@@ -1,0 +1,13 @@
+WebMind includes data derived from CC-CEDICT.
+
+CC-CEDICT is a community-maintained free Chinese-English dictionary published
+by MDBG and licensed under the Creative Commons Attribution-ShareAlike 4.0
+International License (CC BY-SA 4.0):
+
+https://creativecommons.org/licenses/by-sa/4.0/
+
+Source:
+https://www.mdbg.net/chinese/dictionary?page=cc-cedict
+
+Referenced work:
+CEDICT - Copyright (C) 1997, 1998 Paul Andrew Denisowski
