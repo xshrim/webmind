@@ -33,6 +33,7 @@ import {
   getProviderSecret,
   loadCustomTools,
   loadSettings,
+  normalizeSettings,
   saveCustomTools,
   saveProviderSecret,
   saveSettings,
@@ -44,10 +45,11 @@ import type {
   AppSettings,
   AppLanguage,
   CustomTool,
+  DefaultContextScope,
   HoverDefinitionMode,
-  HoverDefinitionShortcut,
+  ImmersiveShortcut,
+  ImmersiveReadingBackgroundStyle,
   ImmersiveTranslationDisplayStyle,
-  ImmersiveTranslationShortcut,
   ImmersiveTranslationTextEffect,
   ImmersiveReadingStrategy,
   ProviderKind,
@@ -60,6 +62,7 @@ import { errorMessage, parseCustomHeaders } from "../shared/utils";
 
 type Status = { kind: "success" | "error" | "info"; text: string } | null;
 type AutoReplyMode = "off" | "multiline" | "all";
+const SETTINGS_EXPORT_VERSION = 3;
 
 const PROVIDER_KINDS: ProviderKind[] = [
   "openai-compatible",
@@ -128,15 +131,31 @@ const HOVER_DEFINITION_MODES: Array<{
   { id: "both", titleKey: "hoverDefinitionBoth" }
 ];
 
-const HOVER_DEFINITION_SHORTCUTS: Array<{
-  id: HoverDefinitionShortcut;
-  titleKey:
-    | "hoverDefinitionShortcutOff"
-    | "hoverDefinitionShortcutCtrl";
+type ShortcutModifier = "ctrl" | "alt" | "shift";
+
+const SHORTCUT_MODIFIERS: Array<{
+  id: ShortcutModifier;
+  labelKey: "shortcutCtrl" | "shortcutAlt" | "shortcutShift";
 }> = [
-  { id: "off", titleKey: "hoverDefinitionShortcutOff" },
-  { id: "ctrl", titleKey: "hoverDefinitionShortcutCtrl" }
+  { id: "ctrl", labelKey: "shortcutCtrl" },
+  { id: "alt", labelKey: "shortcutAlt" },
+  { id: "shift", labelKey: "shortcutShift" }
 ];
+
+function shortcutModifierSet(shortcut: ImmersiveShortcut): Set<ShortcutModifier> {
+  if (shortcut === "off") return new Set();
+  return new Set(shortcut.split("-") as ShortcutModifier[]);
+}
+
+function shortcutFromModifiers(
+  modifiers: Iterable<ShortcutModifier>
+): ImmersiveShortcut {
+  const selected = new Set(modifiers);
+  const ordered = SHORTCUT_MODIFIERS.map((modifier) => modifier.id).filter(
+    (modifier) => selected.has(modifier)
+  );
+  return (ordered.length ? ordered.join("-") : "off") as ImmersiveShortcut;
+}
 
 const TOOL_SURFACES: Array<{
   id: ToolSurface;
@@ -186,22 +205,6 @@ const TRANSLATION_TEXT_EFFECTS: Array<{
   { id: "light", titleKey: "light" }
 ];
 
-const PARAGRAPH_SHORTCUT_OPTIONS: Array<{
-  id: ImmersiveTranslationShortcut;
-  labelKey: "shortcutNone" | "shortcutAlt";
-}> = [
-  { id: "off", labelKey: "shortcutNone" },
-  { id: "alt", labelKey: "shortcutAlt" }
-];
-
-const PAGE_SHORTCUT_OPTIONS: Array<{
-  id: ImmersiveTranslationShortcut;
-  labelKey: "shortcutNone" | "shortcutCtrlAlt";
-}> = [
-  { id: "off", labelKey: "shortcutNone" },
-  { id: "ctrl-alt", labelKey: "shortcutCtrlAlt" }
-];
-
 const IMMERSIVE_READING_STRATEGIES: Array<{
   id: ImmersiveReadingStrategy;
   titleKey:
@@ -221,6 +224,18 @@ const IMMERSIVE_READING_STRATEGIES: Array<{
     titleKey: "immersiveReadingStrategyModelPage",
     descriptionKey: "immersiveReadingStrategyModelPageHelp"
   }
+];
+
+const IMMERSIVE_READING_BACKGROUND_STYLES: Array<{
+  id: ImmersiveReadingBackgroundStyle;
+  labelKey:
+    | "immersiveReadingHighlightNone"
+    | "immersiveReadingHighlightUniform"
+    | "immersiveReadingHighlightLeveled";
+}> = [
+  { id: "none", labelKey: "immersiveReadingHighlightNone" },
+  { id: "uniform", labelKey: "immersiveReadingHighlightUniform" },
+  { id: "leveled", labelKey: "immersiveReadingHighlightLeveled" }
 ];
 
 function applyTheme(settings: AppSettings): void {
@@ -936,10 +951,7 @@ export function SettingsApp() {
     if (!current) return;
     await persist({
       ...current,
-      [key]: value,
-      ...(key === "modelThinkingTimeoutSeconds"
-        ? { modelThinkingTimeoutCustomized: true }
-        : {})
+      [key]: value
     });
   };
 
@@ -978,8 +990,7 @@ export function SettingsApp() {
     if (!settings) return;
     await persist({
       ...settings,
-      selectionOverlayMode: mode,
-      quickActionsEnabled: mode !== "off"
+      selectionOverlayMode: mode
     });
   };
 
@@ -1107,6 +1118,69 @@ export function SettingsApp() {
     });
   };
 
+  type ShortcutPreferenceKey =
+    | "selectionOverlayShortcut"
+    | "hoverDefinitionShortcut"
+    | "immersiveTranslationParagraphShortcut"
+    | "immersiveTranslationPageShortcut"
+    | "immersiveTranslationModeToggleShortcut"
+    | "immersiveReadingParagraphShortcut"
+    | "immersiveReadingContextShortcut";
+
+  const shortcutCheckboxField = (
+    key: ShortcutPreferenceKey,
+    labelKey: UiTextKey,
+    helpKey?: UiTextKey,
+    options: { holdPrefix?: boolean } = {}
+  ) => {
+    if (!settings) return null;
+    const selected = shortcutModifierSet(settings[key] as ImmersiveShortcut);
+    const updateShortcutModifier = (
+      modifier: ShortcutModifier,
+      checked: boolean
+    ) => {
+      const next = new Set(selected);
+      if (checked) {
+        next.add(modifier);
+      } else {
+        next.delete(modifier);
+      }
+      void updatePreference(
+        key,
+        shortcutFromModifiers(next) as AppSettings[ShortcutPreferenceKey]
+      );
+    };
+    return (
+      <div className="field">
+        <span className="field-label">
+          {uiText(settings.interfaceLanguage, labelKey)}
+        </span>
+        <div className="shortcut-checkboxes">
+          {options.holdPrefix && (
+            <span className="shortcut-checkbox-prefix">
+              {t("shortcutHoldPrefix")}
+            </span>
+          )}
+          {SHORTCUT_MODIFIERS.map((modifier) => (
+            <label className="shortcut-checkbox" key={modifier.id}>
+              <input
+                type="checkbox"
+                checked={selected.has(modifier.id)}
+                onChange={(event) =>
+                  updateShortcutModifier(modifier.id, event.target.checked)
+                }
+              />
+              <span>
+                {uiText(settings.interfaceLanguage, modifier.labelKey)}
+              </span>
+            </label>
+          ))}
+        </div>
+        {helpKey && <small>{uiText(settings.interfaceLanguage, helpKey)}</small>}
+      </div>
+    );
+  };
+
   const toolsForSurface = (surface: ToolSurface): ToolDefinition[] =>
     availableTools.filter((tool) => {
           if (tool.id === "ask-selection") return false;
@@ -1125,7 +1199,7 @@ export function SettingsApp() {
         JSON.stringify(
           {
             format: "webmind-settings",
-            version: 3,
+            version: SETTINGS_EXPORT_VERSION,
             exportedAt: new Date().toISOString(),
             settings: cleanSettings,
             customTools: tools
@@ -1150,23 +1224,22 @@ export function SettingsApp() {
   const importData = async (file: File) => {
     try {
       const payload = JSON.parse(await file.text());
-      if (payload.format !== "webmind-settings" || !payload.settings) {
+      if (
+        payload.format !== "webmind-settings" ||
+        payload.version !== SETTINGS_EXPORT_VERSION ||
+        !payload.settings ||
+        !Array.isArray(payload.customTools)
+      ) {
         throw new Error(t("invalidSettingsFile"));
       }
       const incoming = payload.settings as Partial<AppSettings>;
-      const next = {
-        ...DEFAULT_SETTINGS,
+      const next = normalizeSettings({
         ...incoming,
         profiles: (incoming.profiles ?? []).map(
           (profile: ProviderProfile) => ({ ...profile, apiKey: "" })
-        ),
-        compareProfileIds: incoming.compareProfileIds ?? [],
-        enabledToolIds: {
-          ...DEFAULT_SETTINGS.enabledToolIds,
-          ...(incoming.enabledToolIds ?? {})
-        }
-      } as AppSettings;
-      const importedTools = (payload.customTools ?? []) as CustomTool[];
+        )
+      });
+      const importedTools = payload.customTools as CustomTool[];
       await saveSettings(next);
       await saveCustomTools(importedTools);
       settingsRef.current = next;
@@ -1406,6 +1479,12 @@ export function SettingsApp() {
                     )}
                   </small>
                 </div>
+                {shortcutCheckboxField(
+                  "selectionOverlayShortcut",
+                  "selectionOverlayShortcut",
+                  "selectionOverlayShortcutHelp",
+                  { holdPrefix: true }
+                )}
                 <label className="field">
                   <span className="field-label">
                     {t("selectionOverlayMinChars")}
@@ -1474,31 +1553,12 @@ export function SettingsApp() {
                     ))}
                   </div>
                 </div>
-                <div className="field">
-                  <span className="field-label">{t("hoverDefinitionShortcut")}</span>
-                  <div className="segmented segmented-wrap">
-                    {HOVER_DEFINITION_SHORTCUTS.map((shortcut) => (
-                      <button
-                        key={shortcut.id}
-                        className={
-                          settings.hoverDefinitionShortcut === shortcut.id
-                            ? "active"
-                            : ""
-                        }
-                        type="button"
-                        onClick={() =>
-                          void updatePreference(
-                            "hoverDefinitionShortcut",
-                            shortcut.id
-                          )
-                        }
-                      >
-                        {uiText(settings.interfaceLanguage, shortcut.titleKey)}
-                      </button>
-                    ))}
-                  </div>
-                  <small>{t("hoverDefinitionShortcutHelp")}</small>
-                </div>
+                {shortcutCheckboxField(
+                  "hoverDefinitionShortcut",
+                  "hoverDefinitionShortcut",
+                  "hoverDefinitionShortcutHelp",
+                  { holdPrefix: true }
+                )}
                 <label className="field">
                   <span className="field-label">{t("urlBlacklist")}</span>
                   <textarea
@@ -1532,7 +1592,7 @@ export function SettingsApp() {
                   <label className="toggle-row">
                     <input
                       type="checkbox"
-                      checked={settings.edgeQuickToolsEnabled ?? true}
+                      checked={settings.edgeQuickToolsEnabled ?? false}
                       onChange={(event) =>
                         void updatePreference(
                           "edgeQuickToolsEnabled",
@@ -1643,72 +1703,19 @@ export function SettingsApp() {
                 <span>{t("immersiveTranslationHelp")}</span>
               </header>
               <div className="card-body">
-                <div className="field">
-                  <span className="field-label">
-                    {uiText(
-                      settings.interfaceLanguage,
-                      "immersiveTranslationParagraphShortcut"
-                    )}
-                  </span>
-                  <div className="segmented segmented-wrap">
-                    {PARAGRAPH_SHORTCUT_OPTIONS.map((option) => (
-                      <button
-                        key={option.id}
-                        className={
-                          settings.immersiveTranslationParagraphShortcut ===
-                          option.id
-                            ? "active"
-                            : ""
-                        }
-                        type="button"
-                        onClick={() =>
-                          void updatePreference(
-                            "immersiveTranslationParagraphShortcut",
-                            option.id
-                          )
-                        }
-                      >
-                        {uiText(settings.interfaceLanguage, option.labelKey)}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div className="field">
-                  <span className="field-label">
-                    {uiText(
-                      settings.interfaceLanguage,
-                      "immersiveTranslationPageShortcut"
-                    )}
-                  </span>
-                  <div className="segmented segmented-wrap">
-                    {PAGE_SHORTCUT_OPTIONS.map((option) => (
-                      <button
-                        key={option.id}
-                        className={
-                          settings.immersiveTranslationPageShortcut ===
-                          option.id
-                            ? "active"
-                            : ""
-                        }
-                        type="button"
-                        onClick={() =>
-                          void updatePreference(
-                            "immersiveTranslationPageShortcut",
-                            option.id
-                          )
-                        }
-                      >
-                        {uiText(settings.interfaceLanguage, option.labelKey)}
-                      </button>
-                    ))}
-                  </div>
-                  <small>
-                    {uiText(
-                      settings.interfaceLanguage,
-                      "immersiveTranslationShortcutHelp"
-                    )}
-                  </small>
-                </div>
+                {shortcutCheckboxField(
+                  "immersiveTranslationParagraphShortcut",
+                  "immersiveTranslationParagraphShortcut"
+                )}
+                {shortcutCheckboxField(
+                  "immersiveTranslationPageShortcut",
+                  "immersiveTranslationPageShortcut",
+                  "immersiveTranslationShortcutHelp"
+                )}
+                {shortcutCheckboxField(
+                  "immersiveTranslationModeToggleShortcut",
+                  "immersiveTranslationModeToggleShortcut"
+                )}
                 <div className="field">
                   <span className="field-label">{t("displayMode")}</span>
                   <div className="segmented segmented-wrap">
@@ -1862,6 +1869,14 @@ export function SettingsApp() {
                   </div>
                   <small>{t("immersiveReadingDifficultyHelp")}</small>
                 </label>
+                {shortcutCheckboxField(
+                  "immersiveReadingParagraphShortcut",
+                  "immersiveReadingParagraphShortcut"
+                )}
+                {shortcutCheckboxField(
+                  "immersiveReadingContextShortcut",
+                  "immersiveReadingContextShortcut"
+                )}
                 <div className="field">
                   <span className="field-label">{t("immersiveReadingMode")}</span>
                   <div className="segmented segmented-wrap">
@@ -1889,6 +1904,32 @@ export function SettingsApp() {
                         }
                       >
                         {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="field">
+                  <span className="field-label">
+                    {t("immersiveReadingBackgroundStyle")}
+                  </span>
+                  <div className="segmented segmented-wrap">
+                    {IMMERSIVE_READING_BACKGROUND_STYLES.map((style) => (
+                      <button
+                        className={
+                          settings.immersiveReadingBackgroundStyle === style.id
+                            ? "active"
+                            : ""
+                        }
+                        key={style.id}
+                        type="button"
+                        onClick={() =>
+                          void updatePreference(
+                            "immersiveReadingBackgroundStyle",
+                            style.id
+                          )
+                        }
+                      >
+                        {t(style.labelKey)}
                       </button>
                     ))}
                   </div>
@@ -2026,6 +2067,44 @@ export function SettingsApp() {
                     {uiText(
                       settings.interfaceLanguage,
                       "translationLanguageSettingHelp"
+                    )}
+                  </small>
+                </div>
+                <div className="field">
+                  <span className="field-label">
+                    {uiText(
+                      settings.interfaceLanguage,
+                      "defaultContextScopeSetting"
+                    )}
+                  </span>
+                  <div className="segmented">
+                    {([
+                      ["article", "currentBody"],
+                      ["page", "currentPage"]
+                    ] as const).map(([scope, labelKey]) => (
+                      <button
+                        key={scope}
+                        className={
+                          settings.defaultContextScope === scope
+                            ? "active"
+                            : ""
+                        }
+                        type="button"
+                        onClick={() =>
+                          void updatePreference(
+                            "defaultContextScope",
+                            scope as DefaultContextScope
+                          )
+                        }
+                      >
+                        {uiText(settings.interfaceLanguage, labelKey)}
+                      </button>
+                    ))}
+                  </div>
+                  <small>
+                    {uiText(
+                      settings.interfaceLanguage,
+                      "defaultContextScopeHelp"
                     )}
                   </small>
                 </div>

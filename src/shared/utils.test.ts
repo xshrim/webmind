@@ -145,6 +145,39 @@ describe("shared utilities", () => {
     ).toBe("甲 [2]。\n\n乙。");
   });
 
+  it("protects link targets while translating visible link text", () => {
+    const protection = protectTranslationText(
+      "Read [the documentation](https://example.com/path?q=1)."
+    );
+
+    expect(protection.text).toContain("{{WEBMIND_LINK_START_1}}");
+    expect(protection.text).toContain("the documentation");
+    expect(protection.text).not.toContain("https://example.com");
+    expect(
+      restoreTranslationText(
+        "阅读 {{WEBMIND_LINK_START_1}}文档{{WEBMIND_LINK_END_1}}。",
+        protection
+      )
+    ).toBe("阅读 [文档](<https://example.com/path?q=1>)。");
+  });
+
+  it("protects superscript and subscript markup while translating visible text", () => {
+    const protection = protectTranslationText(
+      "H<sub>2</sub>O and x<sup>2</sup>."
+    );
+
+    expect(protection.text).toContain("{{WEBMIND_FORMAT_START_1}}2");
+    expect(protection.text).toContain("{{WEBMIND_FORMAT_START_2}}2");
+    expect(protection.text).not.toContain("<sub>");
+    expect(protection.text).not.toContain("<sup>");
+    expect(
+      restoreTranslationText(
+        "水 {{WEBMIND_FORMAT_START_1}}2{{WEBMIND_FORMAT_END_1}} 和 x{{WEBMIND_FORMAT_START_2}}2{{WEBMIND_FORMAT_END_2}}。",
+        protection
+      )
+    ).toBe("水 <sub>2</sub> 和 x<sup>2</sup>。");
+  });
+
   it("removes citation explanations hallucinated around placeholders", () => {
     const protection = protectTranslationText("This claim [5] is important.");
 

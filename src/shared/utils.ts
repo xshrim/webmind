@@ -1,6 +1,8 @@
 import { uiText } from "./i18n";
 import {
   autoTranslateInstruction,
+  dictionaryTranslationInstruction,
+  isDictionaryTranslationInput,
   translationDirectionInstruction,
   translationFormatInstruction,
   type PromptConfigSource
@@ -15,7 +17,19 @@ import type {
 export interface ProtectedTranslationText {
   text: string;
   citations: string[];
+  links: ProtectedTranslationLink[];
+  formats: ProtectedTranslationFormat[];
   paragraphBreaks: string[];
+}
+
+interface ProtectedTranslationLink {
+  href: string;
+  text: string;
+}
+
+interface ProtectedTranslationFormat {
+  tag: "sup" | "sub";
+  text: string;
 }
 
 export function chunkItems<T>(items: T[], size: number): T[][] {
@@ -54,7 +68,16 @@ function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function protectedTokenPattern(kind: "CITATION" | "PARAGRAPH_BREAK", index: number) {
+function protectedTokenPattern(
+  kind:
+    | "CITATION"
+    | "PARAGRAPH_BREAK"
+    | "LINK_START"
+    | "LINK_END"
+    | "FORMAT_START"
+    | "FORMAT_END",
+  index: number
+) {
   return new RegExp(
     protectedTokenSource(kind, index),
     "gi"
@@ -62,7 +85,13 @@ function protectedTokenPattern(kind: "CITATION" | "PARAGRAPH_BREAK", index: numb
 }
 
 function protectedTokenSource(
-  kind: "CITATION" | "PARAGRAPH_BREAK",
+  kind:
+    | "CITATION"
+    | "PARAGRAPH_BREAK"
+    | "LINK_START"
+    | "LINK_END"
+    | "FORMAT_START"
+    | "FORMAT_END",
   index: number
 ): string {
   return `\`?(?:\\{\\{\\s*WEBMIND_${kind}_${index}\\s*\\}\\}|\\[\\s*WEBMIND_${kind}_${index}\\s*\\]|WEBMIND_${kind}_${index})\`?`;
@@ -155,8 +184,50 @@ function stripCitationMarkerExplanationNoise(
 
 export function protectTranslationText(text: string): ProtectedTranslationText {
   const citations: string[] = [];
+  const links: ProtectedTranslationLink[] = [];
+  const formats: ProtectedTranslationFormat[] = [];
   const paragraphBreaks: string[] = [];
-  const withCitations = text.replace(TRANSLATION_CITATION_PATTERN, (marker) => {
+  const protectFormat = (tag: "sup" | "sub", value: string) => {
+    const visibleText = value
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (!visibleText) return value;
+    formats.push({ tag, text: visibleText });
+    const index = formats.length;
+    return `{{WEBMIND_FORMAT_START_${index}}}${visibleText}{{WEBMIND_FORMAT_END_${index}}}`;
+  };
+  const withFormats = text.replace(
+    /<(sup|sub)\b[^>]*>([\s\S]*?)<\/\1>/gi,
+    (_match, tag: string, value: string) =>
+      protectFormat(tag.toLowerCase() as "sup" | "sub", value)
+  );
+  const protectLink = (href: string, linkText: string) => {
+    const visibleText = linkText
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (!href.trim() || !visibleText) return linkText;
+    links.push({ href: href.trim(), text: visibleText });
+    const index = links.length;
+    return `{{WEBMIND_LINK_START_${index}}}${visibleText}{{WEBMIND_LINK_END_${index}}}`;
+  };
+  const withHtmlLinks = withFormats.replace(
+    /<a\b[^>]*\bhref\s*=\s*(["'])(.*?)\1[^>]*>([\s\S]*?)<\/a>/gi,
+    (_match, _quote: string, href: string, label: string) =>
+      protectLink(href, label)
+  );
+  const withMarkdownLinks = withHtmlLinks.replace(
+    /(^|[^!])\[([^\]\n]{1,500})\]\(\s*(?:<([^>\n]+)>|([^)>\s]+))\s*\)/g,
+    (
+      _match,
+      prefix: string,
+      label: string,
+      angleHref: string | undefined,
+      plainHref: string | undefined
+    ) => `${prefix}${protectLink(angleHref ?? plainHref ?? "", label)}`
+  );
+  const withCitations = withMarkdownLinks.replace(TRANSLATION_CITATION_PATTERN, (marker) => {
     citations.push(marker);
     return `{{WEBMIND_CITATION_${citations.length}}}`;
   });
@@ -166,12 +237,13 @@ export function protectTranslationText(text: string): ProtectedTranslationText {
       paragraphBreaks.push(separator);
       return `{{WEBMIND_PARAGRAPH_BREAK_${paragraphBreaks.length}}}`;
     });
-  return { text: protectedText, citations, paragraphBreaks };
+  return { text: protectedText, citations, links, formats, paragraphBreaks };
 }
 
 export function restoreTranslationText(
   text: string,
-  protection: Pick<ProtectedTranslationText, "citations" | "paragraphBreaks">
+  protection: Pick<ProtectedTranslationText, "citations" | "paragraphBreaks"> &
+    Partial<Pick<ProtectedTranslationText, "links" | "formats">>
 ): string {
   let restored = stripCitationExplanationNoise(
     text,
@@ -189,6 +261,40 @@ export function restoreTranslationText(
       separator.includes("\n\n") ? "\n\n" : separator
     );
   });
+  (protection.links ?? []).forEach((link, index) => {
+    const linkPattern = new RegExp(
+      [
+        protectedTokenSource("LINK_START", index + 1),
+        "([\\s\\S]*?)",
+        protectedTokenSource("LINK_END", index + 1)
+      ].join(""),
+      "gi"
+    );
+    restored = restored.replace(linkPattern, (_match, label: string) => {
+      const visibleText = label.replace(/\s+/g, " ").trim() || link.text;
+      return `[${visibleText.replace(/([\\\]])/g, "\\$1")}](<${link.href}>)`;
+    });
+    restored = restored
+      .replace(protectedTokenPattern("LINK_START", index + 1), "")
+      .replace(protectedTokenPattern("LINK_END", index + 1), "");
+  });
+  (protection.formats ?? []).forEach((format, index) => {
+    const formatPattern = new RegExp(
+      [
+        protectedTokenSource("FORMAT_START", index + 1),
+        "([\\s\\S]*?)",
+        protectedTokenSource("FORMAT_END", index + 1)
+      ].join(""),
+      "gi"
+    );
+    restored = restored.replace(formatPattern, (_match, value: string) => {
+      const visibleText = value.replace(/\s+/g, " ").trim() || format.text;
+      return `<${format.tag}>${visibleText}</${format.tag}>`;
+    });
+    restored = restored
+      .replace(protectedTokenPattern("FORMAT_START", index + 1), "")
+      .replace(protectedTokenPattern("FORMAT_END", index + 1), "");
+  });
   restored = stripCitationMarkerExplanationNoise(restored, protection.citations);
   return restored.replace(/\n[\t ]*\n(?:[\t ]*\n)+/g, "\n\n");
 }
@@ -196,16 +302,23 @@ export function restoreTranslationText(
 export function buildProtectedTranslationPrompt(
   config: PromptConfigSource | undefined,
   sourceText: string,
-  protectedText: string
+  protectedText: string,
+  options: { dictionaryForShortInput?: boolean } = {}
 ): string {
+  const dictionaryMode =
+    options.dictionaryForShortInput && isDictionaryTranslationInput(sourceText);
   return [
-    autoTranslateInstruction(config, sourceText),
+    dictionaryMode
+      ? dictionaryTranslationInstruction(config, sourceText)
+      : autoTranslateInstruction(config, sourceText),
     translationDirectionInstruction(config, sourceText),
-    translationFormatInstruction(config),
-    uiText(
-      typeof config === "object" ? config?.interfaceLanguage : config,
-      "translationOutputOnlyInstruction"
-    ),
+    dictionaryMode ? "" : translationFormatInstruction(config),
+    dictionaryMode
+      ? ""
+      : uiText(
+          typeof config === "object" ? config?.interfaceLanguage : config,
+          "translationOutputOnlyInstruction"
+        ),
     "<translation-input>",
     protectedText,
     "</translation-input>"

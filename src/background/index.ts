@@ -335,8 +335,8 @@ chrome.runtime.onMessage.addListener(
       }
       if (message.type === "panel.open") {
         const payload = message.payload ?? {};
-        const settings = await loadSettings();
         if (!sender.tab?.id) {
+          const settings = await loadSettings();
           throw new Error(uiText(settings.interfaceLanguage, "cannotDetermineTab"));
         }
         const pendingWrite = payload.action
@@ -421,7 +421,9 @@ chrome.runtime.onMessage.addListener(
           ? protectTranslationText(text)
           : null;
         const prompt = protectedText
-          ? buildProtectedTranslationPrompt(settings, text, protectedText.text)
+          ? buildProtectedTranslationPrompt(settings, text, protectedText.text, {
+              dictionaryForShortInput: true
+            })
           : fillPrompt(template, { text });
         const result = await completeModel({
           purpose: isTranslationAction ? "translation" : "default",
@@ -460,7 +462,8 @@ chrome.runtime.onMessage.addListener(
           ? buildProtectedTranslationPrompt(
               settings,
               contextText,
-              protectedText?.text ?? contextText
+              protectedText?.text ?? contextText,
+              { dictionaryForShortInput: tool.id === "translate-text" }
             )
           : `${instruction}\n\n${uiText(settings.interfaceLanguage, "currentContext")}：\n${contextText}`;
         const result = await completeModel({

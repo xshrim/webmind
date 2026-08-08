@@ -20,23 +20,12 @@ describe("settings normalization", () => {
     expect(settings.visionProfileId).toBeNull();
   });
 
-  it("migrates the legacy twenty-second default to zero", () => {
+  it("preserves an explicitly configured thinking timeout", () => {
     const settings = normalizeSettings({
       modelThinkingTimeoutSeconds: 20
     });
 
-    expect(settings.modelThinkingTimeoutSeconds).toBe(0);
-    expect(settings.modelThinkingTimeoutCustomized).toBe(false);
-  });
-
-  it("keeps an explicitly configured twenty-second timeout", () => {
-    const settings = normalizeSettings({
-      modelThinkingTimeoutSeconds: 20,
-      modelThinkingTimeoutCustomized: true
-    });
-
     expect(settings.modelThinkingTimeoutSeconds).toBe(20);
-    expect(settings.modelThinkingTimeoutCustomized).toBe(true);
   });
 
   it("allows one model to carry all three unique roles", () => {

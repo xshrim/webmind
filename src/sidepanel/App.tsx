@@ -4,30 +4,21 @@ import {
   Bot,
   Check,
   ChevronDown,
+  ChevronUp,
   CirclePlus,
   Clock3,
-  Code2,
   Copy,
   FileText,
   Globe2,
-  History,
   ImagePlus,
-  Languages,
   Link2,
-  Lightbulb,
-  ListChecks,
   LoaderCircle,
-  Maximize2,
-  Minimize2,
   MessageCirclePlus,
   MessageSquareText,
   Paperclip,
-  PanelRightOpen,
   PenLine,
   Presentation,
   RefreshCcw,
-  Reply,
-  RotateCcw,
   ScanText,
   Search,
   Send,
@@ -41,7 +32,6 @@ import {
   WandSparkles,
   X
 } from "lucide-react";
-import { Readability } from "@mozilla/readability";
 import {
   useCallback,
   useEffect,
@@ -58,7 +48,6 @@ import {
   sendToTab
 } from "../shared/browser";
 import {
-  resolveLanguage,
   uiText,
   type UiTextKey
 } from "../shared/i18n";
@@ -77,6 +66,12 @@ import { modelPurposeForToolId, profileForPurpose } from "../shared/models";
 import {
   immersiveReadingInstruction
 } from "../shared/prompts";
+import {
+  buildReadingFallbackPrompt,
+  parseReadingFallbackTranslations,
+  type ReadingFallbackTranslation,
+  type ReadingLocalPlan
+} from "../shared/immersiveReading";
 import type {
   AppSettings,
   AppLogLevel,
@@ -93,7 +88,6 @@ import type {
   PendingAction,
   ProviderProfile,
   ToolDefinition,
-  ToolInvocation,
   ToolInvocationContext,
   ToolSurface,
   WebSearchResult,
@@ -104,11 +98,9 @@ import {
   buildPageTranslationSystemPrompt,
   buildPageTranslationUserPrompt,
   buildProtectedTranslationPrompt,
-  chunkItems,
   createMessage,
   errorMessage,
   extractPageTranslationEntries,
-  mapWithConcurrency,
   protectTranslationText,
   restoreTranslationText,
   shortTitle,
@@ -116,9 +108,43 @@ import {
   truncateText,
   type ProtectedTranslationText
 } from "../shared/utils";
+import {
+  orderTranslationsByBlocks,
+  runImmersiveReadingModelPageWorkflow,
+  runImmersiveTranslationWorkflow
+} from "../shared/immersiveWorkflow";
 import { Markdown } from "../ui/Markdown";
-import { extractPdfContext, extractPdfDataContext } from "./pdf";
+import { extractPdfContext } from "./pdf";
 import { searchWeb } from "../shared/webSearch";
+import {
+  fileToAttachment,
+  urlToAttachment,
+  urlToTextAttachment
+} from "./attachments";
+import {
+  buildSystemMessage,
+  contextLabel,
+  contextSnapshotExcerpt,
+  defaultContextMode,
+  normalizePageContext,
+  type ContextMode
+} from "./context";
+import {
+  NAV_ITEMS,
+  TOOL_ICON_CHOICES,
+  TOOL_TAB_PRIORITY,
+  ToolIcon
+} from "./toolIcons";
+import {
+  LOG_LEVEL_OPTIONS,
+  ToolInvocationBubble,
+  attachmentText,
+  contextIcon,
+  formatLogTime,
+  formatTime,
+  logLevelTextKey,
+  logLevelWeight
+} from "./display";
 
 type ViewId = "chat" | "tools" | "history" | "logs";
 
@@ -145,678 +171,9 @@ interface OperationLogRuntimeMessage {
   };
 }
 
-type ReadingFamily = "zh" | "en";
-
-interface ReadingSpan {
-  start: number;
-  end: number;
-  source: string;
-  translation?: string;
-  score: number;
-}
-
-interface ReadingPlanBlock {
-  id: string;
-  text: string;
-  family: ReadingFamily;
-  targetFamily: ReadingFamily;
-  spans: ReadingSpan[];
-}
-
-interface ReadingFallbackTerm {
-  key: string;
-  source: string;
-  context: string;
-  family: ReadingFamily;
-  targetFamily: ReadingFamily;
-}
-
-interface ReadingLocalPlan {
-  blocks: ReadingPlanBlock[];
-  fallbackTerms: ReadingFallbackTerm[];
-}
-
-interface ReadingFallbackTranslation {
-  key?: string;
-  source?: string;
-  translation?: string;
-}
-
-const NAV_ITEMS = [
-  { id: "chat" as const, labelKey: "navChat" as UiTextKey, icon: MessageSquareText },
-  { id: "tools" as const, labelKey: "navTools" as UiTextKey, icon: Wand2 },
-  { id: "history" as const, labelKey: "navHistory" as UiTextKey, icon: History },
-  { id: "logs" as const, labelKey: "navLogs" as UiTextKey, icon: FileText }
-];
-
-const LOG_LEVEL_OPTIONS: AppLogLevel[] = [
-  "debug",
-  "info",
-  "success",
-  "warning",
-  "error"
-];
-
 const IMMERSIVE_READING_BATCH_SIZE = 20;
 const IMMERSIVE_TRANSLATION_BATCH_SIZE = 10;
 const IMMERSIVE_TRANSLATION_CONCURRENCY = 3;
-
-const TOOL_ICONS = {
-  FileText,
-  Globe2,
-  ImagePlus,
-  Lightbulb,
-  ListChecks,
-  Maximize2,
-  Minimize2,
-  PanelRightOpen,
-  PenLine,
-  RotateCcw,
-  Reply,
-  ScanText,
-  Languages,
-  BookOpen,
-  Code2,
-  Presentation,
-  Search,
-  MessageSquareText,
-  Sparkles,
-  TextSelect,
-  Wand2,
-  WandSparkles
-};
-
-const TOOL_ICON_CHOICES = [
-  "Sparkles",
-  "BookOpen",
-  "Code2",
-  "FileText",
-  "Globe2",
-  "ImagePlus",
-  "Lightbulb",
-  "Languages",
-  "ListChecks",
-  "Maximize2",
-  "Minimize2",
-  "PanelRightOpen",
-  "MessageSquareText",
-  "PenLine",
-  "Presentation",
-  "Reply",
-  "RotateCcw",
-  "ScanText",
-  "Search",
-  "TextSelect",
-  "Wand2",
-  "WandSparkles"
-];
-
-const TOOL_TAB_PRIORITY = [
-  "analyze-image",
-  "translate-text",
-  "translate-document"
-];
-
-function isPdfUrl(url: string): boolean {
-  try {
-    return new URL(url).pathname.toLowerCase().endsWith(".pdf");
-  } catch {
-    return false;
-  }
-}
-
-function isYouTubeUrl(url: string): boolean {
-  try {
-    const parsed = new URL(url);
-    return (
-      (parsed.hostname.endsWith("youtube.com") &&
-        parsed.pathname === "/watch") ||
-      parsed.hostname === "youtu.be"
-    );
-  } catch {
-    return false;
-  }
-}
-
-function formatTime(value: number, language?: AppLanguage): string {
-  return new Intl.DateTimeFormat(resolveLanguage(language), {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
-  }).format(value);
-}
-
-function formatLogTime(value: number, language?: AppLanguage): string {
-  return new Intl.DateTimeFormat(resolveLanguage(language), {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit"
-  }).format(value);
-}
-
-function logLevelTextKey(level: AppLogLevel): UiTextKey {
-  switch (level) {
-    case "debug":
-      return "logLevelDebug";
-    case "success":
-      return "logLevelSuccess";
-    case "warning":
-      return "logLevelWarning";
-    case "error":
-      return "logLevelError";
-    case "info":
-    default:
-      return "logLevelInfo";
-  }
-}
-
-function logLevelWeight(level: AppLogLevel): number {
-  switch (level) {
-    case "debug":
-      return 10;
-    case "info":
-      return 20;
-    case "success":
-      return 30;
-    case "warning":
-      return 40;
-    case "error":
-      return 50;
-  }
-}
-
-function extractJsonArrayText(value: string): string {
-  const fenced = value.match(/```(?:json)?\s*([\s\S]*?)```/i);
-  const source = fenced?.[1] ?? value;
-  const start = source.indexOf("[");
-  const end = source.lastIndexOf("]");
-  return start >= 0 && end > start ? source.slice(start, end + 1) : source;
-}
-
-function parseReadingFallbackTranslations(
-  value: string
-): ReadingFallbackTranslation[] {
-  const parsed = JSON.parse(extractJsonArrayText(value)) as unknown;
-  if (!Array.isArray(parsed)) return [];
-  return parsed.flatMap((item) => {
-    if (!item || typeof item !== "object") return [];
-    const record = item as Record<string, unknown>;
-    const key = String(record.key ?? record.source ?? "").trim();
-    const translation = sanitizeReadingMarkerValue(
-      String(record.translation ?? record.text ?? "")
-    );
-    return key && translation ? [{ key, translation }] : [];
-  });
-}
-
-function sanitizeReadingMarkerValue(value: string): string {
-  return value
-    .replace(/`?\{\{\s*WEBMIND_[A-Z_]+(?:_\d+)?\s*\}\}`?/gi, " ")
-    .replace(/\[\s*WEBMIND_[A-Z_]+(?:_\d+)?\s*\]/gi, " ")
-    .replace(/WEBMIND_[A-Z_]+(?:_\d+)?/gi, " ")
-    .replace(/\[\[|\]\]|\|/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function buildReadingFallbackPrompt(terms: ReadingFallbackTerm[]): string {
-  return [
-    "Translate only the listed immersive-reading terms. Do not choose new terms and do not rewrite the context.",
-    "targetFamily=en means translate the source term into concise natural English. targetFamily=zh means translate it into concise natural Chinese.",
-    "Never translate, modify, copy, or output WEBMIND_* placeholders. If a placeholder appears in context, ignore it.",
-    "For targetFamily=en, every translation must contain English letters. For targetFamily=zh, every translation must contain Chinese characters.",
-    "Use the context only to disambiguate. Return only a JSON array, no code fence, in this format: [{\"key\":\"same key\",\"translation\":\"short translation\"}].",
-    "<terms>",
-    JSON.stringify(
-      terms.map((term) => ({
-        key: term.key,
-        source: term.source,
-        sourceFamily: term.family,
-        targetFamily: term.targetFamily,
-        context: sanitizeReadingMarkerValue(term.context)
-      }))
-    ),
-    "</terms>"
-  ].join("\n");
-}
-
-const TEXT_DOCUMENT_TYPES = new Set([
-  "application/json",
-  "application/javascript",
-  "application/xml",
-  "text/css",
-  "text/csv",
-  "text/html",
-  "text/javascript",
-  "text/markdown",
-  "text/plain",
-  "text/xml"
-]);
-
-function isTextDocument(file: File): boolean {
-  if (file.type.startsWith("text/") || TEXT_DOCUMENT_TYPES.has(file.type)) {
-    return true;
-  }
-  return /\.(csv|css|html?|js|json|jsx|log|md|py|ts|tsx|txt|xml|yaml|yml)$/i.test(
-    file.name
-  );
-}
-
-function readFileAsDataUrl(file: File, language?: AppLanguage): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error(uiText(language, "readFileFailed")));
-    reader.onload = () => resolve(String(reader.result));
-    reader.readAsDataURL(file);
-  });
-}
-
-function readFileAsText(file: File, language?: AppLanguage): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error(uiText(language, "readDocumentFailed")));
-    reader.onload = () => resolve(String(reader.result));
-    reader.readAsText(file);
-  });
-}
-
-async function fileToAttachment(
-  file: File,
-  language?: AppLanguage
-): Promise<ImageAttachment> {
-  if (file.type.startsWith("image/")) {
-    return {
-      id: crypto.randomUUID(),
-      kind: "image",
-      name: file.name,
-      mimeType: file.type || "image/png",
-      dataUrl: await readFileAsDataUrl(file, language)
-    };
-  }
-  if (file.type === "application/pdf" || /\.pdf$/i.test(file.name)) {
-    const context = await extractPdfDataContext(
-      new Uint8Array(await file.arrayBuffer()),
-      file.name,
-      "",
-      60000,
-      undefined,
-      language
-    );
-    return {
-      id: crypto.randomUUID(),
-      kind: "document",
-      name: file.name,
-      mimeType: file.type || "application/pdf",
-      text: context.text
-    };
-  }
-  if (isTextDocument(file)) {
-    return {
-      id: crypto.randomUUID(),
-      kind: "document",
-      name: file.name,
-      mimeType: file.type || "text/plain",
-      text: truncateText(await readFileAsText(file, language), 60000, language)
-    };
-  }
-  return {
-    id: crypto.randomUUID(),
-    kind: "document",
-    name: file.name,
-    mimeType: file.type || "application/octet-stream",
-    text: [
-      `${uiText(language, "documentName")}：${file.name}`,
-      `${uiText(language, "typeLabel")}：${file.type || uiText(language, "unknownFileType")}`,
-      `${uiText(language, "sizeLabel")}：${file.size} ${uiText(language, "bytes")}`,
-      "",
-      uiText(language, "unsupportedDocumentText")
-    ].join("\n")
-  };
-}
-
-async function urlToAttachment(
-  url: string,
-  language?: AppLanguage
-): Promise<ImageAttachment> {
-  await requestOriginPermission(url);
-  const response = await fetch(url, { credentials: "include" });
-  if (!response.ok) {
-    throw new Error(`${uiText(language, "readImageUrlFailed")} (${response.status})`);
-  }
-  const blob = await response.blob();
-  const file = new File(
-    [blob],
-    decodeURIComponent(new URL(url).pathname.split("/").pop() || "image"),
-    { type: blob.type || "image/png" }
-  );
-  return fileToAttachment(file, language);
-}
-
-async function urlToTextAttachment(
-  rawUrl: string,
-  language?: AppLanguage
-): Promise<ImageAttachment> {
-  const url = new URL(rawUrl).toString();
-  await requestOriginPermission(url);
-  const response = await fetch(url, { credentials: "include" });
-  if (!response.ok) {
-    throw new Error(`${uiText(language, "readUrlFailed")} (${response.status})`);
-  }
-  const mimeType = response.headers.get("content-type")?.split(";")[0] || "text/plain";
-  if (mimeType.startsWith("image/")) {
-    const blob = await response.blob();
-    return fileToAttachment(
-      new File([blob], decodeURIComponent(new URL(url).pathname.split("/").pop() || "image"), {
-        type: mimeType
-      }),
-      language
-    );
-  }
-  if (mimeType === "application/pdf" || new URL(url).pathname.endsWith(".pdf")) {
-    const context = await extractPdfDataContext(
-      new Uint8Array(await response.arrayBuffer()),
-      decodeURIComponent(new URL(url).pathname.split("/").pop() || uiText(language, "pdfDocument")),
-      url,
-      60000,
-      undefined,
-      language
-    );
-    return {
-      id: crypto.randomUUID(),
-      kind: "url",
-      name: context.title,
-      mimeType,
-      url,
-      text: context.text
-    };
-  }
-  const rawText = await response.text();
-  let text = rawText;
-  if (mimeType === "text/html" || /<\/?[a-z][\s\S]*>/i.test(rawText)) {
-    const document = new DOMParser().parseFromString(rawText, "text/html");
-    document
-      .querySelectorAll("script, style, noscript, svg, canvas")
-      .forEach((node) => node.remove());
-    const article = new Readability(document, { charThreshold: 80 }).parse();
-    text =
-      article?.textContent?.replace(/\s+/g, " ").trim() ||
-      document.body?.textContent?.replace(/\s+/g, " ").trim() ||
-      rawText;
-  }
-  text = truncateText(text, 60000, language);
-  return {
-    id: crypto.randomUUID(),
-    kind: "url",
-    name: new URL(url).hostname,
-    mimeType,
-    url,
-    text
-  };
-}
-
-function contextLabel(
-  context: PageContext | null,
-  language?: AppLanguage
-): string {
-  return uiText(
-    language,
-    context?.kind === "selection" ? "selectedContent" : "currentPage"
-  );
-}
-
-function contextSnapshotExcerpt(text: string): string {
-  const normalized = text.replace(/\s+/g, " ").trim();
-  if (normalized.length <= 180) return normalized;
-  return `${normalized.slice(0, 177)}...`;
-}
-
-function contextIcon(context: PageContext | null) {
-  if (context?.kind === "selection") return TextSelect;
-  if (context?.kind === "pdf") return FileText;
-  if (context?.kind === "youtube") return Presentation;
-  if (context?.kind === "search") return Search;
-  if (context?.kind === "image") return ImagePlus;
-  return Globe2;
-}
-
-function normalizePageContext(context: PageContext | null): PageContext | null {
-  if (!context) return null;
-  if (isPdfUrl(context.url)) return { ...context, kind: "pdf" };
-  if (isYouTubeUrl(context.url)) return { ...context, kind: "youtube" };
-  return context;
-}
-
-function buildSystemMessage(
-  context: PageContext | null,
-  searchResults: WebSearchResult[],
-  profile: ProviderProfile,
-  interfaceLanguage: AppLanguage | undefined
-): ChatMessage {
-  const sections = [
-    uiText(interfaceLanguage, "assistantSystem"),
-    uiText(interfaceLanguage, "assistantGuard")
-  ];
-  if (context?.text) {
-    sections.push(
-      [
-        context.kind === "selection"
-          ? uiText(interfaceLanguage, "selectionContextIntro")
-          : uiText(interfaceLanguage, "pageContextIntro"),
-        `${uiText(interfaceLanguage, "title")}：${context.title}`,
-        `${uiText(interfaceLanguage, "url")}：${context.url}`,
-        context.description
-          ? `${uiText(interfaceLanguage, "description")}：${context.description}`
-          : "",
-        uiText(interfaceLanguage, "body"),
-        truncateText(context.text, profile.maxContextChars, interfaceLanguage)
-      ]
-        .filter(Boolean)
-        .join("\n")
-    );
-    sections.push(
-      context.kind === "selection"
-        ? uiText(interfaceLanguage, "selectionOnly")
-        : context.kind === "pdf"
-        ? uiText(interfaceLanguage, "pdfCitation")
-        : context.kind === "youtube"
-          ? uiText(interfaceLanguage, "youtubeCitation")
-          : uiText(interfaceLanguage, "pageCitation")
-    );
-  }
-  if (searchResults.length) {
-    sections.push(
-      [
-        uiText(interfaceLanguage, "searchSummaryIntro"),
-        ...searchResults.map(
-          (result, index) =>
-            `[${uiText(interfaceLanguage, "searchSourceMarker")} ${index + 1}] ${result.title}\n${result.url}\n${result.snippet}`
-        )
-      ].join("\n\n")
-    );
-  }
-  return createMessage("system", sections.join("\n\n"));
-}
-
-function attachmentText(
-  attachments: ImageAttachment[],
-  language?: AppLanguage
-): string {
-  const textItems = attachments.filter(
-    (attachment) => (attachment.kind ?? "image") !== "image"
-  );
-  if (!textItems.length) return "";
-  return textItems
-    .map((attachment, index) =>
-      [
-        `[${uiText(language, "attachmentLabel")} ${index + 1}] ${attachment.kind === "url" ? "URL" : uiText(language, "documentAttachment")}：${attachment.name}`,
-        attachment.url ? `${uiText(language, "addressLabel")}：${attachment.url}` : "",
-        attachment.mimeType ? `${uiText(language, "typeLabel")}：${attachment.mimeType}` : "",
-        `${uiText(language, "contentLabel")}：`,
-        attachment.text || uiText(language, "noExtractedText")
-      ]
-        .filter(Boolean)
-        .join("\n")
-    )
-    .join("\n\n");
-}
-
-function ToolIcon({ name }: { name: string }) {
-  const Icon = TOOL_ICONS[name as keyof typeof TOOL_ICONS] ?? Sparkles;
-  return <Icon />;
-}
-
-function PageFavicon({ url }: { url?: string }) {
-  const [failed, setFailed] = useState(!url);
-  if (failed) return <Globe2 />;
-  return (
-    <img
-      className="tool-invocation-favicon"
-      src={url}
-      alt=""
-      onError={() => setFailed(true)}
-    />
-  );
-}
-
-function ToolInvocationBubble({
-  invocation,
-  language
-}: {
-  invocation: ToolInvocation;
-  language?: AppLanguage;
-}) {
-  const [copiedContext, setCopiedContext] = useState<"url" | "content" | null>(
-    null
-  );
-  const context = invocation.context;
-  const contextLabel =
-    context.kind === "page"
-      ? uiText(language, "currentPage")
-      : context.kind === "selection"
-        ? uiText(language, "selectedContent")
-        : context.kind === "answer"
-          ? uiText(language, "currentAnswer")
-          : uiText(language, "noneContext");
-  const contextValue =
-    context.kind === "page"
-      ? context.title || context.url || contextLabel
-      : context.kind === "selection" || context.kind === "answer"
-        ? context.text || contextLabel
-        : contextLabel;
-  const ContextIcon =
-    context.kind === "selection"
-      ? TextSelect
-      : context.kind === "answer"
-        ? MessageSquareText
-        : context.kind === "none"
-          ? Square
-          : null;
-  const copyContext = async (value: string, kind: "url" | "content") => {
-    await navigator.clipboard.writeText(value);
-    setCopiedContext(kind);
-    window.setTimeout(() => setCopiedContext(null), 1400);
-  };
-
-  return (
-    <div className="tool-invocation-bubble">
-      <div className="tool-invocation-row">
-        <span className="tool-invocation-tool-icon">
-          <ToolIcon name={invocation.icon} />
-        </span>
-        <div className="tool-invocation-copy">
-          <span className="tool-invocation-label">
-            {uiText(language, "usedTool")}
-          </span>
-          <strong
-            className="tool-invocation-tool-title"
-            title={invocation.title}
-          >
-            {invocation.title}
-          </strong>
-        </div>
-      </div>
-      <div className="tool-invocation-row tool-invocation-context">
-        <span className="tool-invocation-context-icon">
-          {context.kind === "page" ? (
-            <PageFavicon url={context.faviconUrl} />
-          ) : ContextIcon ? (
-            <ContextIcon />
-          ) : (
-            <TextSelect />
-          )}
-        </span>
-        <div className="tool-invocation-copy">
-          <span className="tool-invocation-label">
-            {uiText(language, "questionContext")}
-          </span>
-          {context.kind === "page" ? (
-            <span className="tool-invocation-page-snapshot">
-              {[context.title, context.text]
-                .filter(Boolean)
-                .map((line, index) => (
-                  <span
-                    className="tool-invocation-tooltip-anchor"
-                    data-tooltip={line}
-                    key={`${index}-${line}`}
-                  >
-                    <span
-                      className={
-                        index === 0
-                          ? "tool-invocation-page-title"
-                          : "tool-invocation-page-excerpt"
-                      }
-                    >
-                      {line}
-                    </span>
-                  </span>
-                ))}
-            </span>
-          ) : (
-            <span
-              className="tool-invocation-tooltip-anchor"
-              data-tooltip={contextValue}
-            >
-              <span className="tool-invocation-context-value">
-                {contextValue}
-              </span>
-            </span>
-          )}
-        </div>
-        {context.kind === "page" && context.url && (
-          <button
-            className="tool-invocation-copy-button"
-            type="button"
-            title={
-              copiedContext === "url"
-                ? uiText(language, "copied")
-                : uiText(language, "copyUrl")
-            }
-            aria-label={uiText(language, "copyUrl")}
-            onClick={() => void copyContext(context.url ?? "", "url")}
-          >
-            {copiedContext === "url" ? <Check /> : <Copy />}
-          </button>
-        )}
-        {context.kind === "selection" && context.text && (
-          <button
-            className="tool-invocation-copy-button"
-            type="button"
-            title={
-              copiedContext === "content"
-                ? uiText(language, "copied")
-                : uiText(language, "copySelection")
-            }
-            aria-label={uiText(language, "copySelection")}
-            onClick={() => void copyContext(context.text ?? "", "content")}
-          >
-            {copiedContext === "content" ? <Check /> : <Copy />}
-          </button>
-        )}
-      </div>
-    </div>
-  );
-}
 
 function isFocusOutside(
   container: HTMLElement,
@@ -836,11 +193,15 @@ export function App() {
   const [pageContext, setPageContext] = useState<PageContext | null>(null);
   const [currentPageContext, setCurrentPageContext] =
     useState<PageContext | null>(null);
+  const [currentArticleContext, setCurrentArticleContext] =
+    useState<PageContext | null>(null);
   const [selectionContext, setSelectionContext] =
     useState<PageContext | null>(null);
   const [activeTab, setActiveTab] = useState<chrome.tabs.Tab | null>(null);
   const [contextError, setContextError] = useState("");
   const [contextLoading, setContextLoading] = useState(true);
+  const [articlePicking, setArticlePicking] = useState(false);
+  const [bodyPreviewExpanded, setBodyPreviewExpanded] = useState(false);
   const [streamingId, setStreamingId] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
   const [toolStatus, setToolStatus] = useState("");
@@ -891,7 +252,9 @@ export function App() {
   const previousStreamingIdRef = useRef<string | null>(null);
   const chatToolsStreamStartedRef = useRef(false);
   const selectionContextVersionRef = useRef(0);
+  const pendingSelectionContextRef = useRef<PageContext | null>(null);
   const activeTabContextVersionRef = useRef(0);
+  const contextModeRef = useRef<ContextMode>("page");
   const demoTimerRef = useRef<number | null>(null);
 
   const updateMessages = useCallback(
@@ -988,12 +351,15 @@ export function App() {
 
   useEffect(() => {
     if (!notice) return;
-    if (notice !== uiText(settings?.interfaceLanguage, "pageRestored")) {
-      return;
-    }
     const timer = window.setTimeout(() => setNotice(""), 5000);
     return () => window.clearTimeout(timer);
-  }, [notice, settings?.interfaceLanguage]);
+  }, [notice]);
+
+  useEffect(() => {
+    if (!contextError) return;
+    const timer = window.setTimeout(() => setContextError(""), 5000);
+    return () => window.clearTimeout(timer);
+  }, [contextError]);
 
   useEffect(() => {
     if (!toolStatus) return;
@@ -1059,21 +425,39 @@ export function App() {
       `${uiText(settingsRef.current?.interfaceLanguage, "logPendingAction")}: ${pending.action}`,
       "info"
     );
+    const pendingContextScope =
+      pending.contextScope === "page" ||
+      pending.contextScope === "article" ||
+      pending.contextScope === "selection"
+        ? pending.contextScope
+        : null;
     if (pending.pageUrl && pending.pageTitle) {
-      setPageContext((current) => {
-        const next: PageContext = {
-          kind: pending.imageUrl ? "image" : "selection",
-          title:
-            pending.pageTitle ??
-            current?.title ??
-            uiText(settingsRef.current?.interfaceLanguage, "currentPage"),
-          url: pending.pageUrl ?? current?.url ?? "",
-          text: pending.text ?? "",
-          selection: pending.text
-        };
-        if (next.kind === "selection") setSelectionContext(next);
-        return next;
-      });
+      const next: PageContext = {
+        kind: pending.imageUrl ? "image" : "selection",
+        title:
+          pending.pageTitle ??
+          uiText(settingsRef.current?.interfaceLanguage, "currentPage"),
+        url: pending.pageUrl,
+        text: pending.text ?? "",
+        selection: pending.text
+      };
+      if (next.kind === "selection" && pending.text?.trim()) {
+        pendingSelectionContextRef.current = next;
+        setSelectionContext(next);
+        setPageContext(next);
+      } else {
+        setPageContext(next);
+      }
+      if (pendingContextScope === "selection") {
+        contextModeRef.current = "selection";
+        const tabId = activeTab?.id;
+        if (tabId) {
+          void sendToTab(tabId, {
+            type: "immersive.contextScope.set",
+            scope: "selection"
+          }).catch(() => undefined);
+        }
+      }
       if (pending.text) setIncludePage(true);
     }
     if (pending.imageUrl) {
@@ -1118,7 +502,7 @@ export function App() {
       setComposer(actionQuestions[pending.action]);
     }
     setView("chat");
-  }, [appendOperationLog]);
+  }, [activeTab?.id, appendOperationLog]);
 
   const refreshActivePageContext = useCallback(
     async (reason: string, showLoading = true) => {
@@ -1126,19 +510,50 @@ export function App() {
       selectionContextVersionRef.current += 1;
       if (showLoading) setContextLoading(true);
       try {
+        const scope = defaultContextMode(settingsRef.current);
         const page = await getActivePageContext(
-          settingsRef.current?.interfaceLanguage
+          settingsRef.current?.interfaceLanguage,
+          { ignoreSelection: true, scope }
         );
         if (activeTabContextVersionRef.current !== version) return;
-        const context = normalizePageContext(page.context);
+        const preservedSelection = pendingSelectionContextRef.current;
+        const keepPreservedSelection = Boolean(
+          preservedSelection &&
+            (!page.tab?.url || page.tab.url === preservedSelection.url)
+        );
+        if (preservedSelection && !keepPreservedSelection) {
+          pendingSelectionContextRef.current = null;
+        }
+        const context = keepPreservedSelection
+          ? preservedSelection
+          : normalizePageContext(page.context);
         setActiveTab(page.tab);
         setPageContext(context);
+        let nextContextMode: ContextMode = "page";
         if (context?.kind === "selection") {
+          nextContextMode = "selection";
+          contextModeRef.current = nextContextMode;
           setSelectionContext(context);
           setCurrentPageContext(null);
+          setCurrentArticleContext(null);
+        } else if (context?.kind === "article") {
+          nextContextMode = "article";
+          contextModeRef.current = nextContextMode;
+          setSelectionContext(null);
+          setCurrentPageContext(null);
+          setCurrentArticleContext(context);
         } else {
+          nextContextMode = "page";
+          contextModeRef.current = nextContextMode;
           setSelectionContext(null);
           setCurrentPageContext(context);
+          setCurrentArticleContext(null);
+        }
+        if (page.tab?.id) {
+          void sendToTab(page.tab.id, {
+            type: "immersive.contextScope.set",
+            scope: nextContextMode
+          }).catch(() => undefined);
         }
         setContextError(page.error ?? "");
         appendOperationLog(
@@ -1171,7 +586,7 @@ export function App() {
     ]).then(async ([loadedSettings, loadedHistory, tools]) => {
       settingsRef.current = loadedSettings;
       setSettings(loadedSettings);
-      setIncludePage(loadedSettings.includePageByDefault);
+      setIncludePage(true);
       setWebSearchEnabled(loadedSettings.webSearchByDefault);
       document.documentElement.dataset.theme = loadedSettings.theme;
       setHistory(loadedHistory);
@@ -1192,6 +607,8 @@ export function App() {
     ) => {
       if (areaName === "local" && changes["webmind.settings"]) {
         void loadSettings().then((next) => {
+          const previousDefaultContextScope =
+            settingsRef.current?.defaultContextScope;
           settingsRef.current = next;
           setSettings(next);
           document.documentElement.dataset.theme = next.theme;
@@ -1199,6 +616,14 @@ export function App() {
             uiText(next.interfaceLanguage, "logSettingsUpdated"),
             "info"
           );
+          if (
+            previousDefaultContextScope !== next.defaultContextScope &&
+            (contextModeRef.current === "page" ||
+              contextModeRef.current === "article")
+          ) {
+            setIncludePage(true);
+            void refreshActivePageContext("default-context-updated", true);
+          }
         });
       }
       if (areaName === "local" && changes["webmind.customTools"]) {
@@ -1224,7 +649,7 @@ export function App() {
     };
     chrome.storage.onChanged.addListener(listener);
     return () => chrome.storage.onChanged.removeListener(listener);
-  }, [appendOperationLog, applyPendingAction]);
+  }, [appendOperationLog, applyPendingAction, refreshActivePageContext]);
 
   useEffect(() => {
     if (!isExtensionRuntime()) return;
@@ -1602,22 +1027,38 @@ export function App() {
     return pageContext;
   };
 
-  const readTabContext = async (ignoreSelection: boolean) => {
+  const readTabContext = async (
+    ignoreSelection: boolean,
+    scope: "page" | "article" = "page"
+  ) => {
     if (!activeTab?.id) throw new Error(t("noReadableTab"));
     const context = await sendToTab<PageContext>(activeTab.id, {
       type: "page.context",
-      ignoreSelection
+      ignoreSelection,
+      scope
     });
     return normalizePageContext(context);
   };
 
-  const changeContextMode = async (mode: "none" | "page" | "selection") => {
+  const syncImmersiveContextScope = (mode: ContextMode) => {
+    if (!activeTab?.id) return;
+    void sendToTab(activeTab.id, {
+      type: "immersive.contextScope.set",
+      scope: mode
+    }).catch(() => undefined);
+  };
+
+  const changeContextMode = async (mode: ContextMode) => {
+    contextModeRef.current = mode;
+    syncImmersiveContextScope(mode);
     appendOperationLog(
       `${t("currentContext")}: ${
         mode === "none"
           ? t("noneContext")
           : mode === "selection"
-            ? t("selectedContent")
+            ? t("currentSelection")
+            : mode === "article"
+              ? t("currentBody")
             : t("currentPage")
       }`,
       "info"
@@ -1633,6 +1074,7 @@ export function App() {
       if (
         pageContext &&
         pageContext.kind !== "selection" &&
+        pageContext.kind !== "article" &&
         pageContext.kind !== "image"
       ) {
         return;
@@ -1647,8 +1089,33 @@ export function App() {
       setContextLoading(true);
       setToolStatus(t("switchingToCurrentPage"));
       try {
-        const next = await readTabContext(true);
+        const next = await readTabContext(true, "page");
         setCurrentPageContext(next);
+        setPageContext(next);
+        setContextError("");
+      } catch (error) {
+        setNotice(errorMessage(error));
+      } finally {
+        setContextLoading(false);
+        setToolStatus("");
+      }
+      return;
+    }
+
+    if (mode === "article") {
+      if (currentArticleContext && (!pageContext || currentArticleContext.url === pageContext.url)) {
+        setPageContext(currentArticleContext);
+        return;
+      }
+      setContextLoading(true);
+      setToolStatus(t("readingCurrentBody"));
+      try {
+        const next = await readTabContext(true, "article");
+        if (!next || next.kind !== "article" || !next.text.trim()) {
+          setNotice(t("noProcessablePageBody"));
+          return;
+        }
+        setCurrentArticleContext(next);
         setPageContext(next);
         setContextError("");
       } catch (error) {
@@ -1667,7 +1134,7 @@ export function App() {
     setContextLoading(true);
     setToolStatus(t("readingSelection"));
     try {
-      const next = await readTabContext(false);
+      const next = await readTabContext(false, "page");
       if (!next || next.kind !== "selection" || !next.text.trim()) {
         setNotice(t("noSelectionOnPage"));
         return;
@@ -1679,6 +1146,67 @@ export function App() {
       setNotice(errorMessage(error));
     } finally {
       setContextLoading(false);
+      setToolStatus("");
+    }
+  };
+
+  const pickCurrentBodyRange = async () => {
+    if (!activeTab?.id) {
+      setNotice(t("noReadableTab"));
+      return;
+    }
+    setArticlePicking(true);
+    setToolStatus(t("selectingBodyRange"));
+    setNotice("");
+    try {
+      const next = await sendToTab<PageContext | null>(activeTab.id, {
+        type: "page.article.pick"
+      });
+      if (!next || next.kind !== "article" || !next.text.trim()) {
+        setNotice(t("manualBodySelectionCancelled"));
+        return;
+      }
+      const normalized = normalizePageContext(next);
+      setIncludePage(true);
+      contextModeRef.current = "article";
+      syncImmersiveContextScope("article");
+      setCurrentArticleContext(normalized);
+      setPageContext(normalized);
+      setContextError("");
+      setBodyPreviewExpanded(true);
+      appendOperationLog(t("selectCurrentBody"), "success");
+    } catch (error) {
+      setNotice(errorMessage(error));
+      appendOperationLog(errorMessage(error), "error");
+    } finally {
+      setArticlePicking(false);
+      setToolStatus("");
+    }
+  };
+
+  const restoreCurrentBody = async () => {
+    if (!activeTab?.id) return;
+    setArticlePicking(true);
+    setToolStatus(t("restoreCurrentBody"));
+    setNotice("");
+    try {
+      const next = await sendToTab<PageContext>(activeTab.id, {
+        type: "page.article.restore"
+      });
+      const normalized = normalizePageContext(next);
+      setCurrentArticleContext(normalized);
+      setPageContext(normalized);
+      setIncludePage(true);
+      contextModeRef.current = "article";
+      syncImmersiveContextScope("article");
+      setContextError("");
+      setBodyPreviewExpanded(false);
+      appendOperationLog(t("restoreCurrentBody"), "success");
+    } catch (error) {
+      setNotice(errorMessage(error));
+      appendOperationLog(errorMessage(error), "error");
+    } finally {
+      setArticlePicking(false);
       setToolStatus("");
     }
   };
@@ -1708,6 +1236,11 @@ export function App() {
       setIncludePage(true);
       setNotice("");
       if (Boolean(payload.hasSelection) && text) {
+        contextModeRef.current = "selection";
+        void sendToTab(senderTab.id, {
+          type: "immersive.contextScope.set",
+          scope: "selection"
+        }).catch(() => undefined);
         const next: PageContext = {
           kind: "selection",
           title,
@@ -1725,20 +1258,48 @@ export function App() {
         return;
       }
 
+      pendingSelectionContextRef.current = null;
       setSelectionContext(null);
+      if (
+        currentArticleContext &&
+        (!url || currentArticleContext.url === url)
+      ) {
+        void sendToTab(senderTab.id, {
+          type: "immersive.contextScope.set",
+          scope: "article"
+        }).catch(() => undefined);
+        setPageContext(currentArticleContext);
+        return;
+      }
       if (currentPageContext && (!url || currentPageContext.url === url)) {
+        void sendToTab(senderTab.id, {
+          type: "immersive.contextScope.set",
+          scope: "page"
+        }).catch(() => undefined);
         setPageContext(currentPageContext);
         return;
       }
       if (!senderTab.id) return;
+      const fallbackScope = "article" as const;
       void sendToTab<PageContext>(senderTab.id, {
         type: "page.context",
-        ignoreSelection: true
+        ignoreSelection: true,
+        scope: fallbackScope
       })
         .then((context) => {
           if (selectionContextVersionRef.current !== version) return;
           const next = normalizePageContext(context);
-          setCurrentPageContext(next);
+          const nextScope = next?.kind === "article" ? "article" : "page";
+          if (nextScope === "article") {
+            setCurrentArticleContext(next);
+          } else {
+            setCurrentPageContext(next);
+          }
+          contextModeRef.current = nextScope;
+          void sendToTab(senderTab.id!, {
+            type: "immersive.contextScope.set",
+            scope: nextScope
+          }).catch(() => undefined);
           setPageContext(next);
           setContextError("");
         })
@@ -1750,7 +1311,7 @@ export function App() {
     };
     chrome.runtime.onMessage.addListener(listener);
     return () => chrome.runtime.onMessage.removeListener(listener);
-  }, [activeTab?.id, activeTab?.title, activeTab?.url, currentPageContext, settings?.interfaceLanguage]);
+  }, [activeTab?.id, activeTab?.title, activeTab?.url, currentArticleContext, currentPageContext, settings?.interfaceLanguage]);
 
   const sendMessage = useCallback(
     async (
@@ -1760,6 +1321,7 @@ export function App() {
         skipPageContext?: boolean;
         skipWebSearch?: boolean;
         contextAsInput?: boolean;
+        dictionaryForShortInput?: boolean;
         toolInvocation?: ToolDefinition;
         toolInvocationContext?: ToolInvocationContext;
         attachmentsOverride?: ImageAttachment[];
@@ -1855,7 +1417,8 @@ export function App() {
                 contextualTranslationProtection?.text ?? context.text,
                 profile.maxContextChars,
                 settingsRef.current?.interfaceLanguage
-              )
+              ),
+              { dictionaryForShortInput: options.dictionaryForShortInput }
             )
           : undefined;
       const invocationContext: ToolInvocationContext =
@@ -1865,6 +1428,14 @@ export function App() {
               kind: "selection",
               text: context.selection ?? context.text
             }
+          : context?.kind === "article"
+            ? {
+                kind: "article",
+                title: context.title || activeTab?.title,
+                text: contextSnapshotExcerpt(context.text),
+                url: context.url || activeTab?.url,
+                faviconUrl: activeTab?.favIconUrl
+              }
           : context
             ? {
                 kind: "page",
@@ -2229,7 +1800,8 @@ export function App() {
         buildProtectedTranslationPrompt(
           settingsRef.current ?? undefined,
           content,
-          protection.text
+          protection.text,
+          { dictionaryForShortInput: tool.id === "translate-text" }
         ),
         {
           skipPageContext: true,
@@ -2278,13 +1850,17 @@ export function App() {
 
   const translatePage = async (
     mode: PageTranslationMode = "bilingual",
-    scope: "page" | "selection" = "page"
+    scope: "page" | "article" | "selection" = "page"
   ) => {
     const profile = requireProfile("translation");
     if (!profile || !activeTab?.id) return;
     appendOperationLog(
       `${t("immersiveTranslation")}: ${
-        scope === "selection" ? t("selectedContent") : t("currentPage")
+        scope === "selection"
+          ? t("currentSelection")
+          : scope === "article"
+            ? t("currentBody")
+            : t("currentPage")
       }`,
       "info"
     );
@@ -2292,7 +1868,9 @@ export function App() {
     setToolStatus(
       scope === "selection"
         ? t("collectingSelection")
-        : t("collectingTranslatableText")
+        : scope === "article"
+          ? t("collectingCurrentBody")
+          : t("collectingTranslatableText")
     );
     setNotice("");
     const sendProgress = async (
@@ -2313,16 +1891,19 @@ export function App() {
     try {
       await sendProgress(
         3,
-        scope === "selection" ? t("readingSelection") : t("collectingPageBody")
+        scope === "selection"
+          ? t("readingSelection")
+          : scope === "article"
+            ? t("collectingCurrentBody")
+            : t("collectingPageBody")
       );
       const blocks = await sendToTab<PageTextBlock[]>(tabId, {
         type: "page.translation.prepare",
+        purpose: "translation",
         scope,
         text: scope === "selection" ? pageContext?.text ?? "" : ""
       });
       if (!blocks.length) throw new Error(t("noTranslatableBlocks"));
-      let completed = 0;
-      const batches = chunkItems(blocks, IMMERSIVE_TRANSLATION_BATCH_SIZE);
       const requestTranslations = async (requestBlocks: PageTextBlock[]) => {
         const sourceText = requestBlocks.map((block) => block.text).join("\n");
         const response = await runtimeRequest<{ text: string }>(
@@ -2355,65 +1936,41 @@ export function App() {
           )
         );
       };
-      await mapWithConcurrency(
-        batches,
-        scope === "page" ? IMMERSIVE_TRANSLATION_CONCURRENCY : 1,
-        async (batch, batchIndex) => {
-          const processedBefore = batchIndex * IMMERSIVE_TRANSLATION_BATCH_SIZE;
-        setToolStatus(
-          `${t("translatingPageProgress")}：${Math.min(processedBefore + batch.length, blocks.length)}/${blocks.length}`
-        );
-        await sendProgress(
-          (processedBefore / blocks.length) * 92 + 5,
-          `${t("translatingPageProgress")} ${Math.min(processedBefore + batch.length, blocks.length)}/${blocks.length}`
-        );
-        let translations: PageTranslation[] = [];
-        try {
-          translations = await requestTranslations(batch);
-        } catch (requestError) {
-          if (batch.length === 1) throw requestError;
+      const { completed } = await runImmersiveTranslationWorkflow({
+        blocks,
+        batchSize: IMMERSIVE_TRANSLATION_BATCH_SIZE,
+        concurrency:
+          scope === "selection" ? 1 : IMMERSIVE_TRANSLATION_CONCURRENCY,
+        requestTranslations,
+        applyTranslations: async (translations) => {
+          const applied = await sendToTab<{ count: number }>(tabId, {
+            type: "page.translation.apply",
+            translations,
+            mode,
+            displayStyle:
+              settings?.immersiveTranslationDisplayStyle ?? "default",
+            effects: settings?.immersiveTranslationTextEffects ?? []
+          });
+          return applied.count;
+        },
+        invalidTranslationsError: () => new Error(t("jsonArrayInvalid")),
+        applyCountMismatchError: () => new Error(t("translationWriteFailed")),
+        onBatchStart: async ({ batch, processedBefore }) => {
+          setToolStatus(
+            `${t("translatingPageProgress")}：${Math.min(processedBefore + batch.length, blocks.length)}/${blocks.length}`
+          );
+          await sendProgress(
+            (processedBefore / blocks.length) * 92 + 5,
+            `${t("translatingPageProgress")} ${Math.min(processedBefore + batch.length, blocks.length)}/${blocks.length}`
+          );
+        },
+        onBatchApplied: async ({ completed }) => {
+          await sendProgress(
+            (Math.min(completed, blocks.length) / blocks.length) * 92 + 5,
+            `${t("translationApplied")} ${completed}`
+          );
         }
-        const translatedIds = new Set(
-          translations.map((translation) => translation.id)
-        );
-        const missingBlocks = batch.filter(
-          (block) => !translatedIds.has(block.id)
-        );
-        if (missingBlocks.length) {
-          const retry = await requestTranslations(missingBlocks);
-          for (const translation of retry) {
-            translations.push(translation);
-            translatedIds.add(translation.id);
-          }
-        }
-        if (translations.length !== batch.length) {
-          throw new Error(t("jsonArrayInvalid"));
-        }
-        const translationById = new Map(
-          translations.map((translation) => [translation.id, translation])
-        );
-        translations = batch.flatMap((block) => {
-          const translation = translationById.get(block.id);
-          return translation ? [translation] : [];
-        });
-        const applied = await sendToTab<{ count: number }>(tabId, {
-          type: "page.translation.apply",
-          translations,
-          mode,
-          displayStyle:
-            settings?.immersiveTranslationDisplayStyle ?? "default",
-          effects: settings?.immersiveTranslationTextEffects ?? []
-        });
-        if (applied.count !== translations.length) {
-          throw new Error(t("translationWriteFailed"));
-        }
-        completed += applied.count;
-        await sendProgress(
-          (Math.min(completed, blocks.length) / blocks.length) * 92 + 5,
-          `${t("translationApplied")} ${completed}`
-        );
-        }
-      );
+      });
       setToolStatus(`${t("translationApplied")} ${completed}`);
       appendOperationLog(`${t("translationComplete")}: ${completed}`, "success");
       await sendProgress(
@@ -2434,7 +1991,7 @@ export function App() {
   };
 
   const runImmersiveReading = async (
-    scope: "page" | "selection" = "page"
+    scope: "page" | "article" | "selection" = "page"
   ) => {
     const currentSettings = settingsRef.current;
     const profile = currentSettings
@@ -2443,7 +2000,11 @@ export function App() {
       if (!currentSettings || !activeTab?.id) return;
     appendOperationLog(
       `${t("immersiveReading")}: ${
-        scope === "selection" ? t("selectedContent") : t("currentPage")
+        scope === "selection"
+          ? t("currentSelection")
+          : scope === "article"
+            ? t("currentBody")
+            : t("currentPage")
       }`,
       "info"
     );
@@ -2475,10 +2036,15 @@ export function App() {
       );
       await sendProgress(
         3,
-        scope === "selection" ? t("readingSelection") : t("collectingPageBody")
+        scope === "selection"
+          ? t("readingSelection")
+          : scope === "article"
+            ? t("collectingCurrentBody")
+            : t("collectingPageBody")
       );
       const blocks = await sendToTab<PageTextBlock[]>(activeTab.id, {
         type: "page.translation.prepare",
+        purpose: "reading",
         scope,
         text: scope === "selection" ? pageContext?.text ?? "" : ""
       });
@@ -2546,8 +2112,36 @@ export function App() {
         );
       };
       let translations: PageTranslation[] = [];
+      let appliedDuringProcessing: number | null = null;
       if (useModelPage) {
-        translations = await requestModelReading(blocks);
+        const result = await runImmersiveReadingModelPageWorkflow({
+          blocks,
+          batchSize: IMMERSIVE_TRANSLATION_BATCH_SIZE,
+          concurrency: IMMERSIVE_TRANSLATION_CONCURRENCY,
+          requestTranslations: requestModelReading,
+          applyTranslations: async (orderedTranslations) => {
+            const applied = await sendToTab<{ count: number }>(activeTab.id!, {
+              type: "page.reading.apply",
+              translations: orderedTranslations,
+              mode: currentSettings.immersiveReadingMode,
+              backgroundStyle: currentSettings.immersiveReadingBackgroundStyle,
+              outerEffects: currentSettings.immersiveReadingOuterTextEffects,
+              innerEffects: currentSettings.immersiveReadingInnerTextEffects
+            });
+            return applied.count;
+          },
+          onBatchApplied: async ({ batch, processedBefore, appliedCount }) => {
+            await sendProgress(
+              (Math.min(processedBefore + batch.length, blocks.length) /
+                blocks.length) *
+                92 +
+                5,
+              `${t("immersiveReadingApplied")} ${appliedCount}`
+            );
+          }
+        });
+        translations = result.translations;
+        appliedDuringProcessing = result.appliedCount;
         appendOperationLog(
           `[workflow] ${t("immersiveReading")} model-page aligned translations=${translations.length}`,
           "debug"
@@ -2628,21 +2222,19 @@ export function App() {
           "debug"
         );
       }
-      const translationById = new Map(
-        translations.map((translation) => [translation.id, translation])
-      );
-      translations = blocks.flatMap((block) => {
-        const translation = translationById.get(block.id);
-        return translation ? [translation] : [];
-      });
-      const applied = await sendToTab<{ count: number }>(activeTab.id, {
-        type: "page.reading.apply",
-        translations,
-        mode: currentSettings.immersiveReadingMode,
-        outerEffects: currentSettings.immersiveReadingOuterTextEffects,
-        innerEffects: currentSettings.immersiveReadingInnerTextEffects
-      });
-      const completed = applied.count;
+      let completed = appliedDuringProcessing ?? 0;
+      if (appliedDuringProcessing === null) {
+        translations = orderTranslationsByBlocks(translations, blocks);
+        const applied = await sendToTab<{ count: number }>(activeTab.id, {
+          type: "page.reading.apply",
+          translations,
+          mode: currentSettings.immersiveReadingMode,
+          backgroundStyle: currentSettings.immersiveReadingBackgroundStyle,
+          outerEffects: currentSettings.immersiveReadingOuterTextEffects,
+          innerEffects: currentSettings.immersiveReadingInnerTextEffects
+        });
+        completed = applied.count;
+      }
       appendOperationLog(
         `[workflow] ${t("immersiveReading")} applied blocks=${completed}/${translations.length}`,
         "debug"
@@ -2743,13 +2335,14 @@ export function App() {
     }
     if (!options.respectCurrentContext && pageContext) setIncludePage(true);
     setView("chat");
-    const started = await sendMessage(toolInstruction(tool, settings ?? undefined), {
-      forceIncludePage: !options.respectCurrentContext,
-      contextAsInput:
-        tool.id === "translate-text" || tool.id === "translate-document",
-      modelHistoryOverride,
-      toolInvocation: tool,
-      purpose: modelPurposeForToolId(tool.id)
+      const started = await sendMessage(toolInstruction(tool, settings ?? undefined), {
+        forceIncludePage: !options.respectCurrentContext,
+        contextAsInput:
+          tool.id === "translate-text" || tool.id === "translate-document",
+        dictionaryForShortInput: tool.id === "translate-text",
+        modelHistoryOverride,
+        toolInvocation: tool,
+        purpose: modelPurposeForToolId(tool.id)
     });
     if (hideToolsUntilResponse && !started) {
       setChatToolsHiddenDuringRequest(false);
@@ -2938,6 +2531,8 @@ export function App() {
     ? "none"
     : pageContext?.kind === "selection"
       ? "selection"
+      : pageContext?.kind === "article"
+        ? "article"
       : "page";
   const contextOptions = [
     {
@@ -2951,8 +2546,13 @@ export function App() {
       icon: Globe2
     },
     {
+      id: "article" as const,
+      title: uiText(settings?.interfaceLanguage, "currentBody"),
+      icon: BookOpen
+    },
+    {
       id: "selection" as const,
-      title: uiText(settings?.interfaceLanguage, "selectedContent"),
+      title: uiText(settings?.interfaceLanguage, "currentSelection"),
       icon: TextSelect
     }
   ];
@@ -3016,6 +2616,32 @@ export function App() {
       logLevelWeight(entry.level) >=
       logLevelWeight(settings?.logLevel ?? "info")
   );
+  const articleQuality =
+    pageContext?.kind === "article" ? pageContext.articleQuality : undefined;
+  const articlePreview =
+    pageContext?.kind === "article" ? pageContext.articlePreview ?? [] : [];
+  const articleQualityMetrics = articleQuality
+    ? [
+        ["textDensity", articleQuality.textDensity],
+        ["linkRatio", articleQuality.linkRatio],
+        ["visibleArea", articleQuality.visibleArea],
+        ["continuity", articleQuality.continuity],
+        ["languageConsistency", articleQuality.languageConsistency],
+        ["clutterPenalty", articleQuality.clutterPenalty]
+      ] as Array<[UiTextKey, number]>
+    : [];
+  const bodySourceLabel =
+    articleQuality?.source === "manual"
+      ? t("currentBodySourceManual")
+      : articleQuality?.source === "readability"
+      ? t("currentBodySourceReadability")
+      : articleQuality
+        ? t("currentBodySourceDom")
+        : "";
+  const bodyBlockCount =
+    articleQuality?.blockCount ?? articlePreview.length;
+  const bodyCharCount =
+    articleQuality?.wordCount ?? pageContext?.text?.length ?? 0;
 
   if (!settings) {
     return <div className="panel-loading">{t("loading")} WebMind…</div>;
@@ -3745,6 +3371,112 @@ export function App() {
                 </div>
               ))}
             </div>
+          )}
+          {pageContext?.kind === "article" && (
+            <details
+              className="body-preview"
+              open={bodyPreviewExpanded}
+              onToggle={(event) =>
+                setBodyPreviewExpanded(event.currentTarget.open)
+              }
+            >
+              <summary>
+                <BookOpen />
+                <span>{t("currentBodyPreview")}</span>
+                <span className="body-preview-summary-actions">
+                  {articleQuality?.source === "manual" && (
+                    <button
+                      className="body-preview-action body-restore-button"
+                      type="button"
+                      disabled={articlePicking}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        void restoreCurrentBody();
+                      }}
+                    >
+                      <RefreshCcw />
+                      {t("restoreCurrentBody")}
+                    </button>
+                  )}
+                  <button
+                    className="body-preview-action"
+                    type="button"
+                    disabled={articlePicking}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      void pickCurrentBodyRange();
+                    }}
+                  >
+                    <TextSelect />
+                    {articlePicking
+                      ? t("selectingBodyRange")
+                      : t("selectCurrentBody")}
+                  </button>
+                  {articleQuality && (
+                    <strong>
+                      {t("currentBodyQuality")} {articleQuality.score}
+                    </strong>
+                  )}
+                  <span
+                    className="body-preview-toggle-icon"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={bodyPreviewExpanded ? t("collapse") : t("expand")}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      setBodyPreviewExpanded((expanded) => !expanded);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key !== "Enter" && event.key !== " ") return;
+                      event.preventDefault();
+                      event.stopPropagation();
+                      setBodyPreviewExpanded((expanded) => !expanded);
+                    }}
+                  >
+                    {bodyPreviewExpanded ? <ChevronUp /> : <ChevronDown />}
+                  </span>
+                </span>
+              </summary>
+              <div className="body-preview-meta">
+                <span>
+                  {t("currentBodyBlocks").replace(
+                    "{count}",
+                    String(bodyBlockCount)
+                  )}
+                </span>
+                <span>
+                  {t("currentBodyChars").replace(
+                    "{count}",
+                    String(bodyCharCount)
+                  )}
+                </span>
+                {bodySourceLabel && <span>{bodySourceLabel}</span>}
+                {articleQuality?.selector && (
+                  <span title={articleQuality.selector}>
+                    {articleQuality.selector}
+                  </span>
+                )}
+              </div>
+              {articleQualityMetrics.length > 0 && (
+                <div className="body-quality-grid">
+                  {articleQualityMetrics.map(([key, value]) => (
+                    <span key={key}>
+                      {t(key)} {Math.round(value * 100)}%
+                    </span>
+                  ))}
+                </div>
+              )}
+              {articlePreview.length > 0 && (
+                <div className="body-preview-blocks">
+                  {articlePreview.map((block) => (
+                    <p key={block.id}>{block.text}</p>
+                  ))}
+                </div>
+              )}
+            </details>
           )}
           <div className="composer">
             <textarea

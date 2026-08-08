@@ -60,7 +60,7 @@ export async function sendToTab<T>(
   if (!isExtensionRuntime()) {
     if (message.type === "page.context") {
       return {
-        kind: "webpage",
+        kind: message.scope === "article" ? "article" : "webpage",
         title: uiText(language, "previewPageTitle"),
         url: "https://example.com/research",
         description: uiText(language, "previewPageDescription"),
@@ -89,7 +89,10 @@ export async function sendToTab<T>(
   return response.result as T;
 }
 
-export async function getActivePageContext(language?: AppLanguage): Promise<{
+export async function getActivePageContext(
+  language?: AppLanguage,
+  options: { ignoreSelection?: boolean; scope?: "page" | "article" } = {}
+): Promise<{
   tab: chrome.tabs.Tab | null;
   context: PageContext | null;
   error?: string;
@@ -100,7 +103,9 @@ export async function getActivePageContext(language?: AppLanguage): Promise<{
     const context = await sendToTab<PageContext>(
       tab.id,
       {
-        type: "page.context"
+        type: "page.context",
+        ignoreSelection: Boolean(options.ignoreSelection),
+        scope: options.scope ?? "page"
       },
       language
     );

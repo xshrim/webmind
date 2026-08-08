@@ -34,7 +34,10 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["dictionary/cc-cedict.json"],
+      "resources": [
+        "dictionary/cc-cedict.json",
+        "dictionary/wordfreq-en-25000.json"
+      ],
       "matches": ["<all_urls>"]
     }
   ],

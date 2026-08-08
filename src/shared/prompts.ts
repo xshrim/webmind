@@ -101,16 +101,16 @@ export function translationFormatInstruction(
   const { interfaceLanguage } = resolvePromptConfig(config);
   switch (interfaceLanguage) {
     case "zh-TW":
-      return "嚴格保持原文的段落、換行、標題和清單結構，每個原文段落對應一個譯文段落，不要合併段落。{{WEBMIND_PARAGRAPH_BREAK_N}} 是不可翻譯的段落分隔預留位置，{{WEBMIND_CITATION_N}} 是不可翻譯的引用下標預留位置；兩者都必須逐字保留在原位置，不要展開、解釋、改寫或刪除，不要輸出『該資訊來自……引用』之類的說明。";
+      return "嚴格保持原文的段落、換行、標題和清單結構，每個原文段落對應一個譯文段落，不要合併段落。{{WEBMIND_PARAGRAPH_BREAK_N}} 是不可翻譯的段落分隔預留位置，{{WEBMIND_CITATION_N}} 是不可翻譯的引用下標預留位置；兩者都必須逐字保留在原位置，不要展開、解釋、改寫或刪除，不要輸出『該資訊來自……引用』之類的說明。{{WEBMIND_LINK_START_N}} 和 {{WEBMIND_LINK_END_N}} 是不可翻譯的連結邊界預留位置，必須原樣保留；只翻譯兩者之間可見的連結文字，不要補充、翻譯或輸出連結地址。{{WEBMIND_FORMAT_START_N}} 和 {{WEBMIND_FORMAT_END_N}} 是不可翻譯的上標/下標格式邊界預留位置，必須原樣保留，只翻譯邊界內可見文字。";
     case "en":
-      return "Strictly preserve the source paragraph, line-break, heading, and list structure, with one translated paragraph for each source paragraph; never merge paragraphs. {{WEBMIND_PARAGRAPH_BREAK_N}} is an immutable paragraph-break placeholder and {{WEBMIND_CITATION_N}} is an immutable citation-marker placeholder. Preserve both verbatim in place without expanding, explaining, rewriting, or removing them, and never spell out a citation explanation.";
+      return "Strictly preserve the source paragraph, line-break, heading, and list structure, with one translated paragraph for each source paragraph; never merge paragraphs. {{WEBMIND_PARAGRAPH_BREAK_N}} is an immutable paragraph-break placeholder and {{WEBMIND_CITATION_N}} is an immutable citation-marker placeholder. Preserve both verbatim in place without expanding, explaining, rewriting, or removing them, and never spell out a citation explanation. {{WEBMIND_LINK_START_N}} and {{WEBMIND_LINK_END_N}} are immutable link-boundary placeholders; preserve them verbatim, translate only the visible link text between them, and never add, translate, or output link URLs. {{WEBMIND_FORMAT_START_N}} and {{WEBMIND_FORMAT_END_N}} are immutable superscript/subscript-format boundaries; preserve them verbatim and translate only the visible text between them.";
     case "ja":
-      return "原文の段落、改行、見出し、リスト構造を厳密に保持し、各原文段落を対応する一つの翻訳段落にしてください。段落を結合しないでください。{{WEBMIND_PARAGRAPH_BREAK_N}} は翻訳不可の段落区切りプレースホルダー、{{WEBMIND_CITATION_N}} は翻訳不可の引用番号プレースホルダーです。どちらも元の位置にそのまま残し、展開、説明、書き換え、削除をしないでください。";
+      return "原文の段落、改行、見出し、リスト構造を厳密に保持し、各原文段落を対応する一つの翻訳段落にしてください。段落を結合しないでください。{{WEBMIND_PARAGRAPH_BREAK_N}} は翻訳不可の段落区切りプレースホルダー、{{WEBMIND_CITATION_N}} は翻訳不可の引用番号プレースホルダーです。どちらも元の位置にそのまま残し、展開、説明、書き換え、削除をしないでください。{{WEBMIND_LINK_START_N}} と {{WEBMIND_LINK_END_N}} は翻訳不可のリンク境界プレースホルダーです。そのまま保持し、間にある表示リンク文字だけを翻訳し、リンク URL を追加・翻訳・出力しないでください。{{WEBMIND_FORMAT_START_N}} と {{WEBMIND_FORMAT_END_N}} は翻訳不可の上付き/下付き書式境界です。そのまま保持し、境界内の表示文字だけを翻訳してください。";
     case "ko":
-      return "원문의 문단, 줄바꿈, 제목 및 목록 구조를 엄격히 유지하고 각 원문 문단을 하나의 번역 문단에 대응시키며 문단을 합치지 마세요. {{WEBMIND_PARAGRAPH_BREAK_N}}은 번역하면 안 되는 문단 구분 자리표시자이고 {{WEBMIND_CITATION_N}}은 번역하면 안 되는 인용 번호 자리표시자입니다. 둘 다 원래 위치에 그대로 유지하고 확장, 설명, 수정 또는 삭제하지 마세요.";
+      return "원문의 문단, 줄바꿈, 제목 및 목록 구조를 엄격히 유지하고 각 원문 문단을 하나의 번역 문단에 대응시키며 문단을 합치지 마세요. {{WEBMIND_PARAGRAPH_BREAK_N}}은 번역하면 안 되는 문단 구분 자리표시자이고 {{WEBMIND_CITATION_N}}은 번역하면 안 되는 인용 번호 자리표시자입니다. 둘 다 원래 위치에 그대로 유지하고 확장, 설명, 수정 또는 삭제하지 마세요. {{WEBMIND_LINK_START_N}} 및 {{WEBMIND_LINK_END_N}}은 번역하면 안 되는 링크 경계 자리표시자입니다. 그대로 유지하고 그 사이의 보이는 링크 텍스트만 번역하며 링크 URL을 추가, 번역 또는 출력하지 마세요. {{WEBMIND_FORMAT_START_N}} 및 {{WEBMIND_FORMAT_END_N}}은 번역하면 안 되는 위 첨자/아래 첨자 서식 경계입니다. 그대로 유지하고 경계 안의 보이는 텍스트만 번역하세요.";
     case "zh-CN":
     default:
-      return "严格保持原文的段落、换行、标题和列表结构，每个原文段落对应一个译文段落，不要合并段落。{{WEBMIND_PARAGRAPH_BREAK_N}} 是不可翻译的段落分隔占位符，{{WEBMIND_CITATION_N}} 是不可翻译的引用下标占位符；两者都必须逐字保留在原位置，不要展开、解释、改写或删除，不要输出‘该信息来自……引用’之类的说明。";
+      return "严格保持原文的段落、换行、标题和列表结构，每个原文段落对应一个译文段落，不要合并段落。{{WEBMIND_PARAGRAPH_BREAK_N}} 是不可翻译的段落分隔占位符，{{WEBMIND_CITATION_N}} 是不可翻译的引用下标占位符；两者都必须逐字保留在原位置，不要展开、解释、改写或删除，不要输出‘该信息来自……引用’之类的说明。{{WEBMIND_LINK_START_N}} 和 {{WEBMIND_LINK_END_N}} 是不可翻译的链接边界占位符，必须原样保留；只翻译两者之间可见的链接文字，不要补充、翻译或输出链接地址。{{WEBMIND_FORMAT_START_N}} 和 {{WEBMIND_FORMAT_END_N}} 是不可翻译的上标/下标格式边界，必须原样保留；只翻译边界之间可见的文字。";
   }
 }
 
@@ -156,6 +156,8 @@ export function immersiveReadingInstruction(
       "难度 4：替换 B2-C1 / 较高阶词语、固定搭配或术语，目标密度约每 160-240 个字替换 1-2 个词语。",
       "难度 5：只替换 C1+ / 专业、低频或抽象词语，目标密度约每 240-360 个字替换 1 个词语。",
       "不要只在整页替换一两个普通词；有足够文本时，每个主要段落都应有适量替换。不要替换数字、网址、代码、品牌名、人名、地名或已经是学习语言的词。",
+      "整次任务内尽量不要重复选同一个词或同一个固定搭配。若某个候选已经在前文使用过，必须主动改选附近另一个合适候选，尽量接近目标密度，让替换数量保持均匀。",
+      "难度判断以英文学习词的常见度/词频为主要依据。处理中文页面时，请根据中文词对应英文译词的难度判断是否替换，而不是只看中文词本身的长度或生僻程度。",
       "译文应是基于当前句子或段落上下文的合理简短翻译，通常 1-4 个词；可以消歧和保留必要搭配，但不要加入当前上下文无法支撑的过度限定。"
     ].join("\n"),
     "zh-TW": [
@@ -166,6 +168,8 @@ export function immersiveReadingInstruction(
       "難度 4：替換 B2-C1 / 較高階詞語、固定搭配或術語，目標密度約每 160-240 個字替換 1-2 個詞語。",
       "難度 5：只替換 C1+ / 專業、低頻或抽象詞語，目標密度約每 240-360 個字替換 1 個詞語。",
       "不要只在整頁替換一兩個普通詞；有足夠文本時，每個主要段落都應有適量替換。不要替換數字、網址、程式碼、品牌名、人名、地名或已經是學習語言的詞。",
+      "整次任務內盡量不要重複選同一個詞或同一個固定搭配。若某個候選已經在前文使用過，必須主動改選附近另一個合適候選，盡量接近目標密度，讓替換數量保持均勻。",
+      "難度判斷以英文學習詞的常見度/詞頻為主要依據。處理中文頁面時，請根據中文詞對應英文譯詞的難度判斷是否替換，而不是只看中文詞本身的長度或生僻程度。",
       "譯文應是基於目前句子或段落上下文的合理簡短翻譯，通常 1-4 個詞；可以消歧並保留必要搭配，但不要加入目前上下文無法支撐的過度限定。"
     ].join("\n"),
     en: [
@@ -176,6 +180,8 @@ export function immersiveReadingInstruction(
       "Level 4: replace B2-C1 / advanced words, collocations, or terms, around 1-2 replacements per 160-240 source characters.",
       "Level 5: replace only C1+ / specialized, low-frequency, or abstract words, around 1 replacement per 240-360 source characters.",
       "Do not replace only one or two ordinary words across the whole page. When there is enough text, each main paragraph should receive a reasonable number of replacements. Do not replace numbers, URLs, code, brands, people, places, or words already in the learning language.",
+      "Across the whole task, avoid choosing the same word or fixed phrase more than once whenever possible. If a candidate already appears earlier, actively switch to another suitable nearby candidate so the output stays close to the target density and remains evenly distributed.",
+      "Judge difficulty mainly by the commonness/frequency of the English learning word. For Chinese pages, decide whether a Chinese term is suitable by the difficulty of its English translation, not merely by the Chinese term's length or rarity.",
       "Translations should be reasonable short context-aware glosses, usually 1-4 words. You may disambiguate and keep necessary collocations, but do not add over-specific qualifiers that the current sentence or paragraph does not support."
     ].join("\n"),
     ja: [
@@ -186,6 +192,8 @@ export function immersiveReadingInstruction(
       "レベル 4：B2-C1 / 高度な語、コロケーション、専門用語を置換し、160-240 文字あたり 1-2 語程度を目安にします。",
       "レベル 5：C1+ / 専門的、低頻度、抽象的な語だけを置換し、240-360 文字あたり 1 語程度を目安にします。",
       "ページ全体で普通の語を 1、2 個だけ置換しないでください。十分な本文がある場合、主要段落ごとに適量を置換してください。数字、URL、コード、ブランド名、人名、地名、すでに学習言語の語は置換しないでください。",
+      "タスク全体で同じ語や同じ言い回しをできるだけ繰り返し選ばないでください。前に使った候補があれば、近い候補の中から別の適切なものを積極的に選び、目標密度に近づけて置換が均等になるようにしてください。",
+      "難易度は主に英語の学習語の一般性・頻度で判断してください。中国語ページでは、中国語語句そのものの長さや珍しさだけでなく、対応する英訳語の難易度で置換可否を判断してください。",
       "翻訳は現在の文または段落の文脈に基づく自然で短い語義にし、通常 1-4 語にしてください。曖昧さの解消や必要な連語は許可しますが、文脈で支えられない過度に具体的な限定は加えないでください。"
     ].join("\n"),
     ko: [
@@ -196,6 +204,8 @@ export function immersiveReadingInstruction(
       "4단계: B2-C1 / 고급 단어, 연어, 용어를 바꾸며, 원문 160-240자당 1-2개 정도를 목표로 합니다.",
       "5단계: C1+ / 전문적, 저빈도, 추상 단어만 바꾸며, 원문 240-360자당 1개 정도를 목표로 합니다.",
       "전체 페이지에서 평범한 단어 한두 개만 바꾸지 마세요. 충분한 본문이 있으면 주요 문단마다 적절히 바꾸세요. 숫자, URL, 코드, 브랜드명, 인명, 지명, 이미 학습 언어인 단어는 바꾸지 마세요.",
+      "전체 작업 안에서 같은 단어나 같은 관용구를 가능한 한 반복해서 고르지 마세요. 이미 앞에서 쓴 후보가 있으면 가까운 다른 적절한 후보로 적극적으로 바꿔, 목표 밀도에 가깝고 고르게 교체되도록 하세요.",
+      "난이도는 주로 영어 학습 단어의 일반성/빈도를 기준으로 판단하세요. 중국어 페이지에서는 중국어 표현 자체의 길이나 희귀성만 보지 말고, 해당 영어 번역어의 난이도로 교체 여부를 판단하세요.",
       "번역은 현재 문장이나 문단의 문맥에 맞는 자연스럽고 짧은 뜻풀이여야 하며 보통 1-4단어로 작성하세요. 의미 구분과 필요한 연어는 허용하지만 현재 문맥으로 뒷받침되지 않는 과도하게 구체적인 한정은 추가하지 마세요."
     ].join("\n")
   }[interfaceLanguage];
@@ -208,7 +218,7 @@ export function immersiveReadingInstruction(
         targetRule,
         difficultyGuidance,
         "完整保留句子、標點、段落、數字、專有名詞和引用位置，不要改寫、總結或翻譯整句。",
-        "把每個選中的詞語或短語嚴格標記為 [[WEBMIND_READING|原文|譯文]]。未選中的文字保持原樣，不要巢狀標記，兩個值中不要使用 |。",
+        "把每個選中的詞語或短語嚴格標記為 [[WEBMIND_READING|原文|譯文|難度級別]]，難度級別必須是 1 到 5。未選中的文字保持原樣，不要巢狀標記，原文和譯文中不要使用 |。",
         "形如 {{WEBMIND_CITATION_1}} 的引用預留位置必須逐字保留。",
         '只返回 JSON 陣列，每一項格式為 {"id":"原 id","text":"包含標記的完整原文"}。'
       ].join("\n");
@@ -220,7 +230,7 @@ export function immersiveReadingInstruction(
         targetRule,
         difficultyGuidance,
         "Preserve every sentence, punctuation mark, paragraph, number, proper noun, and citation position. Do not rewrite, summarize, or translate whole sentences.",
-        "Mark each selected word or short phrase exactly as [[WEBMIND_READING|original|translation]]. Leave all unselected text unchanged, never nest markers, and never use | inside either value.",
+        "Mark each selected word or short phrase exactly as [[WEBMIND_READING|original|translation|level]], where level must be 1 to 5. Leave all unselected text unchanged, never nest markers, and never use | inside original or translation.",
         "Preserve citation placeholders such as {{WEBMIND_CITATION_1}} verbatim.",
         'Return only a JSON array. Each item must be {"id":"original id","text":"complete original text with markers"}.'
       ].join("\n");
@@ -232,7 +242,7 @@ export function immersiveReadingInstruction(
         targetRule,
         difficultyGuidance,
         "文、句読点、段落、数字、固有名詞、引用位置を完全に保持し、全文の書き換え、要約、一文全体の翻訳をしないでください。",
-        "選んだ語句を [[WEBMIND_READING|原文|翻訳]] の形式で厳密にマークしてください。選ばない文字はそのまま残し、入れ子や値内の | は使わないでください。",
+        "選んだ語句を [[WEBMIND_READING|原文|翻訳|難易度]] の形式で厳密にマークしてください。難易度は 1 から 5 です。選ばない文字はそのまま残し、原文や翻訳の値内に | は使わないでください。",
         "{{WEBMIND_CITATION_1}} のような引用プレースホルダーはそのまま保持してください。",
         'JSON 配列だけを返し、各項目を {"id":"元の id","text":"マーカーを含む完全な原文"} にしてください。'
       ].join("\n");
@@ -244,7 +254,7 @@ export function immersiveReadingInstruction(
         targetRule,
         difficultyGuidance,
         "문장, 문장부호, 문단, 숫자, 고유명사와 인용 위치를 그대로 유지하고 전체 문장을 다시 쓰거나 요약하거나 번역하지 마세요.",
-        "선택한 단어나 짧은 구를 [[WEBMIND_READING|원문|번역문]] 형식으로 정확히 표시하세요. 선택하지 않은 텍스트는 그대로 두고 중첩하거나 값 안에 |를 넣지 마세요.",
+        "선택한 단어나 짧은 구를 [[WEBMIND_READING|원문|번역문|난이도]] 형식으로 정확히 표시하세요. 난이도는 1부터 5까지여야 합니다. 선택하지 않은 텍스트는 그대로 두고 원문이나 번역문 값 안에 |를 넣지 마세요.",
         "{{WEBMIND_CITATION_1}} 같은 인용 자리표시자는 그대로 유지하세요.",
         'JSON 배열만 반환하고 각 항목은 {"id":"원래 id","text":"표시가 포함된 전체 원문"} 형식이어야 합니다.'
       ].join("\n");
@@ -257,7 +267,7 @@ export function immersiveReadingInstruction(
         targetRule,
         difficultyGuidance,
         "完整保留句子、标点、段落、数字、专有名词和引用位置，不要改写、总结或翻译整句话。",
-        "将每个选中的词语或短语严格标记为 [[WEBMIND_READING|原文|译文]]。未选中的文字保持原样，不要嵌套标记，两个值中不要使用 |。",
+        "将每个选中的词语或短语严格标记为 [[WEBMIND_READING|原文|译文|难度级别]]，难度级别必须是 1 到 5。未选中的文字保持原样，不要嵌套标记，原文和译文中不要使用 |。",
         "形如 {{WEBMIND_CITATION_1}} 的引用占位符必须逐字保留。",
         '只返回 JSON 数组，每一项格式为 {"id":"原 id","text":"包含标记的完整原文"}。'
       ].join("\n");
@@ -353,6 +363,92 @@ function buildAutoTranslateInstruction(
         "语言检测和翻译只针对后面 <translation-input> 标签中的原文；忽略本指令的语言、标签、JSON 字段名、id 和其他元数据，不要把它们算入原文。",
         translationFormatInstruction(config),
         ...(directionInstruction ? [directionInstruction] : [])
+      ].join("\n");
+  }
+}
+
+export function isDictionaryTranslationInput(sourceText: string): boolean {
+  const text = sourceText.replace(/<[^>]*>/g, " ").trim();
+  if (!text || text.length > 80 || /[\r\n]/.test(text)) return false;
+  if (/[。！？!?；;]/.test(text)) return false;
+  if (/[.!?]$/.test(text)) return false;
+  if (/[,，、]/.test(text)) return false;
+  const parts =
+    text.match(
+      /[A-Za-z]+(?:['’-][A-Za-z]+)*|[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]+|[\u3040-\u30ff\u31f0-\u31ff]+|[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af]+|\d+/g
+    ) ?? [];
+  if (!parts.length) return false;
+  if (parts.length > 6) return false;
+  const cjkLength = (text.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g) ?? [])
+    .length;
+  return cjkLength === 0 || cjkLength <= 16;
+}
+
+export function dictionaryTranslationInstruction(
+  config?: PromptConfigSource,
+  sourceText = ""
+): string {
+  const { interfaceLanguage, translationLanguage } = resolvePromptConfig(config);
+  const interfaceLabel = LANGUAGE_LABELS[interfaceLanguage];
+  const sourceLanguage = detectTranslationLanguage(sourceText);
+  const targetLanguage =
+    translationLanguage === "auto"
+      ? sourceLanguage && translationLanguageMatchesInterface(sourceLanguage, interfaceLanguage)
+        ? "en"
+        : interfaceLanguage
+      : resolveLanguage(translationLanguage);
+  const targetLabel = LANGUAGE_LABELS[targetLanguage];
+  switch (interfaceLanguage) {
+    case "zh-TW":
+      return [
+        "這是一個短詞/詞組查詞式翻譯任務。請用緊湊、自然的 Markdown 輸出近似詞典卡片，不要只給一個譯文。",
+        `目前介面語言是${interfaceLabel}，釋義與說明主要使用${interfaceLabel}；譯文與例句翻譯使用${targetLabel}。`,
+        "只分析 <translation-input> 中直接可見的詞或詞組，不要把標籤、URL、HTML 屬性、連結地址或其他不可見文字當作翻譯對象。",
+        "輸出要緊湊但清楚：最多一個短標題，不要層層標題，不要大段空行；不同維度請用必要換行分成短行，不要把所有資訊擠在同一段。優先用 4-8 行短項，例如：**詞** /音標/ · 核心譯義；換行 **義項** n./v./adj. 1... 2...；換行 **常用** 高/中/低頻 + 語域；換行 **搭配** phrase: meaning；換行 **近形/變體** ...；換行 **例** sentence — 譯文。",
+        "可以按內容靈活取捨，不必每次填滿所有欄位；資訊要有用、短、密度高。詞頻只能給高/中/低或常見/較少見等估計，不要編造精確數字。",
+        "如果輸入其實不是可查詞的單詞、詞語或固定短語，請退回普通翻譯，只輸出自然譯文。",
+        "不要輸出 JSON 或程式碼區塊。"
+      ].join("\n");
+    case "en":
+      return [
+        "This is a dictionary-style translation task for a single word or short phrase. Do not return only one translation; produce a compact, natural Markdown dictionary card.",
+        `The interface language is ${interfaceLabel}. Use ${interfaceLabel} for headings and explanations; use ${targetLabel} for translations and example-sentence translations.`,
+        "Analyze only the directly visible word or phrase inside <translation-input>. Do not treat tags, URLs, HTML attributes, link destinations, or other invisible text as source text.",
+        "Keep the output compact but readable: at most one short heading, no stacked section headings, no large blank gaps. Use necessary line breaks for different dimensions; do not squeeze everything into one paragraph. Prefer 4-8 dense short lines such as: **word** /pronunciation/ · core translations; newline **meanings** n./v./adj. 1... 2...; newline **usage** high/medium/low frequency + register; newline **phrases** phrase: meaning; newline **forms** variants/related words; newline **example** sentence — translation.",
+        "Adapt the fields flexibly; do not force every field every time. Make it useful, brief, and information-dense. Frequency must be a rough high/medium/low or common/less common estimate; do not invent exact statistics.",
+        "If the input is not actually a dictionary-like word, term, or fixed phrase, fall back to ordinary translation and output only the natural translation.",
+        "Do not output JSON or code fences."
+      ].join("\n");
+    case "ja":
+      return [
+        "これは単語または短いフレーズ向けの辞書風翻訳タスクです。訳語を一つだけ返さず、コンパクトで自然な Markdown の辞書カードとして出力してください。",
+        `インターフェース言語は${interfaceLabel}です。見出しと説明は主に${interfaceLabel}を使い、訳語と例文訳には${targetLabel}を使ってください。`,
+        "<translation-input> 内に直接表示されている単語またはフレーズだけを分析してください。タグ、URL、HTML 属性、リンク先、その他の非表示文字列を翻訳対象にしないでください。",
+        "出力はコンパクトかつ読みやすくしてください。短い見出しは最大 1 つまで、階層的な見出しを重ねず、大きな空行を入れないでください。異なる観点は必要に応じて改行し、すべてを一段落に詰め込まないでください。4-8 行程度で、例：**語** /発音/ · 中核訳、改行 **意味** n./v./adj. 1... 2...、改行 **用法** 高/中/低頻度 + レジスター、改行 **表現** phrase: meaning、改行 **変化/関連語** ...、改行 **例** sentence — 訳。",
+        "内容に応じて項目は柔軟に選び、毎回すべて埋める必要はありません。有用で短く、情報密度を高くしてください。頻度は高/中/低や一般的/やや少ない程度の推定にし、精密な統計値を作らないでください。",
+        "入力が辞書的に扱える語・用語・固定フレーズでない場合は通常翻訳に戻り、自然な訳文だけを出力してください。",
+        "JSON やコードブロックは出力しないでください。"
+      ].join("\n");
+    case "ko":
+      return [
+        "이것은 단어 또는 짧은 구를 위한 사전식 번역 작업입니다. 번역어 하나만 반환하지 말고 compact하고 자연스러운 Markdown 사전 카드로 출력하세요.",
+        `인터페이스 언어는 ${interfaceLabel}입니다. 제목과 설명은 주로 ${interfaceLabel}로 쓰고, 번역어와 예문 번역은 ${targetLabel}를 사용하세요.`,
+        "<translation-input> 안에 직접 보이는 단어 또는 구만 분석하세요. 태그, URL, HTML 속성, 링크 주소 또는 보이지 않는 문자열을 번역 대상으로 삼지 마세요.",
+        "출력은 compact하지만 읽기 쉽게 작성하세요. 짧은 제목은 최대 하나만 쓰고, 여러 단계의 제목을 쌓거나 큰 빈 줄을 만들지 마세요. 서로 다른 정보 차원은 필요한 만큼 줄바꿈으로 짧게 나누고, 모든 정보를 한 문단에 밀어 넣지 마세요. 4-8줄 정도의 밀도 있는 형식을 선호합니다: **단어** /발음/ · 핵심 번역; 줄바꿈 **뜻** n./v./adj. 1... 2...; 줄바꿈 **용법** 높음/중간/낮음 빈도 + 문체; 줄바꿈 **표현** phrase: meaning; 줄바꿈 **변형/관련어** ...; 줄바꿈 **예문** sentence — 번역.",
+        "항목은 내용에 맞게 유연하게 고르고 매번 모두 채울 필요는 없습니다. 유용하고 짧고 정보 밀도가 높아야 합니다. 빈도는 높음/중간/낮음 또는 흔함/덜 흔함 정도로만 추정하고 정확한 통계 수치를 만들지 마세요.",
+        "입력이 사전식으로 다룰 수 있는 단어, 용어, 고정 표현이 아니라면 일반 번역으로 돌아가 자연스러운 번역문만 출력하세요.",
+        "JSON이나 코드 블록은 출력하지 마세요."
+      ].join("\n");
+    case "zh-CN":
+    default:
+      return [
+        "这是一个短词/词组查词式翻译任务。请不要只给一个译文，而是用紧凑、自然的 Markdown 输出近似词典卡片。",
+        `当前界面语言是${interfaceLabel}，释义与说明主要使用${interfaceLabel}；译文与例句翻译使用${targetLabel}。`,
+        "只分析 <translation-input> 中直接可见的单词、词语或词组，不要把标签、URL、HTML 属性、链接地址或其他不可见文字当作翻译对象。",
+        "输出要紧凑但清楚：最多一个短标题，不要层层标题，不要大段空行；不同维度请用必要换行分成短行，不要把所有信息挤在同一段。优先用 4-8 行短项，例如：**词** /音标/ · 核心译义；换行 **义项** n./v./adj. 1... 2...；换行 **常用** 高/中/低频 + 语域；换行 **搭配** phrase: meaning；换行 **近形/变体** ...；换行 **例** sentence — 译文。",
+        "可以按内容灵活取舍，不必每次填满所有栏目；信息要有用、短、密度高。词频只能给高/中/低或常见/较少见等估计，不要编造精确数字。",
+        "如果输入其实不是可查词的单词、词语或固定短语，请退回普通翻译，只输出自然译文。",
+        "不要输出 JSON 或代码块。"
       ].join("\n");
   }
 }

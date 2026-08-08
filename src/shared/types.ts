@@ -36,16 +36,29 @@ export type ImmersiveTranslationTextEffect =
   | "italic"
   | "light"
   | "emphasis";
-export type ImmersiveTranslationShortcut = "off" | "alt" | "ctrl-alt";
+export type ImmersiveShortcut =
+  | "off"
+  | "ctrl"
+  | "alt"
+  | "shift"
+  | "ctrl-alt"
+  | "ctrl-shift"
+  | "alt-shift"
+  | "ctrl-alt-shift";
+export type ImmersiveTranslationShortcut = ImmersiveShortcut;
+export type ImmersiveTranslationModeToggleShortcut = ImmersiveShortcut;
 export type ImmersiveReadingMode =
   | "translation"
   | "original-translation"
   | "translation-original";
 export type ImmersiveReadingStrategy = "local-first" | "model-page";
+export type ImmersiveReadingBackgroundStyle = "none" | "uniform" | "leveled";
 export type HoverDefinitionMode = "off" | "zh" | "en" | "both";
-export type HoverDefinitionShortcut = "off" | "ctrl";
+export type HoverDefinitionShortcut = ImmersiveShortcut;
+export type SelectionOverlayShortcut = HoverDefinitionShortcut;
 export type ToolSurface = "selection" | "home" | "tools" | "edge";
 export type ModelPurpose = "default" | "translation" | "vision";
+export type DefaultContextScope = "article" | "page";
 
 export interface ToolDefinition {
   id: string;
@@ -87,20 +100,25 @@ export interface AppSettings {
   logLevel: AppLogLevel;
   autoScrollDuringStreaming: boolean;
   modelThinkingTimeoutSeconds: number;
-  modelThinkingTimeoutCustomized: boolean;
   interfaceLanguage: AppLanguage;
   translationLanguage: AppLanguage;
+  defaultContextScope: DefaultContextScope;
   selectionOverlayMode: SelectionOverlayMode;
+  selectionOverlayShortcut: SelectionOverlayShortcut;
   selectionOverlayMinChars: number;
   immersiveTranslationStyle: ImmersiveTranslationStyle;
   immersiveTranslationDisplayStyle: ImmersiveTranslationDisplayStyle;
   immersiveTranslationTextEffects: ImmersiveTranslationTextEffect[];
   immersiveTranslationParagraphShortcut: ImmersiveTranslationShortcut;
   immersiveTranslationPageShortcut: ImmersiveTranslationShortcut;
+  immersiveTranslationModeToggleShortcut: ImmersiveTranslationModeToggleShortcut;
   immersiveTranslationAutoWhitelist: string[];
   immersiveReadingDifficulty: number;
   immersiveReadingStrategy: ImmersiveReadingStrategy;
   immersiveReadingMode: ImmersiveReadingMode;
+  immersiveReadingBackgroundStyle: ImmersiveReadingBackgroundStyle;
+  immersiveReadingParagraphShortcut: ImmersiveShortcut;
+  immersiveReadingContextShortcut: ImmersiveShortcut;
   immersiveReadingOuterTextEffects: ImmersiveTranslationTextEffect[];
   immersiveReadingInnerTextEffects: ImmersiveTranslationTextEffect[];
   immersiveReadingAutoWhitelist: string[];
@@ -116,7 +134,6 @@ export interface AppSettings {
   imageTextExtractionEnabled: boolean;
   imageTextExtractionMinSize: number;
   enabledToolIds: Record<ToolSurface, string[]>;
-  quickActionsEnabled: boolean;
   chromeSyncEnabled: boolean;
   searchAnswerEnabled: boolean;
   includePageByDefault: boolean;
@@ -139,6 +156,7 @@ export interface ImageAttachment {
 export type ToolInvocationContextKind =
   | "none"
   | "page"
+  | "article"
   | "selection"
   | "answer";
 
@@ -185,6 +203,7 @@ export interface Conversation {
 
 export type PageContextKind =
   | "webpage"
+  | "article"
   | "selection"
   | "pdf"
   | "youtube"
@@ -200,6 +219,27 @@ export interface PageContext {
   description?: string;
   language?: string;
   siteName?: string;
+  articleQuality?: ArticleQualitySummary;
+  articlePreview?: ArticlePreviewBlock[];
+}
+
+export interface ArticleQualitySummary {
+  score: number;
+  textDensity: number;
+  linkRatio: number;
+  visibleArea: number;
+  continuity: number;
+  clutterPenalty: number;
+  languageConsistency: number;
+  source: "readability" | "dom" | "manual";
+  selector?: string;
+  blockCount: number;
+  wordCount: number;
+}
+
+export interface ArticlePreviewBlock {
+  id: string;
+  text: string;
 }
 
 export interface PageTextBlock {
@@ -232,18 +272,11 @@ export interface PendingAction {
   id: string;
   action: QuickActionId;
   createdAt: number;
+  contextScope?: "page" | "article" | "selection";
   text?: string;
   imageUrl?: string;
   pageTitle?: string;
   pageUrl?: string;
-}
-
-export interface CustomPrompt {
-  id: string;
-  title: string;
-  description: string;
-  template: string;
-  createdAt: number;
 }
 
 export interface ChatRunRequest {

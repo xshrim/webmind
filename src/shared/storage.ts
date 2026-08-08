@@ -5,7 +5,8 @@ import type {
   AppSettings,
   Conversation,
   CustomTool,
-  CustomPrompt,
+  HoverDefinitionShortcut,
+  ImmersiveShortcut,
   PendingAction,
   ProviderProfile
 } from "./types";
@@ -14,7 +15,6 @@ type StorageAreaName = "local" | "session" | "sync";
 
 const SETTINGS_KEY = "webmind.settings";
 const HISTORY_KEY = "webmind.history";
-const CUSTOM_PROMPTS_KEY = "webmind.customPrompts";
 const CUSTOM_TOOLS_KEY = "webmind.customTools";
 const SESSION_SECRETS_KEY = "webmind.sessionSecrets";
 const PENDING_ACTION_KEY = "webmind.pendingAction";
@@ -29,6 +29,37 @@ const APP_LOG_LEVELS = new Set<AppLogLevel>([
   "warning",
   "error"
 ]);
+
+const IMMERSIVE_SHORTCUTS = new Set<ImmersiveShortcut>([
+  "off",
+  "ctrl",
+  "alt",
+  "shift",
+  "ctrl-alt",
+  "ctrl-shift",
+  "alt-shift",
+  "ctrl-alt-shift"
+]);
+
+const HOVER_DEFINITION_SHORTCUTS = new Set<HoverDefinitionShortcut>([
+  "off",
+  "ctrl",
+  "alt",
+  "shift",
+  "ctrl-alt",
+  "ctrl-shift",
+  "alt-shift",
+  "ctrl-alt-shift"
+]);
+
+function normalizeImmersiveShortcut(
+  value: unknown,
+  fallback: ImmersiveShortcut
+): ImmersiveShortcut {
+  return IMMERSIVE_SHORTCUTS.has(value as ImmersiveShortcut)
+    ? (value as ImmersiveShortcut)
+    : fallback;
+}
 
 export interface ChromeSyncPayload {
   format: "webmind-chrome-sync";
@@ -123,9 +154,6 @@ function normalizeEnabledToolIds(
 
 export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSettings {
   const profiles = stored.profiles ?? [];
-  const storedHoverDefinitionShortcut = String(
-    stored.hoverDefinitionShortcut ?? ""
-  );
   const quickToolsUrlBlacklist = stored.edgeQuickToolUrlBlacklist ?? [];
   const profileIds = new Set(profiles.map((profile) => profile.id));
   const visionProfileIds = new Set(
@@ -137,9 +165,6 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
     0,
     Math.round(Number(stored.modelThinkingTimeoutSeconds) || 0)
   );
-  const legacyTwentySecondDefault =
-    storedTimeoutSeconds === 20 &&
-    stored.modelThinkingTimeoutCustomized !== true;
   const activeProfileId =
     stored.activeProfileId && profileIds.has(stored.activeProfileId)
       ? stored.activeProfileId
@@ -157,52 +182,116 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
       ? stored.visionProfileId
       : null;
   return {
-    ...DEFAULT_SETTINGS,
-    ...stored,
     profiles,
     activeProfileId,
     defaultProfileId,
     translationProfileId,
     visionProfileId,
     compareProfileIds: stored.compareProfileIds ?? [],
+    theme: stored.theme ?? DEFAULT_SETTINGS.theme,
     logLevel: APP_LOG_LEVELS.has(stored.logLevel as AppLogLevel)
       ? (stored.logLevel as AppLogLevel)
       : DEFAULT_SETTINGS.logLevel,
     autoScrollDuringStreaming: stored.autoScrollDuringStreaming ?? true,
-    modelThinkingTimeoutSeconds: legacyTwentySecondDefault
-      ? 0
-      : storedTimeoutSeconds,
-    modelThinkingTimeoutCustomized:
-      stored.modelThinkingTimeoutCustomized ?? false,
+    modelThinkingTimeoutSeconds: storedTimeoutSeconds,
+    interfaceLanguage:
+      stored.interfaceLanguage ?? DEFAULT_SETTINGS.interfaceLanguage,
+    translationLanguage:
+      stored.translationLanguage ?? DEFAULT_SETTINGS.translationLanguage,
+    defaultContextScope:
+      stored.defaultContextScope === "page" ? "page" : "article",
     selectionOverlayMode:
-      stored.selectionOverlayMode ??
-      (stored.quickActionsEnabled === false ? "off" : "always"),
+      stored.selectionOverlayMode ?? DEFAULT_SETTINGS.selectionOverlayMode,
+    selectionOverlayShortcut: HOVER_DEFINITION_SHORTCUTS.has(
+      stored.selectionOverlayShortcut as HoverDefinitionShortcut
+    )
+      ? (stored.selectionOverlayShortcut as HoverDefinitionShortcut)
+      : DEFAULT_SETTINGS.selectionOverlayShortcut,
     selectionOverlayMinChars: Math.max(
       1,
       Math.round(Number(stored.selectionOverlayMinChars ?? 2) || 2)
     ),
-    inputAutoReplyEnabled: stored.inputAutoReplyEnabled ?? true,
+    immersiveTranslationStyle:
+      stored.immersiveTranslationStyle ??
+      DEFAULT_SETTINGS.immersiveTranslationStyle,
+    immersiveTranslationDisplayStyle:
+      stored.immersiveTranslationDisplayStyle ??
+      DEFAULT_SETTINGS.immersiveTranslationDisplayStyle,
+    immersiveTranslationTextEffects:
+      stored.immersiveTranslationTextEffects ??
+      DEFAULT_SETTINGS.immersiveTranslationTextEffects,
+    inputAutoReplyEnabled:
+      stored.inputAutoReplyEnabled ?? DEFAULT_SETTINGS.inputAutoReplyEnabled,
     inputAutoReplyDisableSingleLine:
       stored.inputAutoReplyDisableSingleLine ?? true,
     immersiveTranslationAutoWhitelist:
       stored.immersiveTranslationAutoWhitelist ?? [],
+    immersiveTranslationParagraphShortcut: normalizeImmersiveShortcut(
+      stored.immersiveTranslationParagraphShortcut,
+      DEFAULT_SETTINGS.immersiveTranslationParagraphShortcut
+    ),
+    immersiveTranslationPageShortcut: normalizeImmersiveShortcut(
+      stored.immersiveTranslationPageShortcut,
+      DEFAULT_SETTINGS.immersiveTranslationPageShortcut
+    ),
+    immersiveTranslationModeToggleShortcut:
+      normalizeImmersiveShortcut(
+        stored.immersiveTranslationModeToggleShortcut,
+        DEFAULT_SETTINGS.immersiveTranslationModeToggleShortcut
+      ),
     immersiveReadingAutoWhitelist: stored.immersiveReadingAutoWhitelist ?? [],
+    immersiveReadingDifficulty:
+      stored.immersiveReadingDifficulty ??
+      DEFAULT_SETTINGS.immersiveReadingDifficulty,
+    immersiveReadingMode:
+      stored.immersiveReadingMode ?? DEFAULT_SETTINGS.immersiveReadingMode,
     immersiveReadingStrategy:
       stored.immersiveReadingStrategy === "model-page"
         ? "model-page"
         : "local-first",
+    immersiveReadingBackgroundStyle:
+      stored.immersiveReadingBackgroundStyle === "uniform" ||
+      stored.immersiveReadingBackgroundStyle === "leveled"
+        ? stored.immersiveReadingBackgroundStyle
+        : "none",
+    immersiveReadingParagraphShortcut: normalizeImmersiveShortcut(
+      stored.immersiveReadingParagraphShortcut,
+      DEFAULT_SETTINGS.immersiveReadingParagraphShortcut
+    ),
+    immersiveReadingContextShortcut: normalizeImmersiveShortcut(
+      stored.immersiveReadingContextShortcut,
+      DEFAULT_SETTINGS.immersiveReadingContextShortcut
+    ),
+    immersiveReadingOuterTextEffects:
+      stored.immersiveReadingOuterTextEffects ??
+      DEFAULT_SETTINGS.immersiveReadingOuterTextEffects,
+    immersiveReadingInnerTextEffects:
+      stored.immersiveReadingInnerTextEffects ??
+      DEFAULT_SETTINGS.immersiveReadingInnerTextEffects,
     hoverDefinitionMode: stored.hoverDefinitionMode ?? "off",
-    hoverDefinitionShortcut:
-      storedHoverDefinitionShortcut === "ctrl" ||
-      storedHoverDefinitionShortcut === "ctrl-shift"
-        ? "ctrl"
-        : "off",
+    hoverDefinitionShortcut: HOVER_DEFINITION_SHORTCUTS.has(
+      stored.hoverDefinitionShortcut as HoverDefinitionShortcut
+    )
+      ? (stored.hoverDefinitionShortcut as HoverDefinitionShortcut)
+      : DEFAULT_SETTINGS.hoverDefinitionShortcut,
     hoverDefinitionUrlBlacklist: stored.hoverDefinitionUrlBlacklist ?? [],
+    edgeQuickToolsEnabled:
+      stored.edgeQuickToolsEnabled ?? DEFAULT_SETTINGS.edgeQuickToolsEnabled,
+    edgeQuickToolBottom:
+      stored.edgeQuickToolBottom ?? DEFAULT_SETTINGS.edgeQuickToolBottom,
+    selectionOverlayUrlBlacklist: stored.selectionOverlayUrlBlacklist ?? [],
     imageTextExtractionEnabled: stored.imageTextExtractionEnabled ?? false,
     imageTextExtractionMinSize: stored.imageTextExtractionMinSize ?? 160,
     edgeQuickToolUrlBlacklist: quickToolsUrlBlacklist,
     chromeSyncEnabled: stored.chromeSyncEnabled ?? false,
-    enabledToolIds: normalizeEnabledToolIds(stored.enabledToolIds)
+    enabledToolIds: normalizeEnabledToolIds(stored.enabledToolIds),
+    searchAnswerEnabled:
+      stored.searchAnswerEnabled ?? DEFAULT_SETTINGS.searchAnswerEnabled,
+    includePageByDefault:
+      stored.includePageByDefault ?? DEFAULT_SETTINGS.includePageByDefault,
+    webSearchByDefault:
+      stored.webSearchByDefault ?? DEFAULT_SETTINGS.webSearchByDefault,
+    historyLimit: stored.historyLimit ?? DEFAULT_SETTINGS.historyLimit
   };
 }
 
@@ -302,7 +391,14 @@ export async function loadChromeSyncPayload(): Promise<ChromeSyncPayload | null>
     CHROME_SYNC_META_KEY,
     null
   );
-  if (!meta?.chunkCount) return null;
+  if (
+    !meta ||
+    meta.format !== "webmind-chrome-sync-meta" ||
+    meta.version !== 1 ||
+    !meta.chunkCount
+  ) {
+    return null;
+  }
   const keys = Array.from({ length: meta.chunkCount }, (_, index) =>
     chunkKey(index)
   );
@@ -310,7 +406,12 @@ export async function loadChromeSyncPayload(): Promise<ChromeSyncPayload | null>
   const raw = keys.map((key) => values[key] ?? "").join("");
   if (!raw) return null;
   const payload = JSON.parse(raw) as Partial<ChromeSyncPayload>;
-  if (payload.format !== "webmind-chrome-sync" || !payload.settings) {
+  if (
+    payload.format !== "webmind-chrome-sync" ||
+    payload.version !== 1 ||
+    !payload.settings ||
+    !Array.isArray(payload.customTools)
+  ) {
     throw new Error(uiText(undefined, "chromeSyncInvalidData"));
   }
   return {
@@ -318,7 +419,7 @@ export async function loadChromeSyncPayload(): Promise<ChromeSyncPayload | null>
     version: 1,
     syncedAt: payload.syncedAt ?? meta.syncedAt,
     settings: normalizeSettings(payload.settings),
-    customTools: normalizeCustomTools(payload.customTools ?? [])
+    customTools: normalizeCustomTools(payload.customTools)
   };
 }
 
@@ -453,21 +554,9 @@ export async function clearConversations(): Promise<void> {
   await setValue("local", HISTORY_KEY, []);
 }
 
-export async function loadCustomPrompts(): Promise<CustomPrompt[]> {
-  return getValue<CustomPrompt[]>("local", CUSTOM_PROMPTS_KEY, []);
-}
-
-export async function saveCustomPrompts(
-  prompts: CustomPrompt[]
-): Promise<void> {
-  await setValue("local", CUSTOM_PROMPTS_KEY, prompts);
-}
-
 export async function loadCustomTools(): Promise<CustomTool[]> {
   const tools = await getValue<CustomTool[]>("local", CUSTOM_TOOLS_KEY, []);
-  if (tools.length) return normalizeCustomTools(tools);
-  const legacy = await getValue<CustomTool[]>("local", CUSTOM_PROMPTS_KEY, []);
-  return normalizeCustomTools(legacy);
+  return normalizeCustomTools(tools);
 }
 
 export async function saveCustomTools(tools: CustomTool[]): Promise<void> {

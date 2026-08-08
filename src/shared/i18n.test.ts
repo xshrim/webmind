@@ -38,6 +38,8 @@ describe("localized tools and prompts", () => {
     expect(chineseAutoTranslate?.template).toContain("<translation-input>");
     expect(chineseAutoTranslate?.template).toContain("不要合并段落");
     expect(chineseAutoTranslate?.template).toContain("WEBMIND_CITATION_N");
+    expect(chineseAutoTranslate?.template).toContain("WEBMIND_LINK_START_N");
+    expect(chineseAutoTranslate?.template).toContain("WEBMIND_FORMAT_START_N");
     expect(japaneseTranslate?.title).toBe("自動翻訳");
     expect(japaneseTranslate?.template).toContain("한국어");
   });
@@ -82,5 +84,34 @@ describe("localized tools and prompts", () => {
     expect(prompt).toContain("不得复制原文");
     expect(prompt).toContain("<translation-input>");
     expect(prompt).toContain("Open the settings panel");
+  });
+
+  it("can build a dictionary-style prompt for short translation inputs", () => {
+    const prompt = buildProtectedTranslationPrompt(
+      { interfaceLanguage: "zh-CN", translationLanguage: "auto" },
+      "serendipity",
+      "serendipity",
+      { dictionaryForShortInput: true }
+    );
+
+    expect(prompt).toContain("查词式翻译任务");
+    expect(prompt).toContain("紧凑但清楚");
+    expect(prompt).toContain("最多一个短标题");
+    expect(prompt).toContain("不要层层标题");
+    expect(prompt).toContain("必要换行");
+    expect(prompt).toContain("4-8 行短项");
+    expect(prompt).not.toContain("只输出 <translation-input> 中原文的译文");
+  });
+
+  it("keeps sentence-like translation inputs in normal translation mode", () => {
+    const prompt = buildProtectedTranslationPrompt(
+      { interfaceLanguage: "zh-CN", translationLanguage: "auto" },
+      "Open the settings panel.",
+      "Open the settings panel.",
+      { dictionaryForShortInput: true }
+    );
+
+    expect(prompt).not.toContain("查词式翻译任务");
+    expect(prompt).toContain("只输出 <translation-input> 中原文的译文");
   });
 });

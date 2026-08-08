@@ -353,6 +353,38 @@ svg {
   box-shadow: 0 1px 3px rgba(20, 34, 30, 0.12);
 }
 
+.shortcut-checkboxes {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.shortcut-checkbox-prefix {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.shortcut-checkbox {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.shortcut-checkbox input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--teal);
+}
+
 .provider-kind-picker {
   align-items: center;
 }
@@ -2703,6 +2735,146 @@ button.prompt-row:hover {
 .attachment-thumb svg {
   width: 11px;
   height: 11px;
+}
+
+.body-preview {
+  margin-bottom: 6px;
+  padding: 7px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.body-preview summary {
+  display: flex;
+  min-height: 24px;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 760;
+}
+
+.body-preview summary::-webkit-details-marker {
+  display: none;
+}
+
+.body-preview summary svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  color: var(--teal);
+}
+
+.body-preview-summary-actions {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-left: auto;
+}
+
+.body-preview summary strong {
+  color: var(--teal);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.body-preview-toggle-icon {
+  display: inline-grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 4px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.body-preview-toggle-icon:hover,
+.body-preview-toggle-icon:focus-visible {
+  color: var(--teal);
+  background: color-mix(in srgb, var(--teal) 9%, var(--surface));
+  outline: none;
+}
+
+.body-preview-toggle-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.body-preview-action {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  gap: 6px;
+  max-width: 150px;
+  overflow: hidden;
+  padding: 0 6px;
+  border: 1px solid color-mix(in srgb, var(--teal) 36%, var(--border));
+  border-radius: 5px;
+  color: var(--teal);
+  background: color-mix(in srgb, var(--teal) 7%, var(--surface));
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 760;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.body-preview-action:hover {
+  background: color-mix(in srgb, var(--teal) 12%, var(--surface));
+}
+
+.body-preview-action:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+.body-preview-action svg {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+}
+
+.body-preview-meta,
+.body-quality-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.body-preview-meta span,
+.body-quality-grid span {
+  max-width: 100%;
+  overflow: hidden;
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.body-preview-blocks {
+  display: grid;
+  max-height: 158px;
+  overflow: auto;
+  gap: 5px;
+  margin-top: 7px;
+  padding-right: 2px;
+}
+
+.body-preview-blocks p {
+  margin: 0;
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.45;
 }
 
 .composer {

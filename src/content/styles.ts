@@ -779,6 +779,11 @@ export const PAGE_STYLES = `
   .webmind-translation-text {
     color: inherit !important;
   }
+  .webmind-translation-text a,
+  .webmind-translation-link {
+    color: inherit !important;
+    text-decoration: underline !important;
+  }
   .webmind-translation-citation {
     display: inline !important;
     margin: 0 .08em !important;
@@ -865,13 +870,34 @@ export const PAGE_STYLES = `
     outline: 1px dashed rgba(23, 143, 124, .28) !important;
     outline-offset: 2px !important;
   }
-  .webmind-immersive-reading-source {
-    outline: 1px dashed rgba(23, 143, 124, .2) !important;
-    outline-offset: 2px !important;
-  }
   .webmind-immersive-reading-token {
     display: inline !important;
     white-space: normal !important;
+  }
+  .webmind-immersive-reading-highlight-uniform,
+  .webmind-immersive-reading-highlight-leveled {
+    border-radius: .28em !important;
+    box-decoration-break: clone !important;
+    -webkit-box-decoration-break: clone !important;
+    padding: .05em .16em !important;
+  }
+  .webmind-immersive-reading-highlight-uniform {
+    background: rgba(82, 177, 151, .18) !important;
+  }
+  .webmind-immersive-reading-level-1 {
+    background: rgba(128, 203, 169, .18) !important;
+  }
+  .webmind-immersive-reading-level-2 {
+    background: rgba(119, 184, 213, .18) !important;
+  }
+  .webmind-immersive-reading-level-3 {
+    background: rgba(222, 190, 94, .2) !important;
+  }
+  .webmind-immersive-reading-level-4 {
+    background: rgba(226, 150, 87, .2) !important;
+  }
+  .webmind-immersive-reading-level-5 {
+    background: rgba(214, 116, 135, .2) !important;
   }
   .webmind-immersive-reading-outer,
   .webmind-immersive-reading-inner {
@@ -881,4 +907,24 @@ export const PAGE_STYLES = `
   .webmind-immersive-reading-inner {
     margin-left: .08em !important;
   }
-`;
+  @media (prefers-color-scheme: dark) {
+    .webmind-immersive-reading-highlight-uniform {
+      background: rgba(111, 219, 187, .22) !important;
+    }
+    .webmind-immersive-reading-level-1 {
+      background: rgba(128, 224, 176, .2) !important;
+    }
+    .webmind-immersive-reading-level-2 {
+      background: rgba(119, 203, 232, .2) !important;
+    }
+    .webmind-immersive-reading-level-3 {
+      background: rgba(238, 205, 104, .22) !important;
+    }
+    .webmind-immersive-reading-level-4 {
+      background: rgba(239, 161, 92, .22) !important;
+    }
+    .webmind-immersive-reading-level-5 {
+      background: rgba(229, 124, 148, .22) !important;
+    }
+  }
+	`;

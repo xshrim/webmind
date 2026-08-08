@@ -1,34 +1,16 @@
-import { Readability } from "@mozilla/readability";
 import {
   BotMessageSquare,
   Check,
   ChevronDown,
   Clipboard,
   BookOpen,
-  Code2,
   Copy,
   FileText,
-  Globe2,
-  ImagePlus,
-  Languages,
-  Lightbulb,
-  ListChecks,
-  Maximize2,
-  MessageSquareText,
-  Minimize2,
-  MessageSquareReply,
   PanelRightOpen,
-  PenLine,
-  Presentation,
-  Reply,
   RotateCcw,
   ScanText,
-  Search,
   Send,
   Sparkles,
-  TextSelect,
-  Wand2,
-  WandSparkles,
   X
 } from "lucide-react";
 import {
@@ -46,20 +28,77 @@ import { createRoot } from "react-dom/client";
 import { resolveLanguage, uiText, type UiTextKey } from "../shared/i18n";
 import { englishLemmaCandidates } from "../shared/englishInflections";
 import {
-  searchParamNamesFromUrl,
-  searchQueryFromUrl
-} from "../shared/searchEngines";
+  buildLocalReadingPlan,
+  buildReadingFallbackPrompt,
+  finalizeLocalReadingPlan,
+  parseReadingFallbackTranslations,
+  type EnglishWordFrequencyIndex,
+  type HoverDefinitionDictionary,
+  type ReadingFallbackTerm,
+  type ReadingFallbackTranslation,
+  type ReadingLocalPlan,
+  type ReadingPlanBlock
+} from "../shared/immersiveReading";
 import { loadCustomTools, loadSettings, saveSettings } from "../shared/storage";
 import { allTools, toolInstruction } from "../shared/tools";
 import { profileForPurpose } from "../shared/models";
 import {
   immersiveReadingInstruction,
 } from "../shared/prompts";
+import { applyImmersiveReading as applyImmersiveReadingDom } from "./immersiveReadingDom";
+import {
+  applyTranslations as applyTranslationsDom,
+  restorePage as restorePageDom,
+  toggleImmersiveTranslationDisplayMode as toggleImmersiveTranslationDisplayModeDom,
+  type TranslationSourceRecord
+} from "./translationDom";
+import {
+  findTranslationSource as findTranslationSourcePrepared,
+  prepareParagraphTranslationBlocks as prepareParagraphTranslationBlocksPrepared,
+  prepareTranslationBlocks as prepareTranslationBlocksPrepared,
+  type TranslationBlockOptions,
+  type TranslationPreparationDependencies
+} from "./translationPreparation";
+import {
+  isModifierShortcutKey,
+  modifierShortcutFromEvent,
+  shortcutWeight
+} from "./shortcuts";
+import {
+  urlMatchesBlacklist,
+  urlMatchesWhitelist
+} from "./urlRules";
+import {
+  imageElementToAttachment,
+  imageHoverRect
+} from "./imageAttachments";
+import {
+  autoReplyTargetFromEvent,
+  currentSelection,
+  editableText,
+  pageSelectionText,
+  replaceSelection,
+  setEditableText,
+  textFromElement,
+  type AutoReplyTarget,
+  type SelectionSnapshot
+} from "./selection";
+import {
+  extractPageContext,
+  linkCitationMarkers,
+  searchQuery,
+  searchResultsContext,
+  restoreAutomaticArticleSelection,
+  startManualArticleSelection
+} from "./pageContext";
+import { ToolIcon } from "./toolIcons";
 import type {
   AppSettings,
   CustomTool,
   ImageAttachment,
+  ImmersiveReadingBackgroundStyle,
   ImmersiveReadingMode,
+  ImmersiveShortcut,
   ImmersiveTranslationDisplayStyle,
   ImmersiveTranslationTextEffect,
   PageContext,
@@ -74,16 +113,17 @@ import {
   alignPageTranslations,
   buildPageTranslationSystemPrompt,
   buildPageTranslationUserPrompt,
-  chunkItems,
   createMessage,
   errorMessage,
   extractPageTranslationEntries,
   isPointInsideAnyRect,
-  mapWithConcurrency,
-  protectTranslationText,
-  restoreTranslationText,
   truncateText
 } from "../shared/utils";
+import {
+  orderTranslationsByBlocks,
+  runImmersiveReadingModelPageWorkflow,
+  runImmersiveTranslationWorkflow
+} from "../shared/immersiveWorkflow";
 import { Markdown } from "../ui/Markdown";
 import { PAGE_STYLES, SHADOW_STYLES } from "./styles";
 
@@ -91,26 +131,13 @@ const IMMERSIVE_READING_BATCH_SIZE = 20;
 const IMMERSIVE_TRANSLATION_BATCH_SIZE = 10;
 const IMMERSIVE_TRANSLATION_CONCURRENCY = 3;
 
-interface EditableSnapshot {
-  element: HTMLInputElement | HTMLTextAreaElement | HTMLElement;
-  start?: number;
-  end?: number;
-  range?: Range;
-}
-
-interface AutoReplyTarget {
-  element: HTMLInputElement | HTMLTextAreaElement | HTMLElement;
-  rect: {
-    left: number;
-    top: number;
-    right: number;
-    bottom: number;
-    width: number;
-    height: number;
-  };
-  singleLine: boolean;
-  text: string;
-}
+type ImmersiveContentScope = "page" | "article";
+type ImmersiveShortcutContextScope = "none" | "page" | "article" | "selection";
+type ImmersiveTranslationRunScope =
+  | ImmersiveContentScope
+  | "selection"
+  | "paragraph";
+type ImmersiveReadingRunScope = ImmersiveTranslationRunScope;
 
 interface ImageTextTarget {
   element: HTMLImageElement;
@@ -124,13 +151,6 @@ interface ImageTextTarget {
   };
   src: string;
   alt: string;
-}
-
-interface SelectionSnapshot {
-  text: string;
-  rect: DOMRect;
-  range?: Range;
-  editable?: EditableSnapshot;
 }
 
 interface RuntimeEnvelope<T> {
@@ -147,31 +167,11 @@ interface TranslationProgressState {
   error?: boolean;
 }
 
-interface PreservedCitation {
-  token: string;
-  marker: string;
-  node: HTMLElement;
-}
-
-interface TranslationSourceRecord {
-  element: HTMLElement;
-  originalText: string;
-  citations: PreservedCitation[];
-  selection: boolean;
-}
-
 interface SearchAnswerState {
   text: string;
   error: string;
   busy: boolean;
   results: WebSearchResult[];
-}
-
-interface HoverDefinitionDictionary {
-  source: string;
-  version: number;
-  zh: Record<string, string>;
-  en: Record<string, string>;
 }
 
 interface HoverDefinitionCandidate {
@@ -195,18 +195,25 @@ let showTranslationProgress:
   | ((progress: TranslationProgressState | null) => void)
   | null = null;
 let translationSequence = 0;
+let immersiveShortcutContextScope: ImmersiveShortcutContextScope | null = null;
 let lastPointerTarget: EventTarget | null = null;
 let assistantHost: HTMLElement | null = null;
 const translationSources = new Map<string, TranslationSourceRecord>();
 let selectionReportTimer: number | null = null;
 let selectionOverlayTimer: number | null = null;
+let selectionOverlayShortcutPressed = false;
 let lastSelectionReportKey = "";
 let hoverDefinitionDictionaryPromise: Promise<HoverDefinitionDictionary> | null =
   null;
+let englishWordFrequencyPromise: Promise<EnglishWordFrequencyIndex> | null = null;
 const HOVER_DEFINITION_HIGHLIGHT_NAME = "webmind-hover-definition";
 
 function contentText(key: UiTextKey): string {
   return uiText(settings?.interfaceLanguage, key);
+}
+
+function nextTranslationBlockId(): string {
+  return `md-${Date.now()}-${translationSequence++}`;
 }
 
 const TRANSLATION_DISPLAY_STYLES = new Set<ImmersiveTranslationDisplayStyle>([
@@ -231,222 +238,6 @@ const IMAGE_TEXT_EXTRACTION_TOOL_ID = "image-text-extraction";
 
 const TRANSLATABLE_BLOCK_SELECTOR =
   "h1, h2, h3, h4, h5, h6, p, li, blockquote, figcaption, td, dt, dd, [role='heading'], [role='paragraph']";
-const TRANSLATABLE_PAGE_SELECTOR = TRANSLATABLE_BLOCK_SELECTOR;
-
-const TOOL_ICONS = {
-  BookOpen,
-  Code2,
-  FileText,
-  Globe2,
-  ImagePlus,
-  Languages,
-  Lightbulb,
-  ListChecks,
-  Maximize2,
-  MessageSquareText,
-  Minimize2,
-  MessageSquareReply,
-  PanelRightOpen,
-  PenLine,
-  Presentation,
-  Reply,
-  RotateCcw,
-  Search,
-  ScanText,
-  Sparkles,
-  TextSelect,
-  Wand2,
-  WandSparkles
-};
-
-function ToolIcon({ name }: { name: string }) {
-  const Icon = TOOL_ICONS[name as keyof typeof TOOL_ICONS] ?? Sparkles;
-  return <Icon />;
-}
-
-function normalizePattern(value: string): string {
-  return value.trim().toLowerCase();
-}
-
-function wildcardMatch(value: string, pattern: string): boolean {
-  const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*");
-  return new RegExp(`^${escaped}$`, "i").test(value);
-}
-
-function urlMatchesRule(url: string, rule: string): boolean {
-  const pattern = normalizePattern(rule);
-  if (!pattern) return false;
-  const current = new URL(url);
-  const href = current.href.toLowerCase();
-  const host = current.hostname.toLowerCase();
-  if (pattern.includes("://") || pattern.includes("/") || pattern.includes("*")) {
-    return wildcardMatch(href, pattern) || href.includes(pattern.replace(/\*/g, ""));
-  }
-  return host === pattern || host.endsWith(`.${pattern}`);
-}
-
-function urlMatchesBlacklist(url: string, rules: string[] = []): boolean {
-  return rules.some((rule) => {
-    try {
-      return urlMatchesRule(url, rule);
-    } catch {
-      return false;
-    }
-  });
-}
-
-function urlMatchesWhitelist(url: string, rules: string[] = []): boolean {
-  return rules.some((rule) => {
-    try {
-      return urlMatchesRule(url, rule);
-    } catch {
-      return false;
-    }
-  });
-}
-
-function imageDataUrlToAttachment(
-  dataUrl: string,
-  fallbackName: string
-): ImageAttachment | null {
-  const match = dataUrl.match(/^data:([^;,]+);base64,(.+)$/i);
-  if (!match) return null;
-  return {
-    id: crypto.randomUUID(),
-    kind: "image",
-    name: fallbackName,
-    mimeType: match[1],
-    dataUrl
-  };
-}
-
-async function imageElementToDataUrl(
-  image: HTMLImageElement
-): Promise<string | null> {
-  try {
-    if (!image.complete || !image.naturalWidth || !image.naturalHeight) {
-      return null;
-    }
-    const canvas = document.createElement("canvas");
-    const scale = Math.min(
-      1,
-      2048 / Math.max(image.naturalWidth || 1, image.naturalHeight || 1)
-    );
-    canvas.width = Math.max(1, Math.round((image.naturalWidth || image.width) * scale));
-    canvas.height = Math.max(1, Math.round((image.naturalHeight || image.height) * scale));
-    const context = canvas.getContext("2d");
-    if (!context) return null;
-    context.drawImage(image, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL("image/png");
-  } catch {
-    return null;
-  }
-}
-
-async function cropImageFromVisibleCapture(
-  image: HTMLImageElement,
-  captureDataUrl: string
-): Promise<ImageAttachment | null> {
-  const screenshot = new Image();
-  screenshot.src = captureDataUrl;
-  try {
-    await screenshot.decode();
-  } catch {
-    return null;
-  }
-  const rect = image.getBoundingClientRect();
-  const left = Math.max(0, Math.min(window.innerWidth, rect.left));
-  const top = Math.max(0, Math.min(window.innerHeight, rect.top));
-  const right = Math.max(0, Math.min(window.innerWidth, rect.right));
-  const bottom = Math.max(0, Math.min(window.innerHeight, rect.bottom));
-  if (right - left < 2 || bottom - top < 2) return null;
-  const scaleX = screenshot.naturalWidth / Math.max(1, window.innerWidth);
-  const scaleY = screenshot.naturalHeight / Math.max(1, window.innerHeight);
-  const sourceX = Math.max(0, Math.round(left * scaleX));
-  const sourceY = Math.max(0, Math.round(top * scaleY));
-  const sourceWidth = Math.min(
-    screenshot.naturalWidth - sourceX,
-    Math.max(1, Math.round((right - left) * scaleX))
-  );
-  const sourceHeight = Math.min(
-    screenshot.naturalHeight - sourceY,
-    Math.max(1, Math.round((bottom - top) * scaleY))
-  );
-  if (sourceWidth < 2 || sourceHeight < 2) return null;
-  const maxSide = 2048;
-  const outputScale = Math.min(1, maxSide / Math.max(sourceWidth, sourceHeight));
-  const canvas = document.createElement("canvas");
-  canvas.width = Math.max(1, Math.round(sourceWidth * outputScale));
-  canvas.height = Math.max(1, Math.round(sourceHeight * outputScale));
-  const context = canvas.getContext("2d");
-  if (!context) return null;
-  context.drawImage(
-    screenshot,
-    sourceX,
-    sourceY,
-    sourceWidth,
-    sourceHeight,
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-  const dataUrl = canvas.toDataURL("image/png");
-  return imageDataUrlToAttachment(dataUrl, imageTextName(image));
-}
-
-function imageHoverRect(image: HTMLImageElement) {
-  const rect = image.getBoundingClientRect();
-  return {
-    left: rect.left,
-    top: rect.top,
-    right: rect.right,
-    bottom: rect.bottom,
-    width: rect.width,
-    height: rect.height
-  };
-}
-
-function imageTextName(image: HTMLImageElement): string {
-  const explicit = image.alt.trim() || image.title.trim();
-  if (explicit) return explicit;
-  try {
-    return decodeURIComponent(
-      new URL(image.currentSrc || image.src, location.href).pathname.split("/").pop() ||
-        "image"
-    );
-  } catch {
-    return "image";
-  }
-}
-
-async function imageElementToAttachment(
-  image: HTMLImageElement,
-  capturePromise?: Promise<{ dataUrl: string } | null>
-): Promise<ImageAttachment> {
-  const dataUrl = await imageElementToDataUrl(image);
-  if (dataUrl) {
-    const attachment = imageDataUrlToAttachment(dataUrl, imageTextName(image));
-    if (attachment) return attachment;
-  }
-  const src = image.currentSrc || image.src;
-  let fetchError: unknown = new Error(contentText("readImageUrlFailed"));
-  if (src) {
-    try {
-      return await runtimeRequest<ImageAttachment>("image.fetchDataUrl", {
-        url: src
-      });
-    } catch (requestError) {
-      fetchError = requestError;
-    }
-  }
-  const capture = await capturePromise?.catch(() => null);
-  if (capture?.dataUrl) {
-    const attachment = await cropImageFromVisibleCapture(image, capture.dataUrl);
-    if (attachment) return attachment;
-  }
-  throw fetchError;
-}
 
 function isFocusOutside(
   container: HTMLElement,
@@ -457,58 +248,6 @@ function isFocusOutside(
 
 function isAssistantEvent(event: Event): boolean {
   return Boolean(assistantHost && event.composedPath().includes(assistantHost));
-}
-
-function isModifierKey(event: KeyboardEvent, key: "alt" | "ctrl"): boolean {
-  const lowerKey = event.key.toLowerCase();
-  if (key === "alt") {
-    return (
-      lowerKey === "alt" ||
-      lowerKey === "altgraph" ||
-      event.code === "AltLeft" ||
-      event.code === "AltRight"
-    );
-  }
-  return (
-    lowerKey === "control" ||
-    event.code === "ControlLeft" ||
-    event.code === "ControlRight"
-  );
-}
-
-function isAltOnlyShortcutEvent(event: KeyboardEvent): boolean {
-  return (
-    !event.ctrlKey &&
-    !event.metaKey &&
-    !event.shiftKey &&
-    (event.altKey || isModifierKey(event, "alt"))
-  );
-}
-
-function isCtrlAltShortcutEvent(event: KeyboardEvent): boolean {
-  const altPressed =
-    event.altKey ||
-    event.getModifierState("AltGraph") ||
-    isModifierKey(event, "alt");
-  const ctrlPressed =
-    event.ctrlKey ||
-    event.getModifierState("AltGraph") ||
-    isModifierKey(event, "ctrl");
-  return altPressed && ctrlPressed && !event.metaKey && !event.shiftKey;
-}
-
-function isCtrlDefinitionShortcut(event: {
-  ctrlKey: boolean;
-  metaKey: boolean;
-  shiftKey: boolean;
-  altKey: boolean;
-}): boolean {
-  return (
-    event.ctrlKey &&
-    !event.metaKey &&
-    !event.shiftKey &&
-    !event.altKey
-  );
 }
 
 function loadHoverDefinitionDictionary(): Promise<HoverDefinitionDictionary> {
@@ -534,438 +273,37 @@ function loadHoverDefinitionDictionary(): Promise<HoverDefinitionDictionary> {
   return hoverDefinitionDictionaryPromise;
 }
 
-type ReadingFamily = "zh" | "en";
-
-interface ReadingSpan {
-  start: number;
-  end: number;
-  source: string;
-  translation?: string;
-  score: number;
-}
-
-interface ReadingPlanBlock {
-  id: string;
-  text: string;
-  family: ReadingFamily;
-  targetFamily: ReadingFamily;
-  spans: ReadingSpan[];
-}
-
-interface ReadingFallbackTerm {
-  key: string;
-  source: string;
-  context: string;
-  family: ReadingFamily;
-  targetFamily: ReadingFamily;
-}
-
-interface ReadingLocalPlan {
-  blocks: ReadingPlanBlock[];
-  fallbackTerms: ReadingFallbackTerm[];
-}
-
-interface ReadingFallbackTranslation {
-  key?: string;
-  source?: string;
-  translation?: string;
-}
-
-const ENGLISH_BASIC_WORDS = new Set([
-  "a",
-  "about",
-  "after",
-  "all",
-  "also",
-  "am",
-  "an",
-  "and",
-  "are",
-  "as",
-  "at",
-  "be",
-  "because",
-  "been",
-  "before",
-  "but",
-  "by",
-  "can",
-  "could",
-  "did",
-  "do",
-  "does",
-  "done",
-  "each",
-  "for",
-  "from",
-  "get",
-  "go",
-  "had",
-  "has",
-  "have",
-  "he",
-  "her",
-  "here",
-  "him",
-  "his",
-  "how",
-  "i",
-  "if",
-  "in",
-  "into",
-  "is",
-  "it",
-  "its",
-  "just",
-  "me",
-  "more",
-  "most",
-  "my",
-  "no",
-  "not",
-  "of",
-  "on",
-  "one",
-  "or",
-  "our",
-  "out",
-  "over",
-  "she",
-  "so",
-  "some",
-  "than",
-  "that",
-  "the",
-  "their",
-  "them",
-  "then",
-  "there",
-  "these",
-  "they",
-  "this",
-  "those",
-  "to",
-  "too",
-  "up",
-  "us",
-  "was",
-  "we",
-  "were",
-  "what",
-  "when",
-  "where",
-  "which",
-  "who",
-  "will",
-  "with",
-  "would",
-  "you",
-  "your"
-]);
-
-const CHINESE_BASIC_WORDS = new Set([
-  "的",
-  "了",
-  "和",
-  "是",
-  "在",
-  "有",
-  "不",
-  "就",
-  "人",
-  "都",
-  "一",
-  "也",
-  "很",
-  "與",
-  "与",
-  "及",
-  "我",
-  "你",
-  "他",
-  "她",
-  "它",
-  "我们",
-  "你们",
-  "他们",
-  "她们",
-  "這",
-  "这",
-  "那",
-  "哪",
-  "为",
-  "為",
-  "對",
-  "对"
-]);
-
-function detectReadingFamily(text: string): ReadingFamily | null {
-  const source = text.replace(/<[^>]*>/g, " ");
-  const latinCount = source.match(/[A-Za-z]/g)?.length ?? 0;
-  const hanCount = source.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g)?.length ?? 0;
-  if (hanCount >= 2 && hanCount >= latinCount) return "zh";
-  if (latinCount >= 2) return "en";
-  return null;
-}
-
-function settingReadingFamily(
-  language: AppSettings["interfaceLanguage"] | AppSettings["translationLanguage"] | string | undefined,
-  fallback = false
-): ReadingFamily | null {
-  if (!language) return null;
-  const resolved = language === "auto" ? (fallback ? resolveLanguage("auto") : null) : language;
-  if (resolved === "zh-CN" || resolved === "zh-TW") return "zh";
-  if (resolved === "en") return "en";
-  return null;
-}
-
-function targetReadingFamily(
-  settings: AppSettings,
-  sourceFamily: ReadingFamily
-): ReadingFamily | null {
-  const interfaceFamily = settingReadingFamily(
-    settings.interfaceLanguage === "auto"
-      ? resolveLanguage("auto")
-      : settings.interfaceLanguage
-  );
-  const manualTarget =
-    settings.translationLanguage === "auto"
-      ? null
-      : settingReadingFamily(settings.translationLanguage);
-  if (manualTarget) return manualTarget !== sourceFamily ? manualTarget : null;
-  if (!interfaceFamily) return null;
-  return sourceFamily === interfaceFamily ? "en" : interfaceFamily;
-}
-
-function simplifyGloss(value: string): string {
-  const cleaned = value
-    .replace(/\([^)]*\)/g, " ")
-    .replace(/（[^）]*）/g, " ")
-    .replace(/[\[\]{}]/g, " ")
-    .split(/[;/，,、|]/)[0]
-    .replace(/\s+/g, " ")
-    .trim();
-  return cleaned;
-}
-
-function englishReadingScore(word: string): number {
-  if (word.length < 4) return 0;
-  const lower = word.toLowerCase();
-  if (ENGLISH_BASIC_WORDS.has(lower)) return 0;
-  let score = 1;
-  if (word.length >= 8) score += 1;
-  if (word.length >= 10) score += 0.5;
-  if (/(tion|sion|ment|ness|ity|ive|ous|al|ary|ship|hood|ence|ance|ism|logy|graphy|ize|ise|ate|ify)$/i.test(lower)) {
-    score += 1;
-  }
-  if (/[A-Z]/.test(word.slice(1))) score += 0.25;
-  return score;
-}
-
-function chineseReadingScore(word: string): number {
-  if (word.length < 2) return 0;
-  if (CHINESE_BASIC_WORDS.has(word)) return 0;
-  let score = 1 + Math.min(1.5, (word.length - 1) * 0.5);
-  if (word.length >= 4) score += 0.75;
-  return score;
-}
-
-function readingTargetCount(
-  text: string,
-  candidateCount: number,
-  difficulty: number,
-  family: ReadingFamily
-): number {
-  const units =
-    family === "en"
-      ? text.match(/[A-Za-z][A-Za-z'’\-]*/g)?.length ?? 0
-      : text.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g)?.length ?? 0;
-  const divisor = [8, 11, 15, 21, 30][Math.max(1, Math.min(5, difficulty)) - 1];
-  const maxPerBlock = family === "en" ? 18 : 16;
-  return Math.max(1, Math.min(candidateCount, maxPerBlock, Math.ceil(units / divisor)));
-}
-
-function readingSpanKey(span: ReadingSpan, family: ReadingFamily): string {
-  return family === "en"
-    ? span.source.toLowerCase().replace(/[’']/g, "'")
-    : span.source;
-}
-
-function containsWebMindPlaceholder(value: string): boolean {
-  return /WEBMIND_[A-Z_]+(?:_\d+)?/i.test(value);
-}
-
-function sanitizeReadingMarkerValue(value: string): string {
-  return value
-    .replace(/`?\{\{\s*WEBMIND_[A-Z_]+(?:_\d+)?\s*\}\}`?/gi, " ")
-    .replace(/\[\s*WEBMIND_[A-Z_]+(?:_\d+)?\s*\]/gi, " ")
-    .replace(/WEBMIND_[A-Z_]+(?:_\d+)?/gi, " ")
-    .replace(/\[\[|\]\]|\|/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function isReadingTranslationLanguageValid(
-  translation: string,
-  targetFamily: ReadingFamily
-): boolean {
-  if (targetFamily === "en") return /[A-Za-z]/.test(translation);
-  return /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/.test(translation);
-}
-
-function selectEnglishReadingSpans(
-  text: string,
-  dictionary: HoverDefinitionDictionary,
-  difficulty: number
-): ReadingSpan[] {
-  const spans: ReadingSpan[] = [];
-  const matches = Array.from(
-    text.matchAll(/[A-Za-z][A-Za-z'’\-]*/g)
-  );
-  for (const match of matches) {
-    const original = match[0];
-    const candidates = englishLemmaCandidates(original);
-    const lemma = candidates.find((candidate) => Boolean(dictionary.en[candidate.toLowerCase()]));
-    const score = englishReadingScore(original);
-    if (score < [1.5, 1.8, 2.1, 2.6, 3.1][Math.max(1, Math.min(5, difficulty)) - 1]) {
-      continue;
-    }
-    const translation = lemma
-      ? simplifyGloss(dictionary.en[lemma.toLowerCase()])
-      : "";
-    spans.push({
-      start: match.index ?? 0,
-      end: (match.index ?? 0) + original.length,
-      source: original,
-      translation: translation
-        ? cleanReadingTranslation(original, translation)
-        : undefined,
-      score
-    });
-  }
-  return spans;
-}
-
-function selectChineseReadingSpans(
-  text: string,
-  dictionary: HoverDefinitionDictionary,
-  difficulty: number
-): ReadingSpan[] {
-  const spans: ReadingSpan[] = [];
-  const maxLength = [2, 2, 3, 4, 5][Math.max(1, Math.min(5, difficulty)) - 1];
-  const threshold = [1.1, 1.25, 1.45, 1.9, 2.3][Math.max(1, Math.min(5, difficulty)) - 1];
-  const regex = /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]+/g;
-  let match = regex.exec(text);
-  while (match) {
-    const run = match[0];
-    let index = 0;
-    while (index < run.length) {
-      let best: ReadingSpan | null = null;
-      const max = Math.min(maxLength, run.length - index);
-      for (let length = max; length >= 2; length -= 1) {
-        const source = run.slice(index, index + length);
-        if (containsWebMindPlaceholder(source)) continue;
-        const meaning = dictionary.zh[source];
-        const score = chineseReadingScore(source);
-        if (score < threshold) continue;
-        const translation = meaning
-          ? cleanReadingTranslation(source, simplifyGloss(meaning))
-          : "";
-        best = {
-          start: (match.index ?? 0) + index,
-          end: (match.index ?? 0) + index + length,
-          source,
-          translation: translation || undefined,
-          score
-        };
-        break;
-      }
-      if (best) {
-        spans.push(best);
-        index = best.end - (match.index ?? 0);
-      } else {
-        index += 1;
-      }
-    }
-    match = regex.exec(text);
-  }
-  return spans;
-}
-
-function selectReadingSpans(
-  text: string,
-  spans: ReadingSpan[],
-  difficulty: number,
-  family: ReadingFamily
-): ReadingSpan[] {
-  const targetCount = readingTargetCount(text, spans.length, difficulty, family);
-  const seenSources = new Set<string>();
-  return spans
-    .sort((left, right) => left.start - right.start || left.end - right.end)
-    .filter((span) => {
-      const key = readingSpanKey(span, family);
-      if (seenSources.has(key)) return false;
-      seenSources.add(key);
-      return true;
-    })
-    .sort((left, right) =>
-      Number(Boolean(right.translation)) - Number(Boolean(left.translation)) ||
-      right.score - left.score ||
-      left.start - right.start ||
-      left.end - right.end
+function loadEnglishWordFrequency(): Promise<EnglishWordFrequencyIndex> {
+  if (!englishWordFrequencyPromise) {
+    englishWordFrequencyPromise = fetch(
+      chrome.runtime.getURL("dictionary/wordfreq-en-25000.json")
     )
-    .slice(0, targetCount)
-    .sort((left, right) => left.start - right.start || left.end - right.end);
-}
-
-function buildReadingTextFromSelected(
-  text: string,
-  selected: ReadingSpan[],
-  family: ReadingFamily,
-  targetFamily?: ReadingFamily,
-  fallbackTranslations = new Map<string, string>()
-): string | null {
-  if (!selected.length) return null;
-  const result: string[] = [];
-  let cursor = 0;
-  for (const span of selected) {
-    if (span.start < cursor) continue;
-    const key = readingSpanKey(span, family);
-    const source = sanitizeReadingMarkerValue(span.source);
-    if (!source || containsWebMindPlaceholder(source)) continue;
-    const translation = sanitizeReadingMarkerValue(
-      span.translation ?? fallbackTranslations.get(key) ?? ""
-    );
-    const cleanedTranslation = translation
-      ? cleanReadingTranslation(span.source, translation)
-      : "";
-    if (!cleanedTranslation) continue;
-    if (
-      targetFamily &&
-      !isReadingTranslationLanguageValid(cleanedTranslation, targetFamily)
-    ) {
-      continue;
-    }
-    result.push(text.slice(cursor, span.start));
-    result.push(`[[WEBMIND_READING|${source}|${cleanedTranslation}]]`);
-    cursor = span.end;
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Word frequency request failed: ${response.status}`);
+        }
+        const entries = (await response.json()) as unknown;
+        if (!Array.isArray(entries)) {
+          throw new Error("Invalid word frequency table");
+        }
+        const index: EnglishWordFrequencyIndex = new Map();
+        for (const [rank, entry] of entries.entries()) {
+          if (!Array.isArray(entry)) continue;
+          const word = String(entry[0] ?? "").trim().toLowerCase();
+          if (word) {
+            index.set(word, rank + 1);
+          }
+        }
+        return index;
+      })
+      .catch((error) => {
+        emitDebugLog(
+          `[workflow] immersive reading word frequency load failed: ${errorMessage(error)}`
+        );
+        return new Map();
+      });
   }
-  result.push(text.slice(cursor));
-  const next = result.join("");
-  return next === text ? null : next;
-}
-
-function buildReadingText(
-  text: string,
-  spans: ReadingSpan[],
-  difficulty: number,
-  family: ReadingFamily
-): string | null {
-  return buildReadingTextFromSelected(
-    text,
-    selectReadingSpans(text, spans, difficulty, family),
-    family
-  );
+  return englishWordFrequencyPromise;
 }
 
 async function localReadingTranslations(
@@ -983,129 +321,27 @@ async function localReadingPlan(
   emitDebugLog(
     `[workflow] immersive reading local plan start blocks=${blocks.length}`
   );
-  let dictionary: HoverDefinitionDictionary;
   try {
-    dictionary = await loadHoverDefinitionDictionary();
+    const [dictionary, frequencies] = await Promise.all([
+      loadHoverDefinitionDictionary(),
+      loadEnglishWordFrequency()
+    ]);
+    const plan = buildLocalReadingPlan(
+      blocks,
+      currentSettings,
+      dictionary,
+      frequencies
+    );
+    emitDebugLog(
+      `[workflow] immersive reading local plan done planBlocks=${plan.blocks.length} fallbackTerms=${plan.fallbackTerms.length}`
+    );
+    return plan;
   } catch {
     emitDebugLog(
       "[workflow] immersive reading local plan dictionary load failed"
     );
     return { blocks: [], fallbackTerms: [] };
   }
-  const difficulty = Math.max(
-    1,
-    Math.min(5, Math.round(currentSettings.immersiveReadingDifficulty || 3))
-  );
-  const planBlocks: ReadingPlanBlock[] = [];
-  const fallbackTerms = new Map<string, ReadingFallbackTerm>();
-  for (const block of blocks) {
-    const family = detectReadingFamily(block.text);
-    const targetFamily = family ? targetReadingFamily(currentSettings, family) : null;
-    if (!family || !targetFamily || targetFamily === family) continue;
-    const spans =
-      family === "en"
-        ? selectEnglishReadingSpans(block.text, dictionary, difficulty)
-        : selectChineseReadingSpans(block.text, dictionary, difficulty);
-    const selected = selectReadingSpans(block.text, spans, difficulty, family);
-    if (!selected.length) continue;
-    planBlocks.push({
-      id: block.id,
-      text: block.text,
-      family,
-      targetFamily,
-      spans: selected
-    });
-    for (const span of selected) {
-      if (span.translation) continue;
-      const key = readingSpanKey(span, family);
-      if (fallbackTerms.has(key)) continue;
-      fallbackTerms.set(key, {
-        key,
-        source: span.source,
-        context: block.text.slice(
-          Math.max(0, span.start - 80),
-          Math.min(block.text.length, span.end + 80)
-        ),
-        family,
-        targetFamily
-      });
-    }
-  }
-  const fallbackTermList = Array.from(fallbackTerms.values());
-  emitDebugLog(
-    `[workflow] immersive reading local plan done planBlocks=${planBlocks.length} fallbackTerms=${fallbackTermList.length}`
-  );
-  return {
-    blocks: planBlocks,
-    fallbackTerms: fallbackTermList
-  };
-}
-
-function finalizeLocalReadingPlan(
-  blocks: ReadingPlanBlock[],
-  fallbackTranslations: ReadingFallbackTranslation[]
-): PageTranslation[] {
-  const fallbackMap = new Map<string, string>();
-  for (const item of fallbackTranslations) {
-    const key = String(item.key ?? item.source ?? "").trim();
-    const translation = String(item.translation ?? "").trim();
-    if (key && translation) fallbackMap.set(key, translation);
-  }
-  return blocks.flatMap((block) => {
-    const text = buildReadingTextFromSelected(
-      block.text,
-      block.spans,
-      block.family,
-      block.targetFamily,
-      fallbackMap
-    );
-    return text ? [{ id: block.id, text }] : [];
-  });
-}
-
-function extractJsonArrayText(value: string): string {
-  const fenced = value.match(/```(?:json)?\s*([\s\S]*?)```/i);
-  const source = fenced?.[1] ?? value;
-  const start = source.indexOf("[");
-  const end = source.lastIndexOf("]");
-  return start >= 0 && end > start ? source.slice(start, end + 1) : source;
-}
-
-function parseReadingFallbackTranslations(
-  value: string
-): ReadingFallbackTranslation[] {
-  const parsed = JSON.parse(extractJsonArrayText(value)) as unknown;
-  if (!Array.isArray(parsed)) return [];
-  return parsed.flatMap((item) => {
-    if (!item || typeof item !== "object") return [];
-    const record = item as Record<string, unknown>;
-    const key = String(record.key ?? record.source ?? "").trim();
-    const translation = sanitizeReadingMarkerValue(
-      String(record.translation ?? record.text ?? "")
-    );
-    return key && translation ? [{ key, translation }] : [];
-  });
-}
-
-function buildReadingFallbackPrompt(terms: ReadingFallbackTerm[]): string {
-  return [
-    "Translate only the listed immersive-reading terms. Do not choose new terms and do not rewrite the context.",
-    "targetFamily=en means translate the source term into concise natural English. targetFamily=zh means translate it into concise natural Chinese.",
-    "Never translate, modify, copy, or output WEBMIND_* placeholders. If a placeholder appears in context, ignore it.",
-    "For targetFamily=en, every translation must contain English letters. For targetFamily=zh, every translation must contain Chinese characters.",
-    "Use the context only to disambiguate. Return only a JSON array, no code fence, in this format: [{\"key\":\"same key\",\"translation\":\"short translation\"}].",
-    "<terms>",
-    JSON.stringify(
-      terms.map((term) => ({
-        key: term.key,
-        source: term.source,
-        sourceFamily: term.family,
-        targetFamily: term.targetFamily,
-        context: sanitizeReadingMarkerValue(term.context)
-      }))
-    ),
-    "</terms>"
-  ].join("\n");
 }
 
 async function requestReadingFallbackTranslations(
@@ -1365,92 +601,6 @@ function showPageTooltip(message: string, anchor?: DOMRect | null): void {
   window.setTimeout(() => tooltip.remove(), 5000);
 }
 
-function textFromElement(element: Element | null): string {
-  if (!element) return "";
-  const parts: string[] = [];
-  let citationIndex = 0;
-  const visit = (node: Node) => {
-    if (node instanceof Text) {
-      parts.push(node.textContent ?? "");
-      return;
-    }
-    if (!(node instanceof HTMLElement)) return;
-    if (node.matches("script, style, noscript, template, svg")) return;
-    const citationAnchor = node.matches("a[href]")
-      ? (node as HTMLAnchorElement)
-      : node.querySelector<HTMLAnchorElement>("a[href]");
-    if (
-      citationAnchor &&
-      (node.tagName === "SUP" || isCitationAnchor(citationAnchor))
-    ) {
-      citationIndex += 1;
-      const marker = (node.innerText || node.textContent || "")
-        .replace(/\s+/g, " ")
-        .trim();
-      parts.push(
-        CITATION_MARKER_PATTERN.test(marker)
-          ? marker
-          : /^\d+(?:\s*[-,–—]\s*\d+)*$/.test(marker)
-            ? `[${marker}]`
-            : marker || `[${citationIndex}]`
-      );
-      return;
-    }
-    if (node.tagName === "BR") {
-      parts.push("\n");
-      return;
-    }
-    for (const child of Array.from(node.childNodes)) visit(child);
-    if (/^(?:ADDRESS|ARTICLE|ASIDE|BLOCKQUOTE|DIV|FIGCAPTION|H[1-6]|LI|P|PRE|SECTION|TR)$/.test(node.tagName)) {
-      parts.push("\n\n");
-    } else if (/^(?:TD|TH)$/.test(node.tagName)) {
-      parts.push("\t");
-    }
-  };
-  for (const child of Array.from(element.childNodes)) visit(child);
-  return parts
-    .join("")
-    .replace(/\u00a0/g, " ")
-    .replace(/\r\n?/g, "\n")
-    .replace(/[^\S\n]+/g, " ")
-    .replace(/ *\n */g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-}
-
-function selectionTextWithLayout(selection: Selection | null): string {
-  if (!selection?.rangeCount) return "";
-  try {
-    const container = document.createElement("div");
-    container.append(selection.getRangeAt(0).cloneContents());
-    const structured = textFromElement(container);
-    if (structured) return structured;
-  } catch {
-    // Fall back to the browser's plain-text selection below.
-  }
-  return selection
-    .toString()
-    .replace(/\r\n?/g, "\n")
-    .replace(/[^\S\n]+/g, " ")
-    .replace(/ *\n */g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-}
-
-function pageSelectionText(): string {
-  const active = document.activeElement;
-  if (
-    active instanceof HTMLInputElement ||
-    active instanceof HTMLTextAreaElement
-  ) {
-    const start = active.selectionStart ?? 0;
-    const end = active.selectionEnd ?? start;
-    const selected = active.value.slice(start, end).trim();
-    if (selected) return selected;
-  }
-  return selectionTextWithLayout(window.getSelection());
-}
-
 function scheduleSelectionContextReport(): void {
   if (selectionReportTimer !== null) {
     window.clearTimeout(selectionReportTimer);
@@ -1478,68 +628,6 @@ function scheduleSelectionContextReport(): void {
       // The extension may have been reloaded while this page stayed open.
     }
   }, 100);
-}
-
-function selectedInputText(
-  target: EventTarget | null
-): SelectionSnapshot | null {
-  if (
-    !(target instanceof HTMLInputElement) &&
-    !(target instanceof HTMLTextAreaElement)
-  ) {
-    return null;
-  }
-  const start = target.selectionStart ?? 0;
-  const end = target.selectionEnd ?? start;
-  const text = target.value.slice(start, end).trim();
-  if (!text) return null;
-  return {
-    text,
-    rect: target.getBoundingClientRect(),
-    editable: { element: target, start, end }
-  };
-}
-
-function selectedCharacterCount(text: string): number {
-  return Array.from(text).length;
-}
-
-function currentSelection(
-  target: EventTarget | null,
-  minimumLength = 1
-): SelectionSnapshot | null {
-  const inputSelection = selectedInputText(target);
-  if (
-    inputSelection &&
-    selectedCharacterCount(inputSelection.text) >= minimumLength
-  ) {
-    return inputSelection;
-  }
-  const selection = window.getSelection();
-  const text = selectionTextWithLayout(selection);
-  if (
-    !selection ||
-    selection.rangeCount === 0 ||
-    selectedCharacterCount(text) < Math.max(1, minimumLength)
-  ) {
-    return null;
-  }
-  const range = selection.getRangeAt(0).cloneRange();
-  const rect = range.getBoundingClientRect();
-  if (!rect.width && !rect.height) return null;
-  const container =
-    range.commonAncestorContainer instanceof Element
-      ? range.commonAncestorContainer
-      : range.commonAncestorContainer.parentElement;
-  const editableElement = container?.closest<HTMLElement>("[contenteditable='true']");
-  return {
-    text: text.slice(0, 12000),
-    rect,
-    range,
-    editable: editableElement
-      ? { element: editableElement, range }
-      : undefined
-  };
 }
 
 function translatableElementFromTarget(target: EventTarget | null): HTMLElement | null {
@@ -1572,188 +660,6 @@ function translatableElementFromTarget(target: EventTarget | null): HTMLElement 
   return hasUsableText(inline) ? inline : null;
 }
 
-function replaceSelection(
-  snapshot: SelectionSnapshot,
-  replacement: string
-): void {
-  const editable = snapshot.editable;
-  if (!editable) return;
-  if (
-    editable.element instanceof HTMLInputElement ||
-    editable.element instanceof HTMLTextAreaElement
-  ) {
-    editable.element.focus();
-    editable.element.setRangeText(
-      replacement,
-      editable.start ?? 0,
-      editable.end ?? editable.start ?? 0,
-      "end"
-    );
-    editable.element.dispatchEvent(
-      new InputEvent("input", { bubbles: true, inputType: "insertText", data: replacement })
-    );
-    return;
-  }
-  if (!editable.range) return;
-  editable.element.focus();
-  editable.range.deleteContents();
-  const node = document.createTextNode(replacement);
-  editable.range.insertNode(node);
-  editable.range.setStartAfter(node);
-  editable.range.collapse(true);
-  const selection = window.getSelection();
-  selection?.removeAllRanges();
-  selection?.addRange(editable.range);
-  editable.element.dispatchEvent(
-    new InputEvent("input", { bubbles: true, inputType: "insertText", data: replacement })
-  );
-}
-
-function editableText(
-  element: HTMLInputElement | HTMLTextAreaElement | HTMLElement
-): string {
-  if (
-    element instanceof HTMLInputElement ||
-    element instanceof HTMLTextAreaElement
-  ) {
-    return element.value;
-  }
-  return element.innerText || element.textContent || "";
-}
-
-function setEditableText(
-  element: HTMLInputElement | HTMLTextAreaElement | HTMLElement,
-  text: string
-): void {
-  if (
-    element instanceof HTMLInputElement ||
-    element instanceof HTMLTextAreaElement
-  ) {
-    element.focus();
-    element.value = text;
-    const end = text.length;
-    try {
-      element.setSelectionRange(end, end);
-    } catch {
-      // Some input types do not support selection ranges.
-    }
-    element.dispatchEvent(
-      new InputEvent("input", {
-        bubbles: true,
-        inputType: "insertReplacementText",
-        data: text
-      })
-    );
-    element.dispatchEvent(new Event("change", { bubbles: true }));
-    return;
-  }
-  element.focus();
-  element.textContent = text;
-  element.dispatchEvent(
-    new InputEvent("input", {
-      bubbles: true,
-      inputType: "insertReplacementText",
-      data: text
-    })
-  );
-}
-
-function supportedSingleLineInput(element: HTMLInputElement): boolean {
-  const type = (element.getAttribute("type") || "text").toLowerCase();
-  return ["", "text", "search", "email", "url", "tel"].includes(type);
-}
-
-function isSearchInputElement(element: HTMLElement): boolean {
-  const searchParamNames = searchParamNamesFromUrl(location.href);
-  if (!searchParamNames.length) return false;
-  const normalizedParams = new Set(
-    searchParamNames.map((param) => param.toLowerCase())
-  );
-  if (
-    !(
-      element instanceof HTMLInputElement ||
-      element instanceof HTMLTextAreaElement
-    )
-  ) {
-    return false;
-  }
-  const controlNames = [
-    element.name,
-    element.id,
-    element.getAttribute("aria-label") ?? "",
-    element.getAttribute("placeholder") ?? "",
-    element.getAttribute("title") ?? ""
-  ].map((value) => value.trim().toLowerCase());
-  if (controlNames.some((value) => normalizedParams.has(value))) return true;
-  const inputType =
-    element instanceof HTMLInputElement
-      ? (element.getAttribute("type") || "text").toLowerCase()
-      : "";
-  return Boolean(
-    inputType === "search" ||
-      element.closest("[role='search'], form[action*='search']")
-  );
-}
-
-function autoReplyTargetFromEvent(
-  target: EventTarget | null,
-  disableSingleLine: boolean
-): AutoReplyTarget | null {
-  if (!(target instanceof HTMLElement)) return null;
-  let element: HTMLInputElement | HTMLTextAreaElement | HTMLElement | null = null;
-  let singleLine = false;
-  if (target instanceof HTMLInputElement) {
-    if (
-      target.disabled ||
-      target.readOnly ||
-      !supportedSingleLineInput(target)
-    ) {
-      return null;
-    }
-    singleLine = true;
-    if (disableSingleLine) return null;
-    element = target;
-  } else if (target instanceof HTMLTextAreaElement) {
-    if (target.disabled || target.readOnly) return null;
-    element = target;
-  } else {
-    const editable = target.closest<HTMLElement>("[contenteditable]");
-    if (
-      editable &&
-      editable.isContentEditable &&
-      editable.tagName !== "BODY"
-    ) {
-      element = editable;
-    }
-  }
-  if (!element) return null;
-  if (isSearchInputElement(element)) return null;
-  const rect = element.getBoundingClientRect();
-  if (
-    rect.width < 80 ||
-    rect.height < 24 ||
-    rect.bottom < 0 ||
-    rect.top > window.innerHeight ||
-    rect.right < 0 ||
-    rect.left > window.innerWidth
-  ) {
-    return null;
-  }
-  return {
-    element,
-    singleLine,
-    text: editableText(element),
-    rect: {
-      left: rect.left,
-      top: rect.top,
-      right: rect.right,
-      bottom: rect.bottom,
-      width: rect.width,
-      height: rect.height
-    }
-  };
-}
-
 async function copyText(text: string): Promise<void> {
   try {
     await navigator.clipboard.writeText(text);
@@ -1772,49 +678,6 @@ async function copyText(text: string): Promise<void> {
   }
 }
 
-function searchQuery(): string | null {
-  return searchQueryFromUrl(location.href);
-}
-
-function searchResultsContext(
-  results: WebSearchResult[],
-  language?: AppSettings["interfaceLanguage"]
-): string {
-  return results
-    .map((result, index) =>
-      [
-        `${index + 1}. ${result.title}`,
-        result.url,
-        result.snippet
-          ? `${uiText(language, "searchResultSnippet")}：${result.snippet}`
-          : ""
-      ]
-        .filter(Boolean)
-        .join("\n")
-    )
-    .join("\n\n");
-}
-
-function markdownUrl(url: string): string {
-  return url.replace(/\s/g, "%20").replace(/\)/g, "%29");
-}
-
-function linkCitationMarkers(
-  content: string,
-  results: WebSearchResult[]
-): string {
-  return content.replace(
-    /\[((?:搜索|搜尋|Search|search|検索|검색)\s*(\d+)|(\d+))\]/g,
-    (match, label: string, namedIndex: string | undefined, bareIndex: string | undefined, offset: number, source: string) => {
-      if (source[offset + match.length] === "(") return match;
-      const index = Number(namedIndex ?? bareIndex) - 1;
-      const result = results[index];
-      if (!result?.url) return match;
-      return `[${label}](${markdownUrl(result.url)})`;
-    }
-  );
-}
-
 function SearchAnswerMarkdown({
   content,
   results
@@ -1827,64 +690,6 @@ function SearchAnswerMarkdown({
       <Markdown content={linkCitationMarkers(content, results)} />
     </div>
   );
-}
-
-function extractPageContext(
-  ignoreSelection = false,
-  language?: AppSettings["interfaceLanguage"]
-): PageContext {
-  const selection = ignoreSelection ? undefined : pageSelectionText() || undefined;
-  const description =
-    document.querySelector<HTMLMetaElement>('meta[name="description"]')?.content ??
-    document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.content;
-  const siteName =
-    document.querySelector<HTMLMetaElement>('meta[property="og:site_name"]')?.content ??
-    location.hostname;
-  if (selection) {
-    return {
-      kind: "selection",
-      title: document.title || location.hostname,
-      url: location.href,
-      text: truncateText(selection, 20000, language),
-      selection,
-      description: uiText(language, "selectionDescription").replace(
-        "{count}",
-        String(selection.length)
-      ),
-      language: document.documentElement.lang || navigator.language,
-      siteName
-    };
-  }
-  let text = "";
-  try {
-    const clone = document.cloneNode(true) as Document;
-    const article = new Readability(clone, { charThreshold: 300 }).parse();
-    if (article?.content) {
-      const container = document.createElement("div");
-      container.innerHTML = article.content;
-      text = textFromElement(container);
-    }
-    if (!text) text = article?.textContent ?? "";
-  } catch {
-    // Dynamic applications often do not form a valid Readability document.
-  }
-  if (text.trim().length < 500) {
-    text =
-      textFromElement(document.querySelector("main")) ||
-      textFromElement(document.querySelector('[role="main"]')) ||
-      textFromElement(document.body) ||
-      "";
-  }
-  const query = searchQuery();
-  return {
-    kind: query ? "search" : "webpage",
-    title: document.title || location.hostname,
-    url: location.href,
-    text: truncateText(text, 100000, language),
-    description,
-    language: document.documentElement.lang || navigator.language,
-    siteName
-  };
 }
 
 function isVisible(element: HTMLElement): boolean {
@@ -1900,6 +705,38 @@ function isVisible(element: HTMLElement): boolean {
   return rect.width > 0 && rect.height > 0;
 }
 
+function viewportPriority(element: HTMLElement, order: number): number {
+  const rects = Array.from(element.getClientRects()).filter(
+    (rect) => rect.width > 0 && rect.height > 0
+  );
+  const viewportWidth =
+    window.innerWidth || document.documentElement.clientWidth || 0;
+  const viewportHeight =
+    window.innerHeight || document.documentElement.clientHeight || 0;
+  if (!rects.length || !viewportWidth || !viewportHeight) return order;
+  const viewportCenterY = viewportHeight / 2;
+  let bestDistance = Number.POSITIVE_INFINITY;
+  let intersectsViewport = false;
+  for (const rect of rects) {
+    const horizontalOverlap = rect.right > 0 && rect.left < viewportWidth;
+    const verticalOverlap = rect.bottom > 0 && rect.top < viewportHeight;
+    if (horizontalOverlap && verticalOverlap) {
+      intersectsViewport = true;
+    }
+    if (rect.top <= viewportCenterY && rect.bottom >= viewportCenterY) {
+      bestDistance = 0;
+    } else {
+      bestDistance = Math.min(
+        bestDistance,
+        Math.abs(rect.top - viewportCenterY),
+        Math.abs(rect.bottom - viewportCenterY)
+      );
+    }
+  }
+  const visibilityBucket = intersectsViewport ? 0 : 1;
+  return visibilityBucket * 1_000_000_000 + bestDistance * 10_000 + order;
+}
+
 function textNodes(root: Node): Text[] {
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   const nodes: Text[] = [];
@@ -1911,296 +748,8 @@ function textNodes(root: Node): Text[] {
   return nodes;
 }
 
-const CITATION_MARKER_PATTERN = /^(?:\[\s*\d+(?:\s*[-,–]\s*\d+)*\s*\]|[（(【]?\s*\d+(?:\s*[-,–]\s*\d+)*\s*[)）】]?|[¹²³⁴⁵⁶⁷⁸⁹⁰]+)$/;
-const CITATION_TOKEN_PATTERN = /(?:`?\{\{\s*WEBMIND_CITATION_(\d+)\s*\}\}`?|\[\s*WEBMIND_CITATION_(\d+)\s*\]|WEBMIND_CITATION_(\d+))/gi;
-const IMMERSIVE_READING_TOKEN_PATTERN =
-  /\[\[WEBMIND_READING\|([^|\]\n]{1,160})\|([^|\]\n]{1,160})\]\]/g;
-const IMMERSIVE_READING_OR_CITATION_PATTERN =
-  /\[\[WEBMIND_READING\|([^|\]\n]{1,160})\|([^|\]\n]{1,160})\]\]|(?:`?\{\{\s*WEBMIND_CITATION_(\d+)\s*\}\}`?|\[\s*WEBMIND_CITATION_(\d+)\s*\]|WEBMIND_CITATION_(\d+))/gi;
-
 function normalizedBlockText(value: string): string {
   return value.replace(/\s+/g, " ").trim();
-}
-
-function isCitationAnchor(anchor: HTMLAnchorElement): boolean {
-  const marker = normalizedBlockText(anchor.innerText || anchor.textContent || "");
-  const metadata = [
-    anchor.id,
-    anchor.className,
-    anchor.getAttribute("role"),
-    anchor.getAttribute("rel"),
-    anchor.getAttribute("aria-label"),
-    anchor.getAttribute("title"),
-    anchor.getAttribute("href"),
-    ...Array.from(anchor.attributes).flatMap((attribute) =>
-      attribute.name.startsWith("data-")
-        ? [`${attribute.name} ${attribute.value}`]
-        : []
-    )
-  ]
-    .filter(Boolean)
-    .join(" ");
-  return Boolean(
-    anchor.closest("sup") ||
-      anchor.matches("[role='doc-noteref']") ||
-      CITATION_MARKER_PATTERN.test(marker) ||
-      /cite|citation|reference|footnote|source|\bref[-_:#]|引用|引文|来源|來源|參考|参考|出典|출처|참고/i.test(
-        metadata
-      ) ||
-      ((!marker || marker.length <= 8) &&
-        Boolean(anchor.querySelector("svg, img")) &&
-        anchor.getBoundingClientRect().width <= 64) ||
-      (!marker &&
-        anchor.getBoundingClientRect().width > 0 &&
-        anchor.getBoundingClientRect().width <= 64 &&
-        anchor.getBoundingClientRect().height <= 40)
-  );
-}
-
-function citationMarker(node: HTMLElement, index: number): string {
-  return (
-    normalizedBlockText(node.innerText || node.textContent || "") ||
-    `[${index + 1}]`
-  );
-}
-
-function plainCitationElement(marker: string): HTMLElement {
-  const element = document.createElement("sup");
-  element.className = "webmind-translation-citation";
-  element.textContent = marker;
-  return element;
-}
-
-function citationElements(root: HTMLElement): HTMLElement[] {
-  const descendants = Array.from(
-    root.querySelectorAll<HTMLElement>("sup, a[href], [role='doc-noteref']")
-  );
-  const nodes = root.matches("sup, a[href], [role='doc-noteref']")
-    ? [root, ...descendants]
-    : descendants;
-  const candidates = nodes.filter((node) => {
-    const anchor = node.matches("a[href]")
-      ? (node as HTMLAnchorElement)
-      : node.querySelector<HTMLAnchorElement>("a[href]");
-    return Boolean(anchor && isCitationAnchor(anchor));
-  });
-  return candidates.filter(
-    (node) =>
-      !candidates.some(
-        (possibleParent) =>
-          possibleParent !== node && possibleParent.contains(node)
-      )
-  );
-}
-
-function isVisuallyHiddenTranslationElement(element: HTMLElement): boolean {
-  if (
-    element.matches(
-      "script, style, noscript, template, svg, [hidden], [aria-hidden='true'], .webmind-translation"
-    )
-  ) {
-    return true;
-  }
-  const style = getComputedStyle(element);
-  if (
-    style.display === "none" ||
-    style.visibility === "hidden" ||
-    style.contentVisibility === "hidden" ||
-    Number(style.opacity) === 0
-  ) {
-    return true;
-  }
-  const rect = element.getBoundingClientRect();
-  return Boolean(
-    rect.width <= 2 &&
-      rect.height <= 2 &&
-      ["absolute", "fixed"].includes(style.position) &&
-      (style.overflow === "hidden" ||
-        style.clip !== "auto" ||
-        style.clipPath !== "none")
-  );
-}
-
-function translationTextFromElement(
-  root: HTMLElement,
-  citationNodes: HTMLElement[]
-): string {
-  const citationTokens = new Map(
-    citationNodes.map((node, index) => [
-      node,
-      `{{WEBMIND_CITATION_${index + 1}}}`
-    ])
-  );
-  const parts: string[] = [];
-  const visit = (node: Node) => {
-    if (node instanceof Text) {
-      parts.push(node.textContent ?? "");
-      return;
-    }
-    if (!(node instanceof HTMLElement)) return;
-    const citationToken = citationTokens.get(node);
-    if (citationToken) {
-      parts.push(citationToken);
-      return;
-    }
-    if (isVisuallyHiddenTranslationElement(node)) return;
-    if (node.tagName === "BR") parts.push(" ");
-    for (const child of Array.from(node.childNodes)) visit(child);
-    if (/^(?:ADDRESS|ARTICLE|ASIDE|BLOCKQUOTE|DIV|FIGCAPTION|H[1-6]|LI|P|TD)$/.test(node.tagName)) {
-      parts.push(" ");
-    }
-  };
-  for (const child of Array.from(root.childNodes)) visit(child);
-  return normalizedBlockText(parts.join(""));
-}
-
-function prepareTranslationBlock(
-  element: HTMLElement,
-  id: string,
-  selection = false
-): PageTextBlock | null {
-  const citationNodes = citationElements(element);
-  let text = translationTextFromElement(element, citationNodes);
-  if (text.length < 3 || text.length > 900) return null;
-  const citations = citationNodes.map((node, index) => ({
-    token: `{{WEBMIND_CITATION_${index + 1}}}`,
-    marker: citationMarker(node, index),
-    node: node.cloneNode(true) as HTMLElement
-  }));
-  const inlineProtection = protectTranslationText(text);
-  if (inlineProtection.citations.length) {
-    const offset = citations.length;
-    text = inlineProtection.text.replace(
-      /WEBMIND_CITATION_(\d+)/g,
-      (_match, rawIndex: string) =>
-        `WEBMIND_CITATION_${offset + Number(rawIndex)}`
-    );
-    citations.push(
-      ...inlineProtection.citations.map((marker, index) => ({
-        token: `{{WEBMIND_CITATION_${offset + index + 1}}}`,
-        marker,
-        node: plainCitationElement(marker)
-      }))
-    );
-  }
-  const originalText = citations.reduce(
-    (value, citation) => value.replace(citation.token, citation.marker),
-    text
-  );
-  translationSources.set(id, {
-    element,
-    originalText: normalizedBlockText(originalText),
-    citations,
-    selection
-  });
-  return { id, text };
-}
-
-function wrapCurrentSelection(textFallback = ""): HTMLElement | null {
-  const selection = window.getSelection();
-  const selectedText = selection?.toString().replace(/\s+/g, " ").trim();
-  if (selection && selection.rangeCount && selectedText) {
-    const range = selection.getRangeAt(0).cloneRange();
-    const wrapper = document.createElement("span");
-    wrapper.className = "webmind-immersive-source";
-    wrapper.dataset.webmindBlockId = `md-${Date.now()}-${translationSequence++}`;
-    try {
-      wrapper.append(range.extractContents());
-      range.insertNode(wrapper);
-      selection.removeAllRanges();
-      return wrapper;
-    } catch {
-      return null;
-    }
-  }
-  const targetText = textFallback.replace(/\s+/g, " ").trim();
-  if (!targetText) return null;
-  const exact = textNodes(document.body).find((node) =>
-    node.textContent?.includes(textFallback)
-  );
-  if (!exact || !exact.textContent) return null;
-  const index = exact.textContent.indexOf(textFallback);
-  if (index < 0) return null;
-  const range = document.createRange();
-  range.setStart(exact, index);
-  range.setEnd(exact, index + textFallback.length);
-  const wrapper = document.createElement("span");
-  wrapper.className = "webmind-immersive-source";
-  wrapper.dataset.webmindBlockId = `md-${Date.now()}-${translationSequence++}`;
-  wrapper.append(range.extractContents());
-  range.insertNode(wrapper);
-  return wrapper;
-}
-
-function prepareTranslationBlocks(
-  scope: "page" | "selection" = "page",
-  textFallback = ""
-): PageTextBlock[] {
-  installPageStyles();
-  if (scope === "selection") {
-    const wrapper = wrapCurrentSelection(textFallback);
-    if (!wrapper) return [];
-    const id = wrapper.dataset.webmindBlockId ?? "";
-    const block = prepareTranslationBlock(wrapper, id, true);
-    return block ? [block] : [];
-  }
-  const root =
-    document.querySelector("article") ??
-    document.querySelector("main") ??
-    document.querySelector('[role="main"]') ??
-    document.body;
-  const candidates = Array.from(
-    root.querySelectorAll<HTMLElement>(TRANSLATABLE_PAGE_SELECTOR)
-  );
-  const seen = new Set<string>();
-  const blocks: PageTextBlock[] = [];
-  for (const element of candidates) {
-    if (blocks.length >= 160 || !isVisible(element)) continue;
-    if (element.closest(".webmind-translation, .webmind-immersive-reading-token")) {
-      continue;
-    }
-    if (element.closest("nav, footer, aside, [aria-hidden='true']")) continue;
-    const id =
-      element.dataset.webmindBlockId ??
-      `md-${Date.now()}-${translationSequence++}`;
-    element.dataset.webmindBlockId = id;
-    const block = prepareTranslationBlock(element, id);
-    if (!block || seen.has(block.text)) continue;
-    seen.add(block.text);
-    blocks.push(block);
-  }
-  return blocks;
-}
-
-function prepareParagraphTranslationBlocks(
-  target: EventTarget | null,
-  textFallback = ""
-): PageTextBlock[] {
-  installPageStyles();
-  const selection = currentSelection(target);
-  if (selection?.text) {
-    return prepareTranslationBlocks("selection", selection.text);
-  }
-  const element =
-    translatableElementFromTarget(target) ??
-    translatableElementFromTarget(lastPointerTarget) ??
-    translatableElementFromTarget(document.activeElement);
-  if (!element || !isVisible(element)) return [];
-  const id =
-    element.dataset.webmindBlockId ??
-    `md-${Date.now()}-${translationSequence++}`;
-  element.dataset.webmindBlockId = id;
-  const block = prepareTranslationBlock(element, id);
-  if (block) return [block];
-  const fallback = normalizedBlockText(textFallback);
-  if (fallback.length < 3 || fallback.length > 900) return [];
-  translationSources.set(id, {
-    element,
-    originalText: fallback,
-    citations: [],
-    selection: false
-  });
-  return [{ id, text: fallback }];
 }
 
 function translationDisplayStyle(
@@ -2232,6 +781,14 @@ function readingTextEffects(
   );
 }
 
+function readingBackgroundStyle(
+  value: unknown
+): ImmersiveReadingBackgroundStyle {
+  return value === "uniform" || value === "leveled"
+    ? value
+    : settings?.immersiveReadingBackgroundStyle ?? "none";
+}
+
 function translationClassNames(
   displayStyle: ImmersiveTranslationDisplayStyle,
   effects: ImmersiveTranslationTextEffect[]
@@ -2243,440 +800,82 @@ function translationClassNames(
   ];
 }
 
-function comparableTranslationText(element: HTMLElement): string {
-  const nodes = citationElements(element);
-  const protectedText = translationTextFromElement(element, nodes);
-  return nodes.reduce(
-    (value, node, index) =>
-      value.replace(
-        `{{WEBMIND_CITATION_${index + 1}}}`,
-        citationMarker(node, index)
-      ),
-    protectedText
+function translationPreparationDependencies(): TranslationPreparationDependencies {
+  return {
+    sources: translationSources,
+    installStyles: installPageStyles,
+    isVisible,
+    viewportPriority,
+    textNodes,
+    currentSelection,
+    translatableElementFromTarget,
+    lastPointerTarget: () => lastPointerTarget,
+    nextBlockId: nextTranslationBlockId
+  };
+}
+
+function prepareTranslationBlocks(
+  scope: "page" | "article" | "selection" = "page",
+  textFallback = "",
+  options: TranslationBlockOptions = {}
+): PageTextBlock[] {
+  return prepareTranslationBlocksPrepared(
+    scope,
+    textFallback,
+    options,
+    translationPreparationDependencies()
+  );
+}
+
+function prepareParagraphTranslationBlocks(
+  target: EventTarget | null,
+  textFallback = "",
+  options: TranslationBlockOptions = {}
+): PageTextBlock[] {
+  return prepareParagraphTranslationBlocksPrepared(
+    target,
+    textFallback,
+    options,
+    translationPreparationDependencies()
   );
 }
 
 function findTranslationSource(id: string): HTMLElement | null {
-  const record = translationSources.get(id);
-  const byId = document.querySelector<HTMLElement>(
-    `[data-webmind-block-id="${CSS.escape(id)}"]`
-  );
-  if (byId) {
-    if (record) record.element = byId;
-    return byId;
-  }
-  if (record?.element.isConnected) {
-    record.element.dataset.webmindBlockId = id;
-    return record.element;
-  }
-  if (!record?.originalText) return null;
-
-  if (record.selection) {
-    const wrapper = wrapCurrentSelection(record.originalText);
-    if (wrapper) {
-      wrapper.dataset.webmindBlockId = id;
-      prepareTranslationBlock(wrapper, id, true);
-      return wrapper;
-    }
-  }
-
-  const sourceTag = record.element.tagName.toLowerCase();
-  const candidates = Array.from(
-    document.querySelectorAll<HTMLElement>(sourceTag)
-  ).filter(
-    (element) =>
-      isVisible(element) && !element.closest(".webmind-translation")
-  );
-  const exact = candidates.find(
-    (element) => comparableTranslationText(element) === record.originalText
-  );
-  const fallback = exact ?? candidates
-    .filter((element) =>
-      comparableTranslationText(element).includes(record.originalText)
-    )
-    .sort(
-      (left, right) =>
-        comparableTranslationText(left).length -
-        comparableTranslationText(right).length
-    )[0];
-  if (!fallback) return null;
-  fallback.dataset.webmindBlockId = id;
-  record.element = fallback;
-  return fallback;
-}
-
-function citationTokenIndex(match: RegExpExecArray): number {
-  return Number(match[1] ?? match[2] ?? match[3]);
-}
-
-function textWithCitationFallbacks(
-  text: string,
-  citations: PreservedCitation[]
-): string {
-  let value = text.trim();
-  const protectedIndexes = new Set<number>();
-  CITATION_TOKEN_PATTERN.lastIndex = 0;
-  let tokenMatch = CITATION_TOKEN_PATTERN.exec(value);
-  while (tokenMatch) {
-    protectedIndexes.add(citationTokenIndex(tokenMatch));
-    tokenMatch = CITATION_TOKEN_PATTERN.exec(value);
-  }
-  citations.forEach((citation, index) => {
-    const citationIndex = index + 1;
-    if (
-      protectedIndexes.has(citationIndex) ||
-      !citation.marker ||
-      !CITATION_MARKER_PATTERN.test(citation.marker)
-    ) {
-      return;
-    }
-    const markerPosition = value.indexOf(citation.marker);
-    if (markerPosition < 0) return;
-    value = `${value.slice(0, markerPosition)}${citation.token}${value.slice(
-      markerPosition + citation.marker.length
-    )}`;
-  });
-  return value;
-}
-
-function cloneCitation(citation: PreservedCitation): HTMLElement {
-  const clone = citation.node.cloneNode(true) as HTMLElement;
-  const descendants = [clone, ...Array.from(clone.querySelectorAll<HTMLElement>("*"))];
-  for (const element of descendants) {
-    element.removeAttribute("id");
-    for (const attribute of Array.from(element.attributes)) {
-      if (attribute.name.toLowerCase().startsWith("on")) {
-        element.removeAttribute(attribute.name);
-      }
-    }
-  }
-  clone.querySelectorAll("script, style, iframe, object, embed").forEach((node) =>
-    node.remove()
-  );
-  const link = clone.matches("a[href]")
-    ? (clone as HTMLAnchorElement)
-    : clone.querySelector<HTMLAnchorElement>("a[href]");
-  if (
-    link &&
-    !normalizedBlockText(link.innerText || link.textContent || "") &&
-    !link.querySelector("svg, img")
-  ) {
-    link.textContent = citation.marker;
-  }
-  clone.classList.add("webmind-translation-citation");
-  if (!clone.matches("a[href]")) return clone;
-  const wrapper = document.createElement("sup");
-  wrapper.className = "webmind-translation-citation";
-  wrapper.append(clone);
-  return wrapper;
-}
-
-function translatedContent(id: string, text: string): DocumentFragment {
-  const fragment = document.createDocumentFragment();
-  const citations = translationSources.get(id)?.citations ?? [];
-  const restoredText = restoreTranslationText(text, {
-    citations: citations.map((citation) => citation.marker),
-    paragraphBreaks: []
-  });
-  const protectedText = textWithCitationFallbacks(restoredText, citations);
-  const inserted = new Set<number>();
-  let offset = 0;
-  CITATION_TOKEN_PATTERN.lastIndex = 0;
-  let match = CITATION_TOKEN_PATTERN.exec(protectedText);
-  while (match) {
-    if (match.index > offset) {
-      fragment.append(document.createTextNode(protectedText.slice(offset, match.index)));
-    }
-    const index = citationTokenIndex(match);
-    const citation = citations[index - 1];
-    if (citation && !inserted.has(index)) {
-      fragment.append(cloneCitation(citation));
-      inserted.add(index);
-    }
-    offset = match.index + match[0].length;
-    match = CITATION_TOKEN_PATTERN.exec(protectedText);
-  }
-  if (offset < protectedText.length) {
-    fragment.append(document.createTextNode(protectedText.slice(offset)));
-  }
-  citations.forEach((citation, index) => {
-    if (inserted.has(index + 1)) return;
-    if (fragment.childNodes.length) fragment.append(document.createTextNode(" "));
-    fragment.append(cloneCitation(citation));
-  });
-  return fragment;
-}
-
-function readingEffectClassNames(
-  scope: "outer" | "inner",
-  effects: ImmersiveTranslationTextEffect[]
-): string[] {
-  return [
-    `webmind-immersive-reading-${scope}`,
-    ...effects.map((effect) => `webmind-translation-effect-${effect}`)
-  ];
-}
-
-function createReadingToken(
-  original: string,
-  translation: string,
-  mode: ImmersiveReadingMode,
-  outerEffects: ImmersiveTranslationTextEffect[],
-  innerEffects: ImmersiveTranslationTextEffect[]
-): HTMLSpanElement {
-  const token = document.createElement("span");
-  token.className = "webmind-immersive-reading-token";
-  const outer = document.createElement("span");
-  outer.className = readingEffectClassNames("outer", outerEffects).join(" ");
-  outer.textContent =
-    mode === "original-translation" ? original : translation;
-  token.append(outer);
-  if (mode !== "translation") {
-    const inner = document.createElement("span");
-    inner.className = readingEffectClassNames("inner", innerEffects).join(" ");
-    inner.textContent = `(${
-      mode === "original-translation" ? translation : original
-    })`;
-    token.append(inner);
-  }
-  return token;
-}
-
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function cleanReadingTranslation(original: string, translation: string): string {
-  const source = original.trim();
-  const fallback = translation.trim();
-  if (!source || !fallback) return fallback;
-  const sourcePattern = escapeRegExp(source);
-  let value = fallback;
-  const originalWrappedTranslation = value.match(
-    new RegExp(`^${sourcePattern}\\s*[（(]\\s*(.+?)\\s*[)）]$`, "i")
-  );
-  if (originalWrappedTranslation?.[1]) {
-    value = originalWrappedTranslation[1].trim();
-  }
-  value = value
-    .replace(new RegExp(`\\s*[（(]\\s*${sourcePattern}\\s*[)）]\\s*`, "gi"), " ")
-    .replace(new RegExp(`^${sourcePattern}\\s+`, "i"), "")
-    .replace(new RegExp(`\\s+${sourcePattern}$`, "i"), "")
-    .replace(/\s+/g, " ")
-    .trim();
-  return value || fallback;
-}
-
-function readingNodeContaining(source: HTMLElement, text: string): Text | null {
-  if (!text) return null;
-  return (
-    textNodes(source).find((candidate) => {
-      const parent = candidate.parentElement;
-      return (
-        candidate.data.includes(text) &&
-        !parent?.closest(
-          ".webmind-immersive-reading-token, .webmind-translation-citation, script, style, noscript"
-        )
-      );
-    }) ?? null
-  );
-}
-
-function readingContent(
-  id: string,
-  text: string,
-  mode: ImmersiveReadingMode,
-  outerEffects: ImmersiveTranslationTextEffect[],
-  innerEffects: ImmersiveTranslationTextEffect[]
-): DocumentFragment {
-  const fragment = document.createDocumentFragment();
-  const citations = translationSources.get(id)?.citations ?? [];
-  const insertedCitations = new Set<number>();
-  let offset = 0;
-  IMMERSIVE_READING_OR_CITATION_PATTERN.lastIndex = 0;
-  let match = IMMERSIVE_READING_OR_CITATION_PATTERN.exec(text);
-  while (match) {
-    if (match.index > offset) {
-      fragment.append(document.createTextNode(text.slice(offset, match.index)));
-    }
-    if (match[1] !== undefined && match[2] !== undefined) {
-      if (
-        !containsWebMindPlaceholder(match[1]) &&
-        !containsWebMindPlaceholder(match[2])
-      ) {
-        const original = sanitizeReadingMarkerValue(match[1]);
-        const translation = sanitizeReadingMarkerValue(match[2]);
-        if (original && translation) {
-          fragment.append(
-            createReadingToken(
-              original,
-              translation,
-              mode,
-              outerEffects,
-              innerEffects
-            )
-          );
-        }
-      }
-    } else {
-      const citationIndex = Number(match[3] ?? match[4] ?? match[5]);
-      const citation = citations[citationIndex - 1];
-      if (citation && !insertedCitations.has(citationIndex)) {
-        fragment.append(cloneCitation(citation));
-        insertedCitations.add(citationIndex);
-      }
-    }
-    offset = match.index + match[0].length;
-    match = IMMERSIVE_READING_OR_CITATION_PATTERN.exec(text);
-  }
-  if (offset < text.length) {
-    fragment.append(document.createTextNode(text.slice(offset)));
-  }
-  citations.forEach((citation, index) => {
-    if (insertedCitations.has(index + 1)) return;
-    if (fragment.childNodes.length) fragment.append(document.createTextNode(" "));
-    fragment.append(cloneCitation(citation));
-  });
-  return fragment;
-}
-
-function applyReadingTokensInPlace(
-  source: HTMLElement,
-  text: string,
-  mode: ImmersiveReadingMode,
-  outerEffects: ImmersiveTranslationTextEffect[],
-  innerEffects: ImmersiveTranslationTextEffect[]
-): number {
-  const pairs: Array<{ original: string; translation: string }> = [];
-  IMMERSIVE_READING_TOKEN_PATTERN.lastIndex = 0;
-  let match = IMMERSIVE_READING_TOKEN_PATTERN.exec(text);
-  while (match) {
-    pairs.push({
-      original: match[1].trim(),
-      translation: match[2].trim()
-    });
-    match = IMMERSIVE_READING_TOKEN_PATTERN.exec(text);
-  }
-  let replaced = 0;
-  for (const pair of pairs) {
-    if (
-      containsWebMindPlaceholder(pair.original) ||
-      containsWebMindPlaceholder(pair.translation)
-    ) {
-      continue;
-    }
-    let sourceText = pair.original;
-    let translatedText = cleanReadingTranslation(
-      pair.original,
-      sanitizeReadingMarkerValue(pair.translation)
-    );
-    let node = readingNodeContaining(source, sourceText);
-    if (!node && pair.translation !== pair.original) {
-      const reversedNode = readingNodeContaining(source, pair.translation);
-      if (reversedNode) {
-        node = reversedNode;
-        sourceText = pair.translation;
-        translatedText = cleanReadingTranslation(pair.translation, pair.original);
-      }
-    }
-    if (!node) continue;
-    const index = node.data.indexOf(sourceText);
-    if (index < 0) continue;
-    const matched = node.splitText(index);
-    matched.splitText(sourceText.length);
-    matched.replaceWith(
-      createReadingToken(
-        sourceText,
-        translatedText,
-        mode,
-        outerEffects,
-        innerEffects
-      )
-    );
-    replaced += 1;
-  }
-  return replaced;
-}
-
-function markerStrippedReadingText(text: string): string {
-  IMMERSIVE_READING_OR_CITATION_PATTERN.lastIndex = 0;
-  return text.replace(
-    IMMERSIVE_READING_OR_CITATION_PATTERN,
-    (match, original, _translation, citationA, citationB, citationC) => {
-      if (original !== undefined) return String(original);
-      const citationIndex = citationA ?? citationB ?? citationC;
-      return citationIndex ? `[${citationIndex}]` : match;
-    }
-  );
-}
-
-function isWholeBlockReadingFallbackSafe(
-  source: HTMLElement,
-  text: string
-): boolean {
-  if (containsWebMindPlaceholder(text)) return false;
-  const sourceText = normalizedBlockText(source.innerText || source.textContent || "");
-  const generatedText = normalizedBlockText(markerStrippedReadingText(text));
-  if (!sourceText || !generatedText) return false;
-  if (generatedText.length > sourceText.length * 1.45 + 20) return false;
-  const sourceIndex = generatedText.indexOf(sourceText);
-  if (sourceIndex >= 0 && generatedText.indexOf(sourceText, sourceIndex + 1) >= 0) {
-    return false;
-  }
-  return true;
+  return findTranslationSourcePrepared(id, translationPreparationDependencies());
 }
 
 function applyImmersiveReading(
   translations: PageTranslation[],
   mode: ImmersiveReadingMode,
+  backgroundStyle: ImmersiveReadingBackgroundStyle,
   outerEffects: ImmersiveTranslationTextEffect[],
   innerEffects: ImmersiveTranslationTextEffect[]
 ): number {
-  installPageStyles();
-  emitDebugLog(
-    `[workflow] immersive reading apply start translations=${translations.length} mode=${mode}`
-  );
-  let count = 0;
-  let replacedTotal = 0;
-  let wholeBlockFallbacks = 0;
-  let unsafeFallbackSkips = 0;
-  for (const translation of translations) {
-    IMMERSIVE_READING_TOKEN_PATTERN.lastIndex = 0;
-    if (!IMMERSIVE_READING_TOKEN_PATTERN.test(translation.text)) continue;
-    const source = findTranslationSource(translation.id);
-    if (!source) continue;
-    source.dataset.webmindOriginalHtml =
-      source.dataset.webmindOriginalHtml ?? source.innerHTML;
-    source.innerHTML = source.dataset.webmindOriginalHtml;
-    const replaced = applyReadingTokensInPlace(
-      source,
-      translation.text,
-      mode,
-      outerEffects,
-      innerEffects
-    );
-    replacedTotal += replaced;
-    source.classList.add("webmind-immersive-reading-source");
-    if (!replaced && isWholeBlockReadingFallbackSafe(source, translation.text)) {
-      source.replaceChildren(
-        readingContent(
-          translation.id,
-          translation.text,
-          mode,
-          outerEffects,
-          innerEffects
-        )
-      );
-      wholeBlockFallbacks += 1;
-    } else if (!replaced) {
-      unsafeFallbackSkips += 1;
+  return applyImmersiveReadingDom(
+    translations,
+    mode,
+    backgroundStyle,
+    outerEffects,
+    innerEffects,
+    {
+      sources: translationSources,
+      findSource: findTranslationSource,
+      installStyles: installPageStyles,
+      log: emitDebugLog
     }
-    count += 1;
-  }
-  emitDebugLog(
-    `[workflow] immersive reading apply done appliedBlocks=${count} replacedTokens=${replacedTotal} wholeBlockFallbacks=${wholeBlockFallbacks} unsafeFallbackSkips=${unsafeFallbackSkips}`
   );
-  return count;
+}
+
+function translationWriteFailed(id: string, source: HTMLElement | null): void {
+  const record = translationSources.get(id);
+  showPageTooltip(
+    contentText("translationWriteFailed"),
+    source
+      ? source.getBoundingClientRect()
+      : record?.element.isConnected
+        ? record.element.getBoundingClientRect()
+        : null
+  );
 }
 
 function applyTranslations(
@@ -2685,89 +884,48 @@ function applyTranslations(
   displayStyle: ImmersiveTranslationDisplayStyle = "default",
   effects: ImmersiveTranslationTextEffect[] = []
 ): number {
-  installPageStyles();
-  let count = 0;
-  const classNames = translationClassNames(displayStyle, effects);
-  for (const translation of translations) {
-    const source = findTranslationSource(translation.id);
-    if (!source || !translation.text.trim()) {
-      const record = translationSources.get(translation.id);
-      showPageTooltip(
-        contentText("translationWriteFailed"),
-        record?.element.isConnected
-          ? record.element.getBoundingClientRect()
-          : null
-      );
-      continue;
+  return applyTranslationsDom(
+    translations,
+    mode,
+    displayStyle,
+    effects,
+    {
+      sources: translationSources,
+      findSource: findTranslationSource,
+      installStyles: installPageStyles,
+      classNames: translationClassNames,
+      displayStyle: translationDisplayStyle,
+      textEffects: translationTextEffects,
+      writeFailed: translationWriteFailed,
+      clearSources: () => translationSources.clear()
     }
-    document
-      .querySelectorAll(
-        `[data-webmind-for="${CSS.escape(translation.id)}"]`
-      )
-      .forEach((element) => element.remove());
-    if (mode === "translation-only") {
-      source.dataset.webmindOriginalHtml =
-        source.dataset.webmindOriginalHtml ?? source.innerHTML;
-      source.classList.add("webmind-translated-only", ...classNames);
-      source.replaceChildren(translatedContent(translation.id, translation.text));
-      count += 1;
-      continue;
-    }
-    const translated = document.createElement(
-      source.matches("span, a") ? "span" : "div"
-    );
-    translated.className = ["webmind-translation", ...classNames].join(" ");
-    translated.dataset.webmindFor = translation.id;
-    translated.append(translatedContent(translation.id, translation.text));
-    if (source.matches("li, td")) {
-      source.append(translated);
-    } else {
-      source.insertAdjacentElement("afterend", translated);
-    }
-    if (!translated.isConnected) {
-      showPageTooltip(
-        contentText("translationWriteFailed"),
-        source.getBoundingClientRect()
-      );
-      continue;
-    }
-    count += 1;
-  }
-  return count;
+  );
+}
+
+function toggleImmersiveTranslationDisplayMode(): boolean {
+  return toggleImmersiveTranslationDisplayModeDom({
+    sources: translationSources,
+    findSource: findTranslationSource,
+    installStyles: installPageStyles,
+    classNames: translationClassNames,
+    displayStyle: translationDisplayStyle,
+    textEffects: translationTextEffects,
+    writeFailed: translationWriteFailed,
+    clearSources: () => translationSources.clear()
+  });
 }
 
 function restorePage(): void {
-  document
-    .querySelectorAll(".webmind-translation")
-    .forEach((element) => element.remove());
-  document
-    .querySelectorAll<HTMLElement>("[data-webmind-original-html]")
-    .forEach((element) => {
-      element.innerHTML = element.dataset.webmindOriginalHtml ?? element.innerHTML;
-      delete element.dataset.webmindOriginalHtml;
-      element.classList.remove(
-        "webmind-translated-only",
-        "webmind-immersive-reading-source"
-      );
-      element.classList.remove(
-        ...translationClassNames("default", []),
-        ...Array.from(TRANSLATION_DISPLAY_STYLES).map(
-          (style) => `webmind-translation-${style}`
-        ),
-        ...Array.from(TRANSLATION_TEXT_EFFECTS).map(
-          (effect) => `webmind-translation-effect-${effect}`
-        )
-      );
-    });
-  document
-    .querySelectorAll<HTMLElement>(".webmind-immersive-source")
-    .forEach((element) => {
-      element.replaceWith(...Array.from(element.childNodes));
-    });
-  document
-    .querySelectorAll<HTMLElement>("[data-webmind-block-id]")
-    .forEach((element) => delete element.dataset.webmindBlockId);
-  translationSources.clear();
+  restorePageDom({
+    sources: translationSources,
+    findSource: findTranslationSource,
+    installStyles: installPageStyles,
+    classNames: translationClassNames,
+    displayStyle: translationDisplayStyle,
+    textEffects: translationTextEffects,
+    writeFailed: translationWriteFailed,
+    clearSources: () => translationSources.clear()
+  });
 }
 
 function SelectionAssistant({ query }: { query: string | null }) {
@@ -2826,6 +984,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
   const [translationProgress, setTranslationProgress] =
     useState<TranslationProgressState | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
+  const activeToolRef = useRef<ToolDefinition | null>(null);
   const hoverTimeoutRef = useRef<number | null>(null);
   const hoverDefinitionTimerRef = useRef<number | null>(null);
   const hoverDefinitionCandidateRef = useRef<HoverDefinitionCandidate | null>(
@@ -2867,10 +1026,11 @@ function SelectionAssistant({ query }: { query: string | null }) {
     moved: false
   });
   const immersiveShortcutCooldownRef = useRef(0);
-  const immersiveAltShortcutTimerRef = useRef<number | null>(null);
-  const immersiveAltShortcutPartnerRef = useRef(false);
   const runEdgeImmersiveTranslateRef = useRef<
-    (scope?: "page" | "paragraph", options?: { ignoreBusy?: boolean }) => Promise<void>
+    (
+      scope?: ImmersiveTranslationRunScope,
+      options?: { ignoreBusy?: boolean }
+    ) => Promise<void>
   >(async () => {});
 
   useEffect(() => {
@@ -2938,6 +1098,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
 
   useLayoutEffect(() => {
     showSelection = (next) => {
+      if (activeToolRef.current) return;
       imageTextRunRef.current = "";
       setImageTextBusy(false);
       setActiveTool(null);
@@ -2957,6 +1118,10 @@ function SelectionAssistant({ query }: { query: string | null }) {
       showSelection = null;
     };
   }, []);
+
+  useEffect(() => {
+    activeToolRef.current = activeTool;
+  }, [activeTool]);
 
   useEffect(() => {
     void Promise.all([loadSettings(), loadCustomTools()]).then(
@@ -2984,6 +1149,18 @@ function SelectionAssistant({ query }: { query: string | null }) {
 
   const activeSettings = localSettings ?? settings;
   const t = (key: UiTextKey) => uiText(activeSettings?.interfaceLanguage, key);
+  const defaultImmersiveContentScope = (): ImmersiveContentScope =>
+    activeSettings?.defaultContextScope === "page" ? "page" : "article";
+  const shortcutContextRunScope = (): ImmersiveTranslationRunScope | null => {
+    if (immersiveShortcutContextScope === "none") return null;
+    return immersiveShortcutContextScope ?? defaultImmersiveContentScope();
+  };
+  const immersiveCollectingLabel = (scope: ImmersiveTranslationRunScope) =>
+    scope === "paragraph" || scope === "selection"
+      ? t("collectingSelection")
+      : scope === "article"
+        ? t("collectingCurrentBody")
+        : t("collectingPageBody");
   const activeProfile = useMemo(
     () =>
       activeSettings?.profiles.find(
@@ -3005,7 +1182,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
   );
   const searchAnswerEnabled = activeSettings?.searchAnswerEnabled ?? false;
   const inputAutoReplyEnabled =
-    activeSettings?.inputAutoReplyEnabled ?? true;
+    activeSettings?.inputAutoReplyEnabled ?? false;
   const inputAutoReplyDisableSingleLine =
     activeSettings?.inputAutoReplyDisableSingleLine ?? true;
   const selectionOverlayBlocked = urlMatchesBlacklist(
@@ -3026,7 +1203,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
     currentHref,
     activeSettings?.edgeQuickToolUrlBlacklist ?? []
   );
-  const edgeQuickToolsEnabled = activeSettings?.edgeQuickToolsEnabled ?? true;
+  const edgeQuickToolsEnabled = activeSettings?.edgeQuickToolsEnabled ?? false;
   const edgeBottom =
     edgeBottomOverride ?? activeSettings?.edgeQuickToolBottom ?? 36;
 
@@ -3070,16 +1247,16 @@ function SelectionAssistant({ query }: { query: string | null }) {
         top: Math.max(8, Math.round(rect.top - 35))
       };
     };
-    const schedule = ({ clientX, clientY }: HoverPointerPosition) => {
-      const candidate = definitionCandidateAtPoint(clientX, clientY);
-      if (
-        !candidate ||
-        !modeAllows(candidate.language) ||
-        (hoverDefinitionShortcut === "ctrl" &&
-          !hoverDefinitionShortcutPressedRef.current)
-      ) {
-        hide();
-        return;
+	    const schedule = ({ clientX, clientY }: HoverPointerPosition) => {
+	      const candidate = definitionCandidateAtPoint(clientX, clientY);
+	      if (
+	        !candidate ||
+	        !modeAllows(candidate.language) ||
+	        (hoverDefinitionShortcut !== "off" &&
+	          !hoverDefinitionShortcutPressedRef.current)
+	      ) {
+	        hide();
+	        return;
       }
       const previous = hoverDefinitionCandidateRef.current;
       hoverDefinitionCandidateRef.current = candidate;
@@ -3144,48 +1321,41 @@ function SelectionAssistant({ query }: { query: string | null }) {
           });
       }, 560);
     };
-    const handlePointerMove = (event: PointerEvent) => {
-      if (isAssistantEvent(event)) {
-        hide();
-        return;
-      }
-      if (hoverDefinitionShortcut === "ctrl") {
-        hoverDefinitionShortcutPressedRef.current =
-          isCtrlDefinitionShortcut(event);
-      }
-      const pointer = { clientX: event.clientX, clientY: event.clientY };
-      hoverDefinitionPointerRef.current = pointer;
-      schedule(pointer);
-    };
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (
-        hoverDefinitionShortcut !== "ctrl" ||
-        !isCtrlDefinitionShortcut(event)
-      ) {
-        if (
-          hoverDefinitionShortcut === "ctrl" &&
-          (event.altKey || event.shiftKey || event.metaKey)
-        ) {
-          hoverDefinitionShortcutPressedRef.current = false;
-          hide();
-        }
-        return;
-      }
-      hoverDefinitionShortcutPressedRef.current = true;
-      if (hoverDefinitionPointerRef.current) {
-        schedule(hoverDefinitionPointerRef.current);
-      }
-    };
-    const handleKeyUp = (event: KeyboardEvent) => {
-      if (
-        hoverDefinitionShortcut !== "ctrl" ||
-        !["Control", "Alt", "Shift", "Meta"].includes(event.key)
-      ) {
-        return;
-      }
-      hoverDefinitionShortcutPressedRef.current = false;
-      hide();
-    };
+	    const handlePointerMove = (event: PointerEvent) => {
+	      if (isAssistantEvent(event)) {
+	        hide();
+	        return;
+	      }
+	      if (hoverDefinitionShortcut !== "off") {
+	        hoverDefinitionShortcutPressedRef.current =
+	          modifierShortcutFromEvent(event) === hoverDefinitionShortcut;
+	      }
+	      const pointer = { clientX: event.clientX, clientY: event.clientY };
+	      hoverDefinitionPointerRef.current = pointer;
+	      schedule(pointer);
+	    };
+	    const handleKeyDown = (event: KeyboardEvent) => {
+	      if (hoverDefinitionShortcut === "off" || !isModifierShortcutKey(event)) {
+	        return;
+	      }
+	      hoverDefinitionShortcutPressedRef.current =
+	        modifierShortcutFromEvent(event) === hoverDefinitionShortcut;
+	      if (!hoverDefinitionShortcutPressedRef.current) {
+	        hide();
+	        return;
+	      }
+	      if (hoverDefinitionPointerRef.current) {
+	        schedule(hoverDefinitionPointerRef.current);
+	      }
+	    };
+	    const handleKeyUp = (event: KeyboardEvent) => {
+	      if (hoverDefinitionShortcut === "off" || !isModifierShortcutKey(event)) {
+	        return;
+	      }
+	      hoverDefinitionShortcutPressedRef.current =
+	        modifierShortcutFromEvent(event) === hoverDefinitionShortcut;
+	      if (!hoverDefinitionShortcutPressedRef.current) hide();
+	    };
     const handleBlur = () => {
       hoverDefinitionShortcutPressedRef.current = false;
       hide();
@@ -3609,7 +1779,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
     if (target.range) {
       const wrapper = document.createElement("span");
       wrapper.className = "webmind-immersive-source";
-      wrapper.dataset.webmindBlockId = `md-${Date.now()}-${translationSequence++}`;
+      wrapper.dataset.webmindBlockId = nextTranslationBlockId();
       try {
         wrapper.append(target.range.extractContents());
         target.range.insertNode(wrapper);
@@ -3640,16 +1810,17 @@ function SelectionAssistant({ query }: { query: string | null }) {
           id: crypto.randomUUID(),
           action: "ask",
           createdAt: Date.now(),
+          contextScope: "selection",
           text: snapshot.text,
           pageTitle: document.title,
           pageUrl: location.href
         };
-        setActiveTool(null);
-        setResult("");
-        setError("");
-        setSnapshot(null);
         try {
           await runtimeRequest("panel.open", { action: pending });
+          setActiveTool(null);
+          setResult("");
+          setError("");
+          setSnapshot(null);
         } catch (requestError) {
           showPageTooltip(
             requestError instanceof Error
@@ -3851,111 +2022,84 @@ function SelectionAssistant({ query }: { query: string | null }) {
   };
 
   const runEdgeImmersiveTranslate = async (
-    scope: "page" | "paragraph" = "page",
+    requestedScope?: ImmersiveTranslationRunScope,
     options: { ignoreBusy?: boolean } = {}
   ) => {
+    const scope = requestedScope ?? defaultImmersiveContentScope();
     if (edgeBusy && !options.ignoreBusy) return;
     setEdgeBusy(true);
     showEdgeResult("");
-    showImmersiveProgress(
-      3,
-      scope === "page" ? t("collectingPageBody") : t("collectingSelection")
-    );
+    showImmersiveProgress(3, immersiveCollectingLabel(scope));
     try {
       if (!translationProfile) throw new Error(t("modelEngineRequired"));
       const blocks =
-        scope === "page"
-          ? prepareTranslationBlocks("page")
-          : prepareParagraphTranslationBlocks(lastPointerTarget);
+        scope === "paragraph"
+          ? prepareParagraphTranslationBlocks(lastPointerTarget, "", {
+              preserveRichText: true
+            })
+          : prepareTranslationBlocks(scope, "", {
+              preserveRichText: true
+            });
       if (!blocks.length) throw new Error(t("noTranslatableBlocks"));
-      let completed = 0;
-      const batches = chunkItems(blocks, IMMERSIVE_TRANSLATION_BATCH_SIZE);
-      const requestTranslations = async (requestBlocks: PageTextBlock[]) => {
-        const sourceText = requestBlocks.map((block) => block.text).join("\n");
-        const response = await runtimeRequest<{ text: string }>(
-          "model.complete",
-          {
-            profileId: translationProfile.id,
-            purpose: "translation",
-            temperature: 0,
-            messages: [
-              createMessage(
-                "system",
-                buildPageTranslationSystemPrompt(
-                  activeSettings ?? undefined,
-                  sourceText
+      const { completed } = await runImmersiveTranslationWorkflow({
+        blocks,
+        batchSize: IMMERSIVE_TRANSLATION_BATCH_SIZE,
+        concurrency:
+          scope === "paragraph" ? 1 : IMMERSIVE_TRANSLATION_CONCURRENCY,
+        requestTranslations: async (requestBlocks) => {
+          const sourceText = requestBlocks.map((block) => block.text).join("\n");
+          const response = await runtimeRequest<{ text: string }>(
+            "model.complete",
+            {
+              profileId: translationProfile.id,
+              purpose: "translation",
+              temperature: 0,
+              messages: [
+                createMessage(
+                  "system",
+                  buildPageTranslationSystemPrompt(
+                    activeSettings ?? undefined,
+                    sourceText
+                  )
+                ),
+                createMessage(
+                  "user",
+                  buildPageTranslationUserPrompt(requestBlocks)
                 )
-              ),
-              createMessage(
-                "user",
-                buildPageTranslationUserPrompt(requestBlocks)
-              )
-            ]
-          }
-        );
-        return alignPageTranslations(
-          requestBlocks,
-          extractPageTranslationEntries(
-            response.text,
-            requestBlocks.length,
-            activeSettings?.interfaceLanguage
-          )
-        );
-      };
-      await mapWithConcurrency(
-        batches,
-        scope === "page" ? IMMERSIVE_TRANSLATION_CONCURRENCY : 1,
-        async (batch, batchIndex) => {
-          const processedBefore = batchIndex * IMMERSIVE_TRANSLATION_BATCH_SIZE;
-          showImmersiveProgress(
-            (processedBefore / blocks.length) * 92 + 5,
-            `${t("translatingPageProgress")} ${Math.min(processedBefore + batch.length, blocks.length)}/${blocks.length}`
-          );
-          let translations: PageTranslation[] = [];
-          try {
-            translations = await requestTranslations(batch);
-          } catch (requestError) {
-            if (batch.length === 1) throw requestError;
-          }
-          const translatedIds = new Set(
-            translations.map((translation) => translation.id)
-          );
-          const missingBlocks = batch.filter(
-            (block) => !translatedIds.has(block.id)
-          );
-          if (missingBlocks.length) {
-            const retry = await requestTranslations(missingBlocks);
-            for (const translation of retry) {
-              translations.push(translation);
-              translatedIds.add(translation.id);
+              ]
             }
-          }
-          if (translations.length !== batch.length) {
-            throw new Error(contentText("jsonArrayInvalid"));
-          }
-          const translationById = new Map(
-            translations.map((translation) => [translation.id, translation])
           );
-          translations = batch.flatMap((block) => {
-            const translation = translationById.get(block.id);
-            return translation ? [translation] : [];
-          });
-          const applied = applyTranslations(
+          return alignPageTranslations(
+            requestBlocks,
+            extractPageTranslationEntries(
+              response.text,
+              requestBlocks.length,
+              activeSettings?.interfaceLanguage
+            )
+          );
+        },
+        applyTranslations: (translations) =>
+          applyTranslations(
             translations,
             activeSettings?.immersiveTranslationStyle ?? "bilingual",
             activeSettings?.immersiveTranslationDisplayStyle ?? "default",
             activeSettings?.immersiveTranslationTextEffects ?? []
+          ),
+        invalidTranslationsError: () => new Error(contentText("jsonArrayInvalid")),
+        applyCountMismatchError: () => new Error(t("translationWriteFailed")),
+        onBatchStart: ({ batch, processedBefore }) => {
+          showImmersiveProgress(
+            (processedBefore / blocks.length) * 92 + 5,
+            `${t("translatingPageProgress")} ${Math.min(processedBefore + batch.length, blocks.length)}/${blocks.length}`
           );
-          if (applied !== translations.length) {
-            throw new Error(t("translationWriteFailed"));
-          }
-          completed += applied;
+        },
+        onBatchApplied: ({ completed }) => {
           showImmersiveProgress(
             (Math.min(completed, blocks.length) / blocks.length) * 92 + 5,
             `${t("translationWritten")} ${completed}`
           );
         }
-      );
+      });
       showImmersiveProgress(
         100,
         `${t("translationComplete")}, ${t("translationApplied")} ${completed}`,
@@ -3970,15 +2114,17 @@ function SelectionAssistant({ query }: { query: string | null }) {
   runEdgeImmersiveTranslateRef.current = runEdgeImmersiveTranslate;
 
   const runEdgeImmersiveReading = async (
+    requestedScope?: ImmersiveReadingRunScope,
     options: { ignoreBusy?: boolean } = {}
   ) => {
+    const scope = requestedScope ?? defaultImmersiveContentScope();
     if (edgeBusy && !options.ignoreBusy) return;
     setEdgeBusy(true);
-    emitDebugLog("[workflow] immersive reading edge start scope=page");
+    emitDebugLog(`[workflow] immersive reading edge start scope=${scope}`);
     showEdgeResult("");
     showImmersiveProgress(
       3,
-      t("collectingPageBody"),
+      immersiveCollectingLabel(scope),
       true,
       false,
       t("immersiveReading")
@@ -3986,7 +2132,16 @@ function SelectionAssistant({ query }: { query: string | null }) {
     try {
       if (!activeSettings) throw new Error(t("modelEngineRequired"));
       emitDebugLog("[workflow] immersive reading edge collect text blocks");
-      const blocks = prepareTranslationBlocks("page");
+      const blocks =
+        scope === "paragraph"
+          ? prepareParagraphTranslationBlocks(lastPointerTarget, "", {
+              preserveRichText: false,
+              maxVisibleTextLength: 2400
+            })
+          : prepareTranslationBlocks(scope, "", {
+              preserveRichText: false,
+              maxVisibleTextLength: 2400
+            });
       if (!blocks.length) throw new Error(t("noTranslatableBlocks"));
       emitDebugLog(
         `[workflow] immersive reading edge collected blocks=${blocks.length}`
@@ -4051,8 +2206,36 @@ function SelectionAssistant({ query }: { query: string | null }) {
         );
       };
       let translations: PageTranslation[] = [];
+      let appliedDuringProcessing: number | null = null;
       if (useModelPage) {
-        translations = await requestModelReading(blocks);
+        const result = await runImmersiveReadingModelPageWorkflow({
+          blocks,
+          batchSize: IMMERSIVE_TRANSLATION_BATCH_SIZE,
+          concurrency: IMMERSIVE_TRANSLATION_CONCURRENCY,
+          requestTranslations: requestModelReading,
+          applyTranslations: (orderedTranslations) =>
+            applyImmersiveReading(
+              orderedTranslations,
+              activeSettings.immersiveReadingMode,
+              activeSettings.immersiveReadingBackgroundStyle,
+              activeSettings.immersiveReadingOuterTextEffects,
+              activeSettings.immersiveReadingInnerTextEffects
+            ),
+          onBatchApplied: ({ batch, processedBefore, appliedCount }) => {
+            showImmersiveProgress(
+              (Math.min(processedBefore + batch.length, blocks.length) /
+                blocks.length) *
+                92 +
+                5,
+              `${t("immersiveReadingApplied")} ${appliedCount}`,
+              true,
+              false,
+              t("immersiveReading")
+            );
+          }
+        });
+        translations = result.translations;
+        appliedDuringProcessing = result.appliedCount;
         emitDebugLog(
           `[workflow] immersive reading edge model-page aligned translations=${translations.length}`
         );
@@ -4096,19 +2279,17 @@ function SelectionAssistant({ query }: { query: string | null }) {
           `[workflow] immersive reading edge local-first finalized translations=${translations.length}`
         );
       }
-      const translationById = new Map(
-        translations.map((translation) => [translation.id, translation])
-      );
-      translations = blocks.flatMap((block) => {
-        const translation = translationById.get(block.id);
-        return translation ? [translation] : [];
-      });
-      const completed = applyImmersiveReading(
-        translations,
-        activeSettings.immersiveReadingMode,
-        activeSettings.immersiveReadingOuterTextEffects,
-        activeSettings.immersiveReadingInnerTextEffects
-      );
+      let completed = appliedDuringProcessing ?? 0;
+      if (appliedDuringProcessing === null) {
+        translations = orderTranslationsByBlocks(translations, blocks);
+        completed = applyImmersiveReading(
+          translations,
+          activeSettings.immersiveReadingMode,
+          activeSettings.immersiveReadingBackgroundStyle,
+          activeSettings.immersiveReadingOuterTextEffects,
+          activeSettings.immersiveReadingInnerTextEffects
+        );
+      }
       emitDebugLog(
         `[workflow] immersive reading edge applied blocks=${completed}/${translations.length}`
       );
@@ -4158,10 +2339,10 @@ function SelectionAssistant({ query }: { query: string | null }) {
     const timer = window.setTimeout(() => {
       void (async () => {
         if (shouldTranslate) {
-          await runEdgeImmersiveTranslate("page", { ignoreBusy: true });
+          await runEdgeImmersiveTranslate(undefined, { ignoreBusy: true });
         }
         if (shouldRead) {
-          await runEdgeImmersiveReading({ ignoreBusy: true });
+          await runEdgeImmersiveReading(undefined, { ignoreBusy: true });
         }
       })();
     }, 900);
@@ -4174,94 +2355,150 @@ function SelectionAssistant({ query }: { query: string | null }) {
     runEdgeImmersiveReading
   ]);
 
-  useEffect(() => {
-    if (!activeSettings) return;
-    const paragraphShortcut = activeSettings.immersiveTranslationParagraphShortcut;
-    const pageShortcut = activeSettings.immersiveTranslationPageShortcut;
-    if (paragraphShortcut === "off" && pageShortcut === "off") return;
-
-    const clearAltShortcutTimer = () => {
-      if (immersiveAltShortcutTimerRef.current === null) return;
-      window.clearTimeout(immersiveAltShortcutTimerRef.current);
-      immersiveAltShortcutTimerRef.current = null;
+	  useEffect(() => {
+	    if (!activeSettings) return;
+	    type ImmersiveShortcutAction = {
+	      shortcut: ImmersiveShortcut;
+	      run: () => void;
+	    };
+	    const preventShortcut = (event: KeyboardEvent) => {
+	      event.preventDefault();
+	      event.stopPropagation();
     };
-    const preventShortcut = (event: KeyboardEvent) => {
-      event.preventDefault();
-      event.stopPropagation();
-    };
-    const triggerShortcut = (scope: "page" | "paragraph") => {
+    const triggerShortcut = (scope?: ImmersiveTranslationRunScope) => {
       const now = Date.now();
       if (now < immersiveShortcutCooldownRef.current) return;
-      immersiveShortcutCooldownRef.current = now + 700;
-      void runEdgeImmersiveTranslateRef.current(scope);
-    };
-    const handleShortcut = (event: KeyboardEvent) => {
-      if (event.repeat || isAssistantEvent(event)) {
-        return;
-      }
-      if (
-        event.target instanceof HTMLElement &&
+	      immersiveShortcutCooldownRef.current = now + 700;
+	      void runEdgeImmersiveTranslateRef.current(scope);
+	    };
+	    const triggerTranslationContextShortcut = () => {
+	      const scope = shortcutContextRunScope();
+	      if (!scope) return;
+	      triggerShortcut(scope);
+	    };
+	    const triggerModeToggleShortcut = () => {
+	      if (translationProgress?.active) return;
+      const now = Date.now();
+      if (now < immersiveShortcutCooldownRef.current) return;
+	      if (!toggleImmersiveTranslationDisplayMode()) return;
+	      immersiveShortcutCooldownRef.current = now + 700;
+	    };
+	    const triggerReadingShortcut = (scope: ImmersiveReadingRunScope) => {
+	      const now = Date.now();
+	      if (now < immersiveShortcutCooldownRef.current) return;
+	      immersiveShortcutCooldownRef.current = now + 700;
+	      void runEdgeImmersiveReading(scope);
+	    };
+	    const triggerReadingContextShortcut = () => {
+	      const scope = shortcutContextRunScope();
+	      if (!scope) return;
+	      triggerReadingShortcut(scope);
+	    };
+	    const actions: ImmersiveShortcutAction[] = [
+	      {
+	        shortcut: activeSettings.immersiveTranslationParagraphShortcut,
+	        run: () => triggerShortcut("paragraph")
+	      },
+	      {
+	        shortcut: activeSettings.immersiveTranslationPageShortcut,
+	        run: triggerTranslationContextShortcut
+	      },
+	      {
+	        shortcut: activeSettings.immersiveTranslationModeToggleShortcut,
+	        run: triggerModeToggleShortcut
+	      },
+	      {
+	        shortcut: activeSettings.immersiveReadingParagraphShortcut,
+	        run: () => triggerReadingShortcut("paragraph")
+	      },
+	      {
+	        shortcut: activeSettings.immersiveReadingContextShortcut,
+	        run: triggerReadingContextShortcut
+	      }
+	    ].filter((action) => action.shortcut !== "off");
+	    if (!actions.length) return;
+	    let shortcutTimer: number | null = null;
+	    let scheduledAction: ImmersiveShortcutAction | null = null;
+	    const clearShortcutTimer = () => {
+	      if (shortcutTimer !== null) {
+	        window.clearTimeout(shortcutTimer);
+	        shortcutTimer = null;
+	      }
+	    };
+	    const actionForShortcut = (
+	      shortcut: Exclude<ImmersiveShortcut, "off">
+	    ): ImmersiveShortcutAction | null =>
+	      actions
+	        .filter((action) => action.shortcut === shortcut)
+	        .sort(
+	          (left, right) =>
+	            shortcutWeight(right.shortcut) - shortcutWeight(left.shortcut)
+	        )[0] ?? null;
+	    const runScheduledAction = () => {
+	      const action = scheduledAction;
+	      scheduledAction = null;
+	      clearShortcutTimer();
+	      action?.run();
+	    };
+	    const scheduleAction = (
+	      action: ImmersiveShortcutAction,
+	      event: KeyboardEvent
+	    ) => {
+	      preventShortcut(event);
+	      scheduledAction = action;
+	      clearShortcutTimer();
+	      shortcutTimer = window.setTimeout(runScheduledAction, 160);
+	    };
+	    const handleShortcut = (event: KeyboardEvent) => {
+	      if (event.repeat || isAssistantEvent(event)) {
+	        return;
+	      }
+	      if (
+	        event.target instanceof HTMLElement &&
         (event.target.isContentEditable ||
           ["INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName))
-      ) {
-        return;
-      }
-
-      if (isCtrlAltShortcutEvent(event)) {
-        immersiveAltShortcutPartnerRef.current = true;
-        clearAltShortcutTimer();
-        if (pageShortcut === "ctrl-alt") {
-          preventShortcut(event);
-          triggerShortcut("page");
-        }
-        return;
-      }
-
-      const isAltOnly =
-        isModifierKey(event, "alt") && isAltOnlyShortcutEvent(event);
-      if (event.type === "keydown") {
-        if (
-          event.altKey &&
-          (event.ctrlKey ||
-            event.metaKey ||
-            event.shiftKey ||
-            isModifierKey(event, "ctrl"))
-        ) {
-          immersiveAltShortcutPartnerRef.current = true;
-          clearAltShortcutTimer();
-          return;
-        }
-        if (paragraphShortcut === "alt" && isAltOnly) {
-          preventShortcut(event);
-          immersiveAltShortcutPartnerRef.current = false;
-          clearAltShortcutTimer();
-          immersiveAltShortcutTimerRef.current = window.setTimeout(() => {
-            immersiveAltShortcutTimerRef.current = null;
-            if (!immersiveAltShortcutPartnerRef.current) {
-              triggerShortcut("paragraph");
-            }
-          }, 160);
-        }
-        return;
-      }
-
-      if (paragraphShortcut === "alt" && isAltOnly) {
-        preventShortcut(event);
-        const hadPartner = immersiveAltShortcutPartnerRef.current;
-        clearAltShortcutTimer();
-        immersiveAltShortcutPartnerRef.current = false;
-        if (!hadPartner) triggerShortcut("paragraph");
-      }
-    };
-    window.addEventListener("keydown", handleShortcut, true);
-    window.addEventListener("keyup", handleShortcut, true);
-    return () => {
-      window.removeEventListener("keydown", handleShortcut, true);
-      window.removeEventListener("keyup", handleShortcut, true);
-      clearAltShortcutTimer();
-      immersiveAltShortcutPartnerRef.current = false;
-    };
-  }, [activeSettings]);
+	      ) {
+	        return;
+	      }
+	      if (!isModifierShortcutKey(event)) {
+	        if (event.type === "keydown") {
+	          clearShortcutTimer();
+	          scheduledAction = null;
+	        }
+	        return;
+	      }
+	      if (event.type === "keyup") {
+	        if (scheduledAction) {
+	          preventShortcut(event);
+	          runScheduledAction();
+	        } else {
+	          clearShortcutTimer();
+	        }
+	        return;
+	      }
+	      const shortcut = modifierShortcutFromEvent(event);
+	      if (!shortcut) {
+	        clearShortcutTimer();
+	        scheduledAction = null;
+	        return;
+	      }
+	      const action = actionForShortcut(shortcut);
+	      if (!action) {
+	        clearShortcutTimer();
+	        scheduledAction = null;
+	        return;
+	      }
+	      scheduleAction(action, event);
+	    };
+	    window.addEventListener("keydown", handleShortcut, true);
+	    window.addEventListener("keyup", handleShortcut, true);
+	    return () => {
+	      window.removeEventListener("keydown", handleShortcut, true);
+	      window.removeEventListener("keyup", handleShortcut, true);
+	      clearShortcutTimer();
+	      scheduledAction = null;
+	    };
+	  }, [activeSettings, translationProgress?.active]);
 
   const clampEdgeBottom = (value: number) =>
     Math.max(18, Math.min(window.innerHeight - 104, Math.round(value)));
@@ -4528,7 +2765,8 @@ function SelectionAssistant({ query }: { query: string | null }) {
       }
       const attachment = await imageElementToAttachment(
         target.element,
-        capturePromise
+        capturePromise,
+        contentText("readImageUrlFailed")
       );
       const response = await runtimeRequest<{ text: string }>(
         "model.complete",
@@ -4848,7 +3086,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
             {edgeBusy && !edgeResult && !edgeError ? (
               <div className="md-spinner" />
             ) : (
-              edgeError || edgeResult
+              edgeError || <Markdown content={edgeResult} />
             )}
           </div>
         </div>
@@ -5035,7 +3273,13 @@ function SelectionAssistant({ query }: { query: string | null }) {
             </button>
           </div>
           <div className={`md-result-body ${error ? "md-result-error" : ""}`}>
-            {resultBusy ? <div className="md-spinner" /> : error || result}
+            {resultBusy ? (
+              <div className="md-spinner" />
+            ) : error ? (
+              error
+            ) : (
+              <Markdown content={result} />
+            )}
           </div>
           {(result || error) && (
             <div className="md-result-actions">
@@ -5240,13 +3484,21 @@ async function initialize(): Promise<void> {
           settings.selectionOverlayUrlBlacklist ?? []
         )
     );
+  const selectionOverlayShortcutActive = (
+    event?: KeyboardEvent | MouseEvent | PointerEvent
+  ) => {
+    const shortcut = settings?.selectionOverlayShortcut ?? "off";
+    if (shortcut === "off") return true;
+    if (event) return modifierShortcutFromEvent(event) === shortcut;
+    return selectionOverlayShortcutPressed;
+  };
   const scheduleSelectionOverlayRefresh = (target: EventTarget | null) => {
     if (selectionOverlayTimer !== null) {
       window.clearTimeout(selectionOverlayTimer);
     }
     selectionOverlayTimer = window.setTimeout(() => {
       selectionOverlayTimer = null;
-      if (!selectionOverlayEnabled()) {
+      if (!selectionOverlayEnabled() || !selectionOverlayShortcutActive()) {
         showSelection?.(null);
         return;
       }
@@ -5258,7 +3510,24 @@ async function initialize(): Promise<void> {
   };
   const handleSelectionEnd = (event: Event) => {
     if (isAssistantEvent(event)) return;
-    if (!selectionOverlayEnabled()) {
+    const shortcutEvent =
+      event instanceof KeyboardEvent ||
+      event instanceof MouseEvent ||
+      event instanceof PointerEvent
+        ? event
+        : undefined;
+    if (
+      settings &&
+      settings.selectionOverlayShortcut !== "off" &&
+      shortcutEvent
+    ) {
+      selectionOverlayShortcutPressed =
+        selectionOverlayShortcutActive(shortcutEvent);
+    }
+    if (
+      !selectionOverlayEnabled() ||
+      !selectionOverlayShortcutActive(shortcutEvent)
+    ) {
       showSelection?.(null);
       return;
     }
@@ -5267,9 +3536,49 @@ async function initialize(): Promise<void> {
 
   document.addEventListener("selectionchange", () => {
     scheduleSelectionContextReport();
-    if (selectionOverlayEnabled()) {
+    if (selectionOverlayEnabled() && selectionOverlayShortcutActive()) {
       scheduleSelectionOverlayRefresh(lastPointerTarget);
     } else {
+      showSelection?.(null);
+    }
+  });
+  window.addEventListener(
+    "keydown",
+    (event) => {
+      if (
+        !settings ||
+        settings.selectionOverlayShortcut === "off" ||
+        !isModifierShortcutKey(event)
+      ) {
+        return;
+      }
+      selectionOverlayShortcutPressed = selectionOverlayShortcutActive(event);
+      if (selectionOverlayShortcutPressed && selectionOverlayEnabled()) {
+        scheduleSelectionOverlayRefresh(lastPointerTarget);
+      } else {
+        showSelection?.(null);
+      }
+    },
+    true
+  );
+  window.addEventListener(
+    "keyup",
+    (event) => {
+      if (
+        !settings ||
+        settings.selectionOverlayShortcut === "off" ||
+        !isModifierShortcutKey(event)
+      ) {
+        return;
+      }
+      selectionOverlayShortcutPressed = selectionOverlayShortcutActive(event);
+      if (!selectionOverlayShortcutPressed) showSelection?.(null);
+    },
+    true
+  );
+  window.addEventListener("blur", () => {
+    selectionOverlayShortcutPressed = false;
+    if (settings && settings.selectionOverlayShortcut !== "off") {
       showSelection?.(null);
     }
   });
@@ -5283,21 +3592,51 @@ async function initialize(): Promise<void> {
       ...settings,
       ...(changes["webmind.settings"].newValue as AppSettings)
     } as AppSettings;
+    if (!selectionOverlayEnabled() || !selectionOverlayShortcutActive()) {
+      showSelection?.(null);
+    } else {
+      scheduleSelectionOverlayRefresh(lastPointerTarget);
+    }
   });
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   const run = async () => {
+    if (message.type === "immersive.contextScope.set") {
+      immersiveShortcutContextScope =
+        message.scope === "none" ||
+        message.scope === "page" ||
+        message.scope === "article" ||
+        message.scope === "selection"
+          ? message.scope
+          : null;
+      return { ok: true };
+    }
     if (message.type === "page.context") {
       return extractPageContext(
         Boolean(message.ignoreSelection),
-        settings?.interfaceLanguage
+        settings?.interfaceLanguage,
+        message.scope === "article" ? "article" : "page"
       );
+    }
+    if (message.type === "page.article.pick") {
+      return startManualArticleSelection(settings?.interfaceLanguage);
+    }
+    if (message.type === "page.article.restore") {
+      return restoreAutomaticArticleSelection(settings?.interfaceLanguage);
     }
     if (message.type === "page.translation.prepare") {
       return prepareTranslationBlocks(
-        message.scope === "selection" ? "selection" : "page",
-        String(message.text ?? "")
+        message.scope === "selection"
+          ? "selection"
+          : message.scope === "article"
+            ? "article"
+            : "page",
+        String(message.text ?? ""),
+        {
+          preserveRichText: message.purpose === "translation" ? true : false,
+          maxVisibleTextLength: message.purpose === "reading" ? 2400 : 900
+        }
       );
     }
     if (message.type === "page.reading.translate") {
@@ -5345,6 +3684,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         count: applyImmersiveReading(
           message.translations as PageTranslation[],
           mode,
+          readingBackgroundStyle(message.backgroundStyle),
           readingTextEffects(
             message.outerEffects,
             settings?.immersiveReadingOuterTextEffects ?? []

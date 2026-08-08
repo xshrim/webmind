@@ -42,6 +42,7 @@ var UI_TEXT = {
     assistantGuard: "\u4E25\u683C\u533A\u5206\u4E0A\u4E0B\u6587\u4E2D\u660E\u786E\u7ED9\u51FA\u7684\u4E8B\u5B9E\u548C\u4F60\u7684\u63A8\u65AD\u3002\u4E0A\u4E0B\u6587\u4E0D\u8DB3\u65F6\u76F4\u63A5\u8BF4\u660E\u3002\u4E0D\u8981\u58F0\u79F0\u6D4F\u89C8\u3001\u70B9\u51FB\u6216\u8BFB\u53D6\u4E86\u6CA1\u6709\u63D0\u4F9B\u7ED9\u4F60\u7684\u5185\u5BB9\u3002",
     selectionContextIntro: "\u4EE5\u4E0B\u662F\u7528\u6237\u4E3B\u52A8\u9009\u62E9\u7684\u6587\u672C\u3002\u672C\u8F6E\u64CD\u4F5C\u53EA\u9488\u5BF9\u8FD9\u6BB5\u9009\u4E2D\u5185\u5BB9\uFF0C\u4E0D\u8981\u6269\u5C55\u5230\u9875\u9762\u4E2D\u672A\u63D0\u4F9B\u7684\u90E8\u5206\uFF1A",
     pageContextIntro: "\u4EE5\u4E0B\u662F\u7528\u6237\u4E3B\u52A8\u9644\u5E26\u7684\u6574\u4E2A\u9875\u9762\u4E0A\u4E0B\u6587\uFF1A",
+    articleContextIntro: "\u4EE5\u4E0B\u662F\u4ECE\u5F53\u524D\u9875\u9762\u63D0\u53D6\u7684\u6B63\u6587\u5185\u5BB9\uFF1A",
     translationInputIntro: "\u4EE5\u4E0B\u5185\u5BB9\u662F\u672C\u6B21\u5FC5\u987B\u7FFB\u8BD1\u7684\u8F93\u5165\u6B63\u6587\uFF1A",
     title: "\u6807\u9898",
     url: "\u5730\u5740",
@@ -59,12 +60,16 @@ var UI_TEXT = {
     languageSettingHelp: "\u5F71\u54CD\u754C\u9762\u6587\u5B57\u3001\u5185\u7F6E\u5DE5\u5177\u540D\u79F0\u548C\u9ED8\u8BA4\u63D0\u793A\u8BCD\u3002",
     translationLanguageSetting: "\u8BD1\u6587\u8BED\u8A00",
     translationLanguageSettingHelp: "\u81EA\u52A8\u65F6\u4F1A\u6839\u636E\u5185\u5BB9\u8BED\u8A00\u5728\u754C\u9762\u8BED\u8A00\u548C\u82F1\u6587\u4E4B\u95F4\u5207\u6362\uFF1B\u624B\u52A8\u9009\u62E9\u5219\u59CB\u7EC8\u7FFB\u8BD1\u4E3A\u6240\u9009\u8BED\u8A00\u3002",
+    defaultContextScopeSetting: "\u9ED8\u8BA4\u4E0A\u4E0B\u6587",
+    defaultContextScopeHelp: "\u63A7\u5236\u6C89\u6D78\u7FFB\u8BD1\u548C\u6C89\u6D78\u9605\u8BFB\u7684\u8D34\u8FB9\u83DC\u5355\u4E0E\u5FEB\u6377\u952E\u9ED8\u8BA4\u5904\u7406\u5F53\u524D\u6B63\u6587\u8FD8\u662F\u5F53\u524D\u9875\u9762\u3002",
     immersiveTranslationParagraphShortcut: "\u5F53\u524D\u6BB5\u843D\u6C89\u6D78\u7FFB\u8BD1\u5FEB\u6377\u952E",
-    immersiveTranslationPageShortcut: "\u5F53\u524D\u9875\u9762\u6C89\u6D78\u7FFB\u8BD1\u5FEB\u6377\u952E",
-    immersiveTranslationShortcutHelp: "\u5F53\u524D\u6BB5\u843D\u7528\u4E8E\u9009\u533A\u6216\u6BB5\u843D\u5185\u5BB9\uFF0C\u5F53\u524D\u9875\u9762\u7528\u4E8E\u6574\u9875\u7FFB\u8BD1\u3002",
-    shortcutNone: "\u65E0",
+    immersiveTranslationPageShortcut: "\u5F53\u524D\u4E0A\u4E0B\u6587\u6C89\u6D78\u7FFB\u8BD1\u5FEB\u6377\u952E",
+    immersiveTranslationModeToggleShortcut: "\u8BD1\u6587\u663E\u793A\u6A21\u5F0F\u5207\u6362\u5FEB\u6377\u952E",
+    immersiveTranslationShortcutHelp: "\u5F53\u524D\u6BB5\u843D\u7528\u4E8E\u9009\u533A\u6216\u6BB5\u843D\u5185\u5BB9\uFF0C\u5F53\u524D\u4E0A\u4E0B\u6587\u4F1A\u8DDF\u968F\u4FA7\u8FB9\u680F\u5F53\u524D\u9009\u4E2D\u7684\u4E0A\u4E0B\u6587\u3002",
+    shortcutCtrl: "Ctrl",
     shortcutAlt: "Alt",
-    shortcutCtrlAlt: "Ctrl+Alt",
+    shortcutShift: "Shift",
+    shortcutHoldPrefix: "\u6309\u4F4F:",
     navChat: "\u5BF9\u8BDD",
     navTools: "\u5DE5\u5177",
     navHistory: "\u5386\u53F2",
@@ -139,7 +144,28 @@ var UI_TEXT = {
     removeAttachment: "\u79FB\u9664\u9644\u4EF6",
     openTools: "\u6253\u5F00\u5DE5\u5177",
     currentPage: "\u5F53\u524D\u9875\u9762",
-    selectedContent: "\u9009\u4E2D\u5185\u5BB9",
+    currentBody: "\u5F53\u524D\u6B63\u6587",
+    currentSelection: "\u5F53\u524D\u9009\u4E2D",
+    currentBodyPreview: "\u5F53\u524D\u6B63\u6587\u9884\u89C8",
+    expand: "\u5C55\u5F00",
+    collapse: "\u6536\u8D77",
+    currentBodyQuality: "\u8D28\u91CF",
+    currentBodyBlocks: "{count} \u6BB5",
+    currentBodyChars: "{count} \u5B57",
+    currentBodySourceReadability: "Readability",
+    currentBodySourceDom: "DOM",
+    currentBodySourceManual: "\u624B\u52A8\u9009\u62E9",
+    selectCurrentBody: "\u6846\u9009\u6B63\u6587",
+    restoreCurrentBody: "\u8FD8\u539F\u6B63\u6587",
+    selectingBodyRange: "\u6B63\u5728\u9009\u62E9\u6B63\u6587\u8303\u56F4",
+    manualBodySelectionHint: "\u6EDA\u8F6E/\u65B9\u5411\u952E\u8C03\u6574\u5C42\u7EA7\uFF0C\u70B9\u51FB\u786E\u8BA4\uFF0CEsc \u53D6\u6D88",
+    manualBodySelectionCancelled: "\u5DF2\u53D6\u6D88\u6B63\u6587\u6846\u9009",
+    textDensity: "\u6587\u672C\u5BC6\u5EA6",
+    linkRatio: "\u94FE\u63A5\u6BD4\u4F8B",
+    visibleArea: "\u53EF\u89C1\u9762\u79EF",
+    continuity: "\u8FDE\u7EED\u6027",
+    clutterPenalty: "\u6742\u8BAF",
+    languageConsistency: "\u8BED\u8A00\u4E00\u81F4\u6027",
     noneContext: "\u65E0\u4E0A\u4E0B\u6587",
     webSearch: "\u7F51\u9875\u641C\u7D22",
     addAttachment: "\u6DFB\u52A0\u56FE\u7247\u6216\u6587\u6863",
@@ -171,6 +197,8 @@ var UI_TEXT = {
     selectionOverlay: "\u5212\u8BCD\u6D6E\u5C42",
     selectionOverlayHelp: "\u63A7\u5236\u9009\u62E9\u6587\u5B57\u540E\u7684\u60AC\u6D6E\u5DE5\u5177\u680F\u3002",
     selectionOverlayMode: "\u89E6\u53D1\u65B9\u5F0F",
+    selectionOverlayShortcut: "\u5212\u8BCD\u6D6E\u5C42\u5FEB\u6377\u952E",
+    selectionOverlayShortcutHelp: "\u542F\u7528\u540E\uFF0C\u53EA\u6709\u6309\u4F4F\u6240\u9009\u5FEB\u6377\u952E\u9009\u62E9\u6587\u5B57\u6216\u67E5\u770B\u5DF2\u6709\u9009\u533A\u65F6\u624D\u663E\u793A\u5212\u8BCD\u6D6E\u5C42\u3002",
     selectionOverlayMinChars: "\u6700\u5C11\u9009\u4E2D\u5B57\u7B26\u6570",
     selectionOverlayMinCharsHelp: "\u9009\u4E2D\u6587\u5B57\u8FBE\u5230\u8BE5\u5B57\u7B26\u6570\u65F6\u624D\u89E6\u53D1\u5212\u8BCD\u6D6E\u5C42\uFF0C\u6700\u4F4E\u4E3A 1\u3002",
     selectionOverlayOff: "\u5173\u95ED\u5212\u8BCD\u6D6E\u5C42",
@@ -204,9 +232,15 @@ var UI_TEXT = {
     immersiveReadingDifficulty: "\u8BCD\u8BED\u96BE\u5EA6",
     immersiveReadingDifficultyHelp: "\u96BE\u5EA6\u8D8A\u9AD8\uFF0C\u6A21\u578B\u8D8A\u503E\u5411\u4E8E\u66FF\u6362\u66F4\u5C11\u3001\u66F4\u96BE\u7684\u8BCD\u8BED\u3002",
     immersiveReadingMode: "\u66FF\u6362\u6A21\u5F0F",
+    immersiveReadingParagraphShortcut: "\u5F53\u524D\u6BB5\u843D\u6C89\u6D78\u9605\u8BFB\u5FEB\u6377\u952E",
+    immersiveReadingContextShortcut: "\u5F53\u524D\u4E0A\u4E0B\u6587\u6C89\u6D78\u9605\u8BFB\u5FEB\u6377\u952E",
     immersiveReadingTranslation: "\u8BD1\u6587",
     immersiveReadingOriginalTranslation: "\u539F\u6587\uFF08\u8BD1\u6587\uFF09",
     immersiveReadingTranslationOriginal: "\u8BD1\u6587\uFF08\u539F\u6587\uFF09",
+    immersiveReadingBackgroundStyle: "\u66FF\u6362\u5185\u5BB9\u80CC\u666F\u6837\u5F0F",
+    immersiveReadingHighlightNone: "\u65E0\u9AD8\u4EAE",
+    immersiveReadingHighlightUniform: "\u7EDF\u4E00\u9AD8\u4EAE",
+    immersiveReadingHighlightLeveled: "\u5206\u7EA7\u9AD8\u4EAE",
     immersiveReadingOuterEffects: "\u62EC\u53F7\u5916\u6587\u5B57\u6548\u679C",
     immersiveReadingInnerEffects: "\u62EC\u53F7\u53CA\u62EC\u53F7\u4E2D\u6587\u5B57\u6548\u679C",
     immersiveReadingApplied: "\u6C89\u6D78\u9605\u8BFB\u5DF2\u5E94\u7528",
@@ -257,9 +291,7 @@ var UI_TEXT = {
     hoverDefinitionEnglish: "\u4EC5\u82F1\u6587",
     hoverDefinitionBoth: "\u4E2D\u82F1\u6587",
     hoverDefinitionShortcut: "\u60AC\u505C\u53D6\u8BCD\u5FEB\u6377\u952E",
-    hoverDefinitionShortcutHelp: "\u542F\u7528\u540E\uFF0C\u53EA\u6709\u6309\u4F4F Ctrl \u5E76\u60AC\u505C\u5728\u8BCD\u8BED\u4E0A\u65F6\u624D\u663E\u793A\u91CA\u4E49\uFF1B\u6309\u4F4F Alt \u6216 Shift \u65F6\u4E0D\u4F1A\u89E6\u53D1\uFF0C\u4EE5\u907F\u5F00\u6C89\u6D78\u7FFB\u8BD1\u3002",
-    hoverDefinitionShortcutOff: "\u4E0D\u4F7F\u7528\u5FEB\u6377\u952E",
-    hoverDefinitionShortcutCtrl: "\u6309\u4F4F Ctrl",
+    hoverDefinitionShortcutHelp: "\u542F\u7528\u540E\uFF0C\u6309\u4F4F\u6240\u9009\u5FEB\u6377\u952E\u5E76\u60AC\u505C\u5728\u8BCD\u8BED\u4E0A\u65F6\u663E\u793A\u91CA\u4E49\u3002",
     hoverDefinitionBlacklistHelp: "\u547D\u4E2D\u540E\u9875\u9762\u4E2D\u4E0D\u4F1A\u663E\u793A\u60AC\u505C\u91CA\u4E49\u3002",
     searchAnswerSetting: "\u641C\u7D22\u9875\u663E\u793A\u6A21\u578B\u56DE\u7B54",
     searchAnswerSettingHelp: "\u5F00\u542F\u540E\u5728\u641C\u7D22\u7ED3\u679C\u9875\u53F3\u4FA7\u81EA\u52A8\u56DE\u7B54\uFF0C\u5E76\u4F7F\u7528 DuckDuckGo \u641C\u7D22\u7ED3\u679C\u4F5C\u4E3A\u53C2\u8003\u3002",
@@ -357,12 +389,14 @@ var UI_TEXT = {
     noReadableTab: "\u6CA1\u6709\u53EF\u8BFB\u53D6\u7684\u5F53\u524D\u6807\u7B7E\u9875",
     switchingToCurrentPage: "\u6B63\u5728\u5207\u6362\u5230\u5F53\u524D\u9875\u9762\u2026",
     readingSelection: "\u6B63\u5728\u8BFB\u53D6\u9009\u4E2D\u5185\u5BB9\u2026",
+    readingCurrentBody: "\u6B63\u5728\u8BFB\u53D6\u5F53\u524D\u6B63\u6587\u2026",
     noSelectionOnPage: "\u5F53\u524D\u9875\u9762\u6CA1\u6709\u53EF\u5207\u6362\u7684\u9009\u4E2D\u5185\u5BB9",
     searchPermissionRequired: "\u9700\u8981\u641C\u7D22\u57DF\u540D\u6743\u9650\u624D\u80FD\u8865\u5145\u7F51\u9875\u7ED3\u679C",
     searchingWeb: "\u6B63\u5728\u641C\u7D22\u7F51\u9875\u2026",
     previewDemoAnswer: "\u8FD9\u662F\u9884\u89C8\u6A21\u5F0F\u4E0B\u7684\u793A\u4F8B\u56DE\u7B54\u3002\u52A0\u8F7D\u4E3A Chrome \u6269\u5C55\u5E76\u914D\u7F6E\u6A21\u578B\u5F15\u64CE\u540E\uFF0C\u8FD9\u91CC\u4F1A\u663E\u793A\u771F\u5B9E\u7684\u6D41\u5F0F\u8F93\u51FA\u3002\n\n- \u9875\u9762\u4E0A\u4E0B\u6587\u53EF\u968F\u65F6\u5F00\u5173\n- \u652F\u6301\u7528\u6237\u81EA\u5E26\u6A21\u578B\u548C\u5BC6\u94A5\n- \u5386\u53F2\u8BB0\u5F55\u53EA\u4FDD\u5B58\u5728\u672C\u5730",
     currentAnswer: "\u5F53\u524D\u56DE\u7B54",
     collectingSelection: "\u6B63\u5728\u6536\u96C6\u9009\u4E2D\u5185\u5BB9\u2026",
+    collectingCurrentBody: "\u6B63\u5728\u6536\u96C6\u5F53\u524D\u6B63\u6587\u2026",
     collectingTranslatableText: "\u6B63\u5728\u6536\u96C6\u53EF\u7FFB\u8BD1\u6587\u672C\u2026",
     collectingPageBody: "\u6B63\u5728\u6536\u96C6\u6B63\u6587\u2026",
     noTranslatableBlocks: "\u5F53\u524D\u9875\u9762\u6CA1\u6709\u53EF\u7FFB\u8BD1\u7684\u6B63\u6587\u5757",
@@ -512,6 +546,7 @@ var UI_TEXT = {
     assistantGuard: "\u56B4\u683C\u5340\u5206\u4E0A\u4E0B\u6587\u4E2D\u660E\u78BA\u7D66\u51FA\u7684\u4E8B\u5BE6\u548C\u4F60\u7684\u63A8\u65B7\u3002\u4E0A\u4E0B\u6587\u4E0D\u8DB3\u6642\u76F4\u63A5\u8AAA\u660E\u3002\u4E0D\u8981\u8072\u7A31\u700F\u89BD\u3001\u9EDE\u64CA\u6216\u8B80\u53D6\u4E86\u6C92\u6709\u63D0\u4F9B\u7D66\u4F60\u7684\u5167\u5BB9\u3002",
     selectionContextIntro: "\u4EE5\u4E0B\u662F\u4F7F\u7528\u8005\u4E3B\u52D5\u9078\u53D6\u7684\u6587\u5B57\u3002\u672C\u8F2A\u64CD\u4F5C\u53EA\u91DD\u5C0D\u9019\u6BB5\u9078\u53D6\u5167\u5BB9\uFF0C\u4E0D\u8981\u64F4\u5C55\u5230\u9801\u9762\u4E2D\u672A\u63D0\u4F9B\u7684\u90E8\u5206\uFF1A",
     pageContextIntro: "\u4EE5\u4E0B\u662F\u4F7F\u7528\u8005\u4E3B\u52D5\u9644\u5E36\u7684\u6574\u500B\u9801\u9762\u4E0A\u4E0B\u6587\uFF1A",
+    articleContextIntro: "\u4EE5\u4E0B\u662F\u5F9E\u76EE\u524D\u9801\u9762\u64F7\u53D6\u7684\u6B63\u6587\u5167\u5BB9\uFF1A",
     translationInputIntro: "\u4EE5\u4E0B\u5167\u5BB9\u662F\u672C\u6B21\u5FC5\u9808\u7FFB\u8B6F\u7684\u8F38\u5165\u6B63\u6587\uFF1A",
     title: "\u6A19\u984C",
     url: "\u5730\u5740",
@@ -529,12 +564,16 @@ var UI_TEXT = {
     languageSettingHelp: "\u5F71\u97FF\u4ECB\u9762\u6587\u5B57\u3001\u5167\u5EFA\u5DE5\u5177\u540D\u7A31\u548C\u9810\u8A2D\u63D0\u793A\u8A5E\u3002",
     translationLanguageSetting: "\u8B6F\u6587\u8A9E\u8A00",
     translationLanguageSettingHelp: "\u81EA\u52D5\u6642\u6703\u5728\u4ECB\u9762\u8A9E\u8A00\u548C\u82F1\u6587\u4E4B\u9593\u5207\u63DB\uFF1B\u624B\u52D5\u9078\u64C7\u5247\u59CB\u7D42\u7FFB\u8B6F\u70BA\u6240\u9078\u8A9E\u8A00\u3002",
+    defaultContextScopeSetting: "\u9810\u8A2D\u4E0A\u4E0B\u6587",
+    defaultContextScopeHelp: "\u63A7\u5236\u6C89\u6D78\u7FFB\u8B6F\u548C\u6C89\u6D78\u95B1\u8B80\u7684\u8CBC\u908A\u9078\u55AE\u8207\u5FEB\u6377\u9375\u9810\u8A2D\u8655\u7406\u76EE\u524D\u6B63\u6587\u9084\u662F\u76EE\u524D\u9801\u9762\u3002",
     immersiveTranslationParagraphShortcut: "\u76EE\u524D\u6BB5\u843D\u6C89\u6D78\u7FFB\u8B6F\u5FEB\u6377\u9375",
-    immersiveTranslationPageShortcut: "\u76EE\u524D\u9801\u9762\u6C89\u6D78\u7FFB\u8B6F\u5FEB\u6377\u9375",
-    immersiveTranslationShortcutHelp: "\u76EE\u524D\u6BB5\u843D\u7528\u65BC\u9078\u53D6\u5167\u5BB9\u6216\u6BB5\u843D\u5167\u5BB9\uFF0C\u9801\u9762\u7528\u65BC\u6574\u9801\u7FFB\u8B6F\u3002",
-    shortcutNone: "\u7121",
+    immersiveTranslationPageShortcut: "\u76EE\u524D\u4E0A\u4E0B\u6587\u6C89\u6D78\u7FFB\u8B6F\u5FEB\u6377\u9375",
+    immersiveTranslationModeToggleShortcut: "\u8B6F\u6587\u986F\u793A\u6A21\u5F0F\u5207\u63DB\u5FEB\u6377\u9375",
+    immersiveTranslationShortcutHelp: "\u76EE\u524D\u6BB5\u843D\u7528\u65BC\u9078\u53D6\u5167\u5BB9\u6216\u6BB5\u843D\u5167\u5BB9\uFF0C\u76EE\u524D\u4E0A\u4E0B\u6587\u6703\u8DDF\u96A8\u5074\u908A\u6B04\u76EE\u524D\u9078\u53D6\u7684\u4E0A\u4E0B\u6587\u3002",
+    shortcutCtrl: "Ctrl",
     shortcutAlt: "Alt",
-    shortcutCtrlAlt: "Ctrl+Alt",
+    shortcutShift: "Shift",
+    shortcutHoldPrefix: "\u6309\u4F4F\uFF1A",
     navChat: "\u5C0D\u8A71",
     navTools: "\u5DE5\u5177",
     navHistory: "\u6B77\u53F2",
@@ -609,7 +648,28 @@ var UI_TEXT = {
     removeAttachment: "\u79FB\u9664\u9644\u4EF6",
     openTools: "\u958B\u555F\u5DE5\u5177",
     currentPage: "\u76EE\u524D\u9801\u9762",
-    selectedContent: "\u9078\u53D6\u5167\u5BB9",
+    currentBody: "\u76EE\u524D\u6B63\u6587",
+    currentSelection: "\u76EE\u524D\u9078\u53D6",
+    currentBodyPreview: "\u76EE\u524D\u6B63\u6587\u9810\u89BD",
+    expand: "\u5C55\u958B",
+    collapse: "\u6536\u8D77",
+    currentBodyQuality: "\u54C1\u8CEA",
+    currentBodyBlocks: "{count} \u6BB5",
+    currentBodyChars: "{count} \u5B57",
+    currentBodySourceReadability: "Readability",
+    currentBodySourceDom: "DOM",
+    currentBodySourceManual: "\u624B\u52D5\u9078\u53D6",
+    selectCurrentBody: "\u6846\u9078\u6B63\u6587",
+    restoreCurrentBody: "\u9084\u539F\u6B63\u6587",
+    selectingBodyRange: "\u6B63\u5728\u9078\u53D6\u6B63\u6587\u7BC4\u570D",
+    manualBodySelectionHint: "\u6EFE\u8F2A/\u65B9\u5411\u9375\u8ABF\u6574\u5C64\u7D1A\uFF0C\u9EDE\u64CA\u78BA\u8A8D\uFF0CEsc \u53D6\u6D88",
+    manualBodySelectionCancelled: "\u5DF2\u53D6\u6D88\u6B63\u6587\u6846\u9078",
+    textDensity: "\u6587\u5B57\u5BC6\u5EA6",
+    linkRatio: "\u9023\u7D50\u6BD4\u4F8B",
+    visibleArea: "\u53EF\u898B\u9762\u7A4D",
+    continuity: "\u9023\u7E8C\u6027",
+    clutterPenalty: "\u96DC\u8A0A",
+    languageConsistency: "\u8A9E\u8A00\u4E00\u81F4\u6027",
     noneContext: "\u7121\u4E0A\u4E0B\u6587",
     webSearch: "\u7DB2\u9801\u641C\u5C0B",
     addAttachment: "\u65B0\u589E\u5716\u7247\u6216\u6587\u4EF6",
@@ -641,6 +701,8 @@ var UI_TEXT = {
     selectionOverlay: "\u5283\u8A5E\u6D6E\u5C64",
     selectionOverlayHelp: "\u63A7\u5236\u9078\u53D6\u6587\u5B57\u5F8C\u7684\u61F8\u6D6E\u5DE5\u5177\u5217\u3002",
     selectionOverlayMode: "\u89F8\u767C\u65B9\u5F0F",
+    selectionOverlayShortcut: "\u5283\u8A5E\u6D6E\u5C64\u5FEB\u6377\u9375",
+    selectionOverlayShortcutHelp: "\u555F\u7528\u5F8C\uFF0C\u53EA\u6709\u6309\u4F4F\u6240\u9078\u5FEB\u6377\u9375\u9078\u53D6\u6587\u5B57\u6216\u67E5\u770B\u65E2\u6709\u9078\u5340\u6642\u624D\u986F\u793A\u5283\u8A5E\u6D6E\u5C64\u3002",
     selectionOverlayMinChars: "\u6700\u5C11\u9078\u53D6\u5B57\u5143\u6578",
     selectionOverlayMinCharsHelp: "\u9078\u53D6\u6587\u5B57\u9054\u5230\u6B64\u5B57\u5143\u6578\u6642\u624D\u89F8\u767C\u5283\u8A5E\u6D6E\u5C64\uFF0C\u6700\u4F4E\u70BA 1\u3002",
     selectionOverlayOff: "\u95DC\u9589\u5283\u8A5E\u6D6E\u5C64",
@@ -674,9 +736,15 @@ var UI_TEXT = {
     immersiveReadingDifficulty: "\u8A5E\u8A9E\u96E3\u5EA6",
     immersiveReadingDifficultyHelp: "\u96E3\u5EA6\u8D8A\u9AD8\uFF0C\u6A21\u578B\u8D8A\u50BE\u5411\u53EA\u66FF\u63DB\u8F03\u5C11\u4E14\u66F4\u96E3\u7684\u8A5E\u8A9E\u3002",
     immersiveReadingMode: "\u66FF\u63DB\u6A21\u5F0F",
+    immersiveReadingParagraphShortcut: "\u76EE\u524D\u6BB5\u843D\u6C89\u6D78\u95B1\u8B80\u5FEB\u6377\u9375",
+    immersiveReadingContextShortcut: "\u76EE\u524D\u4E0A\u4E0B\u6587\u6C89\u6D78\u95B1\u8B80\u5FEB\u6377\u9375",
     immersiveReadingTranslation: "\u8B6F\u6587",
     immersiveReadingOriginalTranslation: "\u539F\u6587\uFF08\u8B6F\u6587\uFF09",
     immersiveReadingTranslationOriginal: "\u8B6F\u6587\uFF08\u539F\u6587\uFF09",
+    immersiveReadingBackgroundStyle: "\u66FF\u63DB\u5167\u5BB9\u80CC\u666F\u6A23\u5F0F",
+    immersiveReadingHighlightNone: "\u7121\u9AD8\u4EAE",
+    immersiveReadingHighlightUniform: "\u7D71\u4E00\u9AD8\u4EAE",
+    immersiveReadingHighlightLeveled: "\u5206\u7D1A\u9AD8\u4EAE",
     immersiveReadingOuterEffects: "\u62EC\u865F\u5916\u6587\u5B57\u6548\u679C",
     immersiveReadingInnerEffects: "\u62EC\u865F\u53CA\u62EC\u865F\u4E2D\u6587\u5B57\u6548\u679C",
     immersiveReadingApplied: "\u6C89\u6D78\u95B1\u8B80\u5DF2\u5957\u7528",
@@ -727,9 +795,7 @@ var UI_TEXT = {
     hoverDefinitionEnglish: "\u50C5\u82F1\u6587",
     hoverDefinitionBoth: "\u4E2D\u82F1\u6587",
     hoverDefinitionShortcut: "\u61F8\u505C\u53D6\u8A5E\u5FEB\u6377\u9375",
-    hoverDefinitionShortcutHelp: "\u555F\u7528\u5F8C\uFF0C\u53EA\u6709\u6309\u4F4F Ctrl \u4E26\u61F8\u505C\u5728\u8A5E\u8A9E\u4E0A\u6642\u624D\u986F\u793A\u91CB\u7FA9\uFF1B\u6309\u4F4F Alt \u6216 Shift \u6642\u4E0D\u6703\u89F8\u767C\uFF0C\u4EE5\u907F\u958B\u6C89\u6D78\u7FFB\u8B6F\u3002",
-    hoverDefinitionShortcutOff: "\u4E0D\u4F7F\u7528\u5FEB\u6377\u9375",
-    hoverDefinitionShortcutCtrl: "\u6309\u4F4F Ctrl",
+    hoverDefinitionShortcutHelp: "\u555F\u7528\u5F8C\uFF0C\u6309\u4F4F\u6240\u9078\u5FEB\u6377\u9375\u4E26\u61F8\u505C\u5728\u8A5E\u8A9E\u4E0A\u6642\u986F\u793A\u91CB\u7FA9\u3002",
     hoverDefinitionBlacklistHelp: "\u547D\u4E2D\u5F8C\u9801\u9762\u4E2D\u4E0D\u6703\u986F\u793A\u61F8\u505C\u91CB\u7FA9\u3002",
     searchAnswerSetting: "\u641C\u5C0B\u9801\u986F\u793A\u6A21\u578B\u56DE\u7B54",
     searchAnswerSettingHelp: "\u958B\u555F\u5F8C\u5728\u641C\u5C0B\u7D50\u679C\u9801\u53F3\u5074\u81EA\u52D5\u56DE\u7B54\uFF0C\u4E26\u4F7F\u7528 DuckDuckGo \u641C\u5C0B\u7D50\u679C\u4F5C\u70BA\u53C3\u8003\u3002",
@@ -827,12 +893,14 @@ var UI_TEXT = {
     noReadableTab: "\u6C92\u6709\u53EF\u8B80\u53D6\u7684\u76EE\u524D\u5206\u9801",
     switchingToCurrentPage: "\u6B63\u5728\u5207\u63DB\u5230\u76EE\u524D\u9801\u9762\u2026",
     readingSelection: "\u6B63\u5728\u8B80\u53D6\u9078\u53D6\u5167\u5BB9\u2026",
+    readingCurrentBody: "\u6B63\u5728\u8B80\u53D6\u76EE\u524D\u6B63\u6587\u2026",
     noSelectionOnPage: "\u76EE\u524D\u9801\u9762\u6C92\u6709\u53EF\u5207\u63DB\u7684\u9078\u53D6\u5167\u5BB9",
     searchPermissionRequired: "\u9700\u8981\u641C\u5C0B\u7DB2\u57DF\u6B0A\u9650\u624D\u80FD\u88DC\u5145\u7DB2\u9801\u7D50\u679C",
     searchingWeb: "\u6B63\u5728\u641C\u5C0B\u7DB2\u9801\u2026",
     previewDemoAnswer: "\u9019\u662F\u9810\u89BD\u6A21\u5F0F\u4E0B\u7684\u793A\u4F8B\u56DE\u7B54\u3002\u8F09\u5165\u70BA Chrome \u64F4\u5145\u529F\u80FD\u4E26\u8A2D\u5B9A\u6A21\u578B\u5F15\u64CE\u5F8C\uFF0C\u9019\u88E1\u6703\u986F\u793A\u771F\u5BE6\u7684\u4E32\u6D41\u8F38\u51FA\u3002\n\n- \u9801\u9762\u4E0A\u4E0B\u6587\u53EF\u96A8\u6642\u958B\u95DC\n- \u652F\u63F4\u81EA\u5E36\u6A21\u578B\u548C\u5BC6\u9470\n- \u6B77\u53F2\u8A18\u9304\u53EA\u4FDD\u5B58\u5728\u672C\u6A5F",
     currentAnswer: "\u76EE\u524D\u56DE\u7B54",
     collectingSelection: "\u6B63\u5728\u6536\u96C6\u9078\u53D6\u5167\u5BB9\u2026",
+    collectingCurrentBody: "\u6B63\u5728\u6536\u96C6\u76EE\u524D\u6B63\u6587\u2026",
     collectingTranslatableText: "\u6B63\u5728\u6536\u96C6\u53EF\u7FFB\u8B6F\u6587\u5B57\u2026",
     collectingPageBody: "\u6B63\u5728\u6536\u96C6\u6B63\u6587\u2026",
     noTranslatableBlocks: "\u76EE\u524D\u9801\u9762\u6C92\u6709\u53EF\u7FFB\u8B6F\u7684\u6B63\u6587\u5340\u584A",
@@ -982,6 +1050,7 @@ var UI_TEXT = {
     assistantGuard: "Strictly distinguish facts explicitly provided in context from your inferences. If context is insufficient, say so directly. Do not claim to browse, click, or read content that was not provided.",
     selectionContextIntro: "The user explicitly selected the following text. This turn should only use this selection, not unprovided parts of the page:",
     pageContextIntro: "The user attached the following full page context:",
+    articleContextIntro: "The following is the extracted main article content from the current page:",
     translationInputIntro: "The following content is the input text that must be translated:",
     title: "Title",
     url: "URL",
@@ -999,12 +1068,16 @@ var UI_TEXT = {
     languageSettingHelp: "Affects UI text, built-in tool names, and default prompts.",
     translationLanguageSetting: "Translation Language",
     translationLanguageSettingHelp: "Auto switches between the interface language and English based on the content language; a manual choice always translates into the selected language.",
+    defaultContextScopeSetting: "Default Context",
+    defaultContextScopeHelp: "Controls whether immersive translation and immersive reading edge-menu actions and shortcuts process the current body or the current page by default.",
     immersiveTranslationParagraphShortcut: "Current Paragraph Shortcut",
-    immersiveTranslationPageShortcut: "Current Page Shortcut",
-    immersiveTranslationShortcutHelp: "The paragraph shortcut is for a selection or paragraph, while the page shortcut translates the whole page.",
-    shortcutNone: "None",
+    immersiveTranslationPageShortcut: "Current Context Shortcut",
+    immersiveTranslationModeToggleShortcut: "Translation Display Toggle Shortcut",
+    immersiveTranslationShortcutHelp: "The paragraph shortcut is for a selection or paragraph; the current-context shortcut follows the sidebar's selected context.",
+    shortcutCtrl: "Ctrl",
     shortcutAlt: "Alt",
-    shortcutCtrlAlt: "Ctrl+Alt",
+    shortcutShift: "Shift",
+    shortcutHoldPrefix: "Hold:",
     navChat: "Chat",
     navTools: "Tools",
     navHistory: "History",
@@ -1079,7 +1152,28 @@ var UI_TEXT = {
     removeAttachment: "Remove Attachment",
     openTools: "Open Tools",
     currentPage: "Current Page",
-    selectedContent: "Selected Content",
+    currentBody: "Current Body",
+    currentSelection: "Current Selection",
+    currentBodyPreview: "Current Body Preview",
+    expand: "Expand",
+    collapse: "Collapse",
+    currentBodyQuality: "Quality",
+    currentBodyBlocks: "{count} blocks",
+    currentBodyChars: "{count} chars",
+    currentBodySourceReadability: "Readability",
+    currentBodySourceDom: "DOM",
+    currentBodySourceManual: "Manual",
+    selectCurrentBody: "Select Body",
+    restoreCurrentBody: "Restore Body",
+    selectingBodyRange: "Selecting body range",
+    manualBodySelectionHint: "Wheel/arrow keys adjust level, click to confirm, Esc to cancel",
+    manualBodySelectionCancelled: "Body range selection cancelled",
+    textDensity: "Text Density",
+    linkRatio: "Link Ratio",
+    visibleArea: "Visible Area",
+    continuity: "Continuity",
+    clutterPenalty: "Clutter",
+    languageConsistency: "Language Consistency",
     noneContext: "No Context",
     webSearch: "Web Search",
     addAttachment: "Add Image or Document",
@@ -1111,6 +1205,8 @@ var UI_TEXT = {
     selectionOverlay: "Selection Overlay",
     selectionOverlayHelp: "Controls the floating toolbar after selecting text.",
     selectionOverlayMode: "Trigger Mode",
+    selectionOverlayShortcut: "Selection Overlay Shortcut",
+    selectionOverlayShortcutHelp: "When enabled, the selection overlay appears only while holding the chosen shortcut as you select text or inspect an existing selection.",
     selectionOverlayMinChars: "Minimum Selected Characters",
     selectionOverlayMinCharsHelp: "Show the selection overlay only after this many characters are selected. Minimum: 1.",
     selectionOverlayOff: "Disable Overlay",
@@ -1144,9 +1240,15 @@ var UI_TEXT = {
     immersiveReadingDifficulty: "Word Difficulty",
     immersiveReadingDifficultyHelp: "Higher levels make the model replace fewer, more difficult words.",
     immersiveReadingMode: "Replacement Mode",
+    immersiveReadingParagraphShortcut: "Current Paragraph Reading Shortcut",
+    immersiveReadingContextShortcut: "Current Context Reading Shortcut",
     immersiveReadingTranslation: "Translation",
     immersiveReadingOriginalTranslation: "Original (Translation)",
     immersiveReadingTranslationOriginal: "Translation (Original)",
+    immersiveReadingBackgroundStyle: "Replacement Background Style",
+    immersiveReadingHighlightNone: "No Highlight",
+    immersiveReadingHighlightUniform: "Uniform Highlight",
+    immersiveReadingHighlightLeveled: "Leveled Highlight",
     immersiveReadingOuterEffects: "Outside-parentheses Effects",
     immersiveReadingInnerEffects: "Parentheses and Inner-text Effects",
     immersiveReadingApplied: "Immersive reading applied",
@@ -1197,9 +1299,7 @@ var UI_TEXT = {
     hoverDefinitionEnglish: "English Only",
     hoverDefinitionBoth: "Chinese and English",
     hoverDefinitionShortcut: "Hover Lookup Shortcut",
-    hoverDefinitionShortcutHelp: "When enabled, hold Ctrl while hovering over a word to show its definition. Alt or Shift combinations are ignored to avoid immersive translation shortcuts.",
-    hoverDefinitionShortcutOff: "No Shortcut",
-    hoverDefinitionShortcutCtrl: "Hold Ctrl",
+    hoverDefinitionShortcutHelp: "When enabled, hold the selected shortcut while hovering over a word to show its definition.",
     hoverDefinitionBlacklistHelp: "When matched, hover definitions will not appear on the page.",
     searchAnswerSetting: "Show Model Answers on Search Pages",
     searchAnswerSettingHelp: "When enabled, search result pages show an automatic answer using DuckDuckGo results as reference.",
@@ -1297,12 +1397,14 @@ var UI_TEXT = {
     noReadableTab: "No readable active tab",
     switchingToCurrentPage: "Switching to the current page\u2026",
     readingSelection: "Reading selected content\u2026",
+    readingCurrentBody: "Reading current body\u2026",
     noSelectionOnPage: "The current page has no selectable content to switch to",
     searchPermissionRequired: "Search domain permission is required to supplement web results",
     searchingWeb: "Searching the web\u2026",
     previewDemoAnswer: "This is a preview answer. Once the extension is loaded and a model engine is configured, real streaming output will appear here.\n\n- Page context can be toggled at any time\n- Bring your own model and key\n- History stays local only",
     currentAnswer: "Current Answer",
     collectingSelection: "Collecting selected content\u2026",
+    collectingCurrentBody: "Collecting current body\u2026",
     collectingTranslatableText: "Collecting translatable text\u2026",
     collectingPageBody: "Collecting page body\u2026",
     noTranslatableBlocks: "The current page has no translatable text blocks",
@@ -1452,6 +1554,7 @@ var UI_TEXT = {
     assistantGuard: "\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u306B\u660E\u793A\u3055\u308C\u305F\u4E8B\u5B9F\u3068\u63A8\u8AD6\u3092\u53B3\u5BC6\u306B\u533A\u5225\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u304C\u4E0D\u8DB3\u3057\u3066\u3044\u308B\u5834\u5408\u306F\u660E\u793A\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u63D0\u4F9B\u3055\u308C\u3066\u3044\u306A\u3044\u5185\u5BB9\u3092\u95B2\u89A7\u3001\u30AF\u30EA\u30C3\u30AF\u3001\u8AAD\u4E86\u3057\u305F\u3068\u4E3B\u5F35\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002",
     selectionContextIntro: "\u4EE5\u4E0B\u306F\u30E6\u30FC\u30B6\u30FC\u304C\u660E\u793A\u7684\u306B\u9078\u629E\u3057\u305F\u30C6\u30AD\u30B9\u30C8\u3067\u3059\u3002\u3053\u306E\u30BF\u30FC\u30F3\u3067\u306F\u3053\u306E\u9078\u629E\u7BC4\u56F2\u3060\u3051\u3092\u6271\u3044\u3001\u30DA\u30FC\u30B8\u5185\u306E\u672A\u63D0\u4F9B\u90E8\u5206\u3078\u5E83\u3052\u306A\u3044\u3067\u304F\u3060\u3055\u3044\uFF1A",
     pageContextIntro: "\u4EE5\u4E0B\u306F\u30E6\u30FC\u30B6\u30FC\u304C\u6DFB\u4ED8\u3057\u305F\u30DA\u30FC\u30B8\u5168\u4F53\u306E\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u3067\u3059\uFF1A",
+    articleContextIntro: "\u4EE5\u4E0B\u306F\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u304B\u3089\u62BD\u51FA\u3057\u305F\u672C\u6587\u3067\u3059\uFF1A",
     translationInputIntro: "\u4EE5\u4E0B\u306E\u5185\u5BB9\u306F\u3001\u4ECA\u56DE\u5FC5\u305A\u7FFB\u8A33\u3059\u308B\u5165\u529B\u672C\u6587\u3067\u3059\uFF1A",
     title: "\u30BF\u30A4\u30C8\u30EB",
     url: "URL",
@@ -1469,12 +1572,16 @@ var UI_TEXT = {
     languageSettingHelp: "UI \u30C6\u30AD\u30B9\u30C8\u3001\u5185\u8535\u30C4\u30FC\u30EB\u540D\u3001\u65E2\u5B9A\u30D7\u30ED\u30F3\u30D7\u30C8\u306B\u53CD\u6620\u3055\u308C\u307E\u3059\u3002",
     translationLanguageSetting: "\u7FFB\u8A33\u8A00\u8A9E",
     translationLanguageSettingHelp: "\u81EA\u52D5\u306E\u5834\u5408\u306F\u8868\u793A\u8A00\u8A9E\u3068\u82F1\u8A9E\u3092\u5207\u308A\u66FF\u3048\u307E\u3059\u3002\u624B\u52D5\u9078\u629E\u3067\u306F\u5E38\u306B\u9078\u629E\u3057\u305F\u8A00\u8A9E\u306B\u7FFB\u8A33\u3057\u307E\u3059\u3002",
+    defaultContextScopeSetting: "\u65E2\u5B9A\u306E\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8",
+    defaultContextScopeHelp: "\u30A4\u30DE\u30FC\u30B7\u30D6\u7FFB\u8A33\u3068\u30A4\u30DE\u30FC\u30B7\u30D6\u8AAD\u66F8\u306E\u7AEF\u30E1\u30CB\u30E5\u30FC\u304A\u3088\u3073\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8\u304C\u3001\u65E2\u5B9A\u3067\u73FE\u5728\u306E\u672C\u6587\u307E\u305F\u306F\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u306E\u3069\u3061\u3089\u3092\u51E6\u7406\u3059\u308B\u304B\u3092\u5236\u5FA1\u3057\u307E\u3059\u3002",
     immersiveTranslationParagraphShortcut: "\u73FE\u5728\u306E\u6BB5\u843D\u306E\u30A4\u30DE\u30FC\u30B7\u30D6\u7FFB\u8A33\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8",
-    immersiveTranslationPageShortcut: "\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u306E\u30A4\u30DE\u30FC\u30B7\u30D6\u7FFB\u8A33\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8",
-    immersiveTranslationShortcutHelp: "\u6BB5\u843D\u306F\u9078\u629E\u7BC4\u56F2\u307E\u305F\u306F\u6BB5\u843D\u5185\u5BB9\u3001\u30DA\u30FC\u30B8\u306F\u30DA\u30FC\u30B8\u5168\u4F53\u306E\u7FFB\u8A33\u306B\u4F7F\u3044\u307E\u3059\u3002",
-    shortcutNone: "\u306A\u3057",
+    immersiveTranslationPageShortcut: "\u73FE\u5728\u306E\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u306E\u30A4\u30DE\u30FC\u30B7\u30D6\u7FFB\u8A33\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8",
+    immersiveTranslationModeToggleShortcut: "\u7FFB\u8A33\u8868\u793A\u30E2\u30FC\u30C9\u5207\u308A\u66FF\u3048\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8",
+    immersiveTranslationShortcutHelp: "\u6BB5\u843D\u306F\u9078\u629E\u7BC4\u56F2\u307E\u305F\u306F\u6BB5\u843D\u5185\u5BB9\u306B\u4F7F\u3044\u3001\u73FE\u5728\u306E\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u306F\u30B5\u30A4\u30C9\u30D0\u30FC\u3067\u9078\u629E\u4E2D\u306E\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u306B\u5F93\u3044\u307E\u3059\u3002",
+    shortcutCtrl: "Ctrl",
     shortcutAlt: "Alt",
-    shortcutCtrlAlt: "Ctrl+Alt",
+    shortcutShift: "Shift",
+    shortcutHoldPrefix: "\u62BC\u3059:",
     navChat: "\u30C1\u30E3\u30C3\u30C8",
     navTools: "\u30C4\u30FC\u30EB",
     navHistory: "\u5C65\u6B74",
@@ -1549,7 +1656,28 @@ var UI_TEXT = {
     removeAttachment: "\u6DFB\u4ED8\u3092\u524A\u9664",
     openTools: "\u30C4\u30FC\u30EB\u3092\u958B\u304F",
     currentPage: "\u73FE\u5728\u306E\u30DA\u30FC\u30B8",
-    selectedContent: "\u9078\u629E\u5185\u5BB9",
+    currentBody: "\u73FE\u5728\u306E\u672C\u6587",
+    currentSelection: "\u73FE\u5728\u306E\u9078\u629E",
+    currentBodyPreview: "\u672C\u6587\u30D7\u30EC\u30D3\u30E5\u30FC",
+    expand: "\u5C55\u958B",
+    collapse: "\u6298\u308A\u305F\u305F\u3080",
+    currentBodyQuality: "\u54C1\u8CEA",
+    currentBodyBlocks: "{count} \u30D6\u30ED\u30C3\u30AF",
+    currentBodyChars: "{count} \u6587\u5B57",
+    currentBodySourceReadability: "Readability",
+    currentBodySourceDom: "DOM",
+    currentBodySourceManual: "\u624B\u52D5\u9078\u629E",
+    selectCurrentBody: "\u672C\u6587\u3092\u9078\u629E",
+    restoreCurrentBody: "\u672C\u6587\u3092\u5FA9\u5143",
+    selectingBodyRange: "\u672C\u6587\u7BC4\u56F2\u3092\u9078\u629E\u4E2D",
+    manualBodySelectionHint: "\u30DB\u30A4\u30FC\u30EB/\u77E2\u5370\u30AD\u30FC\u3067\u968E\u5C64\u8ABF\u6574\u3001\u30AF\u30EA\u30C3\u30AF\u3067\u78BA\u5B9A\u3001Esc \u3067\u30AD\u30E3\u30F3\u30BB\u30EB",
+    manualBodySelectionCancelled: "\u672C\u6587\u7BC4\u56F2\u306E\u9078\u629E\u3092\u30AD\u30E3\u30F3\u30BB\u30EB\u3057\u307E\u3057\u305F",
+    textDensity: "\u30C6\u30AD\u30B9\u30C8\u5BC6\u5EA6",
+    linkRatio: "\u30EA\u30F3\u30AF\u6BD4\u7387",
+    visibleArea: "\u8868\u793A\u9762\u7A4D",
+    continuity: "\u9023\u7D9A\u6027",
+    clutterPenalty: "\u30CE\u30A4\u30BA",
+    languageConsistency: "\u8A00\u8A9E\u4E00\u8CAB\u6027",
     noneContext: "\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u306A\u3057",
     webSearch: "\u30A6\u30A7\u30D6\u691C\u7D22",
     addAttachment: "\u753B\u50CF\u307E\u305F\u306F\u6587\u66F8\u3092\u8FFD\u52A0",
@@ -1581,6 +1709,8 @@ var UI_TEXT = {
     selectionOverlay: "\u9078\u629E\u30AA\u30FC\u30D0\u30FC\u30EC\u30A4",
     selectionOverlayHelp: "\u30C6\u30AD\u30B9\u30C8\u9078\u629E\u5F8C\u306B\u8868\u793A\u3055\u308C\u308B\u30D5\u30ED\u30FC\u30C6\u30A3\u30F3\u30B0\u30C4\u30FC\u30EB\u30D0\u30FC\u3092\u5236\u5FA1\u3057\u307E\u3059\u3002",
     selectionOverlayMode: "\u8D77\u52D5\u65B9\u5F0F",
+    selectionOverlayShortcut: "\u9078\u629E\u30AA\u30FC\u30D0\u30FC\u30EC\u30A4\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8",
+    selectionOverlayShortcutHelp: "\u6709\u52B9\u306B\u3059\u308B\u3068\u3001\u9078\u629E\u3057\u305F\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8\u3092\u62BC\u3057\u306A\u304C\u3089\u30C6\u30AD\u30B9\u30C8\u3092\u9078\u629E\u3059\u308B\u5834\u5408\u3001\u307E\u305F\u306F\u65E2\u5B58\u306E\u9078\u629E\u7BC4\u56F2\u3092\u898B\u308B\u5834\u5408\u306B\u3060\u3051\u30AA\u30FC\u30D0\u30FC\u30EC\u30A4\u3092\u8868\u793A\u3057\u307E\u3059\u3002",
     selectionOverlayMinChars: "\u6700\u5C0F\u9078\u629E\u6587\u5B57\u6570",
     selectionOverlayMinCharsHelp: "\u9078\u629E\u6587\u5B57\u6570\u304C\u3053\u306E\u5024\u4EE5\u4E0A\u306E\u5834\u5408\u306B\u30AA\u30FC\u30D0\u30FC\u30EC\u30A4\u3092\u8868\u793A\u3057\u307E\u3059\u3002\u6700\u5C0F\u5024\u306F 1 \u3067\u3059\u3002",
     selectionOverlayOff: "\u9078\u629E\u30AA\u30FC\u30D0\u30FC\u30EC\u30A4\u3092\u7121\u52B9\u5316",
@@ -1614,9 +1744,15 @@ var UI_TEXT = {
     immersiveReadingDifficulty: "\u8A9E\u53E5\u306E\u96E3\u6613\u5EA6",
     immersiveReadingDifficultyHelp: "\u96E3\u6613\u5EA6\u304C\u9AD8\u3044\u307B\u3069\u3001\u3088\u308A\u5C11\u6570\u306E\u96E3\u3057\u3044\u8A9E\u53E5\u3060\u3051\u3092\u7F6E\u304D\u63DB\u3048\u307E\u3059\u3002",
     immersiveReadingMode: "\u7F6E\u63DB\u30E2\u30FC\u30C9",
+    immersiveReadingParagraphShortcut: "\u73FE\u5728\u306E\u6BB5\u843D\u306E\u30A4\u30DE\u30FC\u30B7\u30D6\u30EA\u30FC\u30C7\u30A3\u30F3\u30B0\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8",
+    immersiveReadingContextShortcut: "\u73FE\u5728\u306E\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u306E\u30A4\u30DE\u30FC\u30B7\u30D6\u30EA\u30FC\u30C7\u30A3\u30F3\u30B0\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8",
     immersiveReadingTranslation: "\u7FFB\u8A33",
     immersiveReadingOriginalTranslation: "\u539F\u6587\uFF08\u7FFB\u8A33\uFF09",
     immersiveReadingTranslationOriginal: "\u7FFB\u8A33\uFF08\u539F\u6587\uFF09",
+    immersiveReadingBackgroundStyle: "\u7F6E\u63DB\u5185\u5BB9\u306E\u80CC\u666F\u30B9\u30BF\u30A4\u30EB",
+    immersiveReadingHighlightNone: "\u30CF\u30A4\u30E9\u30A4\u30C8\u306A\u3057",
+    immersiveReadingHighlightUniform: "\u4E00\u5F8B\u30CF\u30A4\u30E9\u30A4\u30C8",
+    immersiveReadingHighlightLeveled: "\u30EC\u30D9\u30EB\u5225\u30CF\u30A4\u30E9\u30A4\u30C8",
     immersiveReadingOuterEffects: "\u62EC\u5F27\u5916\u306E\u6587\u5B57\u52B9\u679C",
     immersiveReadingInnerEffects: "\u62EC\u5F27\u3068\u62EC\u5F27\u5185\u306E\u6587\u5B57\u52B9\u679C",
     immersiveReadingApplied: "\u30A4\u30DE\u30FC\u30B7\u30D6\u30EA\u30FC\u30C7\u30A3\u30F3\u30B0\u3092\u9069\u7528\u3057\u307E\u3057\u305F",
@@ -1667,9 +1803,7 @@ var UI_TEXT = {
     hoverDefinitionEnglish: "\u82F1\u8A9E\u306E\u307F",
     hoverDefinitionBoth: "\u4E2D\u56FD\u8A9E\u3068\u82F1\u8A9E",
     hoverDefinitionShortcut: "\u30DB\u30D0\u30FC\u5358\u8A9E\u691C\u7D22\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8",
-    hoverDefinitionShortcutHelp: "\u6709\u52B9\u306B\u3059\u308B\u3068\u3001Ctrl \u3092\u62BC\u3057\u306A\u304C\u3089\u5358\u8A9E\u306B\u30DB\u30D0\u30FC\u3057\u305F\u3068\u304D\u3060\u3051\u610F\u5473\u3092\u8868\u793A\u3057\u307E\u3059\u3002\u7FFB\u8A33\u306E Alt \u3084 Shift \u3068\u306E\u7D44\u307F\u5408\u308F\u305B\u3067\u306F\u52D5\u4F5C\u3057\u307E\u305B\u3093\u3002",
-    hoverDefinitionShortcutOff: "\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8\u306A\u3057",
-    hoverDefinitionShortcutCtrl: "Ctrl \u3092\u62BC\u3059",
+    hoverDefinitionShortcutHelp: "\u6709\u52B9\u306B\u3059\u308B\u3068\u3001\u9078\u629E\u3057\u305F\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8\u3092\u62BC\u3057\u306A\u304C\u3089\u5358\u8A9E\u306B\u30DB\u30D0\u30FC\u3057\u305F\u3068\u304D\u306B\u610F\u5473\u3092\u8868\u793A\u3057\u307E\u3059\u3002",
     hoverDefinitionBlacklistHelp: "\u4E00\u81F4\u3057\u305F\u30DA\u30FC\u30B8\u3067\u306F\u30DB\u30D0\u30FC\u8F9E\u66F8\u3092\u8868\u793A\u3057\u307E\u305B\u3093\u3002",
     searchAnswerSetting: "\u691C\u7D22\u30DA\u30FC\u30B8\u306B\u30E2\u30C7\u30EB\u56DE\u7B54\u3092\u8868\u793A",
     searchAnswerSettingHelp: "\u6709\u52B9\u306B\u3059\u308B\u3068\u691C\u7D22\u7D50\u679C\u30DA\u30FC\u30B8\u306E\u53F3\u5074\u306B\u3001DuckDuckGo \u306E\u691C\u7D22\u7D50\u679C\u3092\u53C2\u8003\u306B\u3057\u305F\u81EA\u52D5\u56DE\u7B54\u3092\u8868\u793A\u3057\u307E\u3059\u3002",
@@ -1767,12 +1901,14 @@ var UI_TEXT = {
     noReadableTab: "\u8AAD\u307F\u53D6\u308C\u308B\u73FE\u5728\u306E\u30BF\u30D6\u304C\u3042\u308A\u307E\u305B\u3093",
     switchingToCurrentPage: "\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u3078\u5207\u308A\u66FF\u3048\u3066\u3044\u307E\u3059\u2026",
     readingSelection: "\u9078\u629E\u5185\u5BB9\u3092\u8AAD\u307F\u53D6\u3063\u3066\u3044\u307E\u3059\u2026",
+    readingCurrentBody: "\u73FE\u5728\u306E\u672C\u6587\u3092\u8AAD\u307F\u53D6\u3063\u3066\u3044\u307E\u3059\u2026",
     noSelectionOnPage: "\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u306B\u306F\u5207\u308A\u66FF\u3048\u53EF\u80FD\u306A\u9078\u629E\u5185\u5BB9\u304C\u3042\u308A\u307E\u305B\u3093",
     searchPermissionRequired: "\u30A6\u30A7\u30D6\u7D50\u679C\u3092\u88DC\u8DB3\u3059\u308B\u306B\u306F\u691C\u7D22\u30C9\u30E1\u30A4\u30F3\u6A29\u9650\u304C\u5FC5\u8981\u3067\u3059",
     searchingWeb: "\u30A6\u30A7\u30D6\u3092\u691C\u7D22\u3057\u3066\u3044\u307E\u3059\u2026",
     previewDemoAnswer: "\u3053\u308C\u306F\u30D7\u30EC\u30D3\u30E5\u30FC\u30E2\u30FC\u30C9\u306E\u30B5\u30F3\u30D7\u30EB\u56DE\u7B54\u3067\u3059\u3002Chrome \u62E1\u5F35\u6A5F\u80FD\u3068\u3057\u3066\u8AAD\u307F\u8FBC\u307F\u3001\u30E2\u30C7\u30EB\u30A8\u30F3\u30B8\u30F3\u3092\u8A2D\u5B9A\u3059\u308B\u3068\u3001\u3053\u3053\u306B\u5B9F\u969B\u306E\u30B9\u30C8\u30EA\u30FC\u30DF\u30F3\u30B0\u51FA\u529B\u304C\u8868\u793A\u3055\u308C\u307E\u3059\u3002\n\n- \u30DA\u30FC\u30B8\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u306F\u3044\u3064\u3067\u3082\u5207\u308A\u66FF\u3048\u53EF\u80FD\n- \u81EA\u5206\u306E\u30E2\u30C7\u30EB\u3068\u30AD\u30FC\u3092\u4F7F\u7528\u53EF\u80FD\n- \u5C65\u6B74\u306F\u30ED\u30FC\u30AB\u30EB\u306B\u306E\u307F\u4FDD\u5B58",
     currentAnswer: "\u73FE\u5728\u306E\u56DE\u7B54",
     collectingSelection: "\u9078\u629E\u5185\u5BB9\u3092\u53CE\u96C6\u3057\u3066\u3044\u307E\u3059\u2026",
+    collectingCurrentBody: "\u73FE\u5728\u306E\u672C\u6587\u3092\u53CE\u96C6\u3057\u3066\u3044\u307E\u3059\u2026",
     collectingTranslatableText: "\u7FFB\u8A33\u53EF\u80FD\u306A\u30C6\u30AD\u30B9\u30C8\u3092\u53CE\u96C6\u3057\u3066\u3044\u307E\u3059\u2026",
     collectingPageBody: "\u672C\u6587\u3092\u53CE\u96C6\u3057\u3066\u3044\u307E\u3059\u2026",
     noTranslatableBlocks: "\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u306B\u306F\u7FFB\u8A33\u53EF\u80FD\u306A\u672C\u6587\u30D6\u30ED\u30C3\u30AF\u304C\u3042\u308A\u307E\u305B\u3093",
@@ -1922,6 +2058,7 @@ var UI_TEXT = {
     assistantGuard: "\uCEE8\uD14D\uC2A4\uD2B8\uC5D0 \uBA85\uC2DC\uB41C \uC0AC\uC2E4\uACFC \uCD94\uB860\uC744 \uC5C4\uACA9\uD788 \uAD6C\uBD84\uD558\uC138\uC694. \uCEE8\uD14D\uC2A4\uD2B8\uAC00 \uBD80\uC871\uD558\uBA74 \uC9C1\uC811 \uB9D0\uD558\uC138\uC694. \uC81C\uACF5\uB418\uC9C0 \uC54A\uC740 \uB0B4\uC6A9\uC744 \uD0D0\uC0C9, \uD074\uB9AD, \uC77D\uC5C8\uB2E4\uACE0 \uC8FC\uC7A5\uD558\uC9C0 \uB9C8\uC138\uC694.",
     selectionContextIntro: "\uB2E4\uC74C\uC740 \uC0AC\uC6A9\uC790\uAC00 \uC9C1\uC811 \uC120\uD0DD\uD55C \uD14D\uC2A4\uD2B8\uC785\uB2C8\uB2E4. \uC774\uBC88 \uC791\uC5C5\uC740 \uC774 \uC120\uD0DD \uB0B4\uC6A9\uB9CC \uB300\uC0C1\uC73C\uB85C \uD558\uBA70 \uC81C\uACF5\uB418\uC9C0 \uC54A\uC740 \uD398\uC774\uC9C0 \uBD80\uBD84\uC73C\uB85C \uD655\uC7A5\uD558\uC9C0 \uB9C8\uC138\uC694:",
     pageContextIntro: "\uB2E4\uC74C\uC740 \uC0AC\uC6A9\uC790\uAC00 \uCCA8\uBD80\uD55C \uC804\uCCB4 \uD398\uC774\uC9C0 \uCEE8\uD14D\uC2A4\uD2B8\uC785\uB2C8\uB2E4:",
+    articleContextIntro: "\uB2E4\uC74C\uC740 \uD604\uC7AC \uD398\uC774\uC9C0\uC5D0\uC11C \uCD94\uCD9C\uD55C \uBCF8\uBB38\uC785\uB2C8\uB2E4:",
     translationInputIntro: "\uB2E4\uC74C \uB0B4\uC6A9\uC740 \uC774\uBC88\uC5D0 \uBC18\uB4DC\uC2DC \uBC88\uC5ED\uD574\uC57C \uD558\uB294 \uC785\uB825 \uBCF8\uBB38\uC785\uB2C8\uB2E4:",
     title: "\uC81C\uBAA9",
     url: "\uC8FC\uC18C",
@@ -1939,12 +2076,16 @@ var UI_TEXT = {
     languageSettingHelp: "UI \uD14D\uC2A4\uD2B8, \uB0B4\uC7A5 \uB3C4\uAD6C \uC774\uB984, \uAE30\uBCF8 \uD504\uB86C\uD504\uD2B8\uC5D0 \uC801\uC6A9\uB429\uB2C8\uB2E4.",
     translationLanguageSetting: "\uBC88\uC5ED \uC5B8\uC5B4",
     translationLanguageSettingHelp: "\uC790\uB3D9\uC774\uBA74 \uC778\uD130\uD398\uC774\uC2A4 \uC5B8\uC5B4\uC640 \uC601\uC5B4 \uC0AC\uC774\uB97C \uC804\uD658\uD569\uB2C8\uB2E4. \uC218\uB3D9 \uC120\uD0DD\uC740 \uD56D\uC0C1 \uC120\uD0DD\uD55C \uC5B8\uC5B4\uB85C \uBC88\uC5ED\uD569\uB2C8\uB2E4.",
+    defaultContextScopeSetting: "\uAE30\uBCF8 \uCEE8\uD14D\uC2A4\uD2B8",
+    defaultContextScopeHelp: "\uBAB0\uC785 \uBC88\uC5ED\uACFC \uBAB0\uC785 \uC77D\uAE30\uC758 \uAC00\uC7A5\uC790\uB9AC \uBA54\uB274 \uBC0F \uB2E8\uCD95\uD0A4\uAC00 \uAE30\uBCF8\uC801\uC73C\uB85C \uD604\uC7AC \uBCF8\uBB38 \uB610\uB294 \uD604\uC7AC \uD398\uC774\uC9C0 \uC911 \uBB34\uC5C7\uC744 \uCC98\uB9AC\uD560\uC9C0 \uC81C\uC5B4\uD569\uB2C8\uB2E4.",
     immersiveTranslationParagraphShortcut: "\uD604\uC7AC \uBB38\uB2E8 \uBAB0\uC785 \uBC88\uC5ED \uB2E8\uCD95\uD0A4",
-    immersiveTranslationPageShortcut: "\uD604\uC7AC \uD398\uC774\uC9C0 \uBAB0\uC785 \uBC88\uC5ED \uB2E8\uCD95\uD0A4",
-    immersiveTranslationShortcutHelp: "\uBB38\uB2E8\uC740 \uC120\uD0DD \uC601\uC5ED \uB610\uB294 \uBB38\uB2E8 \uB0B4\uC6A9\uC5D0 \uC0AC\uC6A9\uD558\uACE0, \uD398\uC774\uC9C0\uB294 \uC804\uCCB4 \uD398\uC774\uC9C0 \uBC88\uC5ED\uC5D0 \uC0AC\uC6A9\uD569\uB2C8\uB2E4.",
-    shortcutNone: "\uC5C6\uC74C",
+    immersiveTranslationPageShortcut: "\uD604\uC7AC \uCEE8\uD14D\uC2A4\uD2B8 \uBAB0\uC785 \uBC88\uC5ED \uB2E8\uCD95\uD0A4",
+    immersiveTranslationModeToggleShortcut: "\uBC88\uC5ED \uD45C\uC2DC \uBAA8\uB4DC \uC804\uD658 \uB2E8\uCD95\uD0A4",
+    immersiveTranslationShortcutHelp: "\uBB38\uB2E8\uC740 \uC120\uD0DD \uC601\uC5ED \uB610\uB294 \uBB38\uB2E8 \uB0B4\uC6A9\uC5D0 \uC0AC\uC6A9\uD558\uACE0, \uD604\uC7AC \uCEE8\uD14D\uC2A4\uD2B8\uB294 \uC0AC\uC774\uB4DC\uBC14\uC5D0\uC11C \uC120\uD0DD\uD55C \uCEE8\uD14D\uC2A4\uD2B8\uB97C \uB530\uB985\uB2C8\uB2E4.",
+    shortcutCtrl: "Ctrl",
     shortcutAlt: "Alt",
-    shortcutCtrlAlt: "Ctrl+Alt",
+    shortcutShift: "Shift",
+    shortcutHoldPrefix: "\uB204\uB974\uAE30:",
     navChat: "\uB300\uD654",
     navTools: "\uB3C4\uAD6C",
     navHistory: "\uAE30\uB85D",
@@ -2019,7 +2160,28 @@ var UI_TEXT = {
     removeAttachment: "\uCCA8\uBD80 \uC0AD\uC81C",
     openTools: "\uB3C4\uAD6C \uC5F4\uAE30",
     currentPage: "\uD604\uC7AC \uD398\uC774\uC9C0",
-    selectedContent: "\uC120\uD0DD \uB0B4\uC6A9",
+    currentBody: "\uD604\uC7AC \uBCF8\uBB38",
+    currentSelection: "\uD604\uC7AC \uC120\uD0DD",
+    currentBodyPreview: "\uD604\uC7AC \uBCF8\uBB38 \uBBF8\uB9AC\uBCF4\uAE30",
+    expand: "\uD3BC\uCE58\uAE30",
+    collapse: "\uC811\uAE30",
+    currentBodyQuality: "\uD488\uC9C8",
+    currentBodyBlocks: "{count}\uAC1C \uBE14\uB85D",
+    currentBodyChars: "{count}\uC790",
+    currentBodySourceReadability: "Readability",
+    currentBodySourceDom: "DOM",
+    currentBodySourceManual: "\uC218\uB3D9 \uC120\uD0DD",
+    selectCurrentBody: "\uBCF8\uBB38 \uC120\uD0DD",
+    restoreCurrentBody: "\uBCF8\uBB38 \uBCF5\uC6D0",
+    selectingBodyRange: "\uBCF8\uBB38 \uBC94\uC704 \uC120\uD0DD \uC911",
+    manualBodySelectionHint: "\uD720/\uD654\uC0B4\uD45C \uD0A4\uB85C \uACC4\uCE35 \uC870\uC815, \uD074\uB9AD\uC73C\uB85C \uD655\uC815, Esc\uB85C \uCDE8\uC18C",
+    manualBodySelectionCancelled: "\uBCF8\uBB38 \uBC94\uC704 \uC120\uD0DD\uC744 \uCDE8\uC18C\uD588\uC2B5\uB2C8\uB2E4",
+    textDensity: "\uD14D\uC2A4\uD2B8 \uBC00\uB3C4",
+    linkRatio: "\uB9C1\uD06C \uBE44\uC728",
+    visibleArea: "\uAC00\uC2DC \uC601\uC5ED",
+    continuity: "\uC5F0\uC18D\uC131",
+    clutterPenalty: "\uC7A1\uC74C",
+    languageConsistency: "\uC5B8\uC5B4 \uC77C\uAD00\uC131",
     noneContext: "\uCEE8\uD14D\uC2A4\uD2B8 \uC5C6\uC74C",
     webSearch: "\uC6F9 \uAC80\uC0C9",
     addAttachment: "\uC774\uBBF8\uC9C0 \uB610\uB294 \uBB38\uC11C \uCD94\uAC00",
@@ -2051,6 +2213,8 @@ var UI_TEXT = {
     selectionOverlay: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 \uD50C\uB85C\uD305",
     selectionOverlayHelp: "\uD14D\uC2A4\uD2B8 \uC120\uD0DD \uD6C4 \uD45C\uC2DC\uB418\uB294 \uD50C\uB85C\uD305 \uB3C4\uAD6C \uBAA8\uC74C\uC744 \uC81C\uC5B4\uD569\uB2C8\uB2E4.",
     selectionOverlayMode: "\uC2E4\uD589 \uBC29\uC2DD",
+    selectionOverlayShortcut: "\uC120\uD0DD \uD50C\uB85C\uD305 \uB2E8\uCD95\uD0A4",
+    selectionOverlayShortcutHelp: "\uCF1C\uBA74 \uC120\uD0DD\uD55C \uB2E8\uCD95\uD0A4\uB97C \uB204\uB978 \uCC44 \uD14D\uC2A4\uD2B8\uB97C \uC120\uD0DD\uD558\uAC70\uB098 \uAE30\uC874 \uC120\uD0DD \uC601\uC5ED\uC744 \uD655\uC778\uD560 \uB54C\uB9CC \uD50C\uB85C\uD305 \uB3C4\uAD6C\uB97C \uD45C\uC2DC\uD569\uB2C8\uB2E4.",
     selectionOverlayMinChars: "\uCD5C\uC18C \uC120\uD0DD \uAE00\uC790 \uC218",
     selectionOverlayMinCharsHelp: "\uC120\uD0DD\uD55C \uAE00\uC790 \uC218\uAC00 \uC774 \uAC12 \uC774\uC0C1\uC77C \uB54C \uD50C\uB85C\uD305 \uB3C4\uAD6C\uB97C \uD45C\uC2DC\uD569\uB2C8\uB2E4. \uCD5C\uC19F\uAC12\uC740 1\uC785\uB2C8\uB2E4.",
     selectionOverlayOff: "\uC120\uD0DD \uD50C\uB85C\uD305 \uB044\uAE30",
@@ -2084,9 +2248,15 @@ var UI_TEXT = {
     immersiveReadingDifficulty: "\uB2E8\uC5B4 \uB09C\uC774\uB3C4",
     immersiveReadingDifficultyHelp: "\uB09C\uC774\uB3C4\uAC00 \uB192\uC744\uC218\uB85D \uB354 \uC801\uACE0 \uC5B4\uB824\uC6B4 \uB2E8\uC5B4\uB9CC \uBC14\uAFC9\uB2C8\uB2E4.",
     immersiveReadingMode: "\uAD50\uCCB4 \uBAA8\uB4DC",
+    immersiveReadingParagraphShortcut: "\uD604\uC7AC \uBB38\uB2E8 \uBAB0\uC785 \uC77D\uAE30 \uB2E8\uCD95\uD0A4",
+    immersiveReadingContextShortcut: "\uD604\uC7AC \uCEE8\uD14D\uC2A4\uD2B8 \uBAB0\uC785 \uC77D\uAE30 \uB2E8\uCD95\uD0A4",
     immersiveReadingTranslation: "\uBC88\uC5ED\uBB38",
     immersiveReadingOriginalTranslation: "\uC6D0\uBB38(\uBC88\uC5ED\uBB38)",
     immersiveReadingTranslationOriginal: "\uBC88\uC5ED\uBB38(\uC6D0\uBB38)",
+    immersiveReadingBackgroundStyle: "\uAD50\uCCB4 \uB0B4\uC6A9 \uBC30\uACBD \uC2A4\uD0C0\uC77C",
+    immersiveReadingHighlightNone: "\uAC15\uC870 \uC5C6\uC74C",
+    immersiveReadingHighlightUniform: "\uD1B5\uC77C \uAC15\uC870",
+    immersiveReadingHighlightLeveled: "\uB2E8\uACC4\uBCC4 \uAC15\uC870",
     immersiveReadingOuterEffects: "\uAD04\uD638 \uBC16 \uBB38\uC790 \uD6A8\uACFC",
     immersiveReadingInnerEffects: "\uAD04\uD638 \uBC0F \uAD04\uD638 \uC548 \uBB38\uC790 \uD6A8\uACFC",
     immersiveReadingApplied: "\uBAB0\uC785 \uC77D\uAE30\uAC00 \uC801\uC6A9\uB418\uC5C8\uC2B5\uB2C8\uB2E4",
@@ -2137,9 +2307,7 @@ var UI_TEXT = {
     hoverDefinitionEnglish: "\uC601\uC5B4\uB9CC",
     hoverDefinitionBoth: "\uC911\uAD6D\uC5B4\uC640 \uC601\uC5B4",
     hoverDefinitionShortcut: "\uD638\uBC84 \uB2E8\uC5B4 \uCC3E\uAE30 \uB2E8\uCD95\uD0A4",
-    hoverDefinitionShortcutHelp: "\uCF1C\uBA74 Ctrl\uC744 \uB204\uB978 \uCC44 \uB2E8\uC5B4\uC5D0 \uB9C8\uC6B0\uC2A4\uB97C \uC62C\uB9B4 \uB54C\uB9CC \uB73B\uC744 \uD45C\uC2DC\uD569\uB2C8\uB2E4. \uBC88\uC5ED\uC758 Alt \uB610\uB294 Shift \uC870\uD569\uC5D0\uC11C\uB294 \uC791\uB3D9\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
-    hoverDefinitionShortcutOff: "\uB2E8\uCD95\uD0A4 \uC0AC\uC6A9 \uC548 \uD568",
-    hoverDefinitionShortcutCtrl: "Ctrl \uB204\uB974\uAE30",
+    hoverDefinitionShortcutHelp: "\uCF1C\uBA74 \uC120\uD0DD\uD55C \uB2E8\uCD95\uD0A4\uB97C \uB204\uB978 \uCC44 \uB2E8\uC5B4\uC5D0 \uB9C8\uC6B0\uC2A4\uB97C \uC62C\uB9B4 \uB54C \uB73B\uC744 \uD45C\uC2DC\uD569\uB2C8\uB2E4.",
     hoverDefinitionBlacklistHelp: "\uC77C\uCE58\uD558\uB294 \uD398\uC774\uC9C0\uC5D0\uC11C\uB294 \uB9C8\uC6B0\uC2A4 \uC624\uBC84 \uB73B\uD480\uC774\uAC00 \uD45C\uC2DC\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
     searchAnswerSetting: "\uAC80\uC0C9 \uD398\uC774\uC9C0\uC5D0 \uBAA8\uB378 \uB2F5\uBCC0 \uD45C\uC2DC",
     searchAnswerSettingHelp: "\uCF1C\uBA74 \uAC80\uC0C9 \uACB0\uACFC \uD398\uC774\uC9C0 \uC624\uB978\uCABD\uC5D0 DuckDuckGo \uAC80\uC0C9 \uACB0\uACFC\uB97C \uCC38\uACE0\uD55C \uC790\uB3D9 \uB2F5\uBCC0\uC744 \uD45C\uC2DC\uD569\uB2C8\uB2E4.",
@@ -2237,12 +2405,14 @@ var UI_TEXT = {
     noReadableTab: "\uC77D\uC744 \uC218 \uC788\uB294 \uD604\uC7AC \uD0ED\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
     switchingToCurrentPage: "\uD604\uC7AC \uD398\uC774\uC9C0\uB85C \uC804\uD658 \uC911\u2026",
     readingSelection: "\uC120\uD0DD \uB0B4\uC6A9\uC744 \uC77D\uB294 \uC911\u2026",
+    readingCurrentBody: "\uD604\uC7AC \uBCF8\uBB38\uC744 \uC77D\uB294 \uC911\u2026",
     noSelectionOnPage: "\uD604\uC7AC \uD398\uC774\uC9C0\uC5D0\uB294 \uC804\uD658\uD560 \uC218 \uC788\uB294 \uC120\uD0DD \uB0B4\uC6A9\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
     searchPermissionRequired: "\uC6F9 \uACB0\uACFC\uB97C \uBCF4\uC644\uD558\uB824\uBA74 \uAC80\uC0C9 \uB3C4\uBA54\uC778 \uAD8C\uD55C\uC774 \uD544\uC694\uD569\uB2C8\uB2E4",
     searchingWeb: "\uC6F9 \uAC80\uC0C9 \uC911\u2026",
     previewDemoAnswer: "\uBBF8\uB9AC\uBCF4\uAE30 \uBAA8\uB4DC\uC758 \uC608\uC2DC \uB2F5\uBCC0\uC785\uB2C8\uB2E4. Chrome \uD655\uC7A5 \uD504\uB85C\uADF8\uB7A8\uC73C\uB85C \uBD88\uB7EC\uC624\uACE0 \uBAA8\uB378 \uC5D4\uC9C4\uC744 \uC124\uC815\uD558\uBA74 \uC2E4\uC81C \uC2A4\uD2B8\uB9AC\uBC0D \uCD9C\uB825\uC774 \uC5EC\uAE30\uC5D0 \uD45C\uC2DC\uB429\uB2C8\uB2E4.\n\n- \uD398\uC774\uC9C0 \uCEE8\uD14D\uC2A4\uD2B8\uB294 \uC5B8\uC81C\uB4E0 \uCF1C\uACE0 \uB04C \uC218 \uC788\uC2B5\uB2C8\uB2E4\n- \uC9C1\uC811 \uAC00\uC838\uC628 \uBAA8\uB378\uACFC \uD0A4\uB97C \uC9C0\uC6D0\uD569\uB2C8\uB2E4\n- \uAE30\uB85D\uC740 \uB85C\uCEEC\uC5D0\uB9CC \uC800\uC7A5\uB429\uB2C8\uB2E4",
     currentAnswer: "\uD604\uC7AC \uB2F5\uBCC0",
     collectingSelection: "\uC120\uD0DD \uB0B4\uC6A9 \uC218\uC9D1 \uC911\u2026",
+    collectingCurrentBody: "\uD604\uC7AC \uBCF8\uBB38 \uC218\uC9D1 \uC911\u2026",
     collectingTranslatableText: "\uBC88\uC5ED \uAC00\uB2A5\uD55C \uD14D\uC2A4\uD2B8 \uC218\uC9D1 \uC911\u2026",
     collectingPageBody: "\uBCF8\uBB38 \uC218\uC9D1 \uC911\u2026",
     noTranslatableBlocks: "\uD604\uC7AC \uD398\uC774\uC9C0\uC5D0 \uBC88\uC5ED \uAC00\uB2A5\uD55C \uBCF8\uBB38 \uBE14\uB85D\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
@@ -2437,16 +2607,16 @@ function translationFormatInstruction(config) {
   const { interfaceLanguage } = resolvePromptConfig(config);
   switch (interfaceLanguage) {
     case "zh-TW":
-      return "\u56B4\u683C\u4FDD\u6301\u539F\u6587\u7684\u6BB5\u843D\u3001\u63DB\u884C\u3001\u6A19\u984C\u548C\u6E05\u55AE\u7D50\u69CB\uFF0C\u6BCF\u500B\u539F\u6587\u6BB5\u843D\u5C0D\u61C9\u4E00\u500B\u8B6F\u6587\u6BB5\u843D\uFF0C\u4E0D\u8981\u5408\u4F75\u6BB5\u843D\u3002{{WEBMIND_PARAGRAPH_BREAK_N}} \u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u6BB5\u843D\u5206\u9694\u9810\u7559\u4F4D\u7F6E\uFF0C{{WEBMIND_CITATION_N}} \u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u5F15\u7528\u4E0B\u6A19\u9810\u7559\u4F4D\u7F6E\uFF1B\u5169\u8005\u90FD\u5FC5\u9808\u9010\u5B57\u4FDD\u7559\u5728\u539F\u4F4D\u7F6E\uFF0C\u4E0D\u8981\u5C55\u958B\u3001\u89E3\u91CB\u3001\u6539\u5BEB\u6216\u522A\u9664\uFF0C\u4E0D\u8981\u8F38\u51FA\u300E\u8A72\u8CC7\u8A0A\u4F86\u81EA\u2026\u2026\u5F15\u7528\u300F\u4E4B\u985E\u7684\u8AAA\u660E\u3002";
+      return "\u56B4\u683C\u4FDD\u6301\u539F\u6587\u7684\u6BB5\u843D\u3001\u63DB\u884C\u3001\u6A19\u984C\u548C\u6E05\u55AE\u7D50\u69CB\uFF0C\u6BCF\u500B\u539F\u6587\u6BB5\u843D\u5C0D\u61C9\u4E00\u500B\u8B6F\u6587\u6BB5\u843D\uFF0C\u4E0D\u8981\u5408\u4F75\u6BB5\u843D\u3002{{WEBMIND_PARAGRAPH_BREAK_N}} \u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u6BB5\u843D\u5206\u9694\u9810\u7559\u4F4D\u7F6E\uFF0C{{WEBMIND_CITATION_N}} \u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u5F15\u7528\u4E0B\u6A19\u9810\u7559\u4F4D\u7F6E\uFF1B\u5169\u8005\u90FD\u5FC5\u9808\u9010\u5B57\u4FDD\u7559\u5728\u539F\u4F4D\u7F6E\uFF0C\u4E0D\u8981\u5C55\u958B\u3001\u89E3\u91CB\u3001\u6539\u5BEB\u6216\u522A\u9664\uFF0C\u4E0D\u8981\u8F38\u51FA\u300E\u8A72\u8CC7\u8A0A\u4F86\u81EA\u2026\u2026\u5F15\u7528\u300F\u4E4B\u985E\u7684\u8AAA\u660E\u3002{{WEBMIND_LINK_START_N}} \u548C {{WEBMIND_LINK_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u9023\u7D50\u908A\u754C\u9810\u7559\u4F4D\u7F6E\uFF0C\u5FC5\u9808\u539F\u6A23\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8B6F\u5169\u8005\u4E4B\u9593\u53EF\u898B\u7684\u9023\u7D50\u6587\u5B57\uFF0C\u4E0D\u8981\u88DC\u5145\u3001\u7FFB\u8B6F\u6216\u8F38\u51FA\u9023\u7D50\u5730\u5740\u3002{{WEBMIND_FORMAT_START_N}} \u548C {{WEBMIND_FORMAT_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u4E0A\u6A19/\u4E0B\u6A19\u683C\u5F0F\u908A\u754C\u9810\u7559\u4F4D\u7F6E\uFF0C\u5FC5\u9808\u539F\u6A23\u4FDD\u7559\uFF0C\u53EA\u7FFB\u8B6F\u908A\u754C\u5167\u53EF\u898B\u6587\u5B57\u3002";
     case "en":
-      return "Strictly preserve the source paragraph, line-break, heading, and list structure, with one translated paragraph for each source paragraph; never merge paragraphs. {{WEBMIND_PARAGRAPH_BREAK_N}} is an immutable paragraph-break placeholder and {{WEBMIND_CITATION_N}} is an immutable citation-marker placeholder. Preserve both verbatim in place without expanding, explaining, rewriting, or removing them, and never spell out a citation explanation.";
+      return "Strictly preserve the source paragraph, line-break, heading, and list structure, with one translated paragraph for each source paragraph; never merge paragraphs. {{WEBMIND_PARAGRAPH_BREAK_N}} is an immutable paragraph-break placeholder and {{WEBMIND_CITATION_N}} is an immutable citation-marker placeholder. Preserve both verbatim in place without expanding, explaining, rewriting, or removing them, and never spell out a citation explanation. {{WEBMIND_LINK_START_N}} and {{WEBMIND_LINK_END_N}} are immutable link-boundary placeholders; preserve them verbatim, translate only the visible link text between them, and never add, translate, or output link URLs. {{WEBMIND_FORMAT_START_N}} and {{WEBMIND_FORMAT_END_N}} are immutable superscript/subscript-format boundaries; preserve them verbatim and translate only the visible text between them.";
     case "ja":
-      return "\u539F\u6587\u306E\u6BB5\u843D\u3001\u6539\u884C\u3001\u898B\u51FA\u3057\u3001\u30EA\u30B9\u30C8\u69CB\u9020\u3092\u53B3\u5BC6\u306B\u4FDD\u6301\u3057\u3001\u5404\u539F\u6587\u6BB5\u843D\u3092\u5BFE\u5FDC\u3059\u308B\u4E00\u3064\u306E\u7FFB\u8A33\u6BB5\u843D\u306B\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u6BB5\u843D\u3092\u7D50\u5408\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002{{WEBMIND_PARAGRAPH_BREAK_N}} \u306F\u7FFB\u8A33\u4E0D\u53EF\u306E\u6BB5\u843D\u533A\u5207\u308A\u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3001{{WEBMIND_CITATION_N}} \u306F\u7FFB\u8A33\u4E0D\u53EF\u306E\u5F15\u7528\u756A\u53F7\u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3067\u3059\u3002\u3069\u3061\u3089\u3082\u5143\u306E\u4F4D\u7F6E\u306B\u305D\u306E\u307E\u307E\u6B8B\u3057\u3001\u5C55\u958B\u3001\u8AAC\u660E\u3001\u66F8\u304D\u63DB\u3048\u3001\u524A\u9664\u3092\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002";
+      return "\u539F\u6587\u306E\u6BB5\u843D\u3001\u6539\u884C\u3001\u898B\u51FA\u3057\u3001\u30EA\u30B9\u30C8\u69CB\u9020\u3092\u53B3\u5BC6\u306B\u4FDD\u6301\u3057\u3001\u5404\u539F\u6587\u6BB5\u843D\u3092\u5BFE\u5FDC\u3059\u308B\u4E00\u3064\u306E\u7FFB\u8A33\u6BB5\u843D\u306B\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u6BB5\u843D\u3092\u7D50\u5408\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002{{WEBMIND_PARAGRAPH_BREAK_N}} \u306F\u7FFB\u8A33\u4E0D\u53EF\u306E\u6BB5\u843D\u533A\u5207\u308A\u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3001{{WEBMIND_CITATION_N}} \u306F\u7FFB\u8A33\u4E0D\u53EF\u306E\u5F15\u7528\u756A\u53F7\u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3067\u3059\u3002\u3069\u3061\u3089\u3082\u5143\u306E\u4F4D\u7F6E\u306B\u305D\u306E\u307E\u307E\u6B8B\u3057\u3001\u5C55\u958B\u3001\u8AAC\u660E\u3001\u66F8\u304D\u63DB\u3048\u3001\u524A\u9664\u3092\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002{{WEBMIND_LINK_START_N}} \u3068 {{WEBMIND_LINK_END_N}} \u306F\u7FFB\u8A33\u4E0D\u53EF\u306E\u30EA\u30F3\u30AF\u5883\u754C\u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3067\u3059\u3002\u305D\u306E\u307E\u307E\u4FDD\u6301\u3057\u3001\u9593\u306B\u3042\u308B\u8868\u793A\u30EA\u30F3\u30AF\u6587\u5B57\u3060\u3051\u3092\u7FFB\u8A33\u3057\u3001\u30EA\u30F3\u30AF URL \u3092\u8FFD\u52A0\u30FB\u7FFB\u8A33\u30FB\u51FA\u529B\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002{{WEBMIND_FORMAT_START_N}} \u3068 {{WEBMIND_FORMAT_END_N}} \u306F\u7FFB\u8A33\u4E0D\u53EF\u306E\u4E0A\u4ED8\u304D/\u4E0B\u4ED8\u304D\u66F8\u5F0F\u5883\u754C\u3067\u3059\u3002\u305D\u306E\u307E\u307E\u4FDD\u6301\u3057\u3001\u5883\u754C\u5185\u306E\u8868\u793A\u6587\u5B57\u3060\u3051\u3092\u7FFB\u8A33\u3057\u3066\u304F\u3060\u3055\u3044\u3002";
     case "ko":
-      return "\uC6D0\uBB38\uC758 \uBB38\uB2E8, \uC904\uBC14\uAFC8, \uC81C\uBAA9 \uBC0F \uBAA9\uB85D \uAD6C\uC870\uB97C \uC5C4\uACA9\uD788 \uC720\uC9C0\uD558\uACE0 \uAC01 \uC6D0\uBB38 \uBB38\uB2E8\uC744 \uD558\uB098\uC758 \uBC88\uC5ED \uBB38\uB2E8\uC5D0 \uB300\uC751\uC2DC\uD0A4\uBA70 \uBB38\uB2E8\uC744 \uD569\uCE58\uC9C0 \uB9C8\uC138\uC694. {{WEBMIND_PARAGRAPH_BREAK_N}}\uC740 \uBC88\uC5ED\uD558\uBA74 \uC548 \uB418\uB294 \uBB38\uB2E8 \uAD6C\uBD84 \uC790\uB9AC\uD45C\uC2DC\uC790\uC774\uACE0 {{WEBMIND_CITATION_N}}\uC740 \uBC88\uC5ED\uD558\uBA74 \uC548 \uB418\uB294 \uC778\uC6A9 \uBC88\uD638 \uC790\uB9AC\uD45C\uC2DC\uC790\uC785\uB2C8\uB2E4. \uB458 \uB2E4 \uC6D0\uB798 \uC704\uCE58\uC5D0 \uADF8\uB300\uB85C \uC720\uC9C0\uD558\uACE0 \uD655\uC7A5, \uC124\uBA85, \uC218\uC815 \uB610\uB294 \uC0AD\uC81C\uD558\uC9C0 \uB9C8\uC138\uC694.";
+      return "\uC6D0\uBB38\uC758 \uBB38\uB2E8, \uC904\uBC14\uAFC8, \uC81C\uBAA9 \uBC0F \uBAA9\uB85D \uAD6C\uC870\uB97C \uC5C4\uACA9\uD788 \uC720\uC9C0\uD558\uACE0 \uAC01 \uC6D0\uBB38 \uBB38\uB2E8\uC744 \uD558\uB098\uC758 \uBC88\uC5ED \uBB38\uB2E8\uC5D0 \uB300\uC751\uC2DC\uD0A4\uBA70 \uBB38\uB2E8\uC744 \uD569\uCE58\uC9C0 \uB9C8\uC138\uC694. {{WEBMIND_PARAGRAPH_BREAK_N}}\uC740 \uBC88\uC5ED\uD558\uBA74 \uC548 \uB418\uB294 \uBB38\uB2E8 \uAD6C\uBD84 \uC790\uB9AC\uD45C\uC2DC\uC790\uC774\uACE0 {{WEBMIND_CITATION_N}}\uC740 \uBC88\uC5ED\uD558\uBA74 \uC548 \uB418\uB294 \uC778\uC6A9 \uBC88\uD638 \uC790\uB9AC\uD45C\uC2DC\uC790\uC785\uB2C8\uB2E4. \uB458 \uB2E4 \uC6D0\uB798 \uC704\uCE58\uC5D0 \uADF8\uB300\uB85C \uC720\uC9C0\uD558\uACE0 \uD655\uC7A5, \uC124\uBA85, \uC218\uC815 \uB610\uB294 \uC0AD\uC81C\uD558\uC9C0 \uB9C8\uC138\uC694. {{WEBMIND_LINK_START_N}} \uBC0F {{WEBMIND_LINK_END_N}}\uC740 \uBC88\uC5ED\uD558\uBA74 \uC548 \uB418\uB294 \uB9C1\uD06C \uACBD\uACC4 \uC790\uB9AC\uD45C\uC2DC\uC790\uC785\uB2C8\uB2E4. \uADF8\uB300\uB85C \uC720\uC9C0\uD558\uACE0 \uADF8 \uC0AC\uC774\uC758 \uBCF4\uC774\uB294 \uB9C1\uD06C \uD14D\uC2A4\uD2B8\uB9CC \uBC88\uC5ED\uD558\uBA70 \uB9C1\uD06C URL\uC744 \uCD94\uAC00, \uBC88\uC5ED \uB610\uB294 \uCD9C\uB825\uD558\uC9C0 \uB9C8\uC138\uC694. {{WEBMIND_FORMAT_START_N}} \uBC0F {{WEBMIND_FORMAT_END_N}}\uC740 \uBC88\uC5ED\uD558\uBA74 \uC548 \uB418\uB294 \uC704 \uCCA8\uC790/\uC544\uB798 \uCCA8\uC790 \uC11C\uC2DD \uACBD\uACC4\uC785\uB2C8\uB2E4. \uADF8\uB300\uB85C \uC720\uC9C0\uD558\uACE0 \uACBD\uACC4 \uC548\uC758 \uBCF4\uC774\uB294 \uD14D\uC2A4\uD2B8\uB9CC \uBC88\uC5ED\uD558\uC138\uC694.";
     case "zh-CN":
     default:
-      return "\u4E25\u683C\u4FDD\u6301\u539F\u6587\u7684\u6BB5\u843D\u3001\u6362\u884C\u3001\u6807\u9898\u548C\u5217\u8868\u7ED3\u6784\uFF0C\u6BCF\u4E2A\u539F\u6587\u6BB5\u843D\u5BF9\u5E94\u4E00\u4E2A\u8BD1\u6587\u6BB5\u843D\uFF0C\u4E0D\u8981\u5408\u5E76\u6BB5\u843D\u3002{{WEBMIND_PARAGRAPH_BREAK_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u6BB5\u843D\u5206\u9694\u5360\u4F4D\u7B26\uFF0C{{WEBMIND_CITATION_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u5F15\u7528\u4E0B\u6807\u5360\u4F4D\u7B26\uFF1B\u4E24\u8005\u90FD\u5FC5\u987B\u9010\u5B57\u4FDD\u7559\u5728\u539F\u4F4D\u7F6E\uFF0C\u4E0D\u8981\u5C55\u5F00\u3001\u89E3\u91CA\u3001\u6539\u5199\u6216\u5220\u9664\uFF0C\u4E0D\u8981\u8F93\u51FA\u2018\u8BE5\u4FE1\u606F\u6765\u81EA\u2026\u2026\u5F15\u7528\u2019\u4E4B\u7C7B\u7684\u8BF4\u660E\u3002";
+      return "\u4E25\u683C\u4FDD\u6301\u539F\u6587\u7684\u6BB5\u843D\u3001\u6362\u884C\u3001\u6807\u9898\u548C\u5217\u8868\u7ED3\u6784\uFF0C\u6BCF\u4E2A\u539F\u6587\u6BB5\u843D\u5BF9\u5E94\u4E00\u4E2A\u8BD1\u6587\u6BB5\u843D\uFF0C\u4E0D\u8981\u5408\u5E76\u6BB5\u843D\u3002{{WEBMIND_PARAGRAPH_BREAK_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u6BB5\u843D\u5206\u9694\u5360\u4F4D\u7B26\uFF0C{{WEBMIND_CITATION_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u5F15\u7528\u4E0B\u6807\u5360\u4F4D\u7B26\uFF1B\u4E24\u8005\u90FD\u5FC5\u987B\u9010\u5B57\u4FDD\u7559\u5728\u539F\u4F4D\u7F6E\uFF0C\u4E0D\u8981\u5C55\u5F00\u3001\u89E3\u91CA\u3001\u6539\u5199\u6216\u5220\u9664\uFF0C\u4E0D\u8981\u8F93\u51FA\u2018\u8BE5\u4FE1\u606F\u6765\u81EA\u2026\u2026\u5F15\u7528\u2019\u4E4B\u7C7B\u7684\u8BF4\u660E\u3002{{WEBMIND_LINK_START_N}} \u548C {{WEBMIND_LINK_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u94FE\u63A5\u8FB9\u754C\u5360\u4F4D\u7B26\uFF0C\u5FC5\u987B\u539F\u6837\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8BD1\u4E24\u8005\u4E4B\u95F4\u53EF\u89C1\u7684\u94FE\u63A5\u6587\u5B57\uFF0C\u4E0D\u8981\u8865\u5145\u3001\u7FFB\u8BD1\u6216\u8F93\u51FA\u94FE\u63A5\u5730\u5740\u3002{{WEBMIND_FORMAT_START_N}} \u548C {{WEBMIND_FORMAT_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u4E0A\u6807/\u4E0B\u6807\u683C\u5F0F\u8FB9\u754C\uFF0C\u5FC5\u987B\u539F\u6837\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8BD1\u8FB9\u754C\u4E4B\u95F4\u53EF\u89C1\u7684\u6587\u5B57\u3002";
   }
 }
 function translateDocumentSuffix(language) {
@@ -2520,6 +2690,80 @@ function buildAutoTranslateInstruction(config, sourceText = "") {
         "\u8BED\u8A00\u68C0\u6D4B\u548C\u7FFB\u8BD1\u53EA\u9488\u5BF9\u540E\u9762 <translation-input> \u6807\u7B7E\u4E2D\u7684\u539F\u6587\uFF1B\u5FFD\u7565\u672C\u6307\u4EE4\u7684\u8BED\u8A00\u3001\u6807\u7B7E\u3001JSON \u5B57\u6BB5\u540D\u3001id \u548C\u5176\u4ED6\u5143\u6570\u636E\uFF0C\u4E0D\u8981\u628A\u5B83\u4EEC\u7B97\u5165\u539F\u6587\u3002",
         translationFormatInstruction(config),
         ...directionInstruction ? [directionInstruction] : []
+      ].join("\n");
+  }
+}
+function isDictionaryTranslationInput(sourceText) {
+  const text = sourceText.replace(/<[^>]*>/g, " ").trim();
+  if (!text || text.length > 80 || /[\r\n]/.test(text)) return false;
+  if (/[。！？!?；;]/.test(text)) return false;
+  if (/[.!?]$/.test(text)) return false;
+  if (/[,，、]/.test(text)) return false;
+  const parts = text.match(
+    /[A-Za-z]+(?:['’-][A-Za-z]+)*|[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]+|[\u3040-\u30ff\u31f0-\u31ff]+|[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af]+|\d+/g
+  ) ?? [];
+  if (!parts.length) return false;
+  if (parts.length > 6) return false;
+  const cjkLength = (text.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g) ?? []).length;
+  return cjkLength === 0 || cjkLength <= 16;
+}
+function dictionaryTranslationInstruction(config, sourceText = "") {
+  const { interfaceLanguage, translationLanguage } = resolvePromptConfig(config);
+  const interfaceLabel = LANGUAGE_LABELS[interfaceLanguage];
+  const sourceLanguage = detectTranslationLanguage(sourceText);
+  const targetLanguage = translationLanguage === "auto" ? sourceLanguage && translationLanguageMatchesInterface(sourceLanguage, interfaceLanguage) ? "en" : interfaceLanguage : resolveLanguage(translationLanguage);
+  const targetLabel = LANGUAGE_LABELS[targetLanguage];
+  switch (interfaceLanguage) {
+    case "zh-TW":
+      return [
+        "\u9019\u662F\u4E00\u500B\u77ED\u8A5E/\u8A5E\u7D44\u67E5\u8A5E\u5F0F\u7FFB\u8B6F\u4EFB\u52D9\u3002\u8ACB\u7528\u7DCA\u6E4A\u3001\u81EA\u7136\u7684 Markdown \u8F38\u51FA\u8FD1\u4F3C\u8A5E\u5178\u5361\u7247\uFF0C\u4E0D\u8981\u53EA\u7D66\u4E00\u500B\u8B6F\u6587\u3002",
+        `\u76EE\u524D\u4ECB\u9762\u8A9E\u8A00\u662F${interfaceLabel}\uFF0C\u91CB\u7FA9\u8207\u8AAA\u660E\u4E3B\u8981\u4F7F\u7528${interfaceLabel}\uFF1B\u8B6F\u6587\u8207\u4F8B\u53E5\u7FFB\u8B6F\u4F7F\u7528${targetLabel}\u3002`,
+        "\u53EA\u5206\u6790 <translation-input> \u4E2D\u76F4\u63A5\u53EF\u898B\u7684\u8A5E\u6216\u8A5E\u7D44\uFF0C\u4E0D\u8981\u628A\u6A19\u7C64\u3001URL\u3001HTML \u5C6C\u6027\u3001\u9023\u7D50\u5730\u5740\u6216\u5176\u4ED6\u4E0D\u53EF\u898B\u6587\u5B57\u7576\u4F5C\u7FFB\u8B6F\u5C0D\u8C61\u3002",
+        "\u8F38\u51FA\u8981\u7DCA\u6E4A\u4F46\u6E05\u695A\uFF1A\u6700\u591A\u4E00\u500B\u77ED\u6A19\u984C\uFF0C\u4E0D\u8981\u5C64\u5C64\u6A19\u984C\uFF0C\u4E0D\u8981\u5927\u6BB5\u7A7A\u884C\uFF1B\u4E0D\u540C\u7DAD\u5EA6\u8ACB\u7528\u5FC5\u8981\u63DB\u884C\u5206\u6210\u77ED\u884C\uFF0C\u4E0D\u8981\u628A\u6240\u6709\u8CC7\u8A0A\u64E0\u5728\u540C\u4E00\u6BB5\u3002\u512A\u5148\u7528 4-8 \u884C\u77ED\u9805\uFF0C\u4F8B\u5982\uFF1A**\u8A5E** /\u97F3\u6A19/ \xB7 \u6838\u5FC3\u8B6F\u7FA9\uFF1B\u63DB\u884C **\u7FA9\u9805** n./v./adj. 1... 2...\uFF1B\u63DB\u884C **\u5E38\u7528** \u9AD8/\u4E2D/\u4F4E\u983B + \u8A9E\u57DF\uFF1B\u63DB\u884C **\u642D\u914D** phrase: meaning\uFF1B\u63DB\u884C **\u8FD1\u5F62/\u8B8A\u9AD4** ...\uFF1B\u63DB\u884C **\u4F8B** sentence \u2014 \u8B6F\u6587\u3002",
+        "\u53EF\u4EE5\u6309\u5167\u5BB9\u9748\u6D3B\u53D6\u6368\uFF0C\u4E0D\u5FC5\u6BCF\u6B21\u586B\u6EFF\u6240\u6709\u6B04\u4F4D\uFF1B\u8CC7\u8A0A\u8981\u6709\u7528\u3001\u77ED\u3001\u5BC6\u5EA6\u9AD8\u3002\u8A5E\u983B\u53EA\u80FD\u7D66\u9AD8/\u4E2D/\u4F4E\u6216\u5E38\u898B/\u8F03\u5C11\u898B\u7B49\u4F30\u8A08\uFF0C\u4E0D\u8981\u7DE8\u9020\u7CBE\u78BA\u6578\u5B57\u3002",
+        "\u5982\u679C\u8F38\u5165\u5176\u5BE6\u4E0D\u662F\u53EF\u67E5\u8A5E\u7684\u55AE\u8A5E\u3001\u8A5E\u8A9E\u6216\u56FA\u5B9A\u77ED\u8A9E\uFF0C\u8ACB\u9000\u56DE\u666E\u901A\u7FFB\u8B6F\uFF0C\u53EA\u8F38\u51FA\u81EA\u7136\u8B6F\u6587\u3002",
+        "\u4E0D\u8981\u8F38\u51FA JSON \u6216\u7A0B\u5F0F\u78BC\u5340\u584A\u3002"
+      ].join("\n");
+    case "en":
+      return [
+        "This is a dictionary-style translation task for a single word or short phrase. Do not return only one translation; produce a compact, natural Markdown dictionary card.",
+        `The interface language is ${interfaceLabel}. Use ${interfaceLabel} for headings and explanations; use ${targetLabel} for translations and example-sentence translations.`,
+        "Analyze only the directly visible word or phrase inside <translation-input>. Do not treat tags, URLs, HTML attributes, link destinations, or other invisible text as source text.",
+        "Keep the output compact but readable: at most one short heading, no stacked section headings, no large blank gaps. Use necessary line breaks for different dimensions; do not squeeze everything into one paragraph. Prefer 4-8 dense short lines such as: **word** /pronunciation/ \xB7 core translations; newline **meanings** n./v./adj. 1... 2...; newline **usage** high/medium/low frequency + register; newline **phrases** phrase: meaning; newline **forms** variants/related words; newline **example** sentence \u2014 translation.",
+        "Adapt the fields flexibly; do not force every field every time. Make it useful, brief, and information-dense. Frequency must be a rough high/medium/low or common/less common estimate; do not invent exact statistics.",
+        "If the input is not actually a dictionary-like word, term, or fixed phrase, fall back to ordinary translation and output only the natural translation.",
+        "Do not output JSON or code fences."
+      ].join("\n");
+    case "ja":
+      return [
+        "\u3053\u308C\u306F\u5358\u8A9E\u307E\u305F\u306F\u77ED\u3044\u30D5\u30EC\u30FC\u30BA\u5411\u3051\u306E\u8F9E\u66F8\u98A8\u7FFB\u8A33\u30BF\u30B9\u30AF\u3067\u3059\u3002\u8A33\u8A9E\u3092\u4E00\u3064\u3060\u3051\u8FD4\u3055\u305A\u3001\u30B3\u30F3\u30D1\u30AF\u30C8\u3067\u81EA\u7136\u306A Markdown \u306E\u8F9E\u66F8\u30AB\u30FC\u30C9\u3068\u3057\u3066\u51FA\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+        `\u30A4\u30F3\u30BF\u30FC\u30D5\u30A7\u30FC\u30B9\u8A00\u8A9E\u306F${interfaceLabel}\u3067\u3059\u3002\u898B\u51FA\u3057\u3068\u8AAC\u660E\u306F\u4E3B\u306B${interfaceLabel}\u3092\u4F7F\u3044\u3001\u8A33\u8A9E\u3068\u4F8B\u6587\u8A33\u306B\u306F${targetLabel}\u3092\u4F7F\u3063\u3066\u304F\u3060\u3055\u3044\u3002`,
+        "<translation-input> \u5185\u306B\u76F4\u63A5\u8868\u793A\u3055\u308C\u3066\u3044\u308B\u5358\u8A9E\u307E\u305F\u306F\u30D5\u30EC\u30FC\u30BA\u3060\u3051\u3092\u5206\u6790\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u30BF\u30B0\u3001URL\u3001HTML \u5C5E\u6027\u3001\u30EA\u30F3\u30AF\u5148\u3001\u305D\u306E\u4ED6\u306E\u975E\u8868\u793A\u6587\u5B57\u5217\u3092\u7FFB\u8A33\u5BFE\u8C61\u306B\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002",
+        "\u51FA\u529B\u306F\u30B3\u30F3\u30D1\u30AF\u30C8\u304B\u3064\u8AAD\u307F\u3084\u3059\u304F\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u77ED\u3044\u898B\u51FA\u3057\u306F\u6700\u5927 1 \u3064\u307E\u3067\u3001\u968E\u5C64\u7684\u306A\u898B\u51FA\u3057\u3092\u91CD\u306D\u305A\u3001\u5927\u304D\u306A\u7A7A\u884C\u3092\u5165\u308C\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002\u7570\u306A\u308B\u89B3\u70B9\u306F\u5FC5\u8981\u306B\u5FDC\u3058\u3066\u6539\u884C\u3057\u3001\u3059\u3079\u3066\u3092\u4E00\u6BB5\u843D\u306B\u8A70\u3081\u8FBC\u307E\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u30024-8 \u884C\u7A0B\u5EA6\u3067\u3001\u4F8B\uFF1A**\u8A9E** /\u767A\u97F3/ \xB7 \u4E2D\u6838\u8A33\u3001\u6539\u884C **\u610F\u5473** n./v./adj. 1... 2...\u3001\u6539\u884C **\u7528\u6CD5** \u9AD8/\u4E2D/\u4F4E\u983B\u5EA6 + \u30EC\u30B8\u30B9\u30BF\u30FC\u3001\u6539\u884C **\u8868\u73FE** phrase: meaning\u3001\u6539\u884C **\u5909\u5316/\u95A2\u9023\u8A9E** ...\u3001\u6539\u884C **\u4F8B** sentence \u2014 \u8A33\u3002",
+        "\u5185\u5BB9\u306B\u5FDC\u3058\u3066\u9805\u76EE\u306F\u67D4\u8EDF\u306B\u9078\u3073\u3001\u6BCE\u56DE\u3059\u3079\u3066\u57CB\u3081\u308B\u5FC5\u8981\u306F\u3042\u308A\u307E\u305B\u3093\u3002\u6709\u7528\u3067\u77ED\u304F\u3001\u60C5\u5831\u5BC6\u5EA6\u3092\u9AD8\u304F\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u983B\u5EA6\u306F\u9AD8/\u4E2D/\u4F4E\u3084\u4E00\u822C\u7684/\u3084\u3084\u5C11\u306A\u3044\u7A0B\u5EA6\u306E\u63A8\u5B9A\u306B\u3057\u3001\u7CBE\u5BC6\u306A\u7D71\u8A08\u5024\u3092\u4F5C\u3089\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002",
+        "\u5165\u529B\u304C\u8F9E\u66F8\u7684\u306B\u6271\u3048\u308B\u8A9E\u30FB\u7528\u8A9E\u30FB\u56FA\u5B9A\u30D5\u30EC\u30FC\u30BA\u3067\u306A\u3044\u5834\u5408\u306F\u901A\u5E38\u7FFB\u8A33\u306B\u623B\u308A\u3001\u81EA\u7136\u306A\u8A33\u6587\u3060\u3051\u3092\u51FA\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+        "JSON \u3084\u30B3\u30FC\u30C9\u30D6\u30ED\u30C3\u30AF\u306F\u51FA\u529B\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002"
+      ].join("\n");
+    case "ko":
+      return [
+        "\uC774\uAC83\uC740 \uB2E8\uC5B4 \uB610\uB294 \uC9E7\uC740 \uAD6C\uB97C \uC704\uD55C \uC0AC\uC804\uC2DD \uBC88\uC5ED \uC791\uC5C5\uC785\uB2C8\uB2E4. \uBC88\uC5ED\uC5B4 \uD558\uB098\uB9CC \uBC18\uD658\uD558\uC9C0 \uB9D0\uACE0 compact\uD558\uACE0 \uC790\uC5F0\uC2A4\uB7EC\uC6B4 Markdown \uC0AC\uC804 \uCE74\uB4DC\uB85C \uCD9C\uB825\uD558\uC138\uC694.",
+        `\uC778\uD130\uD398\uC774\uC2A4 \uC5B8\uC5B4\uB294 ${interfaceLabel}\uC785\uB2C8\uB2E4. \uC81C\uBAA9\uACFC \uC124\uBA85\uC740 \uC8FC\uB85C ${interfaceLabel}\uB85C \uC4F0\uACE0, \uBC88\uC5ED\uC5B4\uC640 \uC608\uBB38 \uBC88\uC5ED\uC740 ${targetLabel}\uB97C \uC0AC\uC6A9\uD558\uC138\uC694.`,
+        "<translation-input> \uC548\uC5D0 \uC9C1\uC811 \uBCF4\uC774\uB294 \uB2E8\uC5B4 \uB610\uB294 \uAD6C\uB9CC \uBD84\uC11D\uD558\uC138\uC694. \uD0DC\uADF8, URL, HTML \uC18D\uC131, \uB9C1\uD06C \uC8FC\uC18C \uB610\uB294 \uBCF4\uC774\uC9C0 \uC54A\uB294 \uBB38\uC790\uC5F4\uC744 \uBC88\uC5ED \uB300\uC0C1\uC73C\uB85C \uC0BC\uC9C0 \uB9C8\uC138\uC694.",
+        "\uCD9C\uB825\uC740 compact\uD558\uC9C0\uB9CC \uC77D\uAE30 \uC27D\uAC8C \uC791\uC131\uD558\uC138\uC694. \uC9E7\uC740 \uC81C\uBAA9\uC740 \uCD5C\uB300 \uD558\uB098\uB9CC \uC4F0\uACE0, \uC5EC\uB7EC \uB2E8\uACC4\uC758 \uC81C\uBAA9\uC744 \uC313\uAC70\uB098 \uD070 \uBE48 \uC904\uC744 \uB9CC\uB4E4\uC9C0 \uB9C8\uC138\uC694. \uC11C\uB85C \uB2E4\uB978 \uC815\uBCF4 \uCC28\uC6D0\uC740 \uD544\uC694\uD55C \uB9CC\uD07C \uC904\uBC14\uAFC8\uC73C\uB85C \uC9E7\uAC8C \uB098\uB204\uACE0, \uBAA8\uB4E0 \uC815\uBCF4\uB97C \uD55C \uBB38\uB2E8\uC5D0 \uBC00\uC5B4 \uB123\uC9C0 \uB9C8\uC138\uC694. 4-8\uC904 \uC815\uB3C4\uC758 \uBC00\uB3C4 \uC788\uB294 \uD615\uC2DD\uC744 \uC120\uD638\uD569\uB2C8\uB2E4: **\uB2E8\uC5B4** /\uBC1C\uC74C/ \xB7 \uD575\uC2EC \uBC88\uC5ED; \uC904\uBC14\uAFC8 **\uB73B** n./v./adj. 1... 2...; \uC904\uBC14\uAFC8 **\uC6A9\uBC95** \uB192\uC74C/\uC911\uAC04/\uB0AE\uC74C \uBE48\uB3C4 + \uBB38\uCCB4; \uC904\uBC14\uAFC8 **\uD45C\uD604** phrase: meaning; \uC904\uBC14\uAFC8 **\uBCC0\uD615/\uAD00\uB828\uC5B4** ...; \uC904\uBC14\uAFC8 **\uC608\uBB38** sentence \u2014 \uBC88\uC5ED.",
+        "\uD56D\uBAA9\uC740 \uB0B4\uC6A9\uC5D0 \uB9DE\uAC8C \uC720\uC5F0\uD558\uAC8C \uACE0\uB974\uACE0 \uB9E4\uBC88 \uBAA8\uB450 \uCC44\uC6B8 \uD544\uC694\uB294 \uC5C6\uC2B5\uB2C8\uB2E4. \uC720\uC6A9\uD558\uACE0 \uC9E7\uACE0 \uC815\uBCF4 \uBC00\uB3C4\uAC00 \uB192\uC544\uC57C \uD569\uB2C8\uB2E4. \uBE48\uB3C4\uB294 \uB192\uC74C/\uC911\uAC04/\uB0AE\uC74C \uB610\uB294 \uD754\uD568/\uB35C \uD754\uD568 \uC815\uB3C4\uB85C\uB9CC \uCD94\uC815\uD558\uACE0 \uC815\uD655\uD55C \uD1B5\uACC4 \uC218\uCE58\uB97C \uB9CC\uB4E4\uC9C0 \uB9C8\uC138\uC694.",
+        "\uC785\uB825\uC774 \uC0AC\uC804\uC2DD\uC73C\uB85C \uB2E4\uB8F0 \uC218 \uC788\uB294 \uB2E8\uC5B4, \uC6A9\uC5B4, \uACE0\uC815 \uD45C\uD604\uC774 \uC544\uB2C8\uB77C\uBA74 \uC77C\uBC18 \uBC88\uC5ED\uC73C\uB85C \uB3CC\uC544\uAC00 \uC790\uC5F0\uC2A4\uB7EC\uC6B4 \uBC88\uC5ED\uBB38\uB9CC \uCD9C\uB825\uD558\uC138\uC694.",
+        "JSON\uC774\uB098 \uCF54\uB4DC \uBE14\uB85D\uC740 \uCD9C\uB825\uD558\uC9C0 \uB9C8\uC138\uC694."
+      ].join("\n");
+    case "zh-CN":
+    default:
+      return [
+        "\u8FD9\u662F\u4E00\u4E2A\u77ED\u8BCD/\u8BCD\u7EC4\u67E5\u8BCD\u5F0F\u7FFB\u8BD1\u4EFB\u52A1\u3002\u8BF7\u4E0D\u8981\u53EA\u7ED9\u4E00\u4E2A\u8BD1\u6587\uFF0C\u800C\u662F\u7528\u7D27\u51D1\u3001\u81EA\u7136\u7684 Markdown \u8F93\u51FA\u8FD1\u4F3C\u8BCD\u5178\u5361\u7247\u3002",
+        `\u5F53\u524D\u754C\u9762\u8BED\u8A00\u662F${interfaceLabel}\uFF0C\u91CA\u4E49\u4E0E\u8BF4\u660E\u4E3B\u8981\u4F7F\u7528${interfaceLabel}\uFF1B\u8BD1\u6587\u4E0E\u4F8B\u53E5\u7FFB\u8BD1\u4F7F\u7528${targetLabel}\u3002`,
+        "\u53EA\u5206\u6790 <translation-input> \u4E2D\u76F4\u63A5\u53EF\u89C1\u7684\u5355\u8BCD\u3001\u8BCD\u8BED\u6216\u8BCD\u7EC4\uFF0C\u4E0D\u8981\u628A\u6807\u7B7E\u3001URL\u3001HTML \u5C5E\u6027\u3001\u94FE\u63A5\u5730\u5740\u6216\u5176\u4ED6\u4E0D\u53EF\u89C1\u6587\u5B57\u5F53\u4F5C\u7FFB\u8BD1\u5BF9\u8C61\u3002",
+        "\u8F93\u51FA\u8981\u7D27\u51D1\u4F46\u6E05\u695A\uFF1A\u6700\u591A\u4E00\u4E2A\u77ED\u6807\u9898\uFF0C\u4E0D\u8981\u5C42\u5C42\u6807\u9898\uFF0C\u4E0D\u8981\u5927\u6BB5\u7A7A\u884C\uFF1B\u4E0D\u540C\u7EF4\u5EA6\u8BF7\u7528\u5FC5\u8981\u6362\u884C\u5206\u6210\u77ED\u884C\uFF0C\u4E0D\u8981\u628A\u6240\u6709\u4FE1\u606F\u6324\u5728\u540C\u4E00\u6BB5\u3002\u4F18\u5148\u7528 4-8 \u884C\u77ED\u9879\uFF0C\u4F8B\u5982\uFF1A**\u8BCD** /\u97F3\u6807/ \xB7 \u6838\u5FC3\u8BD1\u4E49\uFF1B\u6362\u884C **\u4E49\u9879** n./v./adj. 1... 2...\uFF1B\u6362\u884C **\u5E38\u7528** \u9AD8/\u4E2D/\u4F4E\u9891 + \u8BED\u57DF\uFF1B\u6362\u884C **\u642D\u914D** phrase: meaning\uFF1B\u6362\u884C **\u8FD1\u5F62/\u53D8\u4F53** ...\uFF1B\u6362\u884C **\u4F8B** sentence \u2014 \u8BD1\u6587\u3002",
+        "\u53EF\u4EE5\u6309\u5185\u5BB9\u7075\u6D3B\u53D6\u820D\uFF0C\u4E0D\u5FC5\u6BCF\u6B21\u586B\u6EE1\u6240\u6709\u680F\u76EE\uFF1B\u4FE1\u606F\u8981\u6709\u7528\u3001\u77ED\u3001\u5BC6\u5EA6\u9AD8\u3002\u8BCD\u9891\u53EA\u80FD\u7ED9\u9AD8/\u4E2D/\u4F4E\u6216\u5E38\u89C1/\u8F83\u5C11\u89C1\u7B49\u4F30\u8BA1\uFF0C\u4E0D\u8981\u7F16\u9020\u7CBE\u786E\u6570\u5B57\u3002",
+        "\u5982\u679C\u8F93\u5165\u5176\u5B9E\u4E0D\u662F\u53EF\u67E5\u8BCD\u7684\u5355\u8BCD\u3001\u8BCD\u8BED\u6216\u56FA\u5B9A\u77ED\u8BED\uFF0C\u8BF7\u9000\u56DE\u666E\u901A\u7FFB\u8BD1\uFF0C\u53EA\u8F93\u51FA\u81EA\u7136\u8BD1\u6587\u3002",
+        "\u4E0D\u8981\u8F93\u51FA JSON \u6216\u4EE3\u7801\u5757\u3002"
       ].join("\n");
   }
 }
@@ -3074,8 +3318,36 @@ function stripCitationMarkerExplanationNoise(text, markers) {
 }
 function protectTranslationText(text) {
   const citations = [];
+  const links = [];
+  const formats = [];
   const paragraphBreaks = [];
-  const withCitations = text.replace(TRANSLATION_CITATION_PATTERN, (marker) => {
+  const protectFormat = (tag, value) => {
+    const visibleText = value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+    if (!visibleText) return value;
+    formats.push({ tag, text: visibleText });
+    const index = formats.length;
+    return `{{WEBMIND_FORMAT_START_${index}}}${visibleText}{{WEBMIND_FORMAT_END_${index}}}`;
+  };
+  const withFormats = text.replace(
+    /<(sup|sub)\b[^>]*>([\s\S]*?)<\/\1>/gi,
+    (_match, tag, value) => protectFormat(tag.toLowerCase(), value)
+  );
+  const protectLink = (href, linkText) => {
+    const visibleText = linkText.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+    if (!href.trim() || !visibleText) return linkText;
+    links.push({ href: href.trim(), text: visibleText });
+    const index = links.length;
+    return `{{WEBMIND_LINK_START_${index}}}${visibleText}{{WEBMIND_LINK_END_${index}}}`;
+  };
+  const withHtmlLinks = withFormats.replace(
+    /<a\b[^>]*\bhref\s*=\s*(["'])(.*?)\1[^>]*>([\s\S]*?)<\/a>/gi,
+    (_match, _quote, href, label) => protectLink(href, label)
+  );
+  const withMarkdownLinks = withHtmlLinks.replace(
+    /(^|[^!])\[([^\]\n]{1,500})\]\(\s*(?:<([^>\n]+)>|([^)>\s]+))\s*\)/g,
+    (_match, prefix, label, angleHref, plainHref) => `${prefix}${protectLink(angleHref ?? plainHref ?? "", label)}`
+  );
+  const withCitations = withMarkdownLinks.replace(TRANSLATION_CITATION_PATTERN, (marker) => {
     citations.push(marker);
     return `{{WEBMIND_CITATION_${citations.length}}}`;
   });
@@ -3083,7 +3355,7 @@ function protectTranslationText(text) {
     paragraphBreaks.push(separator);
     return `{{WEBMIND_PARAGRAPH_BREAK_${paragraphBreaks.length}}}`;
   });
-  return { text: protectedText, citations, paragraphBreaks };
+  return { text: protectedText, citations, links, formats, paragraphBreaks };
 }
 function restoreTranslationText(text, protection) {
   let restored = stripCitationExplanationNoise(
@@ -3102,15 +3374,46 @@ function restoreTranslationText(text, protection) {
       separator.includes("\n\n") ? "\n\n" : separator
     );
   });
+  (protection.links ?? []).forEach((link, index) => {
+    const linkPattern = new RegExp(
+      [
+        protectedTokenSource("LINK_START", index + 1),
+        "([\\s\\S]*?)",
+        protectedTokenSource("LINK_END", index + 1)
+      ].join(""),
+      "gi"
+    );
+    restored = restored.replace(linkPattern, (_match, label) => {
+      const visibleText = label.replace(/\s+/g, " ").trim() || link.text;
+      return `[${visibleText.replace(/([\\\]])/g, "\\$1")}](<${link.href}>)`;
+    });
+    restored = restored.replace(protectedTokenPattern("LINK_START", index + 1), "").replace(protectedTokenPattern("LINK_END", index + 1), "");
+  });
+  (protection.formats ?? []).forEach((format, index) => {
+    const formatPattern = new RegExp(
+      [
+        protectedTokenSource("FORMAT_START", index + 1),
+        "([\\s\\S]*?)",
+        protectedTokenSource("FORMAT_END", index + 1)
+      ].join(""),
+      "gi"
+    );
+    restored = restored.replace(formatPattern, (_match, value) => {
+      const visibleText = value.replace(/\s+/g, " ").trim() || format.text;
+      return `<${format.tag}>${visibleText}</${format.tag}>`;
+    });
+    restored = restored.replace(protectedTokenPattern("FORMAT_START", index + 1), "").replace(protectedTokenPattern("FORMAT_END", index + 1), "");
+  });
   restored = stripCitationMarkerExplanationNoise(restored, protection.citations);
   return restored.replace(/\n[\t ]*\n(?:[\t ]*\n)+/g, "\n\n");
 }
-function buildProtectedTranslationPrompt(config, sourceText, protectedText) {
+function buildProtectedTranslationPrompt(config, sourceText, protectedText, options = {}) {
+  const dictionaryMode = options.dictionaryForShortInput && isDictionaryTranslationInput(sourceText);
   return [
-    autoTranslateInstruction(config, sourceText),
+    dictionaryMode ? dictionaryTranslationInstruction(config, sourceText) : autoTranslateInstruction(config, sourceText),
     translationDirectionInstruction(config, sourceText),
-    translationFormatInstruction(config),
-    uiText(
+    dictionaryMode ? "" : translationFormatInstruction(config),
+    dictionaryMode ? "" : uiText(
       typeof config === "object" ? config?.interfaceLanguage : config,
       "translationOutputOnlyInstruction"
     ),
@@ -3306,31 +3609,36 @@ var DEFAULT_SETTINGS = {
   logLevel: "info",
   autoScrollDuringStreaming: true,
   modelThinkingTimeoutSeconds: 0,
-  modelThinkingTimeoutCustomized: false,
   interfaceLanguage: "auto",
   translationLanguage: "auto",
-  selectionOverlayMode: "always",
+  defaultContextScope: "article",
+  selectionOverlayMode: "off",
+  selectionOverlayShortcut: "off",
   selectionOverlayMinChars: 2,
   immersiveTranslationStyle: "bilingual",
   immersiveTranslationDisplayStyle: "default",
-  immersiveTranslationTextEffects: [],
+  immersiveTranslationTextEffects: ["light"],
   immersiveTranslationParagraphShortcut: "off",
   immersiveTranslationPageShortcut: "off",
+  immersiveTranslationModeToggleShortcut: "off",
   immersiveTranslationAutoWhitelist: [],
   immersiveReadingDifficulty: 3,
   immersiveReadingStrategy: "local-first",
   immersiveReadingMode: "original-translation",
-  immersiveReadingOuterTextEffects: ["emphasis"],
+  immersiveReadingBackgroundStyle: "none",
+  immersiveReadingParagraphShortcut: "off",
+  immersiveReadingContextShortcut: "off",
+  immersiveReadingOuterTextEffects: [],
   immersiveReadingInnerTextEffects: ["light"],
   immersiveReadingAutoWhitelist: [],
   hoverDefinitionMode: "off",
   hoverDefinitionShortcut: "off",
   hoverDefinitionUrlBlacklist: [],
-  edgeQuickToolsEnabled: true,
+  edgeQuickToolsEnabled: false,
   edgeQuickToolBottom: 36,
   selectionOverlayUrlBlacklist: [],
   edgeQuickToolUrlBlacklist: [],
-  inputAutoReplyEnabled: true,
+  inputAutoReplyEnabled: false,
   inputAutoReplyDisableSingleLine: true,
   imageTextExtractionEnabled: false,
   imageTextExtractionMinSize: 160,
@@ -3340,7 +3648,6 @@ var DEFAULT_SETTINGS = {
     tools: [...DEFAULT_TOOLS_TAB_IDS],
     edge: [...DEFAULT_EDGE_TOOL_IDS]
   },
-  quickActionsEnabled: true,
   chromeSyncEnabled: false,
   searchAnswerEnabled: false,
   includePageByDefault: true,
@@ -3350,7 +3657,6 @@ var DEFAULT_SETTINGS = {
 
 // src/shared/storage.ts
 var SETTINGS_KEY = "webmind.settings";
-var CUSTOM_PROMPTS_KEY = "webmind.customPrompts";
 var CUSTOM_TOOLS_KEY = "webmind.customTools";
 var SESSION_SECRETS_KEY = "webmind.sessionSecrets";
 var PENDING_ACTION_KEY = "webmind.pendingAction";
@@ -3361,6 +3667,29 @@ var APP_LOG_LEVELS = /* @__PURE__ */ new Set([
   "warning",
   "error"
 ]);
+var IMMERSIVE_SHORTCUTS = /* @__PURE__ */ new Set([
+  "off",
+  "ctrl",
+  "alt",
+  "shift",
+  "ctrl-alt",
+  "ctrl-shift",
+  "alt-shift",
+  "ctrl-alt-shift"
+]);
+var HOVER_DEFINITION_SHORTCUTS = /* @__PURE__ */ new Set([
+  "off",
+  "ctrl",
+  "alt",
+  "shift",
+  "ctrl-alt",
+  "ctrl-shift",
+  "alt-shift",
+  "ctrl-alt-shift"
+]);
+function normalizeImmersiveShortcut(value, fallback) {
+  return IMMERSIVE_SHORTCUTS.has(value) ? value : fallback;
+}
 var memoryFallback = /* @__PURE__ */ new Map();
 function hasChromeStorage(area) {
   return typeof chrome !== "undefined" && Boolean(chrome.storage?.[area]);
@@ -3387,9 +3716,6 @@ function normalizeEnabledToolIds(stored) {
 }
 function normalizeSettings(stored = {}) {
   const profiles = stored.profiles ?? [];
-  const storedHoverDefinitionShortcut = String(
-    stored.hoverDefinitionShortcut ?? ""
-  );
   const quickToolsUrlBlacklist = stored.edgeQuickToolUrlBlacklist ?? [];
   const profileIds = new Set(profiles.map((profile) => profile.id));
   const visionProfileIds = new Set(
@@ -3399,42 +3725,82 @@ function normalizeSettings(stored = {}) {
     0,
     Math.round(Number(stored.modelThinkingTimeoutSeconds) || 0)
   );
-  const legacyTwentySecondDefault = storedTimeoutSeconds === 20 && stored.modelThinkingTimeoutCustomized !== true;
   const activeProfileId = stored.activeProfileId && profileIds.has(stored.activeProfileId) ? stored.activeProfileId : null;
   const defaultProfileId = (stored.defaultProfileId && profileIds.has(stored.defaultProfileId) ? stored.defaultProfileId : null) ?? activeProfileId;
   const translationProfileId = stored.translationProfileId && profileIds.has(stored.translationProfileId) ? stored.translationProfileId : null;
   const visionProfileId = stored.visionProfileId && visionProfileIds.has(stored.visionProfileId) ? stored.visionProfileId : null;
   return {
-    ...DEFAULT_SETTINGS,
-    ...stored,
     profiles,
     activeProfileId,
     defaultProfileId,
     translationProfileId,
     visionProfileId,
     compareProfileIds: stored.compareProfileIds ?? [],
+    theme: stored.theme ?? DEFAULT_SETTINGS.theme,
     logLevel: APP_LOG_LEVELS.has(stored.logLevel) ? stored.logLevel : DEFAULT_SETTINGS.logLevel,
     autoScrollDuringStreaming: stored.autoScrollDuringStreaming ?? true,
-    modelThinkingTimeoutSeconds: legacyTwentySecondDefault ? 0 : storedTimeoutSeconds,
-    modelThinkingTimeoutCustomized: stored.modelThinkingTimeoutCustomized ?? false,
-    selectionOverlayMode: stored.selectionOverlayMode ?? (stored.quickActionsEnabled === false ? "off" : "always"),
+    modelThinkingTimeoutSeconds: storedTimeoutSeconds,
+    interfaceLanguage: stored.interfaceLanguage ?? DEFAULT_SETTINGS.interfaceLanguage,
+    translationLanguage: stored.translationLanguage ?? DEFAULT_SETTINGS.translationLanguage,
+    defaultContextScope: stored.defaultContextScope === "page" ? "page" : "article",
+    selectionOverlayMode: stored.selectionOverlayMode ?? DEFAULT_SETTINGS.selectionOverlayMode,
+    selectionOverlayShortcut: HOVER_DEFINITION_SHORTCUTS.has(
+      stored.selectionOverlayShortcut
+    ) ? stored.selectionOverlayShortcut : DEFAULT_SETTINGS.selectionOverlayShortcut,
     selectionOverlayMinChars: Math.max(
       1,
       Math.round(Number(stored.selectionOverlayMinChars ?? 2) || 2)
     ),
-    inputAutoReplyEnabled: stored.inputAutoReplyEnabled ?? true,
+    immersiveTranslationStyle: stored.immersiveTranslationStyle ?? DEFAULT_SETTINGS.immersiveTranslationStyle,
+    immersiveTranslationDisplayStyle: stored.immersiveTranslationDisplayStyle ?? DEFAULT_SETTINGS.immersiveTranslationDisplayStyle,
+    immersiveTranslationTextEffects: stored.immersiveTranslationTextEffects ?? DEFAULT_SETTINGS.immersiveTranslationTextEffects,
+    inputAutoReplyEnabled: stored.inputAutoReplyEnabled ?? DEFAULT_SETTINGS.inputAutoReplyEnabled,
     inputAutoReplyDisableSingleLine: stored.inputAutoReplyDisableSingleLine ?? true,
     immersiveTranslationAutoWhitelist: stored.immersiveTranslationAutoWhitelist ?? [],
+    immersiveTranslationParagraphShortcut: normalizeImmersiveShortcut(
+      stored.immersiveTranslationParagraphShortcut,
+      DEFAULT_SETTINGS.immersiveTranslationParagraphShortcut
+    ),
+    immersiveTranslationPageShortcut: normalizeImmersiveShortcut(
+      stored.immersiveTranslationPageShortcut,
+      DEFAULT_SETTINGS.immersiveTranslationPageShortcut
+    ),
+    immersiveTranslationModeToggleShortcut: normalizeImmersiveShortcut(
+      stored.immersiveTranslationModeToggleShortcut,
+      DEFAULT_SETTINGS.immersiveTranslationModeToggleShortcut
+    ),
     immersiveReadingAutoWhitelist: stored.immersiveReadingAutoWhitelist ?? [],
+    immersiveReadingDifficulty: stored.immersiveReadingDifficulty ?? DEFAULT_SETTINGS.immersiveReadingDifficulty,
+    immersiveReadingMode: stored.immersiveReadingMode ?? DEFAULT_SETTINGS.immersiveReadingMode,
     immersiveReadingStrategy: stored.immersiveReadingStrategy === "model-page" ? "model-page" : "local-first",
+    immersiveReadingBackgroundStyle: stored.immersiveReadingBackgroundStyle === "uniform" || stored.immersiveReadingBackgroundStyle === "leveled" ? stored.immersiveReadingBackgroundStyle : "none",
+    immersiveReadingParagraphShortcut: normalizeImmersiveShortcut(
+      stored.immersiveReadingParagraphShortcut,
+      DEFAULT_SETTINGS.immersiveReadingParagraphShortcut
+    ),
+    immersiveReadingContextShortcut: normalizeImmersiveShortcut(
+      stored.immersiveReadingContextShortcut,
+      DEFAULT_SETTINGS.immersiveReadingContextShortcut
+    ),
+    immersiveReadingOuterTextEffects: stored.immersiveReadingOuterTextEffects ?? DEFAULT_SETTINGS.immersiveReadingOuterTextEffects,
+    immersiveReadingInnerTextEffects: stored.immersiveReadingInnerTextEffects ?? DEFAULT_SETTINGS.immersiveReadingInnerTextEffects,
     hoverDefinitionMode: stored.hoverDefinitionMode ?? "off",
-    hoverDefinitionShortcut: storedHoverDefinitionShortcut === "ctrl" || storedHoverDefinitionShortcut === "ctrl-shift" ? "ctrl" : "off",
+    hoverDefinitionShortcut: HOVER_DEFINITION_SHORTCUTS.has(
+      stored.hoverDefinitionShortcut
+    ) ? stored.hoverDefinitionShortcut : DEFAULT_SETTINGS.hoverDefinitionShortcut,
     hoverDefinitionUrlBlacklist: stored.hoverDefinitionUrlBlacklist ?? [],
+    edgeQuickToolsEnabled: stored.edgeQuickToolsEnabled ?? DEFAULT_SETTINGS.edgeQuickToolsEnabled,
+    edgeQuickToolBottom: stored.edgeQuickToolBottom ?? DEFAULT_SETTINGS.edgeQuickToolBottom,
+    selectionOverlayUrlBlacklist: stored.selectionOverlayUrlBlacklist ?? [],
     imageTextExtractionEnabled: stored.imageTextExtractionEnabled ?? false,
     imageTextExtractionMinSize: stored.imageTextExtractionMinSize ?? 160,
     edgeQuickToolUrlBlacklist: quickToolsUrlBlacklist,
     chromeSyncEnabled: stored.chromeSyncEnabled ?? false,
-    enabledToolIds: normalizeEnabledToolIds(stored.enabledToolIds)
+    enabledToolIds: normalizeEnabledToolIds(stored.enabledToolIds),
+    searchAnswerEnabled: stored.searchAnswerEnabled ?? DEFAULT_SETTINGS.searchAnswerEnabled,
+    includePageByDefault: stored.includePageByDefault ?? DEFAULT_SETTINGS.includePageByDefault,
+    webSearchByDefault: stored.webSearchByDefault ?? DEFAULT_SETTINGS.webSearchByDefault,
+    historyLimit: stored.historyLimit ?? DEFAULT_SETTINGS.historyLimit
   };
 }
 function normalizeCustomTool(tool) {
@@ -3470,9 +3836,7 @@ async function getProviderSecret(profile) {
 }
 async function loadCustomTools() {
   const tools = await getValue("local", CUSTOM_TOOLS_KEY, []);
-  if (tools.length) return normalizeCustomTools(tools);
-  const legacy = await getValue("local", CUSTOM_PROMPTS_KEY, []);
-  return normalizeCustomTools(legacy);
+  return normalizeCustomTools(tools);
 }
 async function setPendingAction(action) {
   await setValue("session", PENDING_ACTION_KEY, action);
@@ -4379,8 +4743,8 @@ chrome.runtime.onMessage.addListener(
       }
       if (message.type === "panel.open") {
         const payload = message.payload ?? {};
-        const settings = await loadSettings();
         if (!sender.tab?.id) {
+          const settings = await loadSettings();
           throw new Error(uiText(settings.interfaceLanguage, "cannotDetermineTab"));
         }
         const pendingWrite = payload.action ? setPendingAction(payload.action) : Promise.resolve();
@@ -4460,7 +4824,9 @@ chrome.runtime.onMessage.addListener(
         }
         const isTranslationAction = action === "translate";
         const protectedText = isTranslationAction ? protectTranslationText(text) : null;
-        const prompt = protectedText ? buildProtectedTranslationPrompt(settings, text, protectedText.text) : fillPrompt(template, { text });
+        const prompt = protectedText ? buildProtectedTranslationPrompt(settings, text, protectedText.text, {
+          dictionaryForShortInput: true
+        }) : fillPrompt(template, { text });
         const result = await completeModel({
           purpose: isTranslationAction ? "translation" : "default",
           temperature: isTranslationAction ? 0 : void 0,
@@ -4492,7 +4858,8 @@ chrome.runtime.onMessage.addListener(
         const userPrompt = isTranslationTool ? buildProtectedTranslationPrompt(
           settings,
           contextText,
-          protectedText?.text ?? contextText
+          protectedText?.text ?? contextText,
+          { dictionaryForShortInput: tool.id === "translate-text" }
         ) : `${instruction}
 
 ${uiText(settings.interfaceLanguage, "currentContext")}\uFF1A
