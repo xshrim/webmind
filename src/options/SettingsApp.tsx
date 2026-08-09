@@ -37,6 +37,8 @@ import {
   saveCustomTools,
   saveProviderSecret,
   saveSettings,
+  SETTINGS_EXPORT_FORMAT,
+  SETTINGS_EXPORT_VERSION,
   syncSettingsFromChrome,
   syncSettingsToChrome
 } from "../shared/storage";
@@ -62,7 +64,6 @@ import { errorMessage, parseCustomHeaders } from "../shared/utils";
 
 type Status = { kind: "success" | "error" | "info"; text: string } | null;
 type AutoReplyMode = "off" | "multiline" | "all";
-const SETTINGS_EXPORT_VERSION = 3;
 
 const PROVIDER_KINDS: ProviderKind[] = [
   "openai-compatible",
@@ -1198,7 +1199,7 @@ export function SettingsApp() {
       [
         JSON.stringify(
           {
-            format: "webmind-settings",
+            format: SETTINGS_EXPORT_FORMAT,
             version: SETTINGS_EXPORT_VERSION,
             exportedAt: new Date().toISOString(),
             settings: cleanSettings,
@@ -1225,7 +1226,7 @@ export function SettingsApp() {
     try {
       const payload = JSON.parse(await file.text());
       if (
-        payload.format !== "webmind-settings" ||
+        payload.format !== SETTINGS_EXPORT_FORMAT ||
         payload.version !== SETTINGS_EXPORT_VERSION ||
         !payload.settings ||
         !Array.isArray(payload.customTools)

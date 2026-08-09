@@ -155,8 +155,13 @@ var UI_TEXT = {
     currentBodySourceReadability: "Readability",
     currentBodySourceDom: "DOM",
     currentBodySourceManual: "\u624B\u52A8\u9009\u62E9",
+    currentBodySourceEdited: "\u5DF2\u7F16\u8F91",
     selectCurrentBody: "\u6846\u9009\u6B63\u6587",
     restoreCurrentBody: "\u8FD8\u539F\u6B63\u6587",
+    highlightCurrentBodyBlock: "\u5728\u9875\u9762\u4E2D\u9AD8\u4EAE\u8FD9\u4E00\u6BB5",
+    removeCurrentBodyBlock: "\u4ECE\u5F53\u524D\u6B63\u6587\u4E2D\u5220\u9664\u8FD9\u4E00\u6BB5",
+    smartPruneCurrentBody: "\u667A\u80FD\u5254\u9664",
+    currentBodyVirtualizedWarning: "\u7591\u4F3C\u865A\u62DF\u6EDA\u52A8\u9875\u9762\uFF0C\u9884\u89C8\u53EF\u80FD\u53EA\u5305\u542B\u5F53\u524D\u5DF2\u6E32\u67D3\u5185\u5BB9\u3002",
     selectingBodyRange: "\u6B63\u5728\u9009\u62E9\u6B63\u6587\u8303\u56F4",
     manualBodySelectionHint: "\u6EDA\u8F6E/\u65B9\u5411\u952E\u8C03\u6574\u5C42\u7EA7\uFF0C\u70B9\u51FB\u786E\u8BA4\uFF0CEsc \u53D6\u6D88",
     manualBodySelectionCancelled: "\u5DF2\u53D6\u6D88\u6B63\u6587\u6846\u9009",
@@ -378,6 +383,10 @@ var UI_TEXT = {
     saveTool: "\u4FDD\u5B58\u5DE5\u5177",
     custom: "\u81EA\u5B9A\u4E49",
     icon: "\u56FE\u6807",
+    chooseIcon: "\u9009\u62E9\u56FE\u6807",
+    noIcon: "\u65E0\u56FE\u6807",
+    searchIcon: "\u641C\u7D22\u56FE\u6807",
+    noIconMatches: "\u6CA1\u6709\u5339\u914D\u7684\u56FE\u6807",
     toolPrompt: "\u63D0\u793A\u8BCD",
     mainNav: "\u4E3B\u5BFC\u822A",
     connectEngineBannerTitle: "\u5148\u8FDE\u63A5\u4E00\u4E2A\u6A21\u578B\u5F15\u64CE",
@@ -412,6 +421,7 @@ var UI_TEXT = {
     chooseContextFirst: "\u8BF7\u5148\u5728\u4E0A\u4E0B\u6587\u4E2D\u9009\u62E9\u5F53\u524D\u9875\u9762\u6216\u9009\u4E2D\u5185\u5BB9",
     directQuestionPlaceholder: "\u76F4\u63A5\u63D0\u95EE\u2026",
     askContextPlaceholder: "\u5411\u5F53\u524D\u9875\u9762\u63D0\u95EE\u2026",
+    composerShortcutHint: "Enter \u53D1\u9001\uFF0CCtrl+Enter \u6362\u884C",
     addEngineFirst: "\u5148\u5728\u8BBE\u7F6E\u4E2D\u6DFB\u52A0\u6A21\u578B\u5F15\u64CE",
     copyFailed: "\u590D\u5236\u5931\u8D25",
     readingPdf: "\u6B63\u5728\u8BFB\u53D6 PDF",
@@ -659,8 +669,13 @@ var UI_TEXT = {
     currentBodySourceReadability: "Readability",
     currentBodySourceDom: "DOM",
     currentBodySourceManual: "\u624B\u52D5\u9078\u53D6",
+    currentBodySourceEdited: "\u5DF2\u7DE8\u8F2F",
     selectCurrentBody: "\u6846\u9078\u6B63\u6587",
     restoreCurrentBody: "\u9084\u539F\u6B63\u6587",
+    highlightCurrentBodyBlock: "\u5728\u9801\u9762\u4E2D\u9AD8\u4EAE\u9019\u4E00\u6BB5",
+    removeCurrentBodyBlock: "\u5F9E\u76EE\u524D\u6B63\u6587\u4E2D\u522A\u9664\u9019\u4E00\u6BB5",
+    smartPruneCurrentBody: "\u667A\u6167\u5254\u9664",
+    currentBodyVirtualizedWarning: "\u7591\u4F3C\u865B\u64EC\u6372\u52D5\u9801\u9762\uFF0C\u9810\u89BD\u53EF\u80FD\u53EA\u5305\u542B\u76EE\u524D\u5DF2\u6E32\u67D3\u5167\u5BB9\u3002",
     selectingBodyRange: "\u6B63\u5728\u9078\u53D6\u6B63\u6587\u7BC4\u570D",
     manualBodySelectionHint: "\u6EFE\u8F2A/\u65B9\u5411\u9375\u8ABF\u6574\u5C64\u7D1A\uFF0C\u9EDE\u64CA\u78BA\u8A8D\uFF0CEsc \u53D6\u6D88",
     manualBodySelectionCancelled: "\u5DF2\u53D6\u6D88\u6B63\u6587\u6846\u9078",
@@ -882,6 +897,10 @@ var UI_TEXT = {
     saveTool: "\u5132\u5B58\u5DE5\u5177",
     custom: "\u81EA\u8A02",
     icon: "\u5716\u793A",
+    chooseIcon: "\u9078\u64C7\u5716\u793A",
+    noIcon: "\u7121\u5716\u793A",
+    searchIcon: "\u641C\u5C0B\u5716\u793A",
+    noIconMatches: "\u6C92\u6709\u7B26\u5408\u7684\u5716\u793A",
     toolPrompt: "\u63D0\u793A\u8A5E",
     mainNav: "\u4E3B\u5C0E\u89BD",
     connectEngineBannerTitle: "\u5148\u9023\u63A5\u4E00\u500B\u6A21\u578B\u5F15\u64CE",
@@ -916,6 +935,7 @@ var UI_TEXT = {
     chooseContextFirst: "\u8ACB\u5148\u5728\u4E0A\u4E0B\u6587\u4E2D\u9078\u64C7\u76EE\u524D\u9801\u9762\u6216\u9078\u53D6\u5167\u5BB9",
     directQuestionPlaceholder: "\u76F4\u63A5\u63D0\u554F\u2026",
     askContextPlaceholder: "\u5411\u76EE\u524D\u9801\u9762\u63D0\u554F\u2026",
+    composerShortcutHint: "Enter \u9001\u51FA\uFF0CCtrl+Enter \u63DB\u884C",
     addEngineFirst: "\u5148\u5728\u8A2D\u5B9A\u4E2D\u65B0\u589E\u6A21\u578B\u5F15\u64CE",
     copyFailed: "\u8907\u88FD\u5931\u6557",
     readingPdf: "\u6B63\u5728\u8B80\u53D6 PDF",
@@ -1163,8 +1183,13 @@ var UI_TEXT = {
     currentBodySourceReadability: "Readability",
     currentBodySourceDom: "DOM",
     currentBodySourceManual: "Manual",
+    currentBodySourceEdited: "Edited",
     selectCurrentBody: "Select Body",
     restoreCurrentBody: "Restore Body",
+    highlightCurrentBodyBlock: "Highlight this block on the page",
+    removeCurrentBodyBlock: "Remove this block from current body",
+    smartPruneCurrentBody: "Smart Prune",
+    currentBodyVirtualizedWarning: "This looks like a virtualized page, so the preview may include only currently rendered content.",
     selectingBodyRange: "Selecting body range",
     manualBodySelectionHint: "Wheel/arrow keys adjust level, click to confirm, Esc to cancel",
     manualBodySelectionCancelled: "Body range selection cancelled",
@@ -1386,6 +1411,10 @@ var UI_TEXT = {
     saveTool: "Save Tool",
     custom: "Custom",
     icon: "Icon",
+    chooseIcon: "Choose Icon",
+    noIcon: "No Icon",
+    searchIcon: "Search Icons",
+    noIconMatches: "No matching icons",
     toolPrompt: "Prompt",
     mainNav: "Main Navigation",
     connectEngineBannerTitle: "Connect a model engine first",
@@ -1420,6 +1449,7 @@ var UI_TEXT = {
     chooseContextFirst: "Choose the current page or selected content in the context first",
     directQuestionPlaceholder: "Ask directly\u2026",
     askContextPlaceholder: "Ask the current page\u2026",
+    composerShortcutHint: "Enter to send, Ctrl+Enter for newline",
     addEngineFirst: "Add a model engine in Settings first",
     copyFailed: "Copy failed",
     readingPdf: "Reading PDF",
@@ -1667,8 +1697,13 @@ var UI_TEXT = {
     currentBodySourceReadability: "Readability",
     currentBodySourceDom: "DOM",
     currentBodySourceManual: "\u624B\u52D5\u9078\u629E",
+    currentBodySourceEdited: "\u7DE8\u96C6\u6E08\u307F",
     selectCurrentBody: "\u672C\u6587\u3092\u9078\u629E",
     restoreCurrentBody: "\u672C\u6587\u3092\u5FA9\u5143",
+    highlightCurrentBodyBlock: "\u30DA\u30FC\u30B8\u4E0A\u3067\u3053\u306E\u6BB5\u843D\u3092\u30CF\u30A4\u30E9\u30A4\u30C8",
+    removeCurrentBodyBlock: "\u73FE\u5728\u306E\u672C\u6587\u304B\u3089\u3053\u306E\u30D6\u30ED\u30C3\u30AF\u3092\u524A\u9664",
+    smartPruneCurrentBody: "\u30B9\u30DE\u30FC\u30C8\u9664\u5916",
+    currentBodyVirtualizedWarning: "\u4EEE\u60F3\u30B9\u30AF\u30ED\u30FC\u30EB\u30DA\u30FC\u30B8\u306E\u53EF\u80FD\u6027\u304C\u3042\u308A\u3001\u30D7\u30EC\u30D3\u30E5\u30FC\u306F\u73FE\u5728\u63CF\u753B\u3055\u308C\u3066\u3044\u308B\u5185\u5BB9\u3060\u3051\u304B\u3082\u3057\u308C\u307E\u305B\u3093\u3002",
     selectingBodyRange: "\u672C\u6587\u7BC4\u56F2\u3092\u9078\u629E\u4E2D",
     manualBodySelectionHint: "\u30DB\u30A4\u30FC\u30EB/\u77E2\u5370\u30AD\u30FC\u3067\u968E\u5C64\u8ABF\u6574\u3001\u30AF\u30EA\u30C3\u30AF\u3067\u78BA\u5B9A\u3001Esc \u3067\u30AD\u30E3\u30F3\u30BB\u30EB",
     manualBodySelectionCancelled: "\u672C\u6587\u7BC4\u56F2\u306E\u9078\u629E\u3092\u30AD\u30E3\u30F3\u30BB\u30EB\u3057\u307E\u3057\u305F",
@@ -1890,6 +1925,10 @@ var UI_TEXT = {
     saveTool: "\u30C4\u30FC\u30EB\u3092\u4FDD\u5B58",
     custom: "\u30AB\u30B9\u30BF\u30E0",
     icon: "\u30A2\u30A4\u30B3\u30F3",
+    chooseIcon: "\u30A2\u30A4\u30B3\u30F3\u3092\u9078\u629E",
+    noIcon: "\u30A2\u30A4\u30B3\u30F3\u306A\u3057",
+    searchIcon: "\u30A2\u30A4\u30B3\u30F3\u3092\u691C\u7D22",
+    noIconMatches: "\u4E00\u81F4\u3059\u308B\u30A2\u30A4\u30B3\u30F3\u304C\u3042\u308A\u307E\u305B\u3093",
     toolPrompt: "\u30D7\u30ED\u30F3\u30D7\u30C8",
     mainNav: "\u30E1\u30A4\u30F3\u30CA\u30D3\u30B2\u30FC\u30B7\u30E7\u30F3",
     connectEngineBannerTitle: "\u5148\u306B\u30E2\u30C7\u30EB\u30A8\u30F3\u30B8\u30F3\u3092\u63A5\u7D9A\u3057\u3066\u304F\u3060\u3055\u3044",
@@ -1924,6 +1963,7 @@ var UI_TEXT = {
     chooseContextFirst: "\u5148\u306B\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u3067\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u307E\u305F\u306F\u9078\u629E\u5185\u5BB9\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044",
     directQuestionPlaceholder: "\u76F4\u63A5\u8CEA\u554F\u2026",
     askContextPlaceholder: "\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u306B\u8CEA\u554F\u2026",
+    composerShortcutHint: "Enter \u3067\u9001\u4FE1\u3001Ctrl+Enter \u3067\u6539\u884C",
     addEngineFirst: "\u5148\u306B\u8A2D\u5B9A\u3067\u30E2\u30C7\u30EB\u30A8\u30F3\u30B8\u30F3\u3092\u8FFD\u52A0\u3057\u3066\u304F\u3060\u3055\u3044",
     copyFailed: "\u30B3\u30D4\u30FC\u306B\u5931\u6557\u3057\u307E\u3057\u305F",
     readingPdf: "PDF \u3092\u8AAD\u307F\u53D6\u308A\u4E2D",
@@ -2171,8 +2211,13 @@ var UI_TEXT = {
     currentBodySourceReadability: "Readability",
     currentBodySourceDom: "DOM",
     currentBodySourceManual: "\uC218\uB3D9 \uC120\uD0DD",
+    currentBodySourceEdited: "\uD3B8\uC9D1\uB428",
     selectCurrentBody: "\uBCF8\uBB38 \uC120\uD0DD",
     restoreCurrentBody: "\uBCF8\uBB38 \uBCF5\uC6D0",
+    highlightCurrentBodyBlock: "\uD398\uC774\uC9C0\uC5D0\uC11C \uC774 \uBE14\uB85D \uAC15\uC870",
+    removeCurrentBodyBlock: "\uD604\uC7AC \uBCF8\uBB38\uC5D0\uC11C \uC774 \uBE14\uB85D \uC0AD\uC81C",
+    smartPruneCurrentBody: "\uC2A4\uB9C8\uD2B8 \uC81C\uAC70",
+    currentBodyVirtualizedWarning: "\uAC00\uC0C1 \uC2A4\uD06C\uB864 \uD398\uC774\uC9C0\uC77C \uC218 \uC788\uC5B4 \uBBF8\uB9AC\uBCF4\uAE30\uC5D0\uB294 \uD604\uC7AC \uB80C\uB354\uB9C1\uB41C \uB0B4\uC6A9\uB9CC \uD3EC\uD568\uB420 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
     selectingBodyRange: "\uBCF8\uBB38 \uBC94\uC704 \uC120\uD0DD \uC911",
     manualBodySelectionHint: "\uD720/\uD654\uC0B4\uD45C \uD0A4\uB85C \uACC4\uCE35 \uC870\uC815, \uD074\uB9AD\uC73C\uB85C \uD655\uC815, Esc\uB85C \uCDE8\uC18C",
     manualBodySelectionCancelled: "\uBCF8\uBB38 \uBC94\uC704 \uC120\uD0DD\uC744 \uCDE8\uC18C\uD588\uC2B5\uB2C8\uB2E4",
@@ -2394,6 +2439,10 @@ var UI_TEXT = {
     saveTool: "\uB3C4\uAD6C \uC800\uC7A5",
     custom: "\uC0AC\uC6A9\uC790 \uC9C0\uC815",
     icon: "\uC544\uC774\uCF58",
+    chooseIcon: "\uC544\uC774\uCF58 \uC120\uD0DD",
+    noIcon: "\uC544\uC774\uCF58 \uC5C6\uC74C",
+    searchIcon: "\uC544\uC774\uCF58 \uAC80\uC0C9",
+    noIconMatches: "\uC77C\uCE58\uD558\uB294 \uC544\uC774\uCF58 \uC5C6\uC74C",
     toolPrompt: "\uD504\uB86C\uD504\uD2B8",
     mainNav: "\uAE30\uBCF8 \uD0D0\uC0C9",
     connectEngineBannerTitle: "\uBA3C\uC800 \uBAA8\uB378 \uC5D4\uC9C4\uC744 \uC5F0\uACB0\uD558\uC138\uC694",
@@ -2428,6 +2477,7 @@ var UI_TEXT = {
     chooseContextFirst: "\uBA3C\uC800 \uCEE8\uD14D\uC2A4\uD2B8\uC5D0\uC11C \uD604\uC7AC \uD398\uC774\uC9C0 \uB610\uB294 \uC120\uD0DD \uB0B4\uC6A9\uC744 \uC120\uD0DD\uD558\uC138\uC694",
     directQuestionPlaceholder: "\uC9C1\uC811 \uC9C8\uBB38\u2026",
     askContextPlaceholder: "\uD604\uC7AC \uD398\uC774\uC9C0\uC5D0 \uC9C8\uBB38\u2026",
+    composerShortcutHint: "Enter\uB85C \uBCF4\uB0B4\uAE30, Ctrl+Enter\uB85C \uC904\uBC14\uAFC8",
     addEngineFirst: "\uBA3C\uC800 \uC124\uC815\uC5D0\uC11C \uBAA8\uB378 \uC5D4\uC9C4\uC744 \uCD94\uAC00\uD558\uC138\uC694",
     copyFailed: "\uBCF5\uC0AC \uC2E4\uD328",
     readingPdf: "PDF \uC77D\uB294 \uC911",
@@ -2564,16 +2614,18 @@ var TRANSLATION_FAMILY_LABELS = {
 };
 function detectTranslationLanguage(text) {
   const source = text.replace(/<[^>]*>/g, " ");
-  const latinCount = source.match(/[A-Za-z]/g)?.length ?? 0;
+  const latinWordCount = source.match(/[A-Za-z]+/g)?.length ?? 0;
   const chineseCount = source.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g)?.length ?? 0;
   const japaneseKanaCount = source.match(/[\u3040-\u30ff\u31f0-\u31ff]/g)?.length ?? 0;
   const koreanCount = source.match(/[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af]/g)?.length ?? 0;
   if (koreanCount) return "ko";
   if (japaneseKanaCount) return "ja";
-  if (chineseCount && chineseCount >= latinCount && chineseCount >= koreanCount) {
+  if (chineseCount >= 2 && chineseCount >= latinWordCount) {
     return "zh";
   }
-  if (latinCount >= 2) return "en";
+  if (latinWordCount >= 2 && latinWordCount > chineseCount) return "en";
+  if (chineseCount >= 2) return "zh";
+  if (latinWordCount >= 1 && chineseCount === 0) return "en";
   return null;
 }
 function translationLanguageMatchesInterface(sourceLanguage, interfaceLanguage) {
@@ -2882,7 +2934,7 @@ var BUILT_IN_TOOLS = [
     id: "explain-code",
     title: "\u4EE3\u7801\u89E3\u91CA",
     description: "\u5206\u6790\u6D41\u7A0B\u3001\u98CE\u9669\u548C\u6539\u8FDB\u70B9",
-    icon: "Code2",
+    icon: "CodeXml",
     builtin: true,
     template: "\u89E3\u91CA\u9009\u4E2D\u7684\u4EE3\u7801\uFF1A\u5B83\u505A\u4EC0\u4E48\u3001\u6570\u636E\u5982\u4F55\u6D41\u52A8\u3001\u590D\u6742\u5EA6\u3001\u8FB9\u754C\u6761\u4EF6\u3001\u6F5C\u5728\u7F3A\u9677\u4E0E\u53EF\u9A8C\u8BC1\u7684\u6539\u8FDB\u5EFA\u8BAE\u3002"
   }
@@ -3241,6 +3293,9 @@ function protectedTokenPattern(kind, index) {
 function protectedTokenSource(kind, index) {
   return `\`?(?:\\{\\{\\s*WEBMIND_${kind}_${index}\\s*\\}\\}|\\[\\s*WEBMIND_${kind}_${index}\\s*\\]|WEBMIND_${kind}_${index})\`?`;
 }
+function visibleTextFromHtmlFragment(value) {
+  return value.replace(/<script\b[\s\S]*?<\/script>/gi, " ").replace(/<style\b[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
 function stripCitationExplanationNoise(text, citationCount) {
   let cleaned = text;
   for (let index = 1; index <= citationCount; index += 1) {
@@ -3322,8 +3377,8 @@ function protectTranslationText(text) {
   const formats = [];
   const paragraphBreaks = [];
   const protectFormat = (tag, value) => {
-    const visibleText = value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-    if (!visibleText) return value;
+    const visibleText = visibleTextFromHtmlFragment(value);
+    if (!visibleText) return "";
     formats.push({ tag, text: visibleText });
     const index = formats.length;
     return `{{WEBMIND_FORMAT_START_${index}}}${visibleText}{{WEBMIND_FORMAT_END_${index}}}`;
@@ -3333,18 +3388,18 @@ function protectTranslationText(text) {
     (_match, tag, value) => protectFormat(tag.toLowerCase(), value)
   );
   const protectLink = (href, linkText) => {
-    const visibleText = linkText.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-    if (!href.trim() || !visibleText) return linkText;
+    const visibleText = visibleTextFromHtmlFragment(linkText);
+    if (!href.trim() || !visibleText) return visibleText;
     links.push({ href: href.trim(), text: visibleText });
     const index = links.length;
     return `{{WEBMIND_LINK_START_${index}}}${visibleText}{{WEBMIND_LINK_END_${index}}}`;
   };
   const withHtmlLinks = withFormats.replace(
-    /<a\b[^>]*\bhref\s*=\s*(["'])(.*?)\1[^>]*>([\s\S]*?)<\/a>/gi,
-    (_match, _quote, href, label) => protectLink(href, label)
+    /<a\b[^>]*\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))[^>]*>([\s\S]*?)<\/a>/gi,
+    (_match, doubleHref, singleHref, bareHref, label) => protectLink(doubleHref ?? singleHref ?? bareHref ?? "", label)
   );
   const withMarkdownLinks = withHtmlLinks.replace(
-    /(^|[^!])\[([^\]\n]{1,500})\]\(\s*(?:<([^>\n]+)>|([^)>\s]+))\s*\)/g,
+    /(^|[^!])\[([^\]\n]{1,500})\]\(\s*(?:<([^>\n]+)>|([^\s)]+))(?:\s+(?:"[^"\n]*"|'[^'\n]*'|\([^)\n]*\)))?\s*\)/g,
     (_match, prefix, label, angleHref, plainHref) => `${prefix}${protectLink(angleHref ?? plainHref ?? "", label)}`
   );
   const withCitations = withMarkdownLinks.replace(TRANSLATION_CITATION_PATTERN, (marker) => {
@@ -3404,6 +3459,12 @@ function restoreTranslationText(text, protection) {
     });
     restored = restored.replace(protectedTokenPattern("FORMAT_START", index + 1), "").replace(protectedTokenPattern("FORMAT_END", index + 1), "");
   });
+  const missingCitations = protection.citations.filter(
+    (marker) => marker && !restored.includes(marker)
+  );
+  if (missingCitations.length) {
+    restored = `${restored.trimEnd()} ${missingCitations.join(" ")}`;
+  }
   restored = stripCitationMarkerExplanationNoise(restored, protection.citations);
   return restored.replace(/\n[\t ]*\n(?:[\t ]*\n)+/g, "\n\n");
 }

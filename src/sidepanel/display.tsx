@@ -1,11 +1,11 @@
 import {
-  BookOpen,
   Check,
   Copy,
   FileText,
-  Globe2,
   ImagePlus,
   MessageSquareText,
+  Newspaper,
+  PanelTop,
   Presentation,
   Search,
   Square,
@@ -84,12 +84,12 @@ export function logLevelWeight(level: AppLogLevel): number {
 
 export function contextIcon(context: PageContext | null) {
   if (context?.kind === "selection") return TextSelect;
-  if (context?.kind === "article") return BookOpen;
+  if (context?.kind === "article") return Newspaper;
   if (context?.kind === "pdf") return FileText;
   if (context?.kind === "youtube") return Presentation;
   if (context?.kind === "search") return Search;
   if (context?.kind === "image") return ImagePlus;
-  return Globe2;
+  return PanelTop;
 }
 
 export function attachmentText(
@@ -117,7 +117,7 @@ export function attachmentText(
 
 function PageFavicon({ url }: { url?: string }) {
   const [failed, setFailed] = useState(!url);
-  if (failed) return <Globe2 />;
+  if (failed) return <PanelTop />;
   return (
     <img
       className="tool-invocation-favicon"
@@ -159,7 +159,7 @@ export function ToolInvocationBubble({
     context.kind === "selection"
       ? TextSelect
       : context.kind === "article"
-        ? BookOpen
+        ? Newspaper
         : context.kind === "answer"
           ? MessageSquareText
           : context.kind === "none"

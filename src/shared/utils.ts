@@ -97,6 +97,15 @@ function protectedTokenSource(
   return `\`?(?:\\{\\{\\s*WEBMIND_${kind}_${index}\\s*\\}\\}|\\[\\s*WEBMIND_${kind}_${index}\\s*\\]|WEBMIND_${kind}_${index})\`?`;
 }
 
+function visibleTextFromHtmlFragment(value: string): string {
+  return value
+    .replace(/<script\b[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style\b[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function stripCitationExplanationNoise(
   text: string,
   citationCount: number
@@ -188,11 +197,8 @@ export function protectTranslationText(text: string): ProtectedTranslationText {
   const formats: ProtectedTranslationFormat[] = [];
   const paragraphBreaks: string[] = [];
   const protectFormat = (tag: "sup" | "sub", value: string) => {
-    const visibleText = value
-      .replace(/<[^>]+>/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-    if (!visibleText) return value;
+    const visibleText = visibleTextFromHtmlFragment(value);
+    if (!visibleText) return "";
     formats.push({ tag, text: visibleText });
     const index = formats.length;
     return `{{WEBMIND_FORMAT_START_${index}}}${visibleText}{{WEBMIND_FORMAT_END_${index}}}`;
@@ -203,22 +209,24 @@ export function protectTranslationText(text: string): ProtectedTranslationText {
       protectFormat(tag.toLowerCase() as "sup" | "sub", value)
   );
   const protectLink = (href: string, linkText: string) => {
-    const visibleText = linkText
-      .replace(/<[^>]+>/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-    if (!href.trim() || !visibleText) return linkText;
+    const visibleText = visibleTextFromHtmlFragment(linkText);
+    if (!href.trim() || !visibleText) return visibleText;
     links.push({ href: href.trim(), text: visibleText });
     const index = links.length;
     return `{{WEBMIND_LINK_START_${index}}}${visibleText}{{WEBMIND_LINK_END_${index}}}`;
   };
   const withHtmlLinks = withFormats.replace(
-    /<a\b[^>]*\bhref\s*=\s*(["'])(.*?)\1[^>]*>([\s\S]*?)<\/a>/gi,
-    (_match, _quote: string, href: string, label: string) =>
-      protectLink(href, label)
+    /<a\b[^>]*\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))[^>]*>([\s\S]*?)<\/a>/gi,
+    (
+      _match,
+      doubleHref: string | undefined,
+      singleHref: string | undefined,
+      bareHref: string | undefined,
+      label: string
+    ) => protectLink(doubleHref ?? singleHref ?? bareHref ?? "", label)
   );
   const withMarkdownLinks = withHtmlLinks.replace(
-    /(^|[^!])\[([^\]\n]{1,500})\]\(\s*(?:<([^>\n]+)>|([^)>\s]+))\s*\)/g,
+    /(^|[^!])\[([^\]\n]{1,500})\]\(\s*(?:<([^>\n]+)>|([^\s)]+))(?:\s+(?:"[^"\n]*"|'[^'\n]*'|\([^)\n]*\)))?\s*\)/g,
     (
       _match,
       prefix: string,
@@ -295,6 +303,12 @@ export function restoreTranslationText(
       .replace(protectedTokenPattern("FORMAT_START", index + 1), "")
       .replace(protectedTokenPattern("FORMAT_END", index + 1), "");
   });
+  const missingCitations = protection.citations.filter(
+    (marker) => marker && !restored.includes(marker)
+  );
+  if (missingCitations.length) {
+    restored = `${restored.trimEnd()} ${missingCitations.join(" ")}`;
+  }
   restored = stripCitationMarkerExplanationNoise(restored, protection.citations);
   return restored.replace(/\n[\t ]*\n(?:[\t ]*\n)+/g, "\n\n");
 }

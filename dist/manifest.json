@@ -8,6 +8,7 @@
   "permissions": [
     "activeTab",
     "contextMenus",
+    "scripting",
     "sidePanel",
     "storage"
   ],
@@ -36,7 +37,8 @@
     {
       "resources": [
         "dictionary/cc-cedict.json",
-        "dictionary/wordfreq-en-25000.json"
+        "dictionary/wordfreq-en-25000.json",
+        "icons/icon-32.png"
       ],
       "matches": ["<all_urls>"]
     }

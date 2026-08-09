@@ -56,6 +56,7 @@ export function linkCitationMarkers(
 
 interface ArticleCandidate {
   title?: string;
+  titleElement?: HTMLElement;
   text: string;
   description?: string;
   element?: HTMLElement;
@@ -70,8 +71,44 @@ interface ArticleLanguageProfile {
   count: number;
 }
 
+interface ArticlePreviewSourceBlock {
+  text: string;
+  element?: HTMLElement;
+}
+
+interface ArticleExtractionCache {
+  visible: WeakMap<HTMLElement, boolean>;
+  text: WeakMap<HTMLElement, string>;
+}
+
 let manualArticleRoot: HTMLElement | null = null;
+let editedArticleRoot: HTMLElement | null = null;
 let articlePickerSession: Promise<PageContext | null> | null = null;
+let articlePreviewIdCounter = 0;
+let activeArticleExtractionCache: ArticleExtractionCache | null = null;
+const articlePreviewTargets = new Map<string, HTMLElement>();
+const removedArticleBlockTextKeys = new Set<string>();
+
+const ARTICLE_BLOCK_SELECTOR =
+  "h1, h2, h3, h4, h5, h6, p, li, blockquote, figcaption, td, th, pre, [role='heading'], [role='paragraph']";
+const ARTICLE_ROOT_SELECTOR =
+  "article, main, [role='main'], [itemprop='articleBody'], [data-testid*='article' i], [data-testid*='content' i], [data-testid*='post' i], [data-testid*='story' i], [data-testid*='readme' i], [class*='article' i], [class*='content' i], [class*='post' i], [class*='story' i], [class*='entry' i], [class*='readme' i], [class*='markdown' i], [id*='article' i], [id*='content' i], [id*='post' i], [id*='story' i], [id*='readme' i], [id*='markdown' i]";
+const ARTICLE_PREVIEW_HIGHLIGHT_STYLE_ID =
+  "webmind-article-preview-highlight-style";
+const ARTICLE_ROOT_CANDIDATE_LIMIT = 80;
+const ARTICLE_BLOCK_CANDIDATE_LIMIT = 400;
+const SHADOW_HOST_SCAN_LIMIT = 1200;
+
+function waitForPageIdle(timeout = 120): Promise<void> {
+  return new Promise((resolve) => {
+    const requestIdle = window.requestIdleCallback?.bind(window);
+    if (requestIdle) {
+      requestIdle(() => resolve(), { timeout });
+      return;
+    }
+    window.setTimeout(resolve, 0);
+  });
+}
 
 function clamp(value: number, min = 0, max = 1): number {
   return Math.max(min, Math.min(max, value));
@@ -81,8 +118,91 @@ function normalizedText(value: string): string {
   return value.replace(/\s+/g, " ").trim();
 }
 
+function articleBlockTextKey(value: string): string {
+  return normalizedText(value).toLowerCase();
+}
+
 function textLength(value: string): number {
   return value.replace(/\s+/g, "").length;
+}
+
+function withArticleExtractionCache<T>(callback: () => T): T {
+  if (activeArticleExtractionCache) return callback();
+  activeArticleExtractionCache = {
+    visible: new WeakMap(),
+    text: new WeakMap()
+  };
+  try {
+    return callback();
+  } finally {
+    activeArticleExtractionCache = null;
+  }
+}
+
+function isElementVisible(element: HTMLElement): boolean {
+  const cached = activeArticleExtractionCache?.visible.get(element);
+  if (typeof cached === "boolean") return cached;
+  const setCached = (value: boolean) => {
+    activeArticleExtractionCache?.visible.set(element, value);
+    return value;
+  };
+  if (
+    element.closest(
+      "script, style, noscript, template, svg, [hidden], [aria-hidden='true'], .webmind-root, .webmind-translation, .webmind-reading, .webmind-immersive-reading-token"
+    )
+  ) {
+    return setCached(false);
+  }
+  const style = getComputedStyle(element);
+  if (
+    style.display === "none" ||
+    style.visibility === "hidden" ||
+    Number(style.opacity) === 0
+  ) {
+    return setCached(false);
+  }
+  const rects = element.getClientRects();
+  return setCached(rects.length > 0);
+}
+
+function visibleTextFromElement(element: HTMLElement): string {
+  const cached = activeArticleExtractionCache?.text.get(element);
+  if (typeof cached === "string") return cached;
+  const parts: string[] = [];
+  const visit = (node: Node) => {
+    if (node instanceof Text) {
+      const parent = node.parentElement;
+      if (!parent || !isElementVisible(parent)) return;
+      parts.push(node.textContent ?? "");
+      return;
+    }
+    if (!(node instanceof HTMLElement) || !isElementVisible(node)) return;
+    if (node.tagName === "BR") {
+      parts.push("\n");
+      return;
+    }
+    for (const child of Array.from(node.childNodes)) visit(child);
+    if (
+      /^(?:ADDRESS|ARTICLE|ASIDE|BLOCKQUOTE|DIV|FIGCAPTION|H[1-6]|LI|P|PRE|SECTION|TR)$/.test(
+        node.tagName
+      )
+    ) {
+      parts.push("\n\n");
+    } else if (/^(?:TD|TH)$/.test(node.tagName)) {
+      parts.push("\t");
+    }
+  };
+  visit(element);
+  const text = parts
+    .join("")
+    .replace(/\u00a0/g, " ")
+    .replace(/\r\n?/g, "\n")
+    .replace(/[^\S\n]+/g, " ")
+    .replace(/ *\n */g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+  activeArticleExtractionCache?.text.set(element, text);
+  return text;
 }
 
 function sameLanguageProfile(text: string): ArticleLanguageProfile {
@@ -113,18 +233,20 @@ function languageConsistency(blocks: string[]): number {
   );
 }
 
+function articleBlockElements(root: ParentNode): HTMLElement[] {
+  const descendants = Array.from(
+    root.querySelectorAll<HTMLElement>(ARTICLE_BLOCK_SELECTOR)
+  );
+  return root instanceof HTMLElement && root.matches(ARTICLE_BLOCK_SELECTOR)
+    ? [root, ...descendants]
+    : descendants;
+}
+
 function contentBlocksFromElement(element: HTMLElement): string[] {
-  const blockSelector =
-    "h1, h2, h3, h4, h5, h6, p, li, blockquote, figcaption, td, th, pre, code, section, [role='heading'], [role='paragraph']";
-  const blocks = Array.from(element.querySelectorAll<HTMLElement>(blockSelector))
-    .filter((node) => !isArticleNoiseElement(node))
-    .map((node) => normalizedText(node.innerText || node.textContent || ""))
-    .filter((text) => textLength(text) >= 12);
-  if (blocks.length) return blocks;
-  return normalizedText(element.innerText || element.textContent || "")
+  return visibleTextFromElement(element)
     .split(/\n{2,}/)
     .map(normalizedText)
-    .filter((text) => textLength(text) >= 12);
+    .filter((text) => textLength(text) > 0);
 }
 
 function contentBlocksFromText(text: string): string[] {
@@ -132,6 +254,94 @@ function contentBlocksFromText(text: string): string[] {
     .split(/\n{2,}|(?<=[。！？.!?])\s+/)
     .map(normalizedText)
     .filter((block) => textLength(block) >= 12);
+}
+
+function articleTitleSourceFromElement(element?: HTMLElement): {
+  text: string;
+  element?: HTMLElement;
+} {
+  if (!element) return { text: "" };
+  const localHeading =
+    element.matches("h1, h2, [role='heading']")
+      ? element
+      : element.querySelector<HTMLElement>(
+          "h1, h2, [role='heading'][aria-level='1'], [role='heading'][aria-level='2']"
+        );
+  if (localHeading) {
+    return {
+      text: normalizedText(visibleTextFromElement(localHeading)),
+      element: localHeading
+    };
+  }
+  const nearbyHeading = precedingArticleHeading(element);
+  if (nearbyHeading) {
+    return {
+      text: normalizedText(visibleTextFromElement(nearbyHeading)),
+      element: nearbyHeading
+    };
+  }
+  const pageHeading = document.querySelector<HTMLElement>(
+    "main h1, article h1, h1, main h2, article h2"
+  );
+  return {
+    text: pageHeading ? normalizedText(visibleTextFromElement(pageHeading)) : "",
+    element: pageHeading ?? undefined
+  };
+}
+
+function precedingArticleHeading(element: HTMLElement): HTMLElement | null {
+  const selector =
+    "h1, h2, [role='heading'][aria-level='1'], [role='heading'][aria-level='2']";
+  let current: HTMLElement | null = element;
+  while (
+    current &&
+    current !== document.body &&
+    current !== document.documentElement
+  ) {
+    let sibling = current.previousElementSibling as HTMLElement | null;
+    while (sibling) {
+      const heading = sibling.matches(selector)
+        ? sibling
+        : sibling.querySelector<HTMLElement>(selector);
+      if (heading && textLength(visibleTextFromElement(heading)) >= 4) {
+        return heading;
+      }
+      sibling = sibling.previousElementSibling as HTMLElement | null;
+    }
+    current = current.parentElement;
+  }
+  return null;
+}
+
+function prependArticleTitle(title: string | undefined, text: string): string {
+  const normalizedTitle = normalizedText(title ?? "");
+  if (!normalizedTitle) return text;
+  if (
+    text === normalizedTitle ||
+    text.startsWith(`${normalizedTitle} `) ||
+    text.slice(0, 500).includes(normalizedTitle)
+  ) {
+    return text;
+  }
+  return `${normalizedTitle}\n\n${text}`;
+}
+
+function prependArticleTitlePreviewBlock(
+  title: string,
+  blocks: ArticlePreviewSourceBlock[],
+  titleElement?: HTMLElement
+): ArticlePreviewSourceBlock[] {
+  const normalizedTitle = normalizedText(title);
+  if (!normalizedTitle) return blocks;
+  const first = blocks[0]?.text ?? "";
+  if (
+    first === normalizedTitle ||
+    first.startsWith(`${normalizedTitle} `) ||
+    blocks.slice(0, 3).some((block) => block.text.includes(normalizedTitle))
+  ) {
+    return blocks;
+  }
+  return [{ text: normalizedTitle, element: titleElement }, ...blocks];
 }
 
 function isArticleNoiseElement(element: HTMLElement): boolean {
@@ -224,18 +434,197 @@ function continuityScore(blocks: string[]): number {
   );
 }
 
-function articlePreview(blocks: string[]): ArticlePreviewBlock[] {
-  return blocks.slice(0, 8).map((text, index) => ({
-    id: `preview-${index + 1}`,
-    text: truncateText(text, 320)
-  }));
+function articlePreviewTargetId(element?: HTMLElement): string | undefined {
+  if (!element) return undefined;
+  articlePreviewIdCounter += 1;
+  const id = `article-preview-${articlePreviewIdCounter}`;
+  articlePreviewTargets.set(id, element);
+  return id;
 }
 
-function scoreArticleCandidate(candidate: ArticleCandidate): ArticleCandidate {
-  const text = normalizedText(candidate.text);
-  const blocks = candidate.element
+function articlePreviewElementById(targetId?: string): HTMLElement | null {
+  if (!targetId) return null;
+  const target = articlePreviewTargets.get(targetId);
+  return target?.isConnected ? target : null;
+}
+
+export function isEditedArticleBlockExcluded(element: HTMLElement): boolean {
+  const text = normalizedText(visibleTextFromElement(element));
+  return (
+    element.dataset.webmindArticleExcluded === "true" ||
+    Boolean(text && removedArticleBlockTextKeys.has(articleBlockTextKey(text)))
+  );
+}
+
+function isArticleTextBlockExcluded(block: ArticlePreviewSourceBlock): boolean {
+  const key = articleBlockTextKey(block.text);
+  return (
+    Boolean(key && removedArticleBlockTextKeys.has(key)) ||
+    block.element?.dataset.webmindArticleExcluded === "true"
+  );
+}
+
+function articlePreview(
+  blocks: Array<string | ArticlePreviewSourceBlock>
+): ArticlePreviewBlock[] {
+  return blocks.map((block, index) => {
+    const sourceBlock =
+      typeof block === "string" ? { text: block } : block;
+    return {
+      id: `preview-${index + 1}`,
+      text: truncateText(sourceBlock.text, 320),
+      sourceText: sourceBlock.text,
+      targetId: articlePreviewTargetId(sourceBlock.element)
+    };
+  });
+}
+
+function editedArticleRootSource(): ArticleQualitySummary["source"] | null {
+  if (manualArticleRoot?.isConnected) return "manual";
+  if (editedArticleRoot?.isConnected || removedArticleBlockTextKeys.size > 0) {
+    return "edited";
+  }
+  return null;
+}
+
+function hasArticleBlockEdits(): boolean {
+  return Boolean(editedArticleRoot?.isConnected || removedArticleBlockTextKeys.size > 0);
+}
+
+function clearArticleBlockEdits(): void {
+  document
+    .querySelectorAll<HTMLElement>("[data-webmind-article-excluded='true']")
+    .forEach((element) => {
+      delete element.dataset.webmindArticleExcluded;
+    });
+  sameOriginIframeBodies().forEach((body) => {
+    body
+      .querySelectorAll<HTMLElement>("[data-webmind-article-excluded='true']")
+      .forEach((element) => {
+        delete element.dataset.webmindArticleExcluded;
+      });
+  });
+  editedArticleRoot = null;
+  removedArticleBlockTextKeys.clear();
+}
+
+function articlePreviewMatchCandidates(root: ParentNode = document): HTMLElement[] {
+  const roots: ParentNode[] =
+    root === document
+      ? [...(document.body ? [document.body] : []), ...sameOriginIframeBodies()]
+      : [root];
+  const elements = roots.flatMap((root) => {
+    const own = root instanceof HTMLElement ? [root] : [];
+    return [...own, ...articleBlockElements(root), ...collectOpenShadowElements(root)];
+  });
+  return Array.from(new Set(elements)).filter(
+    (element) =>
+      isElementVisible(element) &&
+      textLength(visibleTextFromElement(element)) > 0
+  );
+}
+
+function articlePreviewTextMatchScore(candidate: string, target: string): number {
+  if (candidate === target) return 1000;
+  if (candidate.includes(target)) {
+    return 700 - Math.abs(candidate.length - target.length);
+  }
+  if (target.includes(candidate)) {
+    return 500 - Math.abs(candidate.length - target.length);
+  }
+  return -Infinity;
+}
+
+function alignPreviewBlocksToDom(
+  blocks: string[],
+  root: ParentNode = document
+): ArticlePreviewSourceBlock[] {
+  const candidates = articlePreviewMatchCandidates(root)
+    .filter(isElementVisible)
+    .map((element, order) => ({
+      element,
+      order,
+      text: normalizedText(visibleTextFromElement(element))
+    }))
+    .filter((candidate) => textLength(candidate.text) > 0);
+  let minimumOrder = -1;
+  return blocks.map((text) => {
+    const target = normalizedText(text);
+    const match = candidates
+      .map((candidate) => ({
+        ...candidate,
+        score:
+          candidate.order > minimumOrder
+            ? articlePreviewTextMatchScore(candidate.text, target)
+            : -Infinity
+      }))
+      .filter((candidate) => Number.isFinite(candidate.score))
+      .sort((left, right) => {
+        if (left.score !== right.score) return right.score - left.score;
+        const leftLengthDelta = Math.abs(left.text.length - target.length);
+        const rightLengthDelta = Math.abs(right.text.length - target.length);
+        if (leftLengthDelta !== rightLengthDelta) {
+          return leftLengthDelta - rightLengthDelta;
+        }
+        if (left.element.childElementCount !== right.element.childElementCount) {
+          return left.element.childElementCount - right.element.childElementCount;
+        }
+        return left.order - right.order;
+      })[0];
+    if (!match) return { text };
+    minimumOrder = match.order;
+    return { text, element: match.element };
+  });
+}
+
+function articleQualityWarnings(
+  blockCount: number,
+  totalTextLength: number
+): ArticleQualitySummary["warnings"] {
+  const viewportHeight = Math.max(1, window.innerHeight || 1);
+  const scrollHeight = Math.max(
+    document.documentElement.scrollHeight,
+    document.body?.scrollHeight ?? 0
+  );
+  if (
+    scrollHeight > viewportHeight * 6 &&
+    (blockCount < 8 || totalTextLength < 1200)
+  ) {
+    return ["virtualizedContentMayBeIncomplete"];
+  }
+  return undefined;
+}
+
+function scoreArticleCandidate(
+  candidate: ArticleCandidate,
+  options: { includePreview?: boolean } = {}
+): ArticleCandidate {
+  const includePreview = options.includePreview ?? true;
+  const titleSource = candidate.title
+    ? { text: normalizedText(candidate.title), element: candidate.titleElement }
+    : articleTitleSourceFromElement(candidate.element);
+  const title = normalizedText(titleSource.text);
+  const rawText =
+    candidate.element ? visibleTextFromElement(candidate.element) : normalizedText(candidate.text);
+  const rawTextWithTitle = prependArticleTitle(title, rawText);
+  const rawBlocks = candidate.element
     ? contentBlocksFromElement(candidate.element)
-    : contentBlocksFromText(text);
+    : contentBlocksFromText(rawText);
+  const sourceBlocks = includePreview
+    ? candidate.element
+      ? alignPreviewBlocksToDom(rawBlocks, candidate.element)
+      : alignPreviewBlocksToDom(contentBlocksFromText(rawText))
+    : rawBlocks.map((text) => ({ text }));
+  const filteredBlocks = sourceBlocks.filter(
+    (block) => !isArticleTextBlockExcluded(block)
+  );
+  const blocksWithTitle = prependArticleTitlePreviewBlock(
+    title,
+    filteredBlocks,
+    includePreview ? titleSource.element : undefined
+  ).filter((block) => !isArticleTextBlockExcluded(block));
+  const blocks = blocksWithTitle.map((block) => block.text);
+  const text = hasArticleBlockEdits() ? blocks.join("\n\n") : rawTextWithTitle;
   const totalTextLength = textLength(text);
   const rect = candidate.element?.getBoundingClientRect();
   const rawArea = rect ? Math.max(1, rect.width * rect.height) : totalTextLength * 8;
@@ -270,29 +659,31 @@ function scoreArticleCandidate(candidate: ArticleCandidate): ArticleCandidate {
       continuity: Number(continuity.toFixed(2)),
       clutterPenalty: Number(clutter.toFixed(2)),
       languageConsistency: Number(language.toFixed(2)),
-      source:
-        candidate.element === manualArticleRoot ? "manual" : candidate.source,
+      source: editedArticleRootSource() ?? candidate.source,
       selector: candidate.selector ?? selectorHint(candidate.element),
       blockCount: blocks.length,
-      wordCount: totalTextLength
+      wordCount: totalTextLength,
+      warnings: articleQualityWarnings(blocks.length, totalTextLength)
     },
-    preview: articlePreview(blocks.length ? blocks : contentBlocksFromText(text))
+    preview: includePreview ? articlePreview(blocksWithTitle) : candidate.preview
   };
 }
 
 function collectOpenShadowElements(root: ParentNode): HTMLElement[] {
   const elements: HTMLElement[] = [];
-  root.querySelectorAll<HTMLElement>("*").forEach((element) => {
+  Array.from(root.querySelectorAll<HTMLElement>("*"))
+    .slice(0, SHADOW_HOST_SCAN_LIMIT)
+    .forEach((element) => {
     if (element.shadowRoot) {
+      elements.push(
+        ...Array.from(
+          element.shadowRoot.querySelectorAll<HTMLElement>(ARTICLE_ROOT_SELECTOR)
+        )
+      );
       elements.push(...collectOpenShadowElements(element.shadowRoot));
     }
   });
-  return [
-    ...Array.from(root.querySelectorAll<HTMLElement>(
-      "article, main, [role='main'], [data-testid*='article' i], [data-testid*='content' i], [class*='article' i], [class*='content' i], [class*='post' i], [id*='article' i], [id*='content' i], [id*='post' i]"
-    )),
-    ...elements
-  ];
+  return elements;
 }
 
 function iframeCandidates(): ArticleCandidate[] {
@@ -340,49 +731,371 @@ function readabilityCandidate(): ArticleCandidate | null {
   }
 }
 
-function articleCandidates(): ArticleCandidate[] {
-  const seen = new Set<HTMLElement>();
-  const domCandidates = collectOpenShadowElements(document)
-    .filter((element) => {
-      if (seen.has(element) || isArticleNoiseElement(element)) return false;
-      seen.add(element);
-      return textLength(element.innerText || element.textContent || "") >= 120;
-    })
-    .map<ArticleCandidate>((element) => ({
-      text: textFromElement(element),
+function articleRootElements(root: ParentNode = document): HTMLElement[] {
+  const roots = [
+    ...Array.from(root.querySelectorAll<HTMLElement>(ARTICLE_ROOT_SELECTOR)),
+    ...collectOpenShadowElements(root)
+  ];
+  return Array.from(new Set(roots)).filter(
+    (element) => !isArticleNoiseElement(element) && textLength(element.textContent ?? "") >= 120
+  )
+    .slice(0, ARTICLE_ROOT_CANDIDATE_LIMIT)
+    .filter((element) => textLength(visibleTextFromElement(element)) >= 120);
+}
+
+function continuousRootCandidates(root: ParentNode = document): HTMLElement[] {
+  const blockEntries = articleBlockElements(root)
+    .filter((element) => !isArticleNoiseElement(element))
+    .filter((element) => textLength(element.textContent ?? "") >= 24)
+    .slice(0, ARTICLE_BLOCK_CANDIDATE_LIMIT)
+    .map((element, order) => ({
       element,
-      source: "dom",
-      selector: selectorHint(element)
-    }));
+      order,
+      text: normalizedText(visibleTextFromElement(element))
+    }))
+    .filter((entry) => textLength(entry.text) >= 24)
+    .slice(0, 400);
+  const summaries = new Map<
+    HTMLElement,
+    { blocks: number; textLength: number; first: number; last: number }
+  >();
+  blockEntries.forEach((entry) => {
+    let ancestor = entry.element.parentElement;
+    let depth = 0;
+    while (
+      ancestor &&
+      ancestor !== document.documentElement &&
+      depth < 8
+    ) {
+      if (ancestor === document.body) break;
+      if (!isArticleNoiseElement(ancestor)) {
+        const summary = summaries.get(ancestor) ?? {
+          blocks: 0,
+          textLength: 0,
+          first: entry.order,
+          last: entry.order
+        };
+        summary.blocks += 1;
+        summary.textLength += textLength(entry.text);
+        summary.first = Math.min(summary.first, entry.order);
+        summary.last = Math.max(summary.last, entry.order);
+        summaries.set(ancestor, summary);
+      }
+      ancestor = ancestor.parentElement;
+      depth += 1;
+    }
+  });
+  return Array.from(summaries.entries())
+    .filter(([, summary]) => summary.blocks >= 2 && summary.textLength >= 120)
+    .sort((left, right) => {
+      const leftSummary = left[1];
+      const rightSummary = right[1];
+      const score = (summary: typeof leftSummary) =>
+        summary.textLength * 0.55 +
+        summary.blocks * 40 +
+        summary.blocks / Math.max(1, summary.last - summary.first + 1) * 240;
+      return score(rightSummary) - score(leftSummary);
+    })
+    .slice(0, 12)
+    .map(([element]) => element);
+}
+
+function articleCandidateFromRoot(element: HTMLElement): ArticleCandidate {
+  const titleSource = articleTitleSourceFromElement(element);
+  return {
+    title: titleSource.text,
+    titleElement: titleSource.element,
+    text: visibleTextFromElement(element),
+    element,
+    source: "dom",
+    selector: selectorHint(element)
+  };
+}
+
+function articleCandidates(): ArticleCandidate[] {
+  const domRoots = Array.from(
+    new Set([...articleRootElements(document), ...continuousRootCandidates(document)])
+  ).map(articleCandidateFromRoot);
   const manualCandidate =
-    manualArticleRoot?.isConnected && textLength(textFromElement(manualArticleRoot)) >= 40
-      ? {
-          text: textFromElement(manualArticleRoot),
-          element: manualArticleRoot,
-          source: "manual" as const,
-          selector: selectorHint(manualArticleRoot)
-        }
+    manualArticleRoot?.isConnected && textLength(visibleTextFromElement(manualArticleRoot)) >= 40
+      ? (() => {
+          const titleSource = articleTitleSourceFromElement(manualArticleRoot);
+          return {
+            title: titleSource.text,
+            titleElement: titleSource.element,
+            text: visibleTextFromElement(manualArticleRoot),
+            element: manualArticleRoot,
+            source: "manual" as const,
+            selector: selectorHint(manualArticleRoot)
+          };
+        })()
+      : null;
+  const editedCandidate =
+    !manualCandidate &&
+    editedArticleRoot?.isConnected &&
+    textLength(visibleTextFromElement(editedArticleRoot)) >= 40
+      ? (() => {
+          const titleSource = articleTitleSourceFromElement(editedArticleRoot);
+          return {
+            title: titleSource.text,
+            titleElement: titleSource.element,
+            text: visibleTextFromElement(editedArticleRoot),
+            element: editedArticleRoot,
+            source: "edited" as const,
+            selector: selectorHint(editedArticleRoot)
+          };
+        })()
       : null;
   if (manualArticleRoot && !manualArticleRoot.isConnected) {
     manualArticleRoot = null;
   }
+  if (editedArticleRoot && !editedArticleRoot.isConnected) {
+    editedArticleRoot = null;
+    removedArticleBlockTextKeys.clear();
+  }
   return [
     manualCandidate,
-    readabilityCandidate(),
-    ...domCandidates,
+    editedCandidate,
+    ...domRoots,
     ...iframeCandidates()
   ].filter((candidate): candidate is ArticleCandidate =>
-    Boolean(candidate && textLength(candidate.text) >= 120)
+    Boolean(
+      candidate &&
+        textLength(candidate.text) >=
+          (candidate.source === "manual" ? 40 : 120)
+    )
   );
 }
 
 export function findBestArticleRoot(): HTMLElement | null {
-  if (manualArticleRoot?.isConnected) return manualArticleRoot;
-  const best = articleCandidates()
-    .filter((candidate) => candidate.element)
-    .map(scoreArticleCandidate)
-    .sort((left, right) => (right.score?.score ?? 0) - (left.score?.score ?? 0))[0];
-  return best?.element ?? null;
+  return withArticleExtractionCache(() => {
+    if (manualArticleRoot?.isConnected) return manualArticleRoot;
+    if (editedArticleRoot?.isConnected) return editedArticleRoot;
+    const best = articleCandidates()
+      .filter((candidate) => candidate.element)
+      .map((candidate) => scoreArticleCandidate(candidate, { includePreview: false }))
+      .sort((left, right) => (right.score?.score ?? 0) - (left.score?.score ?? 0))[0];
+    return best?.element ?? null;
+  });
+}
+
+function sameOriginIframeBodies(): HTMLElement[] {
+  const bodies: HTMLElement[] = [];
+  document.querySelectorAll("iframe").forEach((iframe) => {
+    try {
+      const body = iframe.contentDocument?.body;
+      if (body) bodies.push(body);
+    } catch {
+      // Cross-origin frames cannot be inspected by the content script.
+    }
+  });
+  return bodies;
+}
+
+function installArticlePreviewHighlightStyle(root: Document | ShadowRoot): void {
+  if (root.getElementById(ARTICLE_PREVIEW_HIGHLIGHT_STYLE_ID)) return;
+  const doc = root instanceof Document ? root : document;
+  const style = doc.createElement("style");
+  style.id = ARTICLE_PREVIEW_HIGHLIGHT_STYLE_ID;
+  style.textContent = `
+    .webmind-article-preview-highlight {
+      outline: 2px solid rgba(19, 139, 120, .72) !important;
+      outline-offset: 3px !important;
+      box-shadow: 0 0 0 5px rgba(19, 139, 120, .18) !important;
+      transition: outline-color .18s ease, box-shadow .18s ease !important;
+    }
+  `;
+  if (root instanceof Document) {
+    (root.head ?? root.documentElement).append(style);
+  } else {
+    root.append(style);
+  }
+}
+
+function articlePreviewHighlightCandidates(): HTMLElement[] {
+  return articlePreviewMatchCandidates();
+}
+
+function clearArticlePreviewHighlights(root: ParentNode): void {
+  root
+    .querySelectorAll(".webmind-article-preview-highlight")
+    .forEach((element) =>
+      element.classList.remove("webmind-article-preview-highlight")
+    );
+  root.querySelectorAll<HTMLElement>("*").forEach((element) => {
+    if (element.shadowRoot) {
+      clearArticlePreviewHighlights(element.shadowRoot);
+    }
+  });
+}
+
+function applyArticlePreviewHighlight(element: HTMLElement): { ok: boolean } {
+  const root = element.getRootNode();
+  installArticlePreviewHighlightStyle(
+    root instanceof ShadowRoot ? root : element.ownerDocument ?? document
+  );
+  clearArticlePreviewHighlights(document);
+  sameOriginIframeBodies().forEach((body) =>
+    clearArticlePreviewHighlights(body.ownerDocument)
+  );
+  element.classList.add("webmind-article-preview-highlight");
+  element.scrollIntoView({ block: "center", behavior: "smooth" });
+  window.setTimeout(() => {
+    element.classList.remove("webmind-article-preview-highlight");
+  }, 2600);
+  return { ok: true };
+}
+
+export function highlightArticlePreviewBlock(
+  text: string,
+  targetId?: string
+): { ok: boolean } {
+  const directMatch = articlePreviewElementById(targetId);
+  if (directMatch) {
+    return applyArticlePreviewHighlight(directMatch);
+  }
+  const target = normalizedText(text);
+  if (textLength(target) < 12) return { ok: false };
+  const candidates = articlePreviewHighlightCandidates()
+    .filter(isElementVisible)
+    .map((element) => ({
+      element,
+      text: normalizedText(visibleTextFromElement(element))
+    }))
+    .filter((candidate) => textLength(candidate.text) >= 12)
+    .map((candidate) => ({
+      ...candidate,
+      score: articlePreviewTextMatchScore(candidate.text, target)
+    }))
+    .filter((candidate) => Number.isFinite(candidate.score))
+    .sort((left, right) => {
+      if (left.score !== right.score) return right.score - left.score;
+      return left.element.childElementCount - right.element.childElementCount;
+    });
+  const match = candidates[0];
+  if (!match) return { ok: false };
+  return applyArticlePreviewHighlight(match.element);
+}
+
+function setEditedArticleRootFromCurrent(): HTMLElement | null {
+  const root =
+    manualArticleRoot?.isConnected
+      ? manualArticleRoot
+      : editedArticleRoot?.isConnected
+        ? editedArticleRoot
+        : findBestArticleRoot();
+  if (root?.isConnected) {
+    editedArticleRoot = root;
+    return root;
+  }
+  return null;
+}
+
+export function removeArticlePreviewBlock(
+  text: string,
+  targetId?: string,
+  language?: AppSettings["interfaceLanguage"]
+): PageContext {
+  setEditedArticleRootFromCurrent();
+  const normalized = normalizedText(text);
+  const target = articlePreviewElementById(targetId);
+  if (target) {
+    target.dataset.webmindArticleExcluded = "true";
+  }
+  if (normalized) {
+    removedArticleBlockTextKeys.add(articleBlockTextKey(normalized));
+  }
+  return extractPageContext(true, language, "article");
+}
+
+function elementMetadataText(element?: HTMLElement): string {
+  if (!element) return "";
+  return [
+    element.id,
+    element.className,
+    element.getAttribute("role"),
+    element.getAttribute("aria-label"),
+    ...Array.from(element.attributes).flatMap((attribute) =>
+      attribute.name.startsWith("data-")
+        ? [`${attribute.name} ${attribute.value}`]
+        : []
+    )
+  ]
+    .filter(Boolean)
+    .join(" ");
+}
+
+function isLikelyNonArticlePreviewBlock(block: ArticlePreviewBlock): boolean {
+  const text = normalizedText(block.sourceText ?? block.text);
+  const length = textLength(text);
+  if (!text || length <= 2) return true;
+  if (length >= 80) return false;
+  const target = articlePreviewElementById(block.targetId) ?? undefined;
+  if (target?.matches("h1, h2, h3, [role='heading']")) return false;
+  const metadata = elementMetadataText(target);
+  const linkHeavy =
+    target instanceof HTMLElement &&
+    linkRatio(target, visibleTextFromElement(target)) > 0.65 &&
+    length < 60;
+  const looksLikeMetaElement =
+    /(^|\b)(author|avatar|breadcrumb|byline|click|comment|count|date|meta|reply|share|stat|tag|time|toolbar|user|view|vote)(\b|[-_])/i.test(
+      metadata
+    );
+  const looksLikeBreadcrumb =
+    length <= 50 &&
+    /(?:^|[\s\u00a0])(?:›|>|\/|»|→)(?:[\s\u00a0]|$)/.test(text) &&
+    !/[。！？.!?，,；;]/.test(text);
+  const looksLikeTime =
+    length <= 50 &&
+    /(?:\d{1,4}[-/.年]\d{1,2}(?:[-/.月]\d{1,2}日?)?|\d{1,2}:\d{2}|刚刚|分钟前|小时前|天前|yesterday|today|ago|updated|published|posted)/i.test(
+      text
+    );
+  const looksLikeStats =
+    length <= 60 &&
+    /\d[\d,.\s]*(?:次点击|点击|浏览|阅读|评论|回复|收藏|分享|赞|喜欢|views?|clicks?|comments?|replies|likes?|shares?|stars?|forks?)/i.test(
+      text
+    );
+  const looksLikeShortLabel =
+    length <= 18 &&
+    !/[。！？.!?，,；;：:]/.test(text) &&
+    !/\s{2,}/.test(text) &&
+    /^[\p{L}\p{N}_@#.\-\s·]+$/u.test(text);
+  return (
+    Boolean(target && isArticleNoiseElement(target)) ||
+    linkHeavy ||
+    looksLikeMetaElement ||
+    looksLikeBreadcrumb ||
+    looksLikeTime ||
+    looksLikeStats ||
+    looksLikeShortLabel
+  );
+}
+
+export function pruneArticlePreviewBlocks(
+  language?: AppSettings["interfaceLanguage"]
+): PageContext {
+  setEditedArticleRootFromCurrent();
+  const snapshot = readableArticleText();
+  const preview = snapshot.preview ?? [];
+  const removable = preview.filter(isLikelyNonArticlePreviewBlock);
+  const removableKeys = new Set(
+    removable.map((block) => articleBlockTextKey(block.sourceText ?? block.text))
+  );
+  const remaining = preview.filter(
+    (block) => !removableKeys.has(articleBlockTextKey(block.sourceText ?? block.text))
+  );
+  const remainingTextLength = textLength(
+    remaining.map((block) => block.sourceText ?? block.text).join("\n\n")
+  );
+  if (remaining.length >= 2 && remainingTextLength >= 120) {
+    removable.forEach((block) => {
+      const target = articlePreviewElementById(block.targetId);
+      if (target) target.dataset.webmindArticleExcluded = "true";
+      const text = normalizedText(block.sourceText ?? block.text);
+      if (text) removedArticleBlockTextKeys.add(articleBlockTextKey(text));
+    });
+  }
+  return extractPageContext(true, language, "article");
 }
 
 function pickerTextLength(element: HTMLElement): number {
@@ -498,6 +1211,7 @@ export function startManualArticleSelection(
       if (manualArticleRoot) {
         delete manualArticleRoot.dataset.webmindManualArticle;
       }
+      clearArticleBlockEdits();
       manualArticleRoot = element;
       manualArticleRoot.dataset.webmindManualArticle = "true";
       resolve(extractPageContext(true, language, "article"));
@@ -567,6 +1281,7 @@ export function restoreAutomaticArticleSelection(
     delete manualArticleRoot.dataset.webmindManualArticle;
   }
   manualArticleRoot = null;
+  clearArticleBlockEdits();
   return extractPageContext(true, language, "article");
 }
 
@@ -577,57 +1292,90 @@ function readableArticleText(): {
   quality?: ArticleQualitySummary;
   preview?: ArticlePreviewBlock[];
 } {
-  if (manualArticleRoot?.isConnected) {
-    const manualText = textFromElement(manualArticleRoot);
-    if (textLength(manualText) >= 40) {
-      const manual = scoreArticleCandidate({
-        text: manualText,
-        element: manualArticleRoot,
-        source: "manual",
-        selector: selectorHint(manualArticleRoot)
-      });
+  return withArticleExtractionCache(() => {
+    articlePreviewTargets.clear();
+    if (manualArticleRoot?.isConnected) {
+      const manualText = visibleTextFromElement(manualArticleRoot);
+      if (textLength(manualText) >= 40) {
+        const manual = scoreArticleCandidate({
+          text: manualText,
+          element: manualArticleRoot,
+          source: "manual",
+          selector: selectorHint(manualArticleRoot)
+        });
+        return {
+          title: document.title || location.hostname,
+          text: manual.text,
+          description: "",
+          quality: manual.score,
+          preview: manual.preview
+        };
+      }
+    }
+    if (editedArticleRoot?.isConnected) {
+      const editedText = visibleTextFromElement(editedArticleRoot);
+      if (textLength(editedText) >= 40) {
+        const edited = scoreArticleCandidate({
+          text: editedText,
+          element: editedArticleRoot,
+          source: "edited",
+          selector: selectorHint(editedArticleRoot)
+        });
+        return {
+          title: document.title || location.hostname,
+          text: edited.text,
+          description: "",
+          quality: edited.score,
+          preview: edited.preview
+        };
+      }
+    }
+    const scoredCandidates = articleCandidates()
+      .map((candidate) => scoreArticleCandidate(candidate, { includePreview: false }))
+      .sort((left, right) => (right.score?.score ?? 0) - (left.score?.score ?? 0));
+    const best = scoredCandidates[0];
+    if (best?.score && textLength(best.text) >= 120) {
+      const detailed = scoreArticleCandidate(best, { includePreview: true });
       return {
-        title: document.title || location.hostname,
-        text: manual.text,
-        description: "",
-        quality: manual.score,
-        preview: manual.preview
+        title: detailed.title,
+        text: detailed.text,
+        description: detailed.description,
+        quality: detailed.score,
+        preview: detailed.preview
       };
     }
-  }
-  const scoredCandidates = articleCandidates()
-    .map(scoreArticleCandidate)
-    .sort((left, right) => (right.score?.score ?? 0) - (left.score?.score ?? 0));
-  const best = scoredCandidates[0];
-  if (best?.score && textLength(best.text) >= 120) {
+    const readableFallback = readabilityCandidate();
+    if (readableFallback && textLength(readableFallback.text) >= 120) {
+      const readable = scoreArticleCandidate(readableFallback);
+      return {
+        title: readable.title,
+        text: readable.text,
+        description: readable.description,
+        quality: readable.score,
+        preview: readable.preview
+      };
+    }
+    const fallbackElement =
+      document.querySelector<HTMLElement>("article") ||
+      document.querySelector<HTMLElement>("main") ||
+      document.querySelector<HTMLElement>('[role="main"]');
+    const fallback = fallbackElement ? visibleTextFromElement(fallbackElement) : "";
+    const fallbackCandidate = fallbackElement
+      ? scoreArticleCandidate({
+          text: fallback,
+          element: fallbackElement,
+          source: "dom",
+          selector: selectorHint(fallbackElement)
+        })
+      : null;
     return {
-      title: best.title,
-      text: best.text,
-      description: best.description,
-      quality: best.score,
-      preview: best.preview
+      title: "",
+      text: fallback,
+      description: "",
+      quality: fallbackCandidate?.score,
+      preview: fallbackCandidate?.preview
     };
-  }
-  const fallbackElement =
-    document.querySelector<HTMLElement>("article") ||
-    document.querySelector<HTMLElement>("main") ||
-    document.querySelector<HTMLElement>('[role="main"]');
-  const fallback = fallbackElement ? textFromElement(fallbackElement) : "";
-  const fallbackCandidate = fallbackElement
-    ? scoreArticleCandidate({
-        text: fallback,
-        element: fallbackElement,
-        source: "dom",
-        selector: selectorHint(fallbackElement)
-      })
-    : null;
-  return {
-    title: "",
-    text: fallback,
-    description: "",
-    quality: fallbackCandidate?.score,
-    preview: fallbackCandidate?.preview
-  };
+  });
 }
 
 export function extractPageContext(
@@ -690,4 +1438,16 @@ export function extractPageContext(
     language: document.documentElement.lang || navigator.language,
     siteName
   };
+}
+
+export async function extractPageContextAsync(
+  ignoreSelection = false,
+  language?: AppSettings["interfaceLanguage"],
+  scope: "page" | "article" = "page"
+): Promise<PageContext> {
+  const selection = ignoreSelection ? undefined : pageSelectionText() || undefined;
+  if (!selection) {
+    await waitForPageIdle();
+  }
+  return extractPageContext(ignoreSelection, language, scope);
 }

@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { UI_TEXT } from "./i18n";
-import { buildProtectedTranslationPrompt } from "./utils";
+import {
+  buildProtectedTranslationPrompt,
+  protectTranslationText
+} from "./utils";
 import {
   builtInToolsForLanguage,
   quickActionPrompt,
@@ -72,6 +75,16 @@ describe("localized tools and prompts", () => {
     expect(shortChinese).toContain("English");
   });
 
+  it("treats Chinese text with English terms as Chinese-dominant", () => {
+    const mixedChinese = translationDirectionInstruction(
+      { interfaceLanguage: "zh-CN", translationLanguage: "auto" },
+      "这个 React 组件需要处理 API 返回的数据，并在页面中显示结果。"
+    );
+
+    expect(mixedChinese).toContain("本地预判原文主要语言为 Chinese");
+    expect(mixedChinese).toContain("目标语言已固定为English");
+  });
+
   it("builds a protected prompt that fixes English source to Chinese target", () => {
     const prompt = buildProtectedTranslationPrompt(
       { interfaceLanguage: "zh-CN", translationLanguage: "auto" },
@@ -84,6 +97,27 @@ describe("localized tools and prompts", () => {
     expect(prompt).toContain("不得复制原文");
     expect(prompt).toContain("<translation-input>");
     expect(prompt).toContain("Open the settings panel");
+  });
+
+  it("keeps invisible rich-text metadata out of protected translation input", () => {
+    const source =
+      'Read <a href="https://secret.example/path" title="Hidden title">visible docs</a><sup data-note="metadata">[1]</sup>.';
+    const protection = protectTranslationText(source);
+    const prompt = buildProtectedTranslationPrompt(
+      { interfaceLanguage: "zh-CN", translationLanguage: "auto" },
+      source,
+      protection.text
+    );
+    const translationInput = prompt.match(
+      /<translation-input>\n([\s\S]*?)\n<\/translation-input>/
+    )?.[1];
+
+    expect(translationInput).toContain("visible docs");
+    expect(translationInput).toContain("WEBMIND_LINK_START_1");
+    expect(translationInput).toContain("WEBMIND_FORMAT_START_1");
+    expect(translationInput).not.toContain("https://secret.example");
+    expect(translationInput).not.toContain("Hidden title");
+    expect(translationInput).not.toContain("metadata");
   });
 
   it("can build a dictionary-style prompt for short translation inputs", () => {

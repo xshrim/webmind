@@ -161,6 +161,42 @@ describe("shared utilities", () => {
     ).toBe("阅读 [文档](<https://example.com/path?q=1>)。");
   });
 
+  it("does not expose invisible HTML link attributes as translation source text", () => {
+    const protection = protectTranslationText(
+      'Read <a href="https://secret.example/path?q=1" title="Hidden title" aria-label="Hidden label" data-topic="metadata">visible docs</a>.'
+    );
+
+    expect(protection.text).toContain(
+      "{{WEBMIND_LINK_START_1}}visible docs{{WEBMIND_LINK_END_1}}"
+    );
+    expect(protection.text).not.toContain("https://secret.example");
+    expect(protection.text).not.toContain("Hidden title");
+    expect(protection.text).not.toContain("Hidden label");
+    expect(protection.text).not.toContain("metadata");
+    expect(protection.links[0]).toEqual({
+      href: "https://secret.example/path?q=1",
+      text: "visible docs"
+    });
+  });
+
+  it("protects Markdown link titles without treating titles as source text", () => {
+    const protection = protectTranslationText(
+      'Read [visible docs](https://example.com/path "Invisible title").'
+    );
+
+    expect(protection.text).toContain(
+      "{{WEBMIND_LINK_START_1}}visible docs{{WEBMIND_LINK_END_1}}"
+    );
+    expect(protection.text).not.toContain("https://example.com");
+    expect(protection.text).not.toContain("Invisible title");
+    expect(
+      restoreTranslationText(
+        "阅读 {{WEBMIND_LINK_START_1}}文档{{WEBMIND_LINK_END_1}}。",
+        protection
+      )
+    ).toBe("阅读 [文档](<https://example.com/path>)。");
+  });
+
   it("protects superscript and subscript markup while translating visible text", () => {
     const protection = protectTranslationText(
       "H<sub>2</sub>O and x<sup>2</sup>."
@@ -176,6 +212,43 @@ describe("shared utilities", () => {
         protection
       )
     ).toBe("水 <sub>2</sub> 和 x<sup>2</sup>。");
+  });
+
+  it("does not expose invisible attributes from superscript or subscript markup", () => {
+    const protection = protectTranslationText(
+      'x<sup title="squared" data-note="metadata">2</sup> and H<sub aria-label="two">2</sub>O'
+    );
+
+    expect(protection.text).toContain(
+      "x{{WEBMIND_FORMAT_START_1}}2{{WEBMIND_FORMAT_END_1}}"
+    );
+    expect(protection.text).toContain(
+      "H{{WEBMIND_FORMAT_START_2}}2{{WEBMIND_FORMAT_END_2}}O"
+    );
+    expect(protection.text).not.toContain("squared");
+    expect(protection.text).not.toContain("metadata");
+    expect(protection.text).not.toContain("two");
+  });
+
+  it("falls back to plain visible text when rich-text boundary tokens are incomplete", () => {
+    const protection = protectTranslationText(
+      "Read [the documentation](https://example.com/path) and H<sub>2</sub>O."
+    );
+
+    expect(
+      restoreTranslationText(
+        "阅读 {{WEBMIND_LINK_START_1}}文档，同时水 {{WEBMIND_FORMAT_START_1}}2。",
+        protection
+      )
+    ).toBe("阅读 文档，同时水 2。");
+  });
+
+  it("keeps citation markers visible when the model drops citation placeholders", () => {
+    const protection = protectTranslationText("This claim [5] is important.");
+
+    expect(restoreTranslationText("这个说法很重要。", protection)).toBe(
+      "这个说法很重要。 [5]"
+    );
   });
 
   it("removes citation explanations hallucinated around placeholders", () => {

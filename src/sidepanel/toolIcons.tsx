@@ -1,54 +1,19 @@
 import {
-  BookOpen,
-  Code2,
   FileText,
-  Globe2,
   History,
-  ImagePlus,
-  Languages,
-  Lightbulb,
-  ListChecks,
-  Maximize2,
-  Minimize2,
   MessageSquareText,
-  PanelRightOpen,
-  PenLine,
-  Presentation,
-  Reply,
-  RotateCcw,
-  ScanText,
-  Search,
   Sparkles,
-  TextSelect,
   Wand2,
-  WandSparkles
+  icons,
+  type LucideIcon
 } from "lucide-react";
 import type { UiTextKey } from "../shared/i18n";
 
-const TOOL_ICONS = {
-  FileText,
-  Globe2,
-  ImagePlus,
-  Lightbulb,
-  ListChecks,
-  Maximize2,
-  Minimize2,
-  PanelRightOpen,
-  PenLine,
-  RotateCcw,
-  Reply,
-  ScanText,
-  Languages,
-  BookOpen,
-  Code2,
-  Presentation,
-  Search,
-  MessageSquareText,
-  Sparkles,
-  TextSelect,
-  Wand2,
-  WandSparkles
-};
+const TOOL_ICONS = icons as Record<string, LucideIcon>;
+
+function ProductLogoIcon() {
+  return <img className="webmind-logo-icon" src="/icons/icon-32.png" alt="" />;
+}
 
 export const NAV_ITEMS = [
   { id: "chat" as const, labelKey: "navChat" as UiTextKey, icon: MessageSquareText },
@@ -57,30 +22,9 @@ export const NAV_ITEMS = [
   { id: "logs" as const, labelKey: "navLogs" as UiTextKey, icon: FileText }
 ];
 
-export const TOOL_ICON_CHOICES = [
-  "Sparkles",
-  "BookOpen",
-  "Code2",
-  "FileText",
-  "Globe2",
-  "ImagePlus",
-  "Lightbulb",
-  "Languages",
-  "ListChecks",
-  "Maximize2",
-  "Minimize2",
-  "PanelRightOpen",
-  "MessageSquareText",
-  "PenLine",
-  "Presentation",
-  "Reply",
-  "RotateCcw",
-  "ScanText",
-  "Search",
-  "TextSelect",
-  "Wand2",
-  "WandSparkles"
-];
+export const TOOL_ICON_CHOICES = Object.keys(TOOL_ICONS).sort((left, right) =>
+  left.localeCompare(right)
+);
 
 export const TOOL_TAB_PRIORITY = [
   "analyze-image",
@@ -89,6 +33,8 @@ export const TOOL_TAB_PRIORITY = [
 ];
 
 export function ToolIcon({ name }: { name: string }) {
-  const Icon = TOOL_ICONS[name as keyof typeof TOOL_ICONS] ?? Sparkles;
+  if (!name) return null;
+  if (name === "WebMind") return <ProductLogoIcon />;
+  const Icon = TOOL_ICONS[name] ?? Sparkles;
   return <Icon />;
 }

@@ -18,6 +18,8 @@ interface ReadingSpan {
   source: string;
   translation?: string;
   score: number;
+  selectionScore?: number;
+  translationWordCount?: number;
   level: number;
 }
 
@@ -197,10 +199,12 @@ function readingDifficultyLevel(score: number): 1 | 2 | 3 | 4 | 5 {
 
 export function detectReadingFamily(text: string): ReadingFamily | null {
   const source = text.replace(/<[^>]*>/g, " ");
-  const latinCount = source.match(/[A-Za-z]/g)?.length ?? 0;
+  const latinWordCount = source.match(/[A-Za-z]+/g)?.length ?? 0;
   const hanCount = source.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g)?.length ?? 0;
-  if (hanCount >= 2 && hanCount >= latinCount) return "zh";
-  if (latinCount >= 2) return "en";
+  if (hanCount >= 2 && hanCount >= latinWordCount) return "zh";
+  if (latinWordCount >= 2 && latinWordCount > hanCount) return "en";
+  if (hanCount >= 2) return "zh";
+  if (latinWordCount >= 1 && hanCount === 0) return "en";
   return null;
 }
 
@@ -288,6 +292,17 @@ function englishReadingLevel(
   return frequencyLevel ?? heuristicEnglishReadingLevel(word);
 }
 
+function englishFrequencyRank(
+  word: string,
+  frequencies: EnglishWordFrequencyIndex
+): number | undefined {
+  const lower = word.toLowerCase().replace(/[’]/g, "'");
+  const frequencyCandidate = englishLemmaCandidates(lower).find((candidate) =>
+    frequencies.has(candidate)
+  );
+  return frequencyCandidate ? frequencies.get(frequencyCandidate) : undefined;
+}
+
 function englishReadingScore(
   word: string,
   frequencies: EnglishWordFrequencyIndex
@@ -295,24 +310,37 @@ function englishReadingScore(
   if (word.length < 4) return 0;
   const lower = word.toLowerCase();
   if (ENGLISH_BASIC_WORDS.has(lower)) return 0;
-  return readingLevelScore(englishReadingLevel(word, frequencies));
+  const rank = englishFrequencyRank(word, frequencies);
+  const rarityBonus =
+    typeof rank === "number" && Number.isFinite(rank)
+      ? Math.min(0.24, Math.max(0, rank - 1) / 100000)
+      : 0;
+  return readingLevelScore(englishReadingLevel(word, frequencies)) + rarityBonus;
 }
 
-function englishGlossReadingLevel(
+function englishGlossWords(
   gloss: string,
-  frequencies: EnglishWordFrequencyIndex
-): 1 | 2 | 3 | 4 | 5 | null {
-  const words =
+  options: { includeBasicWords?: boolean } = {}
+): string[] {
+  return (
     gloss
       .replace(/['’]s\b/gi, "")
       .match(/[A-Za-z][A-Za-z'’\-]*/g)
       ?.map((word) => word.toLowerCase())
       .filter(
         (word) =>
-          word.length >= 4 &&
-          !ENGLISH_BASIC_WORDS.has(word) &&
+          word.length >= 2 &&
+          (options.includeBasicWords || !ENGLISH_BASIC_WORDS.has(word)) &&
           !/^(?:abbr|adj|adv|coll|fig|idiom|lit|noun|prep|pron|sb|sth|variant|verb)$/i.test(word)
-      ) ?? [];
+      ) ?? []
+  );
+}
+
+function englishGlossReadingLevel(
+  gloss: string,
+  frequencies: EnglishWordFrequencyIndex
+): 1 | 2 | 3 | 4 | 5 | null {
+  const words = englishGlossWords(gloss).filter((word) => word.length >= 4);
   if (!words.length) return null;
   return words.reduce<1 | 2 | 3 | 4 | 5>((level, word) => {
     const next = englishReadingLevel(word, frequencies);
@@ -336,6 +364,33 @@ function chineseReadingScore(
   let score = 1 + Math.min(1.5, (word.length - 1) * 0.5);
   if (word.length >= 4) score += 0.75;
   return score;
+}
+
+function chineseTranslationWordCount(translation: string): number {
+  return englishGlossWords(translation, { includeBasicWords: true }).length;
+}
+
+function chineseReadingSelectionScore(
+  source: string,
+  translation: string,
+  score: number
+): number {
+  const wordCount = chineseTranslationWordCount(translation);
+  const singleWordBoost =
+    translation && wordCount <= 1
+      ? score >= readingLevelScore(3)
+        ? 0.5
+        : score >= readingLevelScore(2)
+          ? 0.25
+          : 0
+      : 0;
+  const phrasePenalty =
+    translation && wordCount > 1
+      ? 0.25 + Math.max(0, wordCount - 2) * 0.35
+      : 0;
+  const sourceLengthPenalty = Math.max(0, source.length - 2) * 0.08;
+  const unknownPenalty = translation ? 0 : 0.35;
+  return score + singleWordBoost - phrasePenalty - sourceLengthPenalty - unknownPenalty;
 }
 
 function readingTargetCount(
@@ -466,7 +521,8 @@ function selectChineseReadingSpans(
     const run = match[0];
     let index = 0;
     while (index < run.length) {
-      let fallback: ReadingSpan | null = null;
+      let translatedFallback: ReadingSpan | null = null;
+      let unknownFallback: ReadingSpan | null = null;
       const max = Math.min(maxLength, run.length - index);
       for (let length = max; length >= 2; length -= 1) {
         const source = run.slice(index, index + length);
@@ -476,25 +532,50 @@ function selectChineseReadingSpans(
           ? cleanReadingTranslation(source, simplifyGloss(meaning))
           : "";
         const score = chineseReadingScore(source, translation, frequencies);
-        if (score < threshold) continue;
+        const selectionScore = chineseReadingSelectionScore(
+          source,
+          translation,
+          score
+        );
+        if (selectionScore < threshold) continue;
         const span: ReadingSpan = {
           start: (match.index ?? 0) + index,
           end: (match.index ?? 0) + index + length,
           source,
           translation: translation || undefined,
           score,
+          selectionScore,
+          translationWordCount: translation
+            ? chineseTranslationWordCount(translation)
+            : undefined,
           level: readingDifficultyLevel(score)
         };
-        if (translation) {
-          fallback = span;
-          break;
+        const currentFallback = translation ? translatedFallback : unknownFallback;
+        if (
+          !currentFallback ||
+          (span.selectionScore ?? span.score) >
+            (currentFallback.selectionScore ?? currentFallback.score) ||
+          ((span.selectionScore ?? span.score) ===
+            (currentFallback.selectionScore ?? currentFallback.score) &&
+            (span.translationWordCount ?? Number.MAX_SAFE_INTEGER) <
+              (currentFallback.translationWordCount ?? Number.MAX_SAFE_INTEGER)) ||
+          ((span.selectionScore ?? span.score) ===
+            (currentFallback.selectionScore ?? currentFallback.score) &&
+            (span.translationWordCount ?? Number.MAX_SAFE_INTEGER) ===
+              (currentFallback.translationWordCount ?? Number.MAX_SAFE_INTEGER) &&
+            span.score > currentFallback.score)
+        ) {
+          if (translation) {
+            translatedFallback = span;
+          } else {
+            unknownFallback = span;
+          }
         }
-        fallback = fallback ?? span;
       }
-      const best = fallback;
+      const best = translatedFallback ?? unknownFallback;
       if (best) {
         spans.push(best);
-        index = best.end - (match.index ?? 0);
+        index = best.translation ? best.end - (match.index ?? 0) : index + 1;
       } else {
         index += 1;
       }
@@ -502,6 +583,41 @@ function selectChineseReadingSpans(
     match = regex.exec(text);
   }
   return spans;
+}
+
+function readingSelectionScore(span: ReadingSpan): number {
+  return span.selectionScore ?? span.score;
+}
+
+function isChinesePhraseTranslation(span: ReadingSpan, family: ReadingFamily): boolean {
+  return family === "zh" && (span.translationWordCount ?? 1) > 1;
+}
+
+function capChinesePhraseTranslations(
+  ranked: ReadingSpan[],
+  targetCount: number,
+  family: ReadingFamily
+): ReadingSpan[] {
+  if (family !== "zh") return ranked.slice(0, targetCount);
+  const phraseLimit = Math.max(1, Math.floor(targetCount * 0.3));
+  const selected: ReadingSpan[] = [];
+  const deferredPhrases: ReadingSpan[] = [];
+  let phraseCount = 0;
+  for (const span of ranked) {
+    const phrase = isChinesePhraseTranslation(span, family);
+    if (phrase && phraseCount >= phraseLimit) {
+      deferredPhrases.push(span);
+      continue;
+    }
+    selected.push(span);
+    if (phrase) phraseCount += 1;
+    if (selected.length >= targetCount) return selected;
+  }
+  for (const span of deferredPhrases) {
+    selected.push(span);
+    if (selected.length >= targetCount) break;
+  }
+  return selected;
 }
 
 function selectReadingSpans(
@@ -513,7 +629,7 @@ function selectReadingSpans(
 ): ReadingSpan[] {
   const targetCount = readingTargetCount(text, spans.length, difficulty, family);
   const seenSources = new Set<string>();
-  return spans
+  const ranked = spans
     .sort((left, right) => left.start - right.start || left.end - right.end)
     .filter((span) => {
       const key = readingSpanKey(span, family);
@@ -526,11 +642,12 @@ function selectReadingSpans(
     })
     .sort((left, right) =>
       Number(Boolean(right.translation)) - Number(Boolean(left.translation)) ||
+      readingSelectionScore(right) - readingSelectionScore(left) ||
       right.score - left.score ||
       left.start - right.start ||
       left.end - right.end
-    )
-    .slice(0, targetCount)
+    );
+  return capChinesePhraseTranslations(ranked, targetCount, family)
     .sort((left, right) => left.start - right.start || left.end - right.end);
 }
 

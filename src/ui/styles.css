@@ -579,6 +579,129 @@ svg {
   width: min(520px, 100%);
 }
 
+.tool-title-editor-row {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: end;
+  gap: 10px;
+}
+
+.tool-icon-picker-trigger,
+.tool-icon-choice {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--teal);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.tool-icon-picker-trigger {
+  width: 42px;
+  height: 40px;
+}
+
+.tool-icon-picker-trigger:hover,
+.tool-icon-picker-trigger:focus-visible,
+.tool-icon-choice:hover,
+.tool-icon-choice:focus-visible,
+.tool-icon-choice.active {
+  border-color: color-mix(in srgb, var(--teal) 44%, var(--border));
+  color: var(--teal);
+  background: color-mix(in srgb, var(--teal) 9%, var(--surface));
+  outline: none;
+}
+
+.tool-icon-picker-trigger.empty,
+.tool-icon-choice.empty {
+  color: var(--faint);
+}
+
+.tool-icon-picker-trigger.empty::before,
+.tool-icon-choice.empty::before {
+  content: "";
+  width: 17px;
+  height: 17px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 4px;
+}
+
+.tool-icon-picker-trigger svg,
+.tool-icon-choice svg {
+  width: 17px;
+  height: 17px;
+}
+
+.tool-icon-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface-2);
+}
+
+.tool-icon-search {
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 9px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  background: var(--surface);
+}
+
+.tool-icon-search:focus-within {
+  border-color: var(--teal);
+}
+
+.tool-icon-search svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+}
+
+.tool-icon-search input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  background: transparent;
+  font-size: 12px;
+}
+
+.tool-icon-search input::placeholder {
+  color: var(--faint);
+}
+
+.tool-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(34px, 1fr));
+  gap: 6px;
+  max-height: 214px;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.tool-icon-choice {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.tool-icon-empty {
+  padding: 4px 2px 2px;
+  color: var(--muted);
+  font-size: 11px;
+  text-align: center;
+}
+
 /* Settings page */
 
 .settings-page {
@@ -1734,6 +1857,12 @@ svg {
   height: 16px;
 }
 
+.tool-invocation-tool-icon .webmind-logo-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
 .tool-invocation-context-icon svg,
 .tool-invocation-favicon {
   width: 14px;
@@ -2163,10 +2292,38 @@ svg {
 
 .markdown h1,
 .markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+  margin: 1em 0 0.45em;
+  color: var(--text);
+  font-weight: 820;
+  line-height: 1.35;
+}
+
+.markdown h1 {
+  font-size: 18px;
+}
+
+.markdown h2 {
+  font-size: 16px;
+}
+
 .markdown h3 {
-  margin: 1.1em 0 0.45em;
   font-size: 14px;
-  line-height: 1.4;
+}
+
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+  font-size: 13px;
+}
+
+.markdown strong,
+.markdown b {
+  color: var(--text);
+  font-weight: 820;
 }
 
 .markdown p,
@@ -2231,6 +2388,19 @@ svg {
   padding: 6px 8px;
   border: 1px solid var(--border);
   text-align: left;
+}
+
+.message.user .markdown {
+  line-height: 1.55;
+}
+
+.message.user .markdown p,
+.message.user .markdown ul,
+.message.user .markdown ol,
+.message.user .markdown blockquote,
+.message.user .markdown pre,
+.message.user .markdown table {
+  margin: 0.45em 0;
 }
 
 /* Side panel workspaces */
@@ -2356,9 +2526,12 @@ button.prompt-row:hover {
 }
 
 .tool-icon svg,
-.prompt-icon svg {
+.prompt-icon svg,
+.tool-icon .webmind-logo-icon,
+.prompt-icon .webmind-logo-icon {
   width: 17px;
   height: 17px;
+  object-fit: contain;
 }
 
 .tool-icon.coral {
@@ -2850,7 +3023,8 @@ button.prompt-row:hover {
 }
 
 .body-preview-meta span,
-.body-quality-grid span {
+.body-quality-grid span,
+.body-quality-action {
   max-width: 100%;
   overflow: hidden;
   padding: 2px 6px;
@@ -2859,6 +3033,50 @@ button.prompt-row:hover {
   background: var(--surface);
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.body-quality-action {
+  display: inline-flex;
+  min-height: 21px;
+  align-items: center;
+  gap: 4px;
+  color: var(--teal);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 760;
+}
+
+.body-quality-action:hover,
+.body-quality-action:focus-visible {
+  border-color: color-mix(in srgb, var(--teal) 38%, var(--border));
+  background: color-mix(in srgb, var(--teal) 8%, var(--surface));
+  outline: none;
+}
+
+.body-quality-action:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+.body-quality-action svg {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+}
+
+.body-preview-warnings {
+  display: grid;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.body-preview-warnings span {
+  padding: 5px 7px;
+  border: 1px solid color-mix(in srgb, var(--yellow) 42%, var(--border));
+  border-radius: 5px;
+  color: color-mix(in srgb, var(--yellow) 68%, var(--text));
+  background: color-mix(in srgb, var(--yellow) 9%, var(--surface));
+  line-height: 1.45;
 }
 
 .body-preview-blocks {
@@ -2870,11 +3088,64 @@ button.prompt-row:hover {
   padding-right: 2px;
 }
 
-.body-preview-blocks p {
+.body-preview-block {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22px;
+  align-items: start;
+  gap: 4px;
+  width: 100%;
   margin: 0;
+  padding: 5px 5px 5px 7px;
+  border: 0;
+  border-radius: 5px;
   color: var(--text);
+  background: transparent;
+  cursor: pointer;
   font-size: 11px;
   line-height: 1.45;
+  text-align: left;
+}
+
+.body-preview-block span {
+  min-width: 0;
+}
+
+.body-preview-block:hover,
+.body-preview-block:focus-visible {
+  color: var(--text);
+  background: color-mix(in srgb, var(--teal) 8%, var(--surface-2));
+  outline: none;
+}
+
+.body-preview-block-remove {
+  display: inline-grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border: 0;
+  border-radius: 5px;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.body-preview-block:hover .body-preview-block-remove,
+.body-preview-block:focus-within .body-preview-block-remove {
+  opacity: 1;
+}
+
+.body-preview-block-remove:hover,
+.body-preview-block-remove:focus-visible {
+  color: var(--red);
+  background: color-mix(in srgb, var(--red) 10%, var(--surface));
+  outline: none;
+}
+
+.body-preview-block-remove svg {
+  width: 13px;
+  height: 13px;
 }
 
 .composer {

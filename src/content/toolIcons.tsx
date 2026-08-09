@@ -1,6 +1,6 @@
 import {
   BookOpen,
-  Code2,
+  CodeXml,
   FileText,
   Globe2,
   ImagePlus,
@@ -24,9 +24,25 @@ import {
   WandSparkles
 } from "lucide-react";
 
+function extensionAssetUrl(path: string): string {
+  return typeof chrome !== "undefined" && chrome.runtime?.getURL
+    ? chrome.runtime.getURL(path)
+    : `/${path}`;
+}
+
+function ProductLogoIcon() {
+  return (
+    <img
+      className="webmind-logo-icon"
+      src={extensionAssetUrl("icons/icon-32.png")}
+      alt=""
+    />
+  );
+}
+
 const TOOL_ICONS = {
   BookOpen,
-  Code2,
+  CodeXml,
   FileText,
   Globe2,
   ImagePlus,
@@ -51,6 +67,7 @@ const TOOL_ICONS = {
 };
 
 export function ToolIcon({ name }: { name: string }) {
+  if (name === "WebMind") return <ProductLogoIcon />;
   const Icon = TOOL_ICONS[name as keyof typeof TOOL_ICONS] ?? Sparkles;
   return <Icon />;
 }

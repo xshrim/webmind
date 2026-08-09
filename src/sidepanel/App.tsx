@@ -1,4 +1,5 @@
 import {
+  ArrowRightLeft,
   ArrowUp,
   BookOpen,
   Bot,
@@ -8,14 +9,17 @@ import {
   CirclePlus,
   Clock3,
   Copy,
+  Eraser,
   FileText,
-  Globe2,
   ImagePlus,
+  Highlighter,
   Link2,
   LoaderCircle,
   MessageCirclePlus,
   MessageSquareText,
+  Newspaper,
   Paperclip,
+  PanelTop,
   PenLine,
   Presentation,
   RefreshCcw,
@@ -52,6 +56,7 @@ import {
   type UiTextKey
 } from "../shared/i18n";
 import {
+  clearConversations,
   consumePendingAction,
   deleteConversation,
   listConversations,
@@ -75,6 +80,7 @@ import {
 import type {
   AppSettings,
   AppLogLevel,
+  ArticlePreviewBlock,
   ChatRunRequest,
   ChatMessage,
   Conversation,
@@ -109,7 +115,22 @@ import {
   type ProtectedTranslationText
 } from "../shared/utils";
 import {
-  orderTranslationsByBlocks,
+  classifyImmersiveWorkflowError,
+  createImmersiveRunState,
+  createImmersiveWorkflowSummary,
+  formatImmersiveWorkflowLog,
+  immersiveReadingModelBatchAppliedProgress,
+  immersiveTranslationBatchAppliedProgress,
+  immersiveTranslationBatchStartProgress,
+  immersiveWorkflowCollectingProgress,
+  immersiveWorkflowCompleteProgress,
+  immersiveWorkflowErrorProgress,
+  immersiveWorkflowReadyProgress,
+  immersiveWorkflowRunningProgress,
+  isImmersiveWorkflowCancelledError,
+  type ImmersiveWorkflowProgressUpdate,
+  runImmersiveReadingFinalApplyWorkflow,
+  runImmersiveReadingLocalFirstWorkflow,
   runImmersiveReadingModelPageWorkflow,
   runImmersiveTranslationWorkflow
 } from "../shared/immersiveWorkflow";
@@ -209,12 +230,14 @@ export function App() {
   const [history, setHistory] = useState<Conversation[]>([]);
   const [customTools, setCustomTools] = useState<CustomTool[]>([]);
   const [toolEditorOpen, setToolEditorOpen] = useState(false);
+  const [toolIconPickerOpen, setToolIconPickerOpen] = useState(false);
+  const [toolIconSearch, setToolIconSearch] = useState("");
   const [editingToolId, setEditingToolId] = useState<string | null>(null);
   const [toolDraft, setToolDraft] = useState({
     title: "",
     description: "",
     template: "",
-    icon: "Sparkles"
+    icon: ""
   });
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
@@ -256,6 +279,29 @@ export function App() {
   const activeTabContextVersionRef = useRef(0);
   const contextModeRef = useRef<ContextMode>("page");
   const demoTimerRef = useRef<number | null>(null);
+  const immersiveRunRef = useRef<{
+    id: string;
+    controller: AbortController;
+  } | null>(null);
+
+  const beginImmersiveRun = () => {
+    immersiveRunRef.current?.controller.abort();
+    const run = {
+      id: crypto.randomUUID(),
+      controller: new AbortController()
+    };
+    immersiveRunRef.current = run;
+    return run;
+  };
+
+  const isCurrentImmersiveRun = (run: { id: string }): boolean =>
+    immersiveRunRef.current?.id === run.id;
+
+  const finishImmersiveRun = (run: { id: string }) => {
+    if (isCurrentImmersiveRun(run)) {
+      immersiveRunRef.current = null;
+    }
+  };
 
   const updateMessages = useCallback(
     (
@@ -981,17 +1027,104 @@ export function App() {
     []
   );
 
+  const contextMatchesActivePage = (
+    context: PageContext | null | undefined
+  ): context is PageContext => {
+    if (!context) return false;
+    const url = pageContext?.url || activeTab?.url || "";
+    return !url || !context.url || context.url === url;
+  };
+
+  const articleContextForActivePage = (): PageContext | null => {
+    if (
+      pageContext?.kind === "article" &&
+      contextMatchesActivePage(pageContext)
+    ) {
+      return pageContext;
+    }
+    if (
+      currentArticleContext?.kind === "article" &&
+      contextMatchesActivePage(currentArticleContext)
+    ) {
+      return currentArticleContext;
+    }
+    return null;
+  };
+
+  const selectionContextForActivePage = (): PageContext | null => {
+    if (
+      pageContext?.kind === "selection" &&
+      contextMatchesActivePage(pageContext)
+    ) {
+      return pageContext;
+    }
+    if (
+      selectionContext?.kind === "selection" &&
+      contextMatchesActivePage(selectionContext)
+    ) {
+      return selectionContext;
+    }
+    return null;
+  };
+
+  const pageContextForActivePage = (): PageContext | null => {
+    if (
+      pageContext &&
+      pageContext.kind !== "selection" &&
+      pageContext.kind !== "article" &&
+      contextMatchesActivePage(pageContext)
+    ) {
+      return pageContext;
+    }
+    if (
+      currentPageContext &&
+      currentPageContext.kind !== "selection" &&
+      currentPageContext.kind !== "article" &&
+      contextMatchesActivePage(currentPageContext)
+    ) {
+      return currentPageContext;
+    }
+    return null;
+  };
+
+  const effectiveContextMode = (): ContextMode => {
+    if (!includePage) return "none";
+    if (pageContext?.kind === "selection") return "selection";
+    if (pageContext?.kind === "article") return "article";
+    if (
+      contextModeRef.current === "selection" &&
+      selectionContextForActivePage()
+    ) {
+      return "selection";
+    }
+    if (contextModeRef.current === "article" && articleContextForActivePage()) {
+      return "article";
+    }
+    return "page";
+  };
+
+  const contextForCurrentMode = (): PageContext | null => {
+    const mode = effectiveContextMode();
+    if (mode === "none") return null;
+    if (mode === "selection") return selectionContextForActivePage();
+    if (mode === "article") return articleContextForActivePage();
+    return pageContextForActivePage() ?? pageContext;
+  };
+
   const resolveRichContext = async (
     profile: ProviderProfile,
-    forceIncludePage = false
+    forceIncludePage = false,
+    contextOverride?: PageContext | null
   ): Promise<PageContext | null> => {
-    if ((!includePage && !forceIncludePage) || !pageContext) return null;
-    if (pageContext.kind === "youtube" && !pageContext.text) {
+    if (contextOverride !== undefined) return contextOverride;
+    const context = forceIncludePage ? pageContext : contextForCurrentMode();
+    if ((!includePage && !forceIncludePage) || !context) return null;
+    if (context.kind === "youtube" && !context.text) {
       setContextLoading(true);
       try {
-        await requestOriginPermission(pageContext.url);
+        await requestOriginPermission(context.url);
         const transcript = await runtimeRequest<PageContext>("context.youtube", {
-          pageUrl: pageContext.url,
+          pageUrl: context.url,
           language: navigator.language
         });
         setPageContext(transcript);
@@ -1002,15 +1135,15 @@ export function App() {
       }
     }
     if (
-      pageContext.kind === "pdf" &&
-      (!pageContext.text || pageContext.text.length < 200)
+      context.kind === "pdf" &&
+      (!context.text || context.text.length < 200)
     ) {
       setContextLoading(true);
       try {
-        const granted = await requestOriginPermission(pageContext.url);
+        const granted = await requestOriginPermission(context.url);
         if (!granted) throw new Error(t("needPdfPermission"));
         const pdf = await extractPdfContext(
-          pageContext.url,
+          context.url,
           profile.maxContextChars,
           (page, total) =>
             setToolStatus(`${t("readingPdf")}：${page}/${total}`),
@@ -1024,7 +1157,7 @@ export function App() {
         setContextLoading(false);
       }
     }
-    return pageContext;
+    return context;
   };
 
   const readTabContext = async (
@@ -1200,8 +1333,71 @@ export function App() {
       contextModeRef.current = "article";
       syncImmersiveContextScope("article");
       setContextError("");
-      setBodyPreviewExpanded(false);
       appendOperationLog(t("restoreCurrentBody"), "success");
+    } catch (error) {
+      setNotice(errorMessage(error));
+      appendOperationLog(errorMessage(error), "error");
+    } finally {
+      setArticlePicking(false);
+      setToolStatus("");
+    }
+  };
+
+  const highlightCurrentBodyPreviewBlock = async (
+    block: ArticlePreviewBlock
+  ) => {
+    const text = block.sourceText ?? block.text;
+    if (!activeTab?.id || (!text.trim() && !block.targetId)) return;
+    await sendToTab(activeTab.id, {
+      type: "page.article.preview.highlight",
+      text,
+      targetId: block.targetId
+    }).catch(() => undefined);
+  };
+
+  const removeCurrentBodyPreviewBlock = async (
+    block: ArticlePreviewBlock
+  ) => {
+    if (!activeTab?.id) return;
+    const text = block.sourceText ?? block.text;
+    try {
+      const next = await sendToTab<PageContext>(activeTab.id, {
+        type: "page.article.preview.remove",
+        text,
+        targetId: block.targetId
+      });
+      const normalized = normalizePageContext(next);
+      setCurrentArticleContext(normalized);
+      setPageContext(normalized);
+      setIncludePage(true);
+      contextModeRef.current = "article";
+      syncImmersiveContextScope("article");
+      setContextError("");
+      setBodyPreviewExpanded(true);
+    } catch (error) {
+      setNotice(errorMessage(error));
+      appendOperationLog(errorMessage(error), "error");
+    }
+  };
+
+  const pruneCurrentBodyPreviewBlocks = async () => {
+    if (!activeTab?.id) return;
+    setArticlePicking(true);
+    setToolStatus(t("smartPruneCurrentBody"));
+    setNotice("");
+    try {
+      const next = await sendToTab<PageContext>(activeTab.id, {
+        type: "page.article.preview.prune"
+      });
+      const normalized = normalizePageContext(next);
+      setCurrentArticleContext(normalized);
+      setPageContext(normalized);
+      setIncludePage(true);
+      contextModeRef.current = "article";
+      syncImmersiveContextScope("article");
+      setContextError("");
+      setBodyPreviewExpanded(true);
+      appendOperationLog(t("smartPruneCurrentBody"), "success");
     } catch (error) {
       setNotice(errorMessage(error));
       appendOperationLog(errorMessage(error), "error");
@@ -1264,6 +1460,7 @@ export function App() {
         currentArticleContext &&
         (!url || currentArticleContext.url === url)
       ) {
+        contextModeRef.current = "article";
         void sendToTab(senderTab.id, {
           type: "immersive.contextScope.set",
           scope: "article"
@@ -1272,6 +1469,7 @@ export function App() {
         return;
       }
       if (currentPageContext && (!url || currentPageContext.url === url)) {
+        contextModeRef.current = "page";
         void sendToTab(senderTab.id, {
           type: "immersive.contextScope.set",
           scope: "page"
@@ -1321,6 +1519,7 @@ export function App() {
         skipPageContext?: boolean;
         skipWebSearch?: boolean;
         contextAsInput?: boolean;
+        contextOverride?: PageContext | null;
         dictionaryForShortInput?: boolean;
         toolInvocation?: ToolDefinition;
         toolInvocationContext?: ToolInvocationContext;
@@ -1361,9 +1560,14 @@ export function App() {
       let context: PageContext | null = null;
       let results: WebSearchResult[] = [];
       try {
-        context = options.skipPageContext
-          ? null
-          : await resolveRichContext(profile, options.forceIncludePage);
+        context =
+          options.skipPageContext
+            ? null
+            : await resolveRichContext(
+                profile,
+                options.forceIncludePage,
+                options.contextOverride
+              );
         if (!options.skipWebSearch && webSearchEnabled && text) {
           const allowed = await requestOriginPermission(
             "https://html.duckduckgo.com/"
@@ -1556,8 +1760,11 @@ export function App() {
       activeTab?.title,
       activeTab?.url,
       appendOperationLog,
+      currentArticleContext,
+      currentPageContext,
       pageContext,
       postStreamMessage,
+      selectionContext,
       streamingId,
       updateMessages,
       webSearchEnabled
@@ -1848,14 +2055,34 @@ export function App() {
     setView("chat");
   };
 
+  const clearConversationHistory = async () => {
+    if (streamingId) stopStreaming();
+    await clearConversations();
+    setHistory([]);
+    updateMessages([]);
+    conversationIdRef.current = crypto.randomUUID();
+    conversationCreatedAtRef.current = Date.now();
+    setComposer("");
+    setAttachments([]);
+    setEditingMessageId(null);
+    setEditingMessageText("");
+    setChatToolsExpanded(false);
+    setChatToolsHiddenDuringRequest(false);
+    chatToolsStreamStartedRef.current = false;
+    setNotice(t("localHistoryCleared"));
+    appendOperationLog(t("localHistoryCleared"), "warning");
+  };
+
   const translatePage = async (
     mode: PageTranslationMode = "bilingual",
     scope: "page" | "article" | "selection" = "page"
   ) => {
     const profile = requireProfile("translation");
     if (!profile || !activeTab?.id) return;
+    const workflowLabel = t("immersiveTranslation");
+    let runState = createImmersiveRunState("translation", scope, "collecting");
     appendOperationLog(
-      `${t("immersiveTranslation")}: ${
+      `${workflowLabel}: ${
         scope === "selection"
           ? t("currentSelection")
           : scope === "article"
@@ -1864,7 +2091,12 @@ export function App() {
       }`,
       "info"
     );
+    appendOperationLog(
+      formatImmersiveWorkflowLog(workflowLabel, "start", { scope }),
+      "debug"
+    );
     const tabId = activeTab.id;
+    const run = beginImmersiveRun();
     setToolStatus(
       scope === "selection"
         ? t("collectingSelection")
@@ -1888,14 +2120,25 @@ export function App() {
         error
       });
     };
-    try {
+    const sendProgressUpdate = async (
+      update: ImmersiveWorkflowProgressUpdate
+    ) => {
       await sendProgress(
-        3,
-        scope === "selection"
-          ? t("readingSelection")
-          : scope === "article"
-            ? t("collectingCurrentBody")
-            : t("collectingPageBody")
+        update.percent,
+        update.label,
+        update.active,
+        update.error
+      );
+    };
+    try {
+      await sendProgressUpdate(
+        immersiveWorkflowCollectingProgress(
+          scope === "selection"
+            ? t("readingSelection")
+            : scope === "article"
+              ? t("collectingCurrentBody")
+              : t("collectingPageBody")
+        )
       );
       const blocks = await sendToTab<PageTextBlock[]>(tabId, {
         type: "page.translation.prepare",
@@ -1904,6 +2147,16 @@ export function App() {
         text: scope === "selection" ? pageContext?.text ?? "" : ""
       });
       if (!blocks.length) throw new Error(t("noTranslatableBlocks"));
+      runState = createImmersiveRunState("translation", scope, "requesting", {
+        totalBlocks: blocks.length
+      });
+      appendOperationLog(
+        formatImmersiveWorkflowLog(workflowLabel, "blocks_collected", {
+          scope,
+          blocks: blocks.length
+        }),
+        "debug"
+      );
       const requestTranslations = async (requestBlocks: PageTextBlock[]) => {
         const sourceText = requestBlocks.map((block) => block.text).join("\n");
         const response = await runtimeRequest<{ text: string }>(
@@ -1936,13 +2189,17 @@ export function App() {
           )
         );
       };
-      const { completed } = await runImmersiveTranslationWorkflow({
+      const { completed, summary } = await runImmersiveTranslationWorkflow({
         blocks,
         batchSize: IMMERSIVE_TRANSLATION_BATCH_SIZE,
         concurrency:
           scope === "selection" ? 1 : IMMERSIVE_TRANSLATION_CONCURRENCY,
+        signal: run.controller.signal,
         requestTranslations,
         applyTranslations: async (translations) => {
+          runState = createImmersiveRunState("translation", scope, "applying", {
+            totalBlocks: blocks.length
+          });
           const applied = await sendToTab<{ count: number }>(tabId, {
             type: "page.translation.apply",
             translations,
@@ -1955,38 +2212,89 @@ export function App() {
         },
         invalidTranslationsError: () => new Error(t("jsonArrayInvalid")),
         applyCountMismatchError: () => new Error(t("translationWriteFailed")),
-        onBatchStart: async ({ batch, processedBefore }) => {
-          setToolStatus(
-            `${t("translatingPageProgress")}：${Math.min(processedBefore + batch.length, blocks.length)}/${blocks.length}`
+        onBatchStart: async (progress) => {
+          const current = Math.min(
+            progress.processedBefore + progress.batch.length,
+            blocks.length
           );
-          await sendProgress(
-            (processedBefore / blocks.length) * 92 + 5,
-            `${t("translatingPageProgress")} ${Math.min(processedBefore + batch.length, blocks.length)}/${blocks.length}`
+          setToolStatus(
+            `${t("translatingPageProgress")}：${current}/${blocks.length}`
+          );
+          await sendProgressUpdate(
+            immersiveTranslationBatchStartProgress(
+              progress,
+              blocks.length,
+              t("translatingPageProgress")
+            )
           );
         },
         onBatchApplied: async ({ completed }) => {
-          await sendProgress(
-            (Math.min(completed, blocks.length) / blocks.length) * 92 + 5,
-            `${t("translationApplied")} ${completed}`
+          await sendProgressUpdate(
+            immersiveTranslationBatchAppliedProgress(
+              completed,
+              blocks.length,
+              t("translationApplied")
+            )
           );
         }
       });
+      runState = createImmersiveRunState("translation", scope, "completed", {
+        totalBlocks: summary.totalBlocks,
+        appliedBlocks: summary.appliedBlocks
+      });
+      if (!isCurrentImmersiveRun(run)) return;
       setToolStatus(`${t("translationApplied")} ${completed}`);
       appendOperationLog(`${t("translationComplete")}: ${completed}`, "success");
-      await sendProgress(
-        100,
-        `${t("translationComplete")}, ${t("translationApplied")} ${completed}`,
-        false
+      appendOperationLog(
+        formatImmersiveWorkflowLog(workflowLabel, "complete", {
+          scope: runState.scope,
+          applied: summary.appliedBlocks,
+          total: summary.totalBlocks
+        }),
+        "debug"
+      );
+      await sendProgressUpdate(
+        immersiveWorkflowCompleteProgress(
+          `${t("translationComplete")}, ${t("translationApplied")} ${completed}`
+        )
       );
     } catch (error) {
+      if (isImmersiveWorkflowCancelledError(error)) {
+        appendOperationLog(
+          formatImmersiveWorkflowLog(workflowLabel, "cancelled", { scope }),
+          "debug"
+        );
+        return;
+      }
+      if (!isCurrentImmersiveRun(run)) return;
+      const message = errorMessage(error);
+      const errorInfo = classifyImmersiveWorkflowError(message, {
+        missingProfile: t("modelEngineRequired"),
+        emptyContext: t("noTranslatableBlocks"),
+        modelResponseInvalid: t("jsonArrayInvalid"),
+        applyFailed: t("translationWriteFailed")
+      });
+      runState = createImmersiveRunState("translation", scope, "failed", {
+        error: message
+      });
       setToolStatus("");
-      setNotice(errorMessage(error));
-      appendOperationLog(errorMessage(error), "error");
+      setNotice(message);
+      appendOperationLog(message, "error");
+      appendOperationLog(
+        formatImmersiveWorkflowLog(workflowLabel, "error", {
+          scope: runState.scope,
+          code: errorInfo.code,
+          error: runState.error
+        }),
+        "debug"
+      );
       try {
-        await sendProgress(100, errorMessage(error), false, true);
+        await sendProgressUpdate(immersiveWorkflowErrorProgress(message));
       } catch {
         // Ignore progress rendering failures after the main operation already failed.
       }
+    } finally {
+      finishImmersiveRun(run);
     }
   };
 
@@ -1997,9 +2305,12 @@ export function App() {
     const profile = currentSettings
       ? profileForPurpose(currentSettings, "translation")
       : null;
-      if (!currentSettings || !activeTab?.id) return;
+    if (!currentSettings || !activeTab?.id) return;
+    const workflowLabel = t("immersiveReading");
+    const run = beginImmersiveRun();
+    let runState = createImmersiveRunState("reading", scope, "collecting");
     appendOperationLog(
-      `${t("immersiveReading")}: ${
+      `${workflowLabel}: ${
         scope === "selection"
           ? t("currentSelection")
           : scope === "article"
@@ -2009,10 +2320,10 @@ export function App() {
       "info"
     );
     appendOperationLog(
-      `[workflow] ${t("immersiveReading")} start scope=${scope}`,
+      formatImmersiveWorkflowLog(workflowLabel, "start", { scope }),
       "debug"
     );
-    setToolStatus(t("immersiveReading"));
+    setToolStatus(workflowLabel);
     setNotice("");
     const sendProgress = async (
       percent: number,
@@ -2029,18 +2340,29 @@ export function App() {
         error
       });
     };
+    const sendProgressUpdate = async (
+      update: ImmersiveWorkflowProgressUpdate
+    ) => {
+      await sendProgress(
+        update.percent,
+        update.label,
+        update.active,
+        update.error
+      );
+    };
     try {
       appendOperationLog(
-        `[workflow] ${t("immersiveReading")} collect text blocks`,
+        formatImmersiveWorkflowLog(workflowLabel, "collect_blocks", { scope }),
         "debug"
       );
-      await sendProgress(
-        3,
-        scope === "selection"
-          ? t("readingSelection")
-          : scope === "article"
-            ? t("collectingCurrentBody")
-            : t("collectingPageBody")
+      await sendProgressUpdate(
+        immersiveWorkflowCollectingProgress(
+          scope === "selection"
+            ? t("readingSelection")
+            : scope === "article"
+              ? t("collectingCurrentBody")
+              : t("collectingPageBody")
+        )
       );
       const blocks = await sendToTab<PageTextBlock[]>(activeTab.id, {
         type: "page.translation.prepare",
@@ -2049,8 +2371,14 @@ export function App() {
         text: scope === "selection" ? pageContext?.text ?? "" : ""
       });
       if (!blocks.length) throw new Error(t("noTranslatableBlocks"));
+      runState = createImmersiveRunState("reading", scope, "requesting", {
+        totalBlocks: blocks.length
+      });
       appendOperationLog(
-        `[workflow] ${t("immersiveReading")} collected blocks=${blocks.length}`,
+        formatImmersiveWorkflowLog(workflowLabel, "blocks_collected", {
+          scope,
+          blocks: blocks.length
+        }),
         "debug"
       );
       const pageLanguageSample = blocks
@@ -2060,21 +2388,26 @@ export function App() {
       const useModelPage =
         currentSettings.immersiveReadingStrategy === "model-page";
       appendOperationLog(
-        `[workflow] ${t("immersiveReading")} strategy=${
-          useModelPage ? "model-page" : "local-first"
-        } difficulty=${currentSettings.immersiveReadingDifficulty}`,
+        formatImmersiveWorkflowLog(workflowLabel, "strategy_selected", {
+          scope,
+          strategy: useModelPage ? "model-page" : "local-first",
+          difficulty: currentSettings.immersiveReadingDifficulty
+        }),
         "debug"
       );
-      await sendProgress(
-        8,
-        `${t("immersiveReading")} ${blocks.length}/${blocks.length}`
+      await sendProgressUpdate(
+        immersiveWorkflowReadyProgress(blocks.length, t("immersiveReading"))
       );
       const requestModelReading = async (requestBlocks: PageTextBlock[]) => {
         if (!profile) {
           throw new Error(t("modelEngineRequired"));
         }
         appendOperationLog(
-          `[workflow] ${t("immersiveReading")} model-page request blocks=${requestBlocks.length} model=${profile.name}/${profile.model}`,
+          formatImmersiveWorkflowLog(workflowLabel, "model_page_request", {
+            scope,
+            blocks: requestBlocks.length,
+            model: `${profile.name}/${profile.model}`
+          }),
           "debug"
         );
         const response = await runtimeRequest<{ text: string }>(
@@ -2113,13 +2446,23 @@ export function App() {
       };
       let translations: PageTranslation[] = [];
       let appliedDuringProcessing: number | null = null;
+      let workflowSummary = createImmersiveWorkflowSummary({
+        totalBlocks: blocks.length,
+        requestedBlocks: 0,
+        translatedBlocks: 0,
+        appliedBlocks: 0
+      });
       if (useModelPage) {
         const result = await runImmersiveReadingModelPageWorkflow({
           blocks,
           batchSize: IMMERSIVE_TRANSLATION_BATCH_SIZE,
           concurrency: IMMERSIVE_TRANSLATION_CONCURRENCY,
+          signal: run.controller.signal,
           requestTranslations: requestModelReading,
           applyTranslations: async (orderedTranslations) => {
+            runState = createImmersiveRunState("reading", scope, "applying", {
+              totalBlocks: blocks.length
+            });
             const applied = await sendToTab<{ count: number }>(activeTab.id!, {
               type: "page.reading.apply",
               translations: orderedTranslations,
@@ -2130,144 +2473,276 @@ export function App() {
             });
             return applied.count;
           },
-          onBatchApplied: async ({ batch, processedBefore, appliedCount }) => {
-            await sendProgress(
-              (Math.min(processedBefore + batch.length, blocks.length) /
-                blocks.length) *
-                92 +
-                5,
-              `${t("immersiveReadingApplied")} ${appliedCount}`
+          onBatchApplied: async (progress) => {
+            await sendProgressUpdate(
+              immersiveReadingModelBatchAppliedProgress(
+                progress,
+                blocks.length,
+                t("immersiveReadingApplied")
+              )
             );
           }
         });
         translations = result.translations;
         appliedDuringProcessing = result.appliedCount;
+        workflowSummary = result.summary;
         appendOperationLog(
-          `[workflow] ${t("immersiveReading")} model-page aligned translations=${translations.length}`,
+          formatImmersiveWorkflowLog(workflowLabel, "model_page_aligned", {
+            scope,
+            translations: workflowSummary.translatedBlocks
+          }),
           "debug"
         );
       } else {
-        appendOperationLog(
-          `[workflow] ${t("immersiveReading")} local-first build local plan`,
-          "debug"
-        );
-        const plan = await sendToTab<ReadingLocalPlan>(activeTab.id!, {
-          type: "page.reading.plan",
-          blocks
-        });
-        appendOperationLog(
-          `[workflow] ${t("immersiveReading")} local-first plan blocks=${plan.blocks.length} fallbackTerms=${plan.fallbackTerms.length}`,
-          "debug"
-        );
-        let fallbackTranslations: ReadingFallbackTranslation[] = [];
-        if (plan.fallbackTerms.length && profile) {
-          try {
-            appendOperationLog(
-              `[workflow] ${t("immersiveReading")} local-first fallback request terms=${plan.fallbackTerms.length} model=${profile.name}/${profile.model}`,
-              "debug"
-            );
-            await sendProgress(
-              18,
-              `${t("immersiveReading")} ${plan.fallbackTerms.length}`
-            );
-            const response = await runtimeRequest<{ text: string }>(
-              "model.complete",
-              {
-                profileId: profile.id,
-                purpose: "translation",
-                temperature: 0,
-                messages: [
-                  createMessage(
-                    "system",
-                    "You are WebMind's local-first immersive-reading term translator. Translate only the supplied terms."
-                  ),
-                  createMessage(
-                    "user",
-                    buildReadingFallbackPrompt(plan.fallbackTerms)
-                  )
-                ]
+        const result = await runImmersiveReadingLocalFirstWorkflow({
+          blocks,
+          signal: run.controller.signal,
+          buildPlan: async (requestBlocks) =>
+            sendToTab<ReadingLocalPlan>(activeTab.id!, {
+              type: "page.reading.plan",
+              blocks: requestBlocks
+            }),
+          requestFallbackTranslations: profile
+            ? async (terms) => {
+                const response = await runtimeRequest<{ text: string }>(
+                  "model.complete",
+                  {
+                    profileId: profile.id,
+                    purpose: "translation",
+                    temperature: 0,
+                    messages: [
+                      createMessage(
+                        "system",
+                        "You are WebMind's local-first immersive-reading term translator. Translate only the supplied terms."
+                      ),
+                      createMessage("user", buildReadingFallbackPrompt(terms))
+                    ]
+                  }
+                );
+                return parseReadingFallbackTranslations(response.text);
               }
-            );
-            fallbackTranslations = parseReadingFallbackTranslations(
-              response.text
-            );
+            : undefined,
+          finalizePlan: async (planBlocks, fallbackTranslations) =>
+            sendToTab<PageTranslation[]>(activeTab.id!, {
+              type: "page.reading.finalize",
+              blocks: planBlocks,
+              fallbackTranslations
+            }),
+          onPlanStart: () => {
             appendOperationLog(
-              `[workflow] ${t("immersiveReading")} local-first fallback parsed translations=${fallbackTranslations.length}`,
+              formatImmersiveWorkflowLog(workflowLabel, "local_first_plan_start", {
+                scope
+              }),
               "debug"
             );
-          } catch {
+          },
+          onPlanReady: (plan) => {
             appendOperationLog(
-              `[workflow] ${t("immersiveReading")} local-first fallback failed, continue with local dictionary results`,
+              formatImmersiveWorkflowLog(workflowLabel, "local_first_plan_ready", {
+                scope,
+                blocks: plan.blocks.length,
+                fallbackTerms: plan.fallbackTerms.length
+              }),
               "debug"
             );
-            fallbackTranslations = [];
+          },
+          onFallbackRequest: async (terms) => {
+            appendOperationLog(
+              formatImmersiveWorkflowLog(
+                workflowLabel,
+                "local_first_fallback_request",
+                {
+                  scope,
+                  fallbackTerms: terms.length,
+                  model: profile ? `${profile.name}/${profile.model}` : undefined
+                }
+              ),
+              "debug"
+            );
+            await sendProgressUpdate(
+              immersiveWorkflowRunningProgress(
+                18,
+                `${t("immersiveReading")} ${terms.length}`
+              )
+            );
+          },
+          onFallbackComplete: (fallbackTranslations) => {
+            appendOperationLog(
+              formatImmersiveWorkflowLog(
+                workflowLabel,
+                "local_first_fallback_complete",
+                {
+                  scope,
+                  translations: fallbackTranslations.length
+                }
+              ),
+              "debug"
+            );
+          },
+          onFallbackFailed: () => {
+            appendOperationLog(
+              formatImmersiveWorkflowLog(
+                workflowLabel,
+                "local_first_fallback_failed",
+                { scope }
+              ),
+              "debug"
+            );
+          },
+          onFallbackSkipped: (terms) => {
+            appendOperationLog(
+              formatImmersiveWorkflowLog(
+                workflowLabel,
+                "local_first_fallback_skipped",
+                {
+                  scope,
+                  fallbackTerms: terms.length
+                }
+              ),
+              "debug"
+            );
+          },
+          onFinalize: () => {
+            appendOperationLog(
+              formatImmersiveWorkflowLog(workflowLabel, "local_first_finalize", {
+                scope,
+              }),
+              "debug"
+            );
+          },
+          onFinalized: (finalTranslations) => {
+            appendOperationLog(
+              formatImmersiveWorkflowLog(workflowLabel, "local_first_finalized", {
+                scope,
+                translations: finalTranslations.length
+              }),
+              "debug"
+            );
           }
-        } else {
-          appendOperationLog(
-            `[workflow] ${t("immersiveReading")} local-first fallback skipped terms=${plan.fallbackTerms.length}`,
-            "debug"
-          );
-        }
-        appendOperationLog(
-          `[workflow] ${t("immersiveReading")} local-first finalize replacements`,
-          "debug"
-        );
-        translations = await sendToTab<PageTranslation[]>(activeTab.id!, {
-          type: "page.reading.finalize",
-          blocks: plan.blocks,
-          fallbackTranslations
         });
-        appendOperationLog(
-          `[workflow] ${t("immersiveReading")} local-first finalized translations=${translations.length}`,
-          "debug"
-        );
+        translations = result.translations;
+        workflowSummary = result.summary;
       }
       let completed = appliedDuringProcessing ?? 0;
       if (appliedDuringProcessing === null) {
-        translations = orderTranslationsByBlocks(translations, blocks);
-        const applied = await sendToTab<{ count: number }>(activeTab.id, {
-          type: "page.reading.apply",
+        const applyResult = await runImmersiveReadingFinalApplyWorkflow({
+          blocks,
           translations,
-          mode: currentSettings.immersiveReadingMode,
-          backgroundStyle: currentSettings.immersiveReadingBackgroundStyle,
-          outerEffects: currentSettings.immersiveReadingOuterTextEffects,
-          innerEffects: currentSettings.immersiveReadingInnerTextEffects
+          summary: workflowSummary,
+          signal: run.controller.signal,
+          onApplyStart: () => {
+            runState = createImmersiveRunState("reading", scope, "applying", {
+              totalBlocks: blocks.length
+            });
+          },
+          applyTranslations: async (orderedTranslations) => {
+            const applied = await sendToTab<{ count: number }>(activeTab.id!, {
+              type: "page.reading.apply",
+              translations: orderedTranslations,
+              mode: currentSettings.immersiveReadingMode,
+              backgroundStyle: currentSettings.immersiveReadingBackgroundStyle,
+              outerEffects: currentSettings.immersiveReadingOuterTextEffects,
+              innerEffects: currentSettings.immersiveReadingInnerTextEffects
+            });
+            return applied.count;
+          }
         });
-        completed = applied.count;
+        translations = applyResult.translations;
+        completed = applyResult.appliedCount;
+        workflowSummary = applyResult.summary;
       }
+      runState = createImmersiveRunState("reading", scope, "completed", {
+        totalBlocks: workflowSummary.totalBlocks,
+        appliedBlocks: workflowSummary.appliedBlocks
+      });
+      if (!isCurrentImmersiveRun(run)) return;
       appendOperationLog(
-        `[workflow] ${t("immersiveReading")} applied blocks=${completed}/${translations.length}`,
+        formatImmersiveWorkflowLog(workflowLabel, "applied", {
+          scope: runState.scope,
+          applied: workflowSummary.appliedBlocks,
+          total: workflowSummary.translatedBlocks
+        }),
         "debug"
       );
       setToolStatus(`${t("immersiveReadingApplied")} ${completed}`);
       appendOperationLog(`${t("immersiveReadingApplied")} ${completed}`, "success");
-      await sendProgress(
-        100,
-        `${t("immersiveReadingApplied")} ${completed}`,
-        false
+      await sendProgressUpdate(
+        immersiveWorkflowCompleteProgress(
+          `${t("immersiveReadingApplied")} ${completed}`
+        )
       );
     } catch (error) {
+      if (isImmersiveWorkflowCancelledError(error)) {
+        appendOperationLog(
+          formatImmersiveWorkflowLog(workflowLabel, "cancelled", { scope }),
+          "debug"
+        );
+        return;
+      }
+      if (!isCurrentImmersiveRun(run)) return;
+      const message = errorMessage(error);
+      const errorInfo = classifyImmersiveWorkflowError(message, {
+        missingProfile: t("modelEngineRequired"),
+        emptyContext: t("noTranslatableBlocks"),
+        modelResponseInvalid: t("jsonArrayInvalid")
+      });
+      runState = createImmersiveRunState("reading", scope, "failed", {
+        error: message
+      });
       setToolStatus("");
-      setNotice(errorMessage(error));
-      appendOperationLog(errorMessage(error), "error");
+      setNotice(message);
+      appendOperationLog(message, "error");
+      appendOperationLog(
+        formatImmersiveWorkflowLog(workflowLabel, "error", {
+          scope: runState.scope,
+          code: errorInfo.code,
+          error: runState.error
+        }),
+        "debug"
+      );
       try {
-        await sendProgress(100, errorMessage(error), false, true);
+        await sendProgressUpdate(immersiveWorkflowErrorProgress(message));
       } catch {
         // Ignore progress rendering failures after the main operation failed.
       }
+    } finally {
+      finishImmersiveRun(run);
     }
   };
 
   const restorePage = async () => {
     if (!activeTab?.id) return;
+    immersiveRunRef.current?.controller.abort();
+    immersiveRunRef.current = null;
+    const workflowLabel = t("restorePage");
+    const runState = createImmersiveRunState("translation", "page", "restoring");
+    appendOperationLog(
+      formatImmersiveWorkflowLog(workflowLabel, "restore", {
+        scope: runState.scope
+      }),
+      "debug"
+    );
     try {
       await sendToTab(activeTab.id, { type: "page.translation.restore" });
       setToolStatus(t("translationRemoved"));
       setNotice(t("pageRestored"));
       appendOperationLog(t("pageRestored"), "success");
+      appendOperationLog(
+        formatImmersiveWorkflowLog(workflowLabel, "restored", {
+          scope: runState.scope
+        }),
+        "debug"
+      );
     } catch (error) {
       setNotice(errorMessage(error));
       appendOperationLog(errorMessage(error), "error");
+      appendOperationLog(
+        formatImmersiveWorkflowLog(workflowLabel, "restore_error", {
+          scope: runState.scope,
+          error: errorMessage(error)
+        }),
+        "debug"
+      );
     }
   };
 
@@ -2333,17 +2808,26 @@ export function App() {
       }
       return;
     }
-    if (!options.respectCurrentContext && pageContext) setIncludePage(true);
+    const isTranslationTool =
+      tool.id === "translate-text" || tool.id === "translate-document";
+    const respectCurrentContext = options.respectCurrentContext ?? true;
+    const currentContextForTool = respectCurrentContext
+      ? contextForCurrentMode()
+      : undefined;
+    if (!respectCurrentContext && pageContext) setIncludePage(true);
     setView("chat");
-      const started = await sendMessage(toolInstruction(tool, settings ?? undefined), {
-        forceIncludePage: !options.respectCurrentContext,
-        contextAsInput:
-          tool.id === "translate-text" || tool.id === "translate-document",
+    const started = await sendMessage(
+      toolInstruction(tool, settings ?? undefined),
+      {
+        forceIncludePage: !respectCurrentContext,
+        contextAsInput: isTranslationTool,
+        contextOverride: currentContextForTool,
         dictionaryForShortInput: tool.id === "translate-text",
         modelHistoryOverride,
         toolInvocation: tool,
         purpose: modelPurposeForToolId(tool.id)
-    });
+      }
+    );
     if (hideToolsUntilResponse && !started) {
       setChatToolsHiddenDuringRequest(false);
     }
@@ -2415,7 +2899,9 @@ export function App() {
 
   const resetToolDraft = () => {
     setEditingToolId(null);
-    setToolDraft({ title: "", description: "", template: "", icon: "Sparkles" });
+    setToolDraft({ title: "", description: "", template: "", icon: "" });
+    setToolIconPickerOpen(false);
+    setToolIconSearch("");
   };
 
   const openNewToolEditor = () => {
@@ -2436,6 +2922,8 @@ export function App() {
 
   const closeToolEditor = () => {
     setToolEditorOpen(false);
+    setToolIconPickerOpen(false);
+    setToolIconSearch("");
     resetToolDraft();
   };
 
@@ -2527,13 +3015,7 @@ export function App() {
   const contextScope = includePage
     ? contextLabel(pageContext, settings?.interfaceLanguage)
     : uiText(settings?.interfaceLanguage, "noneContext");
-  const contextMode = !includePage
-    ? "none"
-    : pageContext?.kind === "selection"
-      ? "selection"
-      : pageContext?.kind === "article"
-        ? "article"
-      : "page";
+  const contextMode = effectiveContextMode();
   const contextOptions = [
     {
       id: "none" as const,
@@ -2543,12 +3025,12 @@ export function App() {
     {
       id: "page" as const,
       title: uiText(settings?.interfaceLanguage, "currentPage"),
-      icon: Globe2
+      icon: PanelTop
     },
     {
       id: "article" as const,
       title: uiText(settings?.interfaceLanguage, "currentBody"),
-      icon: BookOpen
+      icon: Newspaper
     },
     {
       id: "selection" as const,
@@ -2630,9 +3112,19 @@ export function App() {
         ["clutterPenalty", articleQuality.clutterPenalty]
       ] as Array<[UiTextKey, number]>
     : [];
+  const articleQualityWarnings =
+    articleQuality?.warnings
+      ?.map((warning) =>
+        warning === "virtualizedContentMayBeIncomplete"
+          ? t("currentBodyVirtualizedWarning")
+          : ""
+      )
+      .filter(Boolean) ?? [];
   const bodySourceLabel =
     articleQuality?.source === "manual"
       ? t("currentBodySourceManual")
+      : articleQuality?.source === "edited"
+        ? t("currentBodySourceEdited")
       : articleQuality?.source === "readability"
       ? t("currentBodySourceReadability")
       : articleQuality
@@ -2642,6 +3134,9 @@ export function App() {
     articleQuality?.blockCount ?? articlePreview.length;
   const bodyCharCount =
     articleQuality?.wordCount ?? pageContext?.text?.length ?? 0;
+  const filteredToolIconChoices = TOOL_ICON_CHOICES.filter((icon) =>
+    icon.toLowerCase().includes(toolIconSearch.trim().toLowerCase())
+  );
 
   if (!settings) {
     return <div className="panel-loading">{t("loading")} WebMind…</div>;
@@ -2657,7 +3152,7 @@ export function App() {
             title={`${t("immersiveTranslation")}: ${selectedContextOption.title}`}
             onClick={() => void runHeaderImmersiveTranslate()}
           >
-            <ScanText />
+            <ArrowRightLeft />
           </button>
           <button
             className="brand-tool-button"
@@ -2665,7 +3160,7 @@ export function App() {
             title={`${t("immersiveReading")}: ${selectedContextOption.title}`}
             onClick={() => void runHeaderImmersiveReading()}
           >
-            <BookOpen />
+            <Highlighter />
           </button>
           <strong>WebMind</strong>
         </div>
@@ -3014,7 +3509,7 @@ export function App() {
                               language={settings?.interfaceLanguage}
                             />
                           ) : (
-                            <p className="user-copy">{message.content}</p>
+                            <Markdown content={message.content} />
                           )}
                           <div className="message-actions">
                             <button
@@ -3206,14 +3701,25 @@ export function App() {
                 <p className="eyebrow">{t("localRecords")}</p>
                 <h1>{t("savedConversations")}</h1>
               </div>
-              <button
-                className="icon-button"
-                type="button"
-                title={t("newChat")}
-                onClick={newChat}
-              >
-                <CirclePlus />
-              </button>
+              <div className="view-heading-actions">
+                <button
+                  className="icon-button danger"
+                  type="button"
+                  title={t("clearConversationHistory")}
+                  disabled={!history.length}
+                  onClick={() => void clearConversationHistory()}
+                >
+                  <Trash2 />
+                </button>
+                <button
+                  className="icon-button"
+                  type="button"
+                  title={t("newChat")}
+                  onClick={newChat}
+                >
+                  <CirclePlus />
+                </button>
+              </div>
             </div>
 
             {!history.length ? (
@@ -3384,7 +3890,8 @@ export function App() {
                 <BookOpen />
                 <span>{t("currentBodyPreview")}</span>
                 <span className="body-preview-summary-actions">
-                  {articleQuality?.source === "manual" && (
+                  {(articleQuality?.source === "manual" ||
+                    articleQuality?.source === "edited") && (
                     <button
                       className="body-preview-action body-restore-button"
                       type="button"
@@ -3441,6 +3948,15 @@ export function App() {
                 </span>
               </summary>
               <div className="body-preview-meta">
+                <button
+                  className="body-quality-action"
+                  type="button"
+                  disabled={articlePicking}
+                  onClick={() => void pruneCurrentBodyPreviewBlocks()}
+                >
+                  <Eraser />
+                  {t("smartPruneCurrentBody")}
+                </button>
                 <span>
                   {t("currentBodyBlocks").replace(
                     "{count}",
@@ -3469,10 +3985,52 @@ export function App() {
                   ))}
                 </div>
               )}
+              {articleQualityWarnings.length > 0 && (
+                <div className="body-preview-warnings">
+                  {articleQualityWarnings.map((warning) => (
+                    <span key={warning}>{warning}</span>
+                  ))}
+                </div>
+              )}
               {articlePreview.length > 0 && (
                 <div className="body-preview-blocks">
                   {articlePreview.map((block) => (
-                    <p key={block.id}>{block.text}</p>
+                    <div
+                      key={block.id}
+                      className="body-preview-block"
+                      title={t("highlightCurrentBodyBlock")}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() =>
+                        void highlightCurrentBodyPreviewBlock(block)
+                      }
+                      onFocus={() =>
+                        void highlightCurrentBodyPreviewBlock(block)
+                      }
+                      onMouseEnter={() =>
+                        void highlightCurrentBodyPreviewBlock(block)
+                      }
+                      onKeyDown={(event) => {
+                        if (event.key !== "Enter" && event.key !== " ") return;
+                        event.preventDefault();
+                        void highlightCurrentBodyPreviewBlock(block);
+                      }}
+                    >
+                      <span>{block.text}</span>
+                      <button
+                        className="body-preview-block-remove"
+                        type="button"
+                        title={t("removeCurrentBodyBlock")}
+                        aria-label={t("removeCurrentBodyBlock")}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          void removeCurrentBodyPreviewBlock(block);
+                        }}
+                      >
+                        <X />
+                      </button>
+                    </div>
                   ))}
                 </div>
               )}
@@ -3484,16 +4042,19 @@ export function App() {
               rows={1}
               placeholder={
                 activeProfile
-                  ? includePage
-                    ? `${contextScope}…`
-                    : t("directQuestionPlaceholder")
+                  ? `${
+                      includePage
+                        ? `${contextScope}…`
+                        : t("directQuestionPlaceholder")
+                    } ${t("composerShortcutHint")}`
                   : t("addEngineFirst")
               }
               onChange={(event) => setComposer(event.target.value)}
               onKeyDown={(event) => {
                 if (
                   event.key === "Enter" &&
-                  !event.shiftKey &&
+                  !event.ctrlKey &&
+                  !event.metaKey &&
                   !event.nativeEvent.isComposing
                 ) {
                   event.preventDefault();
@@ -3696,36 +4257,82 @@ export function App() {
               </button>
             </header>
             <div className="modal-body form-stack">
-              <label className="field">
-                <span className="field-label">{t("icon")}</span>
-                <select
-                  value={toolDraft.icon}
-                  onChange={(event) =>
-                    setToolDraft((current) => ({
-                      ...current,
-                      icon: event.target.value
-                    }))
-                  }
-                >
-                  {TOOL_ICON_CHOICES.map((icon) => (
-                    <option key={icon} value={icon}>
-                      {icon}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="field">
+              <div className="field">
                 <span className="field-label">{t("title")}</span>
-                <input
-                  value={toolDraft.title}
-                  onChange={(event) =>
-                    setToolDraft((current) => ({
-                      ...current,
-                      title: event.target.value
-                    }))
-                  }
-                />
-              </label>
+                <div className="tool-title-editor-row">
+                  <button
+                    className={`tool-icon-picker-trigger ${
+                      toolDraft.icon ? "" : "empty"
+                    }`}
+                    type="button"
+                    title={toolDraft.icon || t("noIcon")}
+                    aria-label={t("chooseIcon")}
+                    onClick={() => {
+                      setToolIconSearch("");
+                      setToolIconPickerOpen((current) => !current);
+                    }}
+                  >
+                    <ToolIcon name={toolDraft.icon} />
+                  </button>
+                  <input
+                    value={toolDraft.title}
+                    onChange={(event) =>
+                      setToolDraft((current) => ({
+                        ...current,
+                        title: event.target.value
+                      }))
+                    }
+                  />
+                </div>
+              </div>
+              {toolIconPickerOpen && (
+                <div className="tool-icon-picker" role="dialog" aria-label={t("chooseIcon")}>
+                  <label className="tool-icon-search">
+                    <Search />
+                    <input
+                      value={toolIconSearch}
+                      placeholder={t("searchIcon")}
+                      onChange={(event) => setToolIconSearch(event.target.value)}
+                    />
+                  </label>
+                  <div className="tool-icon-grid">
+                    <button
+                      className={`tool-icon-choice ${
+                        toolDraft.icon ? "" : "active empty"
+                      }`}
+                      type="button"
+                      title={t("noIcon")}
+                      aria-label={t("noIcon")}
+                      onClick={() => {
+                        setToolDraft((current) => ({ ...current, icon: "" }));
+                        setToolIconPickerOpen(false);
+                        setToolIconSearch("");
+                      }}
+                    />
+                    {filteredToolIconChoices.map((icon) => (
+                      <button
+                        key={icon}
+                        className={`tool-icon-choice ${
+                          toolDraft.icon === icon ? "active" : ""
+                        }`}
+                        type="button"
+                        title={icon}
+                        aria-label={icon}
+                        onClick={() => {
+                          setToolDraft((current) => ({ ...current, icon }));
+                          setToolIconPickerOpen(false);
+                          setToolIconSearch("");
+                        }}
+                      >
+                        <ToolIcon name={icon} />
+                      </button>
+                    ))}
+                  </div>
+                  {!filteredToolIconChoices.length && (
+                    <div className="tool-icon-empty">{t("noIconMatches")}</div>
+                  )}
+                </div>
+              )}
               <label className="field">
                 <span className="field-label">{t("description")}</span>
                 <input

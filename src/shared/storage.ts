@@ -22,6 +22,9 @@ const CHROME_SYNC_META_KEY = "webmind.chromeSync.meta";
 const CHROME_SYNC_CHUNK_PREFIX = "webmind.chromeSync.chunk.";
 const CHROME_SYNC_CHUNK_CHARS = 2400;
 
+export const SETTINGS_EXPORT_FORMAT = "webmind-settings";
+export const SETTINGS_EXPORT_VERSION = 3;
+
 const APP_LOG_LEVELS = new Set<AppLogLevel>([
   "debug",
   "info",

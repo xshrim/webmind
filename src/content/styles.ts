@@ -354,6 +354,12 @@ export const SHADOW_STYLES = `
     height: 10px;
     stroke-width: 2.4;
   }
+  .md-auto-reply-button .webmind-logo-icon {
+    display: block;
+    width: 10px;
+    height: 10px;
+    object-fit: contain;
+  }
   .md-auto-reply-button .md-mini-spinner {
     width: 10px;
     height: 10px;

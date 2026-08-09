@@ -1,6 +1,9 @@
 import type { PageTextBlock } from "../shared/types";
 import { protectTranslationText } from "../shared/utils";
-import { findBestArticleRoot } from "./pageContext";
+import {
+  findBestArticleRoot,
+  isEditedArticleBlockExcluded
+} from "./pageContext";
 import type {
   TranslationCitation,
   TranslationFormat,
@@ -11,6 +14,7 @@ import type {
 export interface TranslationBlockOptions {
   preserveRichText?: boolean;
   maxVisibleTextLength?: number;
+  minVisibleTextLength?: number;
 }
 
 export interface TranslationPreparationDependencies {
@@ -54,6 +58,82 @@ function blockCandidatesFromRoot(root: HTMLElement): HTMLElement[] {
     return [root, ...descendants];
   }
   return descendants;
+}
+
+function isWebMindGeneratedElement(element: HTMLElement): boolean {
+  return Boolean(
+    element.closest(".webmind-translation, .webmind-immersive-reading-token")
+  );
+}
+
+function hasDirectText(element: HTMLElement): boolean {
+  return Array.from(element.childNodes).some(
+    (node) => node instanceof Text && Boolean(node.textContent?.trim())
+  );
+}
+
+function translationElementVisibleText(element: HTMLElement): string {
+  return translationVisibleText(translationTextFromElement(element, []));
+}
+
+function articleContentCandidatesFromRoot(
+  root: HTMLElement,
+  options: TranslationBlockOptions,
+  dependencies: TranslationPreparationDependencies
+): HTMLElement[] {
+  const maxVisibleTextLength = options.maxVisibleTextLength ?? 900;
+  const candidates: HTMLElement[] = [];
+  const visit = (element: HTMLElement) => {
+    if (!dependencies.isVisible(element) || isWebMindGeneratedElement(element)) {
+      return;
+    }
+    const text = translationElementVisibleText(element);
+    if (!text) return;
+    const children = Array.from(element.children).filter(
+      (child): child is HTMLElement => child instanceof HTMLElement
+    );
+    const textChildren = children.filter(
+      (child) =>
+        dependencies.isVisible(child) &&
+        !isWebMindGeneratedElement(child) &&
+        Boolean(translationElementVisibleText(child))
+    );
+    const canUseWholeElement =
+      element !== root &&
+      text.length <= maxVisibleTextLength &&
+      (hasDirectText(element) ||
+        !textChildren.length ||
+        element.matches(TRANSLATABLE_BLOCK_SELECTOR));
+    if (canUseWholeElement) {
+      candidates.push(element);
+      return;
+    }
+    for (const child of children) visit(child);
+    if (!textChildren.length && element === root && text.length <= maxVisibleTextLength) {
+      candidates.push(element);
+    }
+  };
+  visit(root);
+  return candidates;
+}
+
+function articleHeadingCandidates(root: HTMLElement): HTMLElement[] {
+  const localHeading = root.matches("h1, h2, [role='heading']")
+    ? root
+    : root.querySelector<HTMLElement>(
+        "h1, h2, [role='heading'][aria-level='1'], [role='heading'][aria-level='2']"
+      );
+  const pageHeading = document.querySelector<HTMLElement>(
+    "main h1, article h1, h1, main h2, article h2"
+  );
+  return [localHeading, pageHeading].filter(
+    (element, index, elements): element is HTMLElement =>
+      Boolean(
+        element &&
+          elements.indexOf(element) === index &&
+          (root.contains(element) || !element.contains(root))
+      )
+  );
 }
 
 function isCitationAnchor(anchor: HTMLAnchorElement): boolean {
@@ -263,7 +343,11 @@ function prepareTranslationBlock(
   );
   const visibleText = translationVisibleText(text);
   const maxVisibleTextLength = options.maxVisibleTextLength ?? 900;
-  if (visibleText.length < 3 || visibleText.length > maxVisibleTextLength) {
+  const minVisibleTextLength = options.minVisibleTextLength ?? 3;
+  if (
+    visibleText.length < minVisibleTextLength ||
+    visibleText.length > maxVisibleTextLength
+  ) {
     return null;
   }
   const citations: TranslationCitation[] = citationNodes.map((node, index) => ({
@@ -364,18 +448,37 @@ export function prepareTranslationBlocks(
         document.querySelector('[role="main"]') ??
         document.body
       : document.body;
-  let candidates = blockCandidatesFromRoot(root)
+  const articleOptions =
+    scope === "article"
+      ? {
+          ...options,
+          minVisibleTextLength: 1,
+          maxVisibleTextLength: Math.max(
+            options.maxVisibleTextLength ?? 0,
+            20000
+          )
+        }
+      : options;
+  const rootCandidates =
+    scope === "article"
+      ? articleContentCandidatesFromRoot(root, articleOptions, dependencies)
+      : blockCandidatesFromRoot(root);
+  const candidatesForScope =
+    scope === "article"
+      ? [
+          ...articleHeadingCandidates(root).filter(
+            (heading) => !rootCandidates.includes(heading)
+          ),
+          ...rootCandidates
+        ]
+      : rootCandidates;
+  const orderedCandidates = candidatesForScope
     .map((element, order) => ({ element, order }))
     .filter(({ element }) => {
       if (!dependencies.isVisible(element)) return false;
-      if (
-        element.closest(
-          ".webmind-translation, .webmind-immersive-reading-token"
-        )
-      ) {
-        return false;
-      }
-      if (element.closest("nav, footer, aside, [aria-hidden='true']")) return false;
+      if (isWebMindGeneratedElement(element)) return false;
+      if (scope === "article" && isEditedArticleBlockExcluded(element)) return false;
+      if (scope !== "article" && element.closest("nav, footer, aside, [aria-hidden='true']")) return false;
       return true;
     })
     .map((candidate) => ({
@@ -383,15 +486,23 @@ export function prepareTranslationBlocks(
       priority: dependencies.viewportPriority(candidate.element, candidate.order)
     }))
     .sort((left, right) => left.priority - right.priority)
-    .slice(0, 160)
     .map(({ element }) => element);
+  const candidates =
+    scope === "article" ? orderedCandidates : orderedCandidates.slice(0, 160);
   const seen = new Set<string>();
   const blocks: PageTextBlock[] = [];
   for (const element of candidates) {
     const id = element.dataset.webmindBlockId ?? dependencies.nextBlockId();
     element.dataset.webmindBlockId = id;
-    const block = prepareTranslationBlock(element, id, false, options, dependencies);
-    if (!block || seen.has(block.text)) continue;
+    const block = prepareTranslationBlock(
+      element,
+      id,
+      false,
+      articleOptions,
+      dependencies
+    );
+    if (!block) continue;
+    if (scope !== "article" && seen.has(block.text)) continue;
     seen.add(block.text);
     blocks.push(block);
   }

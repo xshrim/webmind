@@ -52,6 +52,29 @@ export async function getActiveTab(): Promise<chrome.tabs.Tab | null> {
   return tab ?? null;
 }
 
+function isContentScriptMissingError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error ?? "");
+  return (
+    message.includes("Could not establish connection") ||
+    message.includes("Receiving end does not exist")
+  );
+}
+
+async function ensureContentScript(tabId: number): Promise<void> {
+  if (!isExtensionRuntime() || !chrome.scripting?.executeScript) return;
+  await chrome.scripting.executeScript({
+    target: { tabId },
+    files: ["content.js"]
+  });
+}
+
+async function sendMessageToTab<T>(
+  tabId: number,
+  message: Record<string, unknown>
+): Promise<RuntimeEnvelope<T>> {
+  return (await chrome.tabs.sendMessage(tabId, message)) as RuntimeEnvelope<T>;
+}
+
 export async function sendToTab<T>(
   tabId: number,
   message: Record<string, unknown>,
@@ -79,10 +102,25 @@ export async function sendToTab<T>(
     }
     return { ok: true } as T;
   }
-  const response = (await chrome.tabs.sendMessage(
-    tabId,
-    message
-  )) as RuntimeEnvelope<T>;
+  let response: RuntimeEnvelope<T>;
+  try {
+    response = await sendMessageToTab<T>(tabId, message);
+  } catch (error) {
+    if (!isContentScriptMissingError(error)) throw error;
+    try {
+      await ensureContentScript(tabId);
+      response = await sendMessageToTab<T>(tabId, message);
+    } catch (retryError) {
+      if (isContentScriptMissingError(retryError)) {
+        throw new Error(uiText(language, "currentPageUnavailable"));
+      }
+      throw new Error(
+        retryError instanceof Error
+          ? retryError.message
+          : uiText(language, "currentPageUnavailable")
+      );
+    }
+  }
   if (!response?.ok) {
     throw new Error(response?.error ?? uiText(language, "currentPageUnavailable"));
   }

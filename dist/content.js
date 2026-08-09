@@ -14882,6 +14882,14 @@
     return Component;
   };
 
+  // node_modules/lucide-react/dist/esm/icons/arrow-right-left.js
+  var ArrowRightLeft = createLucideIcon("ArrowRightLeft", [
+    ["path", { d: "m16 3 4 4-4 4", key: "1x1c3m" }],
+    ["path", { d: "M20 7H4", key: "zbl0bi" }],
+    ["path", { d: "m8 21-4-4 4-4", key: "h9nckh" }],
+    ["path", { d: "M4 17h16", key: "g4d7ey" }]
+  ]);
+
   // node_modules/lucide-react/dist/esm/icons/book-open.js
   var BookOpen = createLucideIcon("BookOpen", [
     ["path", { d: "M12 7v14", key: "1akyts" }],
@@ -14892,16 +14900,6 @@
         key: "ruj8y"
       }
     ]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/bot-message-square.js
-  var BotMessageSquare = createLucideIcon("BotMessageSquare", [
-    ["path", { d: "M12 6V2H8", key: "1155em" }],
-    ["path", { d: "m8 18-4 4V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2Z", key: "w2lp3e" }],
-    ["path", { d: "M2 12h2", key: "1t8f8n" }],
-    ["path", { d: "M9 11v2", key: "1ueba0" }],
-    ["path", { d: "M15 11v2", key: "i11awn" }],
-    ["path", { d: "M20 12h2", key: "1q8mjw" }]
   ]);
 
   // node_modules/lucide-react/dist/esm/icons/check.js
@@ -14958,6 +14956,12 @@
     ["path", { d: "M10 9H8", key: "b1mrlr" }],
     ["path", { d: "M16 13H8", key: "t4e002" }],
     ["path", { d: "M16 17H8", key: "z1uh3a" }]
+  ]);
+
+  // node_modules/lucide-react/dist/esm/icons/highlighter.js
+  var Highlighter = createLucideIcon("Highlighter", [
+    ["path", { d: "m9 11-6 6v3h9l3-3", key: "1a3l36" }],
+    ["path", { d: "m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4", key: "14a9rk" }]
   ]);
 
   // node_modules/lucide-react/dist/esm/icons/image-plus.js
@@ -15317,8 +15321,13 @@
       currentBodySourceReadability: "Readability",
       currentBodySourceDom: "DOM",
       currentBodySourceManual: "\u624B\u52A8\u9009\u62E9",
+      currentBodySourceEdited: "\u5DF2\u7F16\u8F91",
       selectCurrentBody: "\u6846\u9009\u6B63\u6587",
       restoreCurrentBody: "\u8FD8\u539F\u6B63\u6587",
+      highlightCurrentBodyBlock: "\u5728\u9875\u9762\u4E2D\u9AD8\u4EAE\u8FD9\u4E00\u6BB5",
+      removeCurrentBodyBlock: "\u4ECE\u5F53\u524D\u6B63\u6587\u4E2D\u5220\u9664\u8FD9\u4E00\u6BB5",
+      smartPruneCurrentBody: "\u667A\u80FD\u5254\u9664",
+      currentBodyVirtualizedWarning: "\u7591\u4F3C\u865A\u62DF\u6EDA\u52A8\u9875\u9762\uFF0C\u9884\u89C8\u53EF\u80FD\u53EA\u5305\u542B\u5F53\u524D\u5DF2\u6E32\u67D3\u5185\u5BB9\u3002",
       selectingBodyRange: "\u6B63\u5728\u9009\u62E9\u6B63\u6587\u8303\u56F4",
       manualBodySelectionHint: "\u6EDA\u8F6E/\u65B9\u5411\u952E\u8C03\u6574\u5C42\u7EA7\uFF0C\u70B9\u51FB\u786E\u8BA4\uFF0CEsc \u53D6\u6D88",
       manualBodySelectionCancelled: "\u5DF2\u53D6\u6D88\u6B63\u6587\u6846\u9009",
@@ -15540,6 +15549,10 @@
       saveTool: "\u4FDD\u5B58\u5DE5\u5177",
       custom: "\u81EA\u5B9A\u4E49",
       icon: "\u56FE\u6807",
+      chooseIcon: "\u9009\u62E9\u56FE\u6807",
+      noIcon: "\u65E0\u56FE\u6807",
+      searchIcon: "\u641C\u7D22\u56FE\u6807",
+      noIconMatches: "\u6CA1\u6709\u5339\u914D\u7684\u56FE\u6807",
       toolPrompt: "\u63D0\u793A\u8BCD",
       mainNav: "\u4E3B\u5BFC\u822A",
       connectEngineBannerTitle: "\u5148\u8FDE\u63A5\u4E00\u4E2A\u6A21\u578B\u5F15\u64CE",
@@ -15574,6 +15587,7 @@
       chooseContextFirst: "\u8BF7\u5148\u5728\u4E0A\u4E0B\u6587\u4E2D\u9009\u62E9\u5F53\u524D\u9875\u9762\u6216\u9009\u4E2D\u5185\u5BB9",
       directQuestionPlaceholder: "\u76F4\u63A5\u63D0\u95EE\u2026",
       askContextPlaceholder: "\u5411\u5F53\u524D\u9875\u9762\u63D0\u95EE\u2026",
+      composerShortcutHint: "Enter \u53D1\u9001\uFF0CCtrl+Enter \u6362\u884C",
       addEngineFirst: "\u5148\u5728\u8BBE\u7F6E\u4E2D\u6DFB\u52A0\u6A21\u578B\u5F15\u64CE",
       copyFailed: "\u590D\u5236\u5931\u8D25",
       readingPdf: "\u6B63\u5728\u8BFB\u53D6 PDF",
@@ -15821,8 +15835,13 @@
       currentBodySourceReadability: "Readability",
       currentBodySourceDom: "DOM",
       currentBodySourceManual: "\u624B\u52D5\u9078\u53D6",
+      currentBodySourceEdited: "\u5DF2\u7DE8\u8F2F",
       selectCurrentBody: "\u6846\u9078\u6B63\u6587",
       restoreCurrentBody: "\u9084\u539F\u6B63\u6587",
+      highlightCurrentBodyBlock: "\u5728\u9801\u9762\u4E2D\u9AD8\u4EAE\u9019\u4E00\u6BB5",
+      removeCurrentBodyBlock: "\u5F9E\u76EE\u524D\u6B63\u6587\u4E2D\u522A\u9664\u9019\u4E00\u6BB5",
+      smartPruneCurrentBody: "\u667A\u6167\u5254\u9664",
+      currentBodyVirtualizedWarning: "\u7591\u4F3C\u865B\u64EC\u6372\u52D5\u9801\u9762\uFF0C\u9810\u89BD\u53EF\u80FD\u53EA\u5305\u542B\u76EE\u524D\u5DF2\u6E32\u67D3\u5167\u5BB9\u3002",
       selectingBodyRange: "\u6B63\u5728\u9078\u53D6\u6B63\u6587\u7BC4\u570D",
       manualBodySelectionHint: "\u6EFE\u8F2A/\u65B9\u5411\u9375\u8ABF\u6574\u5C64\u7D1A\uFF0C\u9EDE\u64CA\u78BA\u8A8D\uFF0CEsc \u53D6\u6D88",
       manualBodySelectionCancelled: "\u5DF2\u53D6\u6D88\u6B63\u6587\u6846\u9078",
@@ -16044,6 +16063,10 @@
       saveTool: "\u5132\u5B58\u5DE5\u5177",
       custom: "\u81EA\u8A02",
       icon: "\u5716\u793A",
+      chooseIcon: "\u9078\u64C7\u5716\u793A",
+      noIcon: "\u7121\u5716\u793A",
+      searchIcon: "\u641C\u5C0B\u5716\u793A",
+      noIconMatches: "\u6C92\u6709\u7B26\u5408\u7684\u5716\u793A",
       toolPrompt: "\u63D0\u793A\u8A5E",
       mainNav: "\u4E3B\u5C0E\u89BD",
       connectEngineBannerTitle: "\u5148\u9023\u63A5\u4E00\u500B\u6A21\u578B\u5F15\u64CE",
@@ -16078,6 +16101,7 @@
       chooseContextFirst: "\u8ACB\u5148\u5728\u4E0A\u4E0B\u6587\u4E2D\u9078\u64C7\u76EE\u524D\u9801\u9762\u6216\u9078\u53D6\u5167\u5BB9",
       directQuestionPlaceholder: "\u76F4\u63A5\u63D0\u554F\u2026",
       askContextPlaceholder: "\u5411\u76EE\u524D\u9801\u9762\u63D0\u554F\u2026",
+      composerShortcutHint: "Enter \u9001\u51FA\uFF0CCtrl+Enter \u63DB\u884C",
       addEngineFirst: "\u5148\u5728\u8A2D\u5B9A\u4E2D\u65B0\u589E\u6A21\u578B\u5F15\u64CE",
       copyFailed: "\u8907\u88FD\u5931\u6557",
       readingPdf: "\u6B63\u5728\u8B80\u53D6 PDF",
@@ -16325,8 +16349,13 @@
       currentBodySourceReadability: "Readability",
       currentBodySourceDom: "DOM",
       currentBodySourceManual: "Manual",
+      currentBodySourceEdited: "Edited",
       selectCurrentBody: "Select Body",
       restoreCurrentBody: "Restore Body",
+      highlightCurrentBodyBlock: "Highlight this block on the page",
+      removeCurrentBodyBlock: "Remove this block from current body",
+      smartPruneCurrentBody: "Smart Prune",
+      currentBodyVirtualizedWarning: "This looks like a virtualized page, so the preview may include only currently rendered content.",
       selectingBodyRange: "Selecting body range",
       manualBodySelectionHint: "Wheel/arrow keys adjust level, click to confirm, Esc to cancel",
       manualBodySelectionCancelled: "Body range selection cancelled",
@@ -16548,6 +16577,10 @@
       saveTool: "Save Tool",
       custom: "Custom",
       icon: "Icon",
+      chooseIcon: "Choose Icon",
+      noIcon: "No Icon",
+      searchIcon: "Search Icons",
+      noIconMatches: "No matching icons",
       toolPrompt: "Prompt",
       mainNav: "Main Navigation",
       connectEngineBannerTitle: "Connect a model engine first",
@@ -16582,6 +16615,7 @@
       chooseContextFirst: "Choose the current page or selected content in the context first",
       directQuestionPlaceholder: "Ask directly\u2026",
       askContextPlaceholder: "Ask the current page\u2026",
+      composerShortcutHint: "Enter to send, Ctrl+Enter for newline",
       addEngineFirst: "Add a model engine in Settings first",
       copyFailed: "Copy failed",
       readingPdf: "Reading PDF",
@@ -16829,8 +16863,13 @@
       currentBodySourceReadability: "Readability",
       currentBodySourceDom: "DOM",
       currentBodySourceManual: "\u624B\u52D5\u9078\u629E",
+      currentBodySourceEdited: "\u7DE8\u96C6\u6E08\u307F",
       selectCurrentBody: "\u672C\u6587\u3092\u9078\u629E",
       restoreCurrentBody: "\u672C\u6587\u3092\u5FA9\u5143",
+      highlightCurrentBodyBlock: "\u30DA\u30FC\u30B8\u4E0A\u3067\u3053\u306E\u6BB5\u843D\u3092\u30CF\u30A4\u30E9\u30A4\u30C8",
+      removeCurrentBodyBlock: "\u73FE\u5728\u306E\u672C\u6587\u304B\u3089\u3053\u306E\u30D6\u30ED\u30C3\u30AF\u3092\u524A\u9664",
+      smartPruneCurrentBody: "\u30B9\u30DE\u30FC\u30C8\u9664\u5916",
+      currentBodyVirtualizedWarning: "\u4EEE\u60F3\u30B9\u30AF\u30ED\u30FC\u30EB\u30DA\u30FC\u30B8\u306E\u53EF\u80FD\u6027\u304C\u3042\u308A\u3001\u30D7\u30EC\u30D3\u30E5\u30FC\u306F\u73FE\u5728\u63CF\u753B\u3055\u308C\u3066\u3044\u308B\u5185\u5BB9\u3060\u3051\u304B\u3082\u3057\u308C\u307E\u305B\u3093\u3002",
       selectingBodyRange: "\u672C\u6587\u7BC4\u56F2\u3092\u9078\u629E\u4E2D",
       manualBodySelectionHint: "\u30DB\u30A4\u30FC\u30EB/\u77E2\u5370\u30AD\u30FC\u3067\u968E\u5C64\u8ABF\u6574\u3001\u30AF\u30EA\u30C3\u30AF\u3067\u78BA\u5B9A\u3001Esc \u3067\u30AD\u30E3\u30F3\u30BB\u30EB",
       manualBodySelectionCancelled: "\u672C\u6587\u7BC4\u56F2\u306E\u9078\u629E\u3092\u30AD\u30E3\u30F3\u30BB\u30EB\u3057\u307E\u3057\u305F",
@@ -17052,6 +17091,10 @@
       saveTool: "\u30C4\u30FC\u30EB\u3092\u4FDD\u5B58",
       custom: "\u30AB\u30B9\u30BF\u30E0",
       icon: "\u30A2\u30A4\u30B3\u30F3",
+      chooseIcon: "\u30A2\u30A4\u30B3\u30F3\u3092\u9078\u629E",
+      noIcon: "\u30A2\u30A4\u30B3\u30F3\u306A\u3057",
+      searchIcon: "\u30A2\u30A4\u30B3\u30F3\u3092\u691C\u7D22",
+      noIconMatches: "\u4E00\u81F4\u3059\u308B\u30A2\u30A4\u30B3\u30F3\u304C\u3042\u308A\u307E\u305B\u3093",
       toolPrompt: "\u30D7\u30ED\u30F3\u30D7\u30C8",
       mainNav: "\u30E1\u30A4\u30F3\u30CA\u30D3\u30B2\u30FC\u30B7\u30E7\u30F3",
       connectEngineBannerTitle: "\u5148\u306B\u30E2\u30C7\u30EB\u30A8\u30F3\u30B8\u30F3\u3092\u63A5\u7D9A\u3057\u3066\u304F\u3060\u3055\u3044",
@@ -17086,6 +17129,7 @@
       chooseContextFirst: "\u5148\u306B\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u3067\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u307E\u305F\u306F\u9078\u629E\u5185\u5BB9\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044",
       directQuestionPlaceholder: "\u76F4\u63A5\u8CEA\u554F\u2026",
       askContextPlaceholder: "\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u306B\u8CEA\u554F\u2026",
+      composerShortcutHint: "Enter \u3067\u9001\u4FE1\u3001Ctrl+Enter \u3067\u6539\u884C",
       addEngineFirst: "\u5148\u306B\u8A2D\u5B9A\u3067\u30E2\u30C7\u30EB\u30A8\u30F3\u30B8\u30F3\u3092\u8FFD\u52A0\u3057\u3066\u304F\u3060\u3055\u3044",
       copyFailed: "\u30B3\u30D4\u30FC\u306B\u5931\u6557\u3057\u307E\u3057\u305F",
       readingPdf: "PDF \u3092\u8AAD\u307F\u53D6\u308A\u4E2D",
@@ -17333,8 +17377,13 @@
       currentBodySourceReadability: "Readability",
       currentBodySourceDom: "DOM",
       currentBodySourceManual: "\uC218\uB3D9 \uC120\uD0DD",
+      currentBodySourceEdited: "\uD3B8\uC9D1\uB428",
       selectCurrentBody: "\uBCF8\uBB38 \uC120\uD0DD",
       restoreCurrentBody: "\uBCF8\uBB38 \uBCF5\uC6D0",
+      highlightCurrentBodyBlock: "\uD398\uC774\uC9C0\uC5D0\uC11C \uC774 \uBE14\uB85D \uAC15\uC870",
+      removeCurrentBodyBlock: "\uD604\uC7AC \uBCF8\uBB38\uC5D0\uC11C \uC774 \uBE14\uB85D \uC0AD\uC81C",
+      smartPruneCurrentBody: "\uC2A4\uB9C8\uD2B8 \uC81C\uAC70",
+      currentBodyVirtualizedWarning: "\uAC00\uC0C1 \uC2A4\uD06C\uB864 \uD398\uC774\uC9C0\uC77C \uC218 \uC788\uC5B4 \uBBF8\uB9AC\uBCF4\uAE30\uC5D0\uB294 \uD604\uC7AC \uB80C\uB354\uB9C1\uB41C \uB0B4\uC6A9\uB9CC \uD3EC\uD568\uB420 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
       selectingBodyRange: "\uBCF8\uBB38 \uBC94\uC704 \uC120\uD0DD \uC911",
       manualBodySelectionHint: "\uD720/\uD654\uC0B4\uD45C \uD0A4\uB85C \uACC4\uCE35 \uC870\uC815, \uD074\uB9AD\uC73C\uB85C \uD655\uC815, Esc\uB85C \uCDE8\uC18C",
       manualBodySelectionCancelled: "\uBCF8\uBB38 \uBC94\uC704 \uC120\uD0DD\uC744 \uCDE8\uC18C\uD588\uC2B5\uB2C8\uB2E4",
@@ -17556,6 +17605,10 @@
       saveTool: "\uB3C4\uAD6C \uC800\uC7A5",
       custom: "\uC0AC\uC6A9\uC790 \uC9C0\uC815",
       icon: "\uC544\uC774\uCF58",
+      chooseIcon: "\uC544\uC774\uCF58 \uC120\uD0DD",
+      noIcon: "\uC544\uC774\uCF58 \uC5C6\uC74C",
+      searchIcon: "\uC544\uC774\uCF58 \uAC80\uC0C9",
+      noIconMatches: "\uC77C\uCE58\uD558\uB294 \uC544\uC774\uCF58 \uC5C6\uC74C",
       toolPrompt: "\uD504\uB86C\uD504\uD2B8",
       mainNav: "\uAE30\uBCF8 \uD0D0\uC0C9",
       connectEngineBannerTitle: "\uBA3C\uC800 \uBAA8\uB378 \uC5D4\uC9C4\uC744 \uC5F0\uACB0\uD558\uC138\uC694",
@@ -17590,6 +17643,7 @@
       chooseContextFirst: "\uBA3C\uC800 \uCEE8\uD14D\uC2A4\uD2B8\uC5D0\uC11C \uD604\uC7AC \uD398\uC774\uC9C0 \uB610\uB294 \uC120\uD0DD \uB0B4\uC6A9\uC744 \uC120\uD0DD\uD558\uC138\uC694",
       directQuestionPlaceholder: "\uC9C1\uC811 \uC9C8\uBB38\u2026",
       askContextPlaceholder: "\uD604\uC7AC \uD398\uC774\uC9C0\uC5D0 \uC9C8\uBB38\u2026",
+      composerShortcutHint: "Enter\uB85C \uBCF4\uB0B4\uAE30, Ctrl+Enter\uB85C \uC904\uBC14\uAFC8",
       addEngineFirst: "\uBA3C\uC800 \uC124\uC815\uC5D0\uC11C \uBAA8\uB378 \uC5D4\uC9C4\uC744 \uCD94\uAC00\uD558\uC138\uC694",
       copyFailed: "\uBCF5\uC0AC \uC2E4\uD328",
       readingPdf: "PDF \uC77D\uB294 \uC911",
@@ -18018,10 +18072,12 @@
   }
   function detectReadingFamily(text2) {
     const source = text2.replace(/<[^>]*>/g, " ");
-    const latinCount = source.match(/[A-Za-z]/g)?.length ?? 0;
+    const latinWordCount = source.match(/[A-Za-z]+/g)?.length ?? 0;
     const hanCount = source.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g)?.length ?? 0;
-    if (hanCount >= 2 && hanCount >= latinCount) return "zh";
-    if (latinCount >= 2) return "en";
+    if (hanCount >= 2 && hanCount >= latinWordCount) return "zh";
+    if (latinWordCount >= 2 && latinWordCount > hanCount) return "en";
+    if (hanCount >= 2) return "zh";
+    if (latinWordCount >= 1 && hanCount === 0) return "en";
     return null;
   }
   function settingReadingFamily(language, fallback = false) {
@@ -18076,16 +18132,28 @@
     );
     return frequencyLevel ?? heuristicEnglishReadingLevel(word);
   }
+  function englishFrequencyRank(word, frequencies) {
+    const lower = word.toLowerCase().replace(/[’]/g, "'");
+    const frequencyCandidate = englishLemmaCandidates(lower).find(
+      (candidate) => frequencies.has(candidate)
+    );
+    return frequencyCandidate ? frequencies.get(frequencyCandidate) : void 0;
+  }
   function englishReadingScore(word, frequencies) {
     if (word.length < 4) return 0;
     const lower = word.toLowerCase();
     if (ENGLISH_BASIC_WORDS.has(lower)) return 0;
-    return readingLevelScore(englishReadingLevel(word, frequencies));
+    const rank = englishFrequencyRank(word, frequencies);
+    const rarityBonus = typeof rank === "number" && Number.isFinite(rank) ? Math.min(0.24, Math.max(0, rank - 1) / 1e5) : 0;
+    return readingLevelScore(englishReadingLevel(word, frequencies)) + rarityBonus;
+  }
+  function englishGlossWords(gloss, options = {}) {
+    return gloss.replace(/['’]s\b/gi, "").match(/[A-Za-z][A-Za-z'’\-]*/g)?.map((word) => word.toLowerCase()).filter(
+      (word) => word.length >= 2 && (options.includeBasicWords || !ENGLISH_BASIC_WORDS.has(word)) && !/^(?:abbr|adj|adv|coll|fig|idiom|lit|noun|prep|pron|sb|sth|variant|verb)$/i.test(word)
+    ) ?? [];
   }
   function englishGlossReadingLevel(gloss, frequencies) {
-    const words = gloss.replace(/['’]s\b/gi, "").match(/[A-Za-z][A-Za-z'’\-]*/g)?.map((word) => word.toLowerCase()).filter(
-      (word) => word.length >= 4 && !ENGLISH_BASIC_WORDS.has(word) && !/^(?:abbr|adj|adv|coll|fig|idiom|lit|noun|prep|pron|sb|sth|variant|verb)$/i.test(word)
-    ) ?? [];
+    const words = englishGlossWords(gloss).filter((word) => word.length >= 4);
     if (!words.length) return null;
     return words.reduce((level, word) => {
       const next = englishReadingLevel(word, frequencies);
@@ -18102,6 +18170,17 @@
     let score = 1 + Math.min(1.5, (word.length - 1) * 0.5);
     if (word.length >= 4) score += 0.75;
     return score;
+  }
+  function chineseTranslationWordCount(translation) {
+    return englishGlossWords(translation, { includeBasicWords: true }).length;
+  }
+  function chineseReadingSelectionScore(source, translation, score) {
+    const wordCount = chineseTranslationWordCount(translation);
+    const singleWordBoost = translation && wordCount <= 1 ? score >= readingLevelScore(3) ? 0.5 : score >= readingLevelScore(2) ? 0.25 : 0 : 0;
+    const phrasePenalty = translation && wordCount > 1 ? 0.25 + Math.max(0, wordCount - 2) * 0.35 : 0;
+    const sourceLengthPenalty = Math.max(0, source.length - 2) * 0.08;
+    const unknownPenalty = translation ? 0 : 0.35;
+    return score + singleWordBoost - phrasePenalty - sourceLengthPenalty - unknownPenalty;
   }
   function readingTargetCount(text2, candidateCount, difficulty, family) {
     const units = family === "en" ? text2.match(/[A-Za-z][A-Za-z'’\-]*/g)?.length ?? 0 : text2.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g)?.length ?? 0;
@@ -18182,7 +18261,8 @@
       const run = match[0];
       let index = 0;
       while (index < run.length) {
-        let fallback = null;
+        let translatedFallback = null;
+        let unknownFallback = null;
         const max = Math.min(maxLength, run.length - index);
         for (let length = max; length >= 2; length -= 1) {
           const source = run.slice(index, index + length);
@@ -18190,25 +18270,35 @@
           const meaning = dictionary.zh[source];
           const translation = meaning ? cleanReadingTranslation(source, simplifyGloss(meaning)) : "";
           const score = chineseReadingScore(source, translation, frequencies);
-          if (score < threshold) continue;
+          const selectionScore = chineseReadingSelectionScore(
+            source,
+            translation,
+            score
+          );
+          if (selectionScore < threshold) continue;
           const span = {
             start: (match.index ?? 0) + index,
             end: (match.index ?? 0) + index + length,
             source,
             translation: translation || void 0,
             score,
+            selectionScore,
+            translationWordCount: translation ? chineseTranslationWordCount(translation) : void 0,
             level: readingDifficultyLevel(score)
           };
-          if (translation) {
-            fallback = span;
-            break;
+          const currentFallback = translation ? translatedFallback : unknownFallback;
+          if (!currentFallback || (span.selectionScore ?? span.score) > (currentFallback.selectionScore ?? currentFallback.score) || (span.selectionScore ?? span.score) === (currentFallback.selectionScore ?? currentFallback.score) && (span.translationWordCount ?? Number.MAX_SAFE_INTEGER) < (currentFallback.translationWordCount ?? Number.MAX_SAFE_INTEGER) || (span.selectionScore ?? span.score) === (currentFallback.selectionScore ?? currentFallback.score) && (span.translationWordCount ?? Number.MAX_SAFE_INTEGER) === (currentFallback.translationWordCount ?? Number.MAX_SAFE_INTEGER) && span.score > currentFallback.score) {
+            if (translation) {
+              translatedFallback = span;
+            } else {
+              unknownFallback = span;
+            }
           }
-          fallback = fallback ?? span;
         }
-        const best = fallback;
+        const best = translatedFallback ?? unknownFallback;
         if (best) {
           spans.push(best);
-          index = best.end - (match.index ?? 0);
+          index = best.translation ? best.end - (match.index ?? 0) : index + 1;
         } else {
           index += 1;
         }
@@ -18217,10 +18307,38 @@
     }
     return spans;
   }
+  function readingSelectionScore(span) {
+    return span.selectionScore ?? span.score;
+  }
+  function isChinesePhraseTranslation(span, family) {
+    return family === "zh" && (span.translationWordCount ?? 1) > 1;
+  }
+  function capChinesePhraseTranslations(ranked, targetCount, family) {
+    if (family !== "zh") return ranked.slice(0, targetCount);
+    const phraseLimit = Math.max(1, Math.floor(targetCount * 0.3));
+    const selected = [];
+    const deferredPhrases = [];
+    let phraseCount = 0;
+    for (const span of ranked) {
+      const phrase = isChinesePhraseTranslation(span, family);
+      if (phrase && phraseCount >= phraseLimit) {
+        deferredPhrases.push(span);
+        continue;
+      }
+      selected.push(span);
+      if (phrase) phraseCount += 1;
+      if (selected.length >= targetCount) return selected;
+    }
+    for (const span of deferredPhrases) {
+      selected.push(span);
+      if (selected.length >= targetCount) break;
+    }
+    return selected;
+  }
   function selectReadingSpans(text2, spans, difficulty, family, blockedSourceKeys = /* @__PURE__ */ new Set()) {
     const targetCount = readingTargetCount(text2, spans.length, difficulty, family);
     const seenSources = /* @__PURE__ */ new Set();
-    return spans.sort((left, right) => left.start - right.start || left.end - right.end).filter((span) => {
+    const ranked = spans.sort((left, right) => left.start - right.start || left.end - right.end).filter((span) => {
       const key = readingSpanKey(span, family);
       if (blockedSourceKeys.has(readingGlobalSourceKey(span.source, family))) {
         return false;
@@ -18229,8 +18347,9 @@
       seenSources.add(key);
       return true;
     }).sort(
-      (left, right) => Number(Boolean(right.translation)) - Number(Boolean(left.translation)) || right.score - left.score || left.start - right.start || left.end - right.end
-    ).slice(0, targetCount).sort((left, right) => left.start - right.start || left.end - right.end);
+      (left, right) => Number(Boolean(right.translation)) - Number(Boolean(left.translation)) || readingSelectionScore(right) - readingSelectionScore(left) || right.score - left.score || left.start - right.start || left.end - right.end
+    );
+    return capChinesePhraseTranslations(ranked, targetCount, family).sort((left, right) => left.start - right.start || left.end - right.end);
   }
   function buildReadingTextFromSelected(text2, selected, family, targetFamily, fallbackTranslations = /* @__PURE__ */ new Map()) {
     if (!selected.length) return null;
@@ -18413,16 +18532,18 @@
   };
   function detectTranslationLanguage(text2) {
     const source = text2.replace(/<[^>]*>/g, " ");
-    const latinCount = source.match(/[A-Za-z]/g)?.length ?? 0;
+    const latinWordCount = source.match(/[A-Za-z]+/g)?.length ?? 0;
     const chineseCount = source.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g)?.length ?? 0;
     const japaneseKanaCount = source.match(/[\u3040-\u30ff\u31f0-\u31ff]/g)?.length ?? 0;
     const koreanCount = source.match(/[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af]/g)?.length ?? 0;
     if (koreanCount) return "ko";
     if (japaneseKanaCount) return "ja";
-    if (chineseCount && chineseCount >= latinCount && chineseCount >= koreanCount) {
+    if (chineseCount >= 2 && chineseCount >= latinWordCount) {
       return "zh";
     }
-    if (latinCount >= 2) return "en";
+    if (latinWordCount >= 2 && latinWordCount > chineseCount) return "en";
+    if (chineseCount >= 2) return "zh";
+    if (latinWordCount >= 1 && chineseCount === 0) return "en";
     return null;
   }
   function translationLanguageMatchesInterface(sourceLanguage, interfaceLanguage) {
@@ -18800,7 +18921,7 @@
       id: "explain-code",
       title: "\u4EE3\u7801\u89E3\u91CA",
       description: "\u5206\u6790\u6D41\u7A0B\u3001\u98CE\u9669\u548C\u6539\u8FDB\u70B9",
-      icon: "Code2",
+      icon: "CodeXml",
       builtin: true,
       template: "\u89E3\u91CA\u9009\u4E2D\u7684\u4EE3\u7801\uFF1A\u5B83\u505A\u4EC0\u4E48\u3001\u6570\u636E\u5982\u4F55\u6D41\u52A8\u3001\u590D\u6742\u5EA6\u3001\u8FB9\u754C\u6761\u4EF6\u3001\u6F5C\u5728\u7F3A\u9677\u4E0E\u53EF\u9A8C\u8BC1\u7684\u6539\u8FDB\u5EFA\u8BAE\u3002"
     }
@@ -19745,6 +19866,9 @@
   function protectedTokenSource(kind, index) {
     return `\`?(?:\\{\\{\\s*WEBMIND_${kind}_${index}\\s*\\}\\}|\\[\\s*WEBMIND_${kind}_${index}\\s*\\]|WEBMIND_${kind}_${index})\`?`;
   }
+  function visibleTextFromHtmlFragment(value) {
+    return value.replace(/<script\b[\s\S]*?<\/script>/gi, " ").replace(/<style\b[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  }
   function stripCitationExplanationNoise(text2, citationCount) {
     let cleaned = text2;
     for (let index = 1; index <= citationCount; index += 1) {
@@ -19826,8 +19950,8 @@
     const formats = [];
     const paragraphBreaks = [];
     const protectFormat = (tag, value) => {
-      const visibleText = value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-      if (!visibleText) return value;
+      const visibleText = visibleTextFromHtmlFragment(value);
+      if (!visibleText) return "";
       formats.push({ tag, text: visibleText });
       const index = formats.length;
       return `{{WEBMIND_FORMAT_START_${index}}}${visibleText}{{WEBMIND_FORMAT_END_${index}}}`;
@@ -19837,18 +19961,18 @@
       (_match, tag, value) => protectFormat(tag.toLowerCase(), value)
     );
     const protectLink = (href, linkText) => {
-      const visibleText = linkText.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-      if (!href.trim() || !visibleText) return linkText;
+      const visibleText = visibleTextFromHtmlFragment(linkText);
+      if (!href.trim() || !visibleText) return visibleText;
       links.push({ href: href.trim(), text: visibleText });
       const index = links.length;
       return `{{WEBMIND_LINK_START_${index}}}${visibleText}{{WEBMIND_LINK_END_${index}}}`;
     };
     const withHtmlLinks = withFormats.replace(
-      /<a\b[^>]*\bhref\s*=\s*(["'])(.*?)\1[^>]*>([\s\S]*?)<\/a>/gi,
-      (_match, _quote, href, label) => protectLink(href, label)
+      /<a\b[^>]*\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))[^>]*>([\s\S]*?)<\/a>/gi,
+      (_match, doubleHref, singleHref, bareHref, label) => protectLink(doubleHref ?? singleHref ?? bareHref ?? "", label)
     );
     const withMarkdownLinks = withHtmlLinks.replace(
-      /(^|[^!])\[([^\]\n]{1,500})\]\(\s*(?:<([^>\n]+)>|([^)>\s]+))\s*\)/g,
+      /(^|[^!])\[([^\]\n]{1,500})\]\(\s*(?:<([^>\n]+)>|([^\s)]+))(?:\s+(?:"[^"\n]*"|'[^'\n]*'|\([^)\n]*\)))?\s*\)/g,
       (_match, prefix, label, angleHref, plainHref) => `${prefix}${protectLink(angleHref ?? plainHref ?? "", label)}`
     );
     const withCitations = withMarkdownLinks.replace(TRANSLATION_CITATION_PATTERN, (marker) => {
@@ -19908,6 +20032,12 @@
       });
       restored = restored.replace(protectedTokenPattern("FORMAT_START", index + 1), "").replace(protectedTokenPattern("FORMAT_END", index + 1), "");
     });
+    const missingCitations = protection.citations.filter(
+      (marker) => marker && !restored.includes(marker)
+    );
+    if (missingCitations.length) {
+      restored = `${restored.trimEnd()} ${missingCitations.join(" ")}`;
+    }
     restored = stripCitationMarkerExplanationNoise(restored, protection.citations);
     return restored.replace(/\n[\t ]*\n(?:[\t ]*\n)+/g, "\n\n");
   }
@@ -20903,15 +21033,100 @@ ${normalized.slice(-tail)}`;
     );
   }
   var manualArticleRoot = null;
+  var editedArticleRoot = null;
   var articlePickerSession = null;
+  var articlePreviewIdCounter = 0;
+  var activeArticleExtractionCache = null;
+  var articlePreviewTargets = /* @__PURE__ */ new Map();
+  var removedArticleBlockTextKeys = /* @__PURE__ */ new Set();
+  var ARTICLE_BLOCK_SELECTOR = "h1, h2, h3, h4, h5, h6, p, li, blockquote, figcaption, td, th, pre, [role='heading'], [role='paragraph']";
+  var ARTICLE_ROOT_SELECTOR = "article, main, [role='main'], [itemprop='articleBody'], [data-testid*='article' i], [data-testid*='content' i], [data-testid*='post' i], [data-testid*='story' i], [data-testid*='readme' i], [class*='article' i], [class*='content' i], [class*='post' i], [class*='story' i], [class*='entry' i], [class*='readme' i], [class*='markdown' i], [id*='article' i], [id*='content' i], [id*='post' i], [id*='story' i], [id*='readme' i], [id*='markdown' i]";
+  var ARTICLE_PREVIEW_HIGHLIGHT_STYLE_ID = "webmind-article-preview-highlight-style";
+  var ARTICLE_ROOT_CANDIDATE_LIMIT = 80;
+  var ARTICLE_BLOCK_CANDIDATE_LIMIT = 400;
+  var SHADOW_HOST_SCAN_LIMIT = 1200;
+  function waitForPageIdle(timeout = 120) {
+    return new Promise((resolve) => {
+      const requestIdle = window.requestIdleCallback?.bind(window);
+      if (requestIdle) {
+        requestIdle(() => resolve(), { timeout });
+        return;
+      }
+      window.setTimeout(resolve, 0);
+    });
+  }
   function clamp(value, min = 0, max = 1) {
     return Math.max(min, Math.min(max, value));
   }
   function normalizedText(value) {
     return value.replace(/\s+/g, " ").trim();
   }
+  function articleBlockTextKey(value) {
+    return normalizedText(value).toLowerCase();
+  }
   function textLength(value) {
     return value.replace(/\s+/g, "").length;
+  }
+  function withArticleExtractionCache(callback) {
+    if (activeArticleExtractionCache) return callback();
+    activeArticleExtractionCache = {
+      visible: /* @__PURE__ */ new WeakMap(),
+      text: /* @__PURE__ */ new WeakMap()
+    };
+    try {
+      return callback();
+    } finally {
+      activeArticleExtractionCache = null;
+    }
+  }
+  function isElementVisible(element) {
+    const cached = activeArticleExtractionCache?.visible.get(element);
+    if (typeof cached === "boolean") return cached;
+    const setCached = (value) => {
+      activeArticleExtractionCache?.visible.set(element, value);
+      return value;
+    };
+    if (element.closest(
+      "script, style, noscript, template, svg, [hidden], [aria-hidden='true'], .webmind-root, .webmind-translation, .webmind-reading, .webmind-immersive-reading-token"
+    )) {
+      return setCached(false);
+    }
+    const style = getComputedStyle(element);
+    if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) {
+      return setCached(false);
+    }
+    const rects = element.getClientRects();
+    return setCached(rects.length > 0);
+  }
+  function visibleTextFromElement(element) {
+    const cached = activeArticleExtractionCache?.text.get(element);
+    if (typeof cached === "string") return cached;
+    const parts = [];
+    const visit = (node) => {
+      if (node instanceof Text) {
+        const parent = node.parentElement;
+        if (!parent || !isElementVisible(parent)) return;
+        parts.push(node.textContent ?? "");
+        return;
+      }
+      if (!(node instanceof HTMLElement) || !isElementVisible(node)) return;
+      if (node.tagName === "BR") {
+        parts.push("\n");
+        return;
+      }
+      for (const child of Array.from(node.childNodes)) visit(child);
+      if (/^(?:ADDRESS|ARTICLE|ASIDE|BLOCKQUOTE|DIV|FIGCAPTION|H[1-6]|LI|P|PRE|SECTION|TR)$/.test(
+        node.tagName
+      )) {
+        parts.push("\n\n");
+      } else if (/^(?:TD|TH)$/.test(node.tagName)) {
+        parts.push("	");
+      }
+    };
+    visit(element);
+    const text2 = parts.join("").replace(/\u00a0/g, " ").replace(/\r\n?/g, "\n").replace(/[^\S\n]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+    activeArticleExtractionCache?.text.set(element, text2);
+    return text2;
   }
   function sameLanguageProfile(text2) {
     const profiles = [
@@ -20935,14 +21150,78 @@ ${normalized.slice(-tail)}`;
     );
     return Math.max(...Object.values(familyCounts)) / Math.max(1, meaningful.length);
   }
+  function articleBlockElements(root) {
+    const descendants = Array.from(
+      root.querySelectorAll(ARTICLE_BLOCK_SELECTOR)
+    );
+    return root instanceof HTMLElement && root.matches(ARTICLE_BLOCK_SELECTOR) ? [root, ...descendants] : descendants;
+  }
   function contentBlocksFromElement(element) {
-    const blockSelector = "h1, h2, h3, h4, h5, h6, p, li, blockquote, figcaption, td, th, pre, code, section, [role='heading'], [role='paragraph']";
-    const blocks = Array.from(element.querySelectorAll(blockSelector)).filter((node) => !isArticleNoiseElement(node)).map((node) => normalizedText(node.innerText || node.textContent || "")).filter((text2) => textLength(text2) >= 12);
-    if (blocks.length) return blocks;
-    return normalizedText(element.innerText || element.textContent || "").split(/\n{2,}/).map(normalizedText).filter((text2) => textLength(text2) >= 12);
+    return visibleTextFromElement(element).split(/\n{2,}/).map(normalizedText).filter((text2) => textLength(text2) > 0);
   }
   function contentBlocksFromText(text2) {
     return text2.split(/\n{2,}|(?<=[。！？.!?])\s+/).map(normalizedText).filter((block) => textLength(block) >= 12);
+  }
+  function articleTitleSourceFromElement(element) {
+    if (!element) return { text: "" };
+    const localHeading = element.matches("h1, h2, [role='heading']") ? element : element.querySelector(
+      "h1, h2, [role='heading'][aria-level='1'], [role='heading'][aria-level='2']"
+    );
+    if (localHeading) {
+      return {
+        text: normalizedText(visibleTextFromElement(localHeading)),
+        element: localHeading
+      };
+    }
+    const nearbyHeading = precedingArticleHeading(element);
+    if (nearbyHeading) {
+      return {
+        text: normalizedText(visibleTextFromElement(nearbyHeading)),
+        element: nearbyHeading
+      };
+    }
+    const pageHeading = document.querySelector(
+      "main h1, article h1, h1, main h2, article h2"
+    );
+    return {
+      text: pageHeading ? normalizedText(visibleTextFromElement(pageHeading)) : "",
+      element: pageHeading ?? void 0
+    };
+  }
+  function precedingArticleHeading(element) {
+    const selector = "h1, h2, [role='heading'][aria-level='1'], [role='heading'][aria-level='2']";
+    let current = element;
+    while (current && current !== document.body && current !== document.documentElement) {
+      let sibling = current.previousElementSibling;
+      while (sibling) {
+        const heading = sibling.matches(selector) ? sibling : sibling.querySelector(selector);
+        if (heading && textLength(visibleTextFromElement(heading)) >= 4) {
+          return heading;
+        }
+        sibling = sibling.previousElementSibling;
+      }
+      current = current.parentElement;
+    }
+    return null;
+  }
+  function prependArticleTitle(title, text2) {
+    const normalizedTitle = normalizedText(title ?? "");
+    if (!normalizedTitle) return text2;
+    if (text2 === normalizedTitle || text2.startsWith(`${normalizedTitle} `) || text2.slice(0, 500).includes(normalizedTitle)) {
+      return text2;
+    }
+    return `${normalizedTitle}
+
+${text2}`;
+  }
+  function prependArticleTitlePreviewBlock(title, blocks, titleElement) {
+    const normalizedTitle = normalizedText(title);
+    if (!normalizedTitle) return blocks;
+    const first = blocks[0]?.text ?? "";
+    if (first === normalizedTitle || first.startsWith(`${normalizedTitle} `) || blocks.slice(0, 3).some((block) => block.text.includes(normalizedTitle))) {
+      return blocks;
+    }
+    return [{ text: normalizedTitle, element: titleElement }, ...blocks];
   }
   function isArticleNoiseElement(element) {
     if (element.matches(
@@ -21017,15 +21296,137 @@ ${normalized.slice(-tail)}`;
       substantial / Math.max(3, blocks.length) * 0.55 + adjacentLongRuns.bestRun / Math.max(3, blocks.length) * 0.45
     );
   }
-  function articlePreview(blocks) {
-    return blocks.slice(0, 8).map((text2, index) => ({
-      id: `preview-${index + 1}`,
-      text: truncateText(text2, 320)
-    }));
+  function articlePreviewTargetId(element) {
+    if (!element) return void 0;
+    articlePreviewIdCounter += 1;
+    const id = `article-preview-${articlePreviewIdCounter}`;
+    articlePreviewTargets.set(id, element);
+    return id;
   }
-  function scoreArticleCandidate(candidate) {
-    const text2 = normalizedText(candidate.text);
-    const blocks = candidate.element ? contentBlocksFromElement(candidate.element) : contentBlocksFromText(text2);
+  function articlePreviewElementById(targetId) {
+    if (!targetId) return null;
+    const target = articlePreviewTargets.get(targetId);
+    return target?.isConnected ? target : null;
+  }
+  function isEditedArticleBlockExcluded(element) {
+    const text2 = normalizedText(visibleTextFromElement(element));
+    return element.dataset.webmindArticleExcluded === "true" || Boolean(text2 && removedArticleBlockTextKeys.has(articleBlockTextKey(text2)));
+  }
+  function isArticleTextBlockExcluded(block) {
+    const key = articleBlockTextKey(block.text);
+    return Boolean(key && removedArticleBlockTextKeys.has(key)) || block.element?.dataset.webmindArticleExcluded === "true";
+  }
+  function articlePreview(blocks) {
+    return blocks.map((block, index) => {
+      const sourceBlock = typeof block === "string" ? { text: block } : block;
+      return {
+        id: `preview-${index + 1}`,
+        text: truncateText(sourceBlock.text, 320),
+        sourceText: sourceBlock.text,
+        targetId: articlePreviewTargetId(sourceBlock.element)
+      };
+    });
+  }
+  function editedArticleRootSource() {
+    if (manualArticleRoot?.isConnected) return "manual";
+    if (editedArticleRoot?.isConnected || removedArticleBlockTextKeys.size > 0) {
+      return "edited";
+    }
+    return null;
+  }
+  function hasArticleBlockEdits() {
+    return Boolean(editedArticleRoot?.isConnected || removedArticleBlockTextKeys.size > 0);
+  }
+  function clearArticleBlockEdits() {
+    document.querySelectorAll("[data-webmind-article-excluded='true']").forEach((element) => {
+      delete element.dataset.webmindArticleExcluded;
+    });
+    sameOriginIframeBodies().forEach((body) => {
+      body.querySelectorAll("[data-webmind-article-excluded='true']").forEach((element) => {
+        delete element.dataset.webmindArticleExcluded;
+      });
+    });
+    editedArticleRoot = null;
+    removedArticleBlockTextKeys.clear();
+  }
+  function articlePreviewMatchCandidates(root = document) {
+    const roots = root === document ? [...document.body ? [document.body] : [], ...sameOriginIframeBodies()] : [root];
+    const elements = roots.flatMap((root2) => {
+      const own = root2 instanceof HTMLElement ? [root2] : [];
+      return [...own, ...articleBlockElements(root2), ...collectOpenShadowElements(root2)];
+    });
+    return Array.from(new Set(elements)).filter(
+      (element) => isElementVisible(element) && textLength(visibleTextFromElement(element)) > 0
+    );
+  }
+  function articlePreviewTextMatchScore(candidate, target) {
+    if (candidate === target) return 1e3;
+    if (candidate.includes(target)) {
+      return 700 - Math.abs(candidate.length - target.length);
+    }
+    if (target.includes(candidate)) {
+      return 500 - Math.abs(candidate.length - target.length);
+    }
+    return -Infinity;
+  }
+  function alignPreviewBlocksToDom(blocks, root = document) {
+    const candidates = articlePreviewMatchCandidates(root).filter(isElementVisible).map((element, order) => ({
+      element,
+      order,
+      text: normalizedText(visibleTextFromElement(element))
+    })).filter((candidate) => textLength(candidate.text) > 0);
+    let minimumOrder = -1;
+    return blocks.map((text2) => {
+      const target = normalizedText(text2);
+      const match = candidates.map((candidate) => ({
+        ...candidate,
+        score: candidate.order > minimumOrder ? articlePreviewTextMatchScore(candidate.text, target) : -Infinity
+      })).filter((candidate) => Number.isFinite(candidate.score)).sort((left, right) => {
+        if (left.score !== right.score) return right.score - left.score;
+        const leftLengthDelta = Math.abs(left.text.length - target.length);
+        const rightLengthDelta = Math.abs(right.text.length - target.length);
+        if (leftLengthDelta !== rightLengthDelta) {
+          return leftLengthDelta - rightLengthDelta;
+        }
+        if (left.element.childElementCount !== right.element.childElementCount) {
+          return left.element.childElementCount - right.element.childElementCount;
+        }
+        return left.order - right.order;
+      })[0];
+      if (!match) return { text: text2 };
+      minimumOrder = match.order;
+      return { text: text2, element: match.element };
+    });
+  }
+  function articleQualityWarnings(blockCount, totalTextLength) {
+    const viewportHeight = Math.max(1, window.innerHeight || 1);
+    const scrollHeight = Math.max(
+      document.documentElement.scrollHeight,
+      document.body?.scrollHeight ?? 0
+    );
+    if (scrollHeight > viewportHeight * 6 && (blockCount < 8 || totalTextLength < 1200)) {
+      return ["virtualizedContentMayBeIncomplete"];
+    }
+    return void 0;
+  }
+  function scoreArticleCandidate(candidate, options = {}) {
+    const includePreview = options.includePreview ?? true;
+    const titleSource = candidate.title ? { text: normalizedText(candidate.title), element: candidate.titleElement } : articleTitleSourceFromElement(candidate.element);
+    const title = normalizedText(titleSource.text);
+    const rawText = candidate.element ? visibleTextFromElement(candidate.element) : normalizedText(candidate.text);
+    const rawTextWithTitle = prependArticleTitle(title, rawText);
+    const rawBlocks = candidate.element ? contentBlocksFromElement(candidate.element) : contentBlocksFromText(rawText);
+    const sourceBlocks = includePreview ? candidate.element ? alignPreviewBlocksToDom(rawBlocks, candidate.element) : alignPreviewBlocksToDom(contentBlocksFromText(rawText)) : rawBlocks.map((text3) => ({ text: text3 }));
+    const filteredBlocks = sourceBlocks.filter(
+      (block) => !isArticleTextBlockExcluded(block)
+    );
+    const blocksWithTitle = prependArticleTitlePreviewBlock(
+      title,
+      filteredBlocks,
+      includePreview ? titleSource.element : void 0
+    ).filter((block) => !isArticleTextBlockExcluded(block));
+    const blocks = blocksWithTitle.map((block) => block.text);
+    const text2 = hasArticleBlockEdits() ? blocks.join("\n\n") : rawTextWithTitle;
     const totalTextLength = textLength(text2);
     const rect = candidate.element?.getBoundingClientRect();
     const rawArea = rect ? Math.max(1, rect.width * rect.height) : totalTextLength * 8;
@@ -21053,27 +21454,28 @@ ${normalized.slice(-tail)}`;
         continuity: Number(continuity.toFixed(2)),
         clutterPenalty: Number(clutter.toFixed(2)),
         languageConsistency: Number(language.toFixed(2)),
-        source: candidate.element === manualArticleRoot ? "manual" : candidate.source,
+        source: editedArticleRootSource() ?? candidate.source,
         selector: candidate.selector ?? selectorHint(candidate.element),
         blockCount: blocks.length,
-        wordCount: totalTextLength
+        wordCount: totalTextLength,
+        warnings: articleQualityWarnings(blocks.length, totalTextLength)
       },
-      preview: articlePreview(blocks.length ? blocks : contentBlocksFromText(text2))
+      preview: includePreview ? articlePreview(blocksWithTitle) : candidate.preview
     };
   }
   function collectOpenShadowElements(root) {
     const elements = [];
-    root.querySelectorAll("*").forEach((element) => {
+    Array.from(root.querySelectorAll("*")).slice(0, SHADOW_HOST_SCAN_LIMIT).forEach((element) => {
       if (element.shadowRoot) {
+        elements.push(
+          ...Array.from(
+            element.shadowRoot.querySelectorAll(ARTICLE_ROOT_SELECTOR)
+          )
+        );
         elements.push(...collectOpenShadowElements(element.shadowRoot));
       }
     });
-    return [
-      ...Array.from(root.querySelectorAll(
-        "article, main, [role='main'], [data-testid*='article' i], [data-testid*='content' i], [class*='article' i], [class*='content' i], [class*='post' i], [id*='article' i], [id*='content' i], [id*='post' i]"
-      )),
-      ...elements
-    ];
+    return elements;
   }
   function iframeCandidates() {
     const candidates = [];
@@ -21117,40 +21519,271 @@ ${normalized.slice(-tail)}`;
       return null;
     }
   }
-  function articleCandidates() {
-    const seen = /* @__PURE__ */ new Set();
-    const domCandidates = collectOpenShadowElements(document).filter((element) => {
-      if (seen.has(element) || isArticleNoiseElement(element)) return false;
-      seen.add(element);
-      return textLength(element.innerText || element.textContent || "") >= 120;
-    }).map((element) => ({
-      text: textFromElement(element),
+  function articleRootElements(root = document) {
+    const roots = [
+      ...Array.from(root.querySelectorAll(ARTICLE_ROOT_SELECTOR)),
+      ...collectOpenShadowElements(root)
+    ];
+    return Array.from(new Set(roots)).filter(
+      (element) => !isArticleNoiseElement(element) && textLength(element.textContent ?? "") >= 120
+    ).slice(0, ARTICLE_ROOT_CANDIDATE_LIMIT).filter((element) => textLength(visibleTextFromElement(element)) >= 120);
+  }
+  function continuousRootCandidates(root = document) {
+    const blockEntries = articleBlockElements(root).filter((element) => !isArticleNoiseElement(element)).filter((element) => textLength(element.textContent ?? "") >= 24).slice(0, ARTICLE_BLOCK_CANDIDATE_LIMIT).map((element, order) => ({
+      element,
+      order,
+      text: normalizedText(visibleTextFromElement(element))
+    })).filter((entry) => textLength(entry.text) >= 24).slice(0, 400);
+    const summaries = /* @__PURE__ */ new Map();
+    blockEntries.forEach((entry) => {
+      let ancestor = entry.element.parentElement;
+      let depth = 0;
+      while (ancestor && ancestor !== document.documentElement && depth < 8) {
+        if (ancestor === document.body) break;
+        if (!isArticleNoiseElement(ancestor)) {
+          const summary = summaries.get(ancestor) ?? {
+            blocks: 0,
+            textLength: 0,
+            first: entry.order,
+            last: entry.order
+          };
+          summary.blocks += 1;
+          summary.textLength += textLength(entry.text);
+          summary.first = Math.min(summary.first, entry.order);
+          summary.last = Math.max(summary.last, entry.order);
+          summaries.set(ancestor, summary);
+        }
+        ancestor = ancestor.parentElement;
+        depth += 1;
+      }
+    });
+    return Array.from(summaries.entries()).filter(([, summary]) => summary.blocks >= 2 && summary.textLength >= 120).sort((left, right) => {
+      const leftSummary = left[1];
+      const rightSummary = right[1];
+      const score = (summary) => summary.textLength * 0.55 + summary.blocks * 40 + summary.blocks / Math.max(1, summary.last - summary.first + 1) * 240;
+      return score(rightSummary) - score(leftSummary);
+    }).slice(0, 12).map(([element]) => element);
+  }
+  function articleCandidateFromRoot(element) {
+    const titleSource = articleTitleSourceFromElement(element);
+    return {
+      title: titleSource.text,
+      titleElement: titleSource.element,
+      text: visibleTextFromElement(element),
       element,
       source: "dom",
       selector: selectorHint(element)
-    }));
-    const manualCandidate = manualArticleRoot?.isConnected && textLength(textFromElement(manualArticleRoot)) >= 40 ? {
-      text: textFromElement(manualArticleRoot),
-      element: manualArticleRoot,
-      source: "manual",
-      selector: selectorHint(manualArticleRoot)
-    } : null;
+    };
+  }
+  function articleCandidates() {
+    const domRoots = Array.from(
+      /* @__PURE__ */ new Set([...articleRootElements(document), ...continuousRootCandidates(document)])
+    ).map(articleCandidateFromRoot);
+    const manualCandidate = manualArticleRoot?.isConnected && textLength(visibleTextFromElement(manualArticleRoot)) >= 40 ? (() => {
+      const titleSource = articleTitleSourceFromElement(manualArticleRoot);
+      return {
+        title: titleSource.text,
+        titleElement: titleSource.element,
+        text: visibleTextFromElement(manualArticleRoot),
+        element: manualArticleRoot,
+        source: "manual",
+        selector: selectorHint(manualArticleRoot)
+      };
+    })() : null;
+    const editedCandidate = !manualCandidate && editedArticleRoot?.isConnected && textLength(visibleTextFromElement(editedArticleRoot)) >= 40 ? (() => {
+      const titleSource = articleTitleSourceFromElement(editedArticleRoot);
+      return {
+        title: titleSource.text,
+        titleElement: titleSource.element,
+        text: visibleTextFromElement(editedArticleRoot),
+        element: editedArticleRoot,
+        source: "edited",
+        selector: selectorHint(editedArticleRoot)
+      };
+    })() : null;
     if (manualArticleRoot && !manualArticleRoot.isConnected) {
       manualArticleRoot = null;
     }
+    if (editedArticleRoot && !editedArticleRoot.isConnected) {
+      editedArticleRoot = null;
+      removedArticleBlockTextKeys.clear();
+    }
     return [
       manualCandidate,
-      readabilityCandidate(),
-      ...domCandidates,
+      editedCandidate,
+      ...domRoots,
       ...iframeCandidates()
     ].filter(
-      (candidate) => Boolean(candidate && textLength(candidate.text) >= 120)
+      (candidate) => Boolean(
+        candidate && textLength(candidate.text) >= (candidate.source === "manual" ? 40 : 120)
+      )
     );
   }
   function findBestArticleRoot() {
-    if (manualArticleRoot?.isConnected) return manualArticleRoot;
-    const best = articleCandidates().filter((candidate) => candidate.element).map(scoreArticleCandidate).sort((left, right) => (right.score?.score ?? 0) - (left.score?.score ?? 0))[0];
-    return best?.element ?? null;
+    return withArticleExtractionCache(() => {
+      if (manualArticleRoot?.isConnected) return manualArticleRoot;
+      if (editedArticleRoot?.isConnected) return editedArticleRoot;
+      const best = articleCandidates().filter((candidate) => candidate.element).map((candidate) => scoreArticleCandidate(candidate, { includePreview: false })).sort((left, right) => (right.score?.score ?? 0) - (left.score?.score ?? 0))[0];
+      return best?.element ?? null;
+    });
+  }
+  function sameOriginIframeBodies() {
+    const bodies = [];
+    document.querySelectorAll("iframe").forEach((iframe) => {
+      try {
+        const body = iframe.contentDocument?.body;
+        if (body) bodies.push(body);
+      } catch {
+      }
+    });
+    return bodies;
+  }
+  function installArticlePreviewHighlightStyle(root) {
+    if (root.getElementById(ARTICLE_PREVIEW_HIGHLIGHT_STYLE_ID)) return;
+    const doc = root instanceof Document ? root : document;
+    const style = doc.createElement("style");
+    style.id = ARTICLE_PREVIEW_HIGHLIGHT_STYLE_ID;
+    style.textContent = `
+    .webmind-article-preview-highlight {
+      outline: 2px solid rgba(19, 139, 120, .72) !important;
+      outline-offset: 3px !important;
+      box-shadow: 0 0 0 5px rgba(19, 139, 120, .18) !important;
+      transition: outline-color .18s ease, box-shadow .18s ease !important;
+    }
+  `;
+    if (root instanceof Document) {
+      (root.head ?? root.documentElement).append(style);
+    } else {
+      root.append(style);
+    }
+  }
+  function articlePreviewHighlightCandidates() {
+    return articlePreviewMatchCandidates();
+  }
+  function clearArticlePreviewHighlights(root) {
+    root.querySelectorAll(".webmind-article-preview-highlight").forEach(
+      (element) => element.classList.remove("webmind-article-preview-highlight")
+    );
+    root.querySelectorAll("*").forEach((element) => {
+      if (element.shadowRoot) {
+        clearArticlePreviewHighlights(element.shadowRoot);
+      }
+    });
+  }
+  function applyArticlePreviewHighlight(element) {
+    const root = element.getRootNode();
+    installArticlePreviewHighlightStyle(
+      root instanceof ShadowRoot ? root : element.ownerDocument ?? document
+    );
+    clearArticlePreviewHighlights(document);
+    sameOriginIframeBodies().forEach(
+      (body) => clearArticlePreviewHighlights(body.ownerDocument)
+    );
+    element.classList.add("webmind-article-preview-highlight");
+    element.scrollIntoView({ block: "center", behavior: "smooth" });
+    window.setTimeout(() => {
+      element.classList.remove("webmind-article-preview-highlight");
+    }, 2600);
+    return { ok: true };
+  }
+  function highlightArticlePreviewBlock(text2, targetId) {
+    const directMatch = articlePreviewElementById(targetId);
+    if (directMatch) {
+      return applyArticlePreviewHighlight(directMatch);
+    }
+    const target = normalizedText(text2);
+    if (textLength(target) < 12) return { ok: false };
+    const candidates = articlePreviewHighlightCandidates().filter(isElementVisible).map((element) => ({
+      element,
+      text: normalizedText(visibleTextFromElement(element))
+    })).filter((candidate) => textLength(candidate.text) >= 12).map((candidate) => ({
+      ...candidate,
+      score: articlePreviewTextMatchScore(candidate.text, target)
+    })).filter((candidate) => Number.isFinite(candidate.score)).sort((left, right) => {
+      if (left.score !== right.score) return right.score - left.score;
+      return left.element.childElementCount - right.element.childElementCount;
+    });
+    const match = candidates[0];
+    if (!match) return { ok: false };
+    return applyArticlePreviewHighlight(match.element);
+  }
+  function setEditedArticleRootFromCurrent() {
+    const root = manualArticleRoot?.isConnected ? manualArticleRoot : editedArticleRoot?.isConnected ? editedArticleRoot : findBestArticleRoot();
+    if (root?.isConnected) {
+      editedArticleRoot = root;
+      return root;
+    }
+    return null;
+  }
+  function removeArticlePreviewBlock(text2, targetId, language) {
+    setEditedArticleRootFromCurrent();
+    const normalized = normalizedText(text2);
+    const target = articlePreviewElementById(targetId);
+    if (target) {
+      target.dataset.webmindArticleExcluded = "true";
+    }
+    if (normalized) {
+      removedArticleBlockTextKeys.add(articleBlockTextKey(normalized));
+    }
+    return extractPageContext(true, language, "article");
+  }
+  function elementMetadataText(element) {
+    if (!element) return "";
+    return [
+      element.id,
+      element.className,
+      element.getAttribute("role"),
+      element.getAttribute("aria-label"),
+      ...Array.from(element.attributes).flatMap(
+        (attribute) => attribute.name.startsWith("data-") ? [`${attribute.name} ${attribute.value}`] : []
+      )
+    ].filter(Boolean).join(" ");
+  }
+  function isLikelyNonArticlePreviewBlock(block) {
+    const text2 = normalizedText(block.sourceText ?? block.text);
+    const length = textLength(text2);
+    if (!text2 || length <= 2) return true;
+    if (length >= 80) return false;
+    const target = articlePreviewElementById(block.targetId) ?? void 0;
+    if (target?.matches("h1, h2, h3, [role='heading']")) return false;
+    const metadata = elementMetadataText(target);
+    const linkHeavy = target instanceof HTMLElement && linkRatio(target, visibleTextFromElement(target)) > 0.65 && length < 60;
+    const looksLikeMetaElement = /(^|\b)(author|avatar|breadcrumb|byline|click|comment|count|date|meta|reply|share|stat|tag|time|toolbar|user|view|vote)(\b|[-_])/i.test(
+      metadata
+    );
+    const looksLikeBreadcrumb = length <= 50 && /(?:^|[\s\u00a0])(?:›|>|\/|»|→)(?:[\s\u00a0]|$)/.test(text2) && !/[。！？.!?，,；;]/.test(text2);
+    const looksLikeTime = length <= 50 && /(?:\d{1,4}[-/.年]\d{1,2}(?:[-/.月]\d{1,2}日?)?|\d{1,2}:\d{2}|刚刚|分钟前|小时前|天前|yesterday|today|ago|updated|published|posted)/i.test(
+      text2
+    );
+    const looksLikeStats = length <= 60 && /\d[\d,.\s]*(?:次点击|点击|浏览|阅读|评论|回复|收藏|分享|赞|喜欢|views?|clicks?|comments?|replies|likes?|shares?|stars?|forks?)/i.test(
+      text2
+    );
+    const looksLikeShortLabel = length <= 18 && !/[。！？.!?，,；;：:]/.test(text2) && !/\s{2,}/.test(text2) && /^[\p{L}\p{N}_@#.\-\s·]+$/u.test(text2);
+    return Boolean(target && isArticleNoiseElement(target)) || linkHeavy || looksLikeMetaElement || looksLikeBreadcrumb || looksLikeTime || looksLikeStats || looksLikeShortLabel;
+  }
+  function pruneArticlePreviewBlocks(language) {
+    setEditedArticleRootFromCurrent();
+    const snapshot = readableArticleText();
+    const preview = snapshot.preview ?? [];
+    const removable = preview.filter(isLikelyNonArticlePreviewBlock);
+    const removableKeys = new Set(
+      removable.map((block) => articleBlockTextKey(block.sourceText ?? block.text))
+    );
+    const remaining = preview.filter(
+      (block) => !removableKeys.has(articleBlockTextKey(block.sourceText ?? block.text))
+    );
+    const remainingTextLength = textLength(
+      remaining.map((block) => block.sourceText ?? block.text).join("\n\n")
+    );
+    if (remaining.length >= 2 && remainingTextLength >= 120) {
+      removable.forEach((block) => {
+        const target = articlePreviewElementById(block.targetId);
+        if (target) target.dataset.webmindArticleExcluded = "true";
+        const text2 = normalizedText(block.sourceText ?? block.text);
+        if (text2) removedArticleBlockTextKeys.add(articleBlockTextKey(text2));
+      });
+    }
+    return extractPageContext(true, language, "article");
   }
   function pickerTextLength(element) {
     return textLength(element.innerText || element.textContent || "");
@@ -21256,6 +21889,7 @@ ${normalized.slice(-tail)}`;
         if (manualArticleRoot) {
           delete manualArticleRoot.dataset.webmindManualArticle;
         }
+        clearArticleBlockEdits();
         manualArticleRoot = element;
         manualArticleRoot.dataset.webmindManualArticle = "true";
         resolve(extractPageContext(true, language, "article"));
@@ -21317,53 +21951,87 @@ ${normalized.slice(-tail)}`;
       delete manualArticleRoot.dataset.webmindManualArticle;
     }
     manualArticleRoot = null;
+    clearArticleBlockEdits();
     return extractPageContext(true, language, "article");
   }
   function readableArticleText() {
-    if (manualArticleRoot?.isConnected) {
-      const manualText = textFromElement(manualArticleRoot);
-      if (textLength(manualText) >= 40) {
-        const manual = scoreArticleCandidate({
-          text: manualText,
-          element: manualArticleRoot,
-          source: "manual",
-          selector: selectorHint(manualArticleRoot)
-        });
+    return withArticleExtractionCache(() => {
+      articlePreviewTargets.clear();
+      if (manualArticleRoot?.isConnected) {
+        const manualText = visibleTextFromElement(manualArticleRoot);
+        if (textLength(manualText) >= 40) {
+          const manual = scoreArticleCandidate({
+            text: manualText,
+            element: manualArticleRoot,
+            source: "manual",
+            selector: selectorHint(manualArticleRoot)
+          });
+          return {
+            title: document.title || location.hostname,
+            text: manual.text,
+            description: "",
+            quality: manual.score,
+            preview: manual.preview
+          };
+        }
+      }
+      if (editedArticleRoot?.isConnected) {
+        const editedText = visibleTextFromElement(editedArticleRoot);
+        if (textLength(editedText) >= 40) {
+          const edited = scoreArticleCandidate({
+            text: editedText,
+            element: editedArticleRoot,
+            source: "edited",
+            selector: selectorHint(editedArticleRoot)
+          });
+          return {
+            title: document.title || location.hostname,
+            text: edited.text,
+            description: "",
+            quality: edited.score,
+            preview: edited.preview
+          };
+        }
+      }
+      const scoredCandidates = articleCandidates().map((candidate) => scoreArticleCandidate(candidate, { includePreview: false })).sort((left, right) => (right.score?.score ?? 0) - (left.score?.score ?? 0));
+      const best = scoredCandidates[0];
+      if (best?.score && textLength(best.text) >= 120) {
+        const detailed = scoreArticleCandidate(best, { includePreview: true });
         return {
-          title: document.title || location.hostname,
-          text: manual.text,
-          description: "",
-          quality: manual.score,
-          preview: manual.preview
+          title: detailed.title,
+          text: detailed.text,
+          description: detailed.description,
+          quality: detailed.score,
+          preview: detailed.preview
         };
       }
-    }
-    const scoredCandidates = articleCandidates().map(scoreArticleCandidate).sort((left, right) => (right.score?.score ?? 0) - (left.score?.score ?? 0));
-    const best = scoredCandidates[0];
-    if (best?.score && textLength(best.text) >= 120) {
+      const readableFallback = readabilityCandidate();
+      if (readableFallback && textLength(readableFallback.text) >= 120) {
+        const readable = scoreArticleCandidate(readableFallback);
+        return {
+          title: readable.title,
+          text: readable.text,
+          description: readable.description,
+          quality: readable.score,
+          preview: readable.preview
+        };
+      }
+      const fallbackElement = document.querySelector("article") || document.querySelector("main") || document.querySelector('[role="main"]');
+      const fallback = fallbackElement ? visibleTextFromElement(fallbackElement) : "";
+      const fallbackCandidate = fallbackElement ? scoreArticleCandidate({
+        text: fallback,
+        element: fallbackElement,
+        source: "dom",
+        selector: selectorHint(fallbackElement)
+      }) : null;
       return {
-        title: best.title,
-        text: best.text,
-        description: best.description,
-        quality: best.score,
-        preview: best.preview
+        title: "",
+        text: fallback,
+        description: "",
+        quality: fallbackCandidate?.score,
+        preview: fallbackCandidate?.preview
       };
-    }
-    const fallbackElement = document.querySelector("article") || document.querySelector("main") || document.querySelector('[role="main"]');
-    const fallback = fallbackElement ? textFromElement(fallbackElement) : "";
-    const fallbackCandidate = fallbackElement ? scoreArticleCandidate({
-      text: fallback,
-      element: fallbackElement,
-      source: "dom",
-      selector: selectorHint(fallbackElement)
-    }) : null;
-    return {
-      title: "",
-      text: fallback,
-      description: "",
-      quality: fallbackCandidate?.score,
-      preview: fallbackCandidate?.preview
-    };
+    });
   }
   function extractPageContext(ignoreSelection = false, language, scope = "page") {
     const selection = ignoreSelection ? void 0 : pageSelectionText() || void 0;
@@ -21414,6 +22082,13 @@ ${normalized.slice(-tail)}`;
       siteName
     };
   }
+  async function extractPageContextAsync(ignoreSelection = false, language, scope = "page") {
+    const selection = ignoreSelection ? void 0 : pageSelectionText() || void 0;
+    if (!selection) {
+      await waitForPageIdle();
+    }
+    return extractPageContext(ignoreSelection, language, scope);
+  }
 
   // src/content/translationPreparation.ts
   var TRANSLATABLE_BLOCK_SELECTOR = "h1, h2, h3, h4, h5, h6, p, li, blockquote, figcaption, td, dt, dd, [role='heading'], [role='paragraph']";
@@ -21433,6 +22108,60 @@ ${normalized.slice(-tail)}`;
       return [root, ...descendants];
     }
     return descendants;
+  }
+  function isWebMindGeneratedElement(element) {
+    return Boolean(
+      element.closest(".webmind-translation, .webmind-immersive-reading-token")
+    );
+  }
+  function hasDirectText(element) {
+    return Array.from(element.childNodes).some(
+      (node) => node instanceof Text && Boolean(node.textContent?.trim())
+    );
+  }
+  function translationElementVisibleText(element) {
+    return translationVisibleText(translationTextFromElement(element, []));
+  }
+  function articleContentCandidatesFromRoot(root, options, dependencies) {
+    const maxVisibleTextLength = options.maxVisibleTextLength ?? 900;
+    const candidates = [];
+    const visit = (element) => {
+      if (!dependencies.isVisible(element) || isWebMindGeneratedElement(element)) {
+        return;
+      }
+      const text2 = translationElementVisibleText(element);
+      if (!text2) return;
+      const children = Array.from(element.children).filter(
+        (child) => child instanceof HTMLElement
+      );
+      const textChildren = children.filter(
+        (child) => dependencies.isVisible(child) && !isWebMindGeneratedElement(child) && Boolean(translationElementVisibleText(child))
+      );
+      const canUseWholeElement = element !== root && text2.length <= maxVisibleTextLength && (hasDirectText(element) || !textChildren.length || element.matches(TRANSLATABLE_BLOCK_SELECTOR));
+      if (canUseWholeElement) {
+        candidates.push(element);
+        return;
+      }
+      for (const child of children) visit(child);
+      if (!textChildren.length && element === root && text2.length <= maxVisibleTextLength) {
+        candidates.push(element);
+      }
+    };
+    visit(root);
+    return candidates;
+  }
+  function articleHeadingCandidates(root) {
+    const localHeading = root.matches("h1, h2, [role='heading']") ? root : root.querySelector(
+      "h1, h2, [role='heading'][aria-level='1'], [role='heading'][aria-level='2']"
+    );
+    const pageHeading = document.querySelector(
+      "main h1, article h1, h1, main h2, article h2"
+    );
+    return [localHeading, pageHeading].filter(
+      (element, index, elements) => Boolean(
+        element && elements.indexOf(element) === index && (root.contains(element) || !element.contains(root))
+      )
+    );
   }
   function isCitationAnchor2(anchor) {
     const marker = normalizedBlockText4(anchor.innerText || anchor.textContent || "");
@@ -21581,7 +22310,8 @@ ${normalized.slice(-tail)}`;
     );
     const visibleText = translationVisibleText(text2);
     const maxVisibleTextLength = options.maxVisibleTextLength ?? 900;
-    if (visibleText.length < 3 || visibleText.length > maxVisibleTextLength) {
+    const minVisibleTextLength = options.minVisibleTextLength ?? 3;
+    if (visibleText.length < minVisibleTextLength || visibleText.length > maxVisibleTextLength) {
       return null;
     }
     const citations = citationNodes.map((node, index) => ({
@@ -21662,26 +22392,46 @@ ${normalized.slice(-tail)}`;
       return block ? [block] : [];
     }
     const root = scope === "article" ? findBestArticleRoot() ?? document.querySelector("article") ?? document.querySelector("main") ?? document.querySelector('[role="main"]') ?? document.body : document.body;
-    let candidates = blockCandidatesFromRoot(root).map((element, order) => ({ element, order })).filter(({ element }) => {
+    const articleOptions = scope === "article" ? {
+      ...options,
+      minVisibleTextLength: 1,
+      maxVisibleTextLength: Math.max(
+        options.maxVisibleTextLength ?? 0,
+        2e4
+      )
+    } : options;
+    const rootCandidates = scope === "article" ? articleContentCandidatesFromRoot(root, articleOptions, dependencies) : blockCandidatesFromRoot(root);
+    const candidatesForScope = scope === "article" ? [
+      ...articleHeadingCandidates(root).filter(
+        (heading) => !rootCandidates.includes(heading)
+      ),
+      ...rootCandidates
+    ] : rootCandidates;
+    const orderedCandidates = candidatesForScope.map((element, order) => ({ element, order })).filter(({ element }) => {
       if (!dependencies.isVisible(element)) return false;
-      if (element.closest(
-        ".webmind-translation, .webmind-immersive-reading-token"
-      )) {
-        return false;
-      }
-      if (element.closest("nav, footer, aside, [aria-hidden='true']")) return false;
+      if (isWebMindGeneratedElement(element)) return false;
+      if (scope === "article" && isEditedArticleBlockExcluded(element)) return false;
+      if (scope !== "article" && element.closest("nav, footer, aside, [aria-hidden='true']")) return false;
       return true;
     }).map((candidate) => ({
       ...candidate,
       priority: dependencies.viewportPriority(candidate.element, candidate.order)
-    })).sort((left, right) => left.priority - right.priority).slice(0, 160).map(({ element }) => element);
+    })).sort((left, right) => left.priority - right.priority).map(({ element }) => element);
+    const candidates = scope === "article" ? orderedCandidates : orderedCandidates.slice(0, 160);
     const seen = /* @__PURE__ */ new Set();
     const blocks = [];
     for (const element of candidates) {
       const id = element.dataset.webmindBlockId ?? dependencies.nextBlockId();
       element.dataset.webmindBlockId = id;
-      const block = prepareTranslationBlock(element, id, false, options, dependencies);
-      if (!block || seen.has(block.text)) continue;
+      const block = prepareTranslationBlock(
+        element,
+        id,
+        false,
+        articleOptions,
+        dependencies
+      );
+      if (!block) continue;
+      if (scope !== "article" && seen.has(block.text)) continue;
       seen.add(block.text);
       blocks.push(block);
     }
@@ -22014,9 +22764,22 @@ ${normalized.slice(-tail)}`;
 
   // src/content/toolIcons.tsx
   var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
+  function extensionAssetUrl(path) {
+    return typeof chrome !== "undefined" && chrome.runtime?.getURL ? chrome.runtime.getURL(path) : `/${path}`;
+  }
+  function ProductLogoIcon() {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      "img",
+      {
+        className: "webmind-logo-icon",
+        src: extensionAssetUrl("icons/icon-32.png"),
+        alt: ""
+      }
+    );
+  }
   var TOOL_ICONS = {
     BookOpen,
-    Code2: CodeXml,
+    CodeXml,
     FileText,
     Globe2: Earth,
     ImagePlus,
@@ -22040,11 +22803,138 @@ ${normalized.slice(-tail)}`;
     WandSparkles
   };
   function ToolIcon({ name }) {
+    if (name === "WebMind") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProductLogoIcon, {});
     const Icon2 = TOOL_ICONS[name] ?? Sparkles;
     return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Icon2, {});
   }
 
   // src/shared/immersiveWorkflow.ts
+  function createImmersiveWorkflowSummary({
+    totalBlocks,
+    requestedBlocks,
+    translatedBlocks,
+    appliedBlocks
+  }) {
+    return {
+      totalBlocks,
+      requestedBlocks,
+      translatedBlocks,
+      appliedBlocks,
+      skippedBlocks: Math.max(0, totalBlocks - appliedBlocks)
+    };
+  }
+  function classifyImmersiveWorkflowError(message, labels = {}) {
+    if (labels.missingProfile && message === labels.missingProfile) {
+      return { code: "missing-profile", message };
+    }
+    if (labels.emptyContext && message === labels.emptyContext) {
+      return { code: "empty-context", message };
+    }
+    if (labels.modelResponseInvalid && message === labels.modelResponseInvalid) {
+      return { code: "model-response-invalid", message };
+    }
+    if (labels.applyFailed && message === labels.applyFailed) {
+      return { code: "apply-failed", message };
+    }
+    return {
+      code: message ? "runtime-failed" : "unknown",
+      message
+    };
+  }
+  var ImmersiveWorkflowCancelledError = class extends Error {
+    constructor(message = "Immersive workflow cancelled") {
+      super(message);
+      this.name = "ImmersiveWorkflowCancelledError";
+    }
+  };
+  function assertImmersiveWorkflowNotCancelled(signal) {
+    if (signal?.aborted) {
+      throw new ImmersiveWorkflowCancelledError();
+    }
+  }
+  function isImmersiveWorkflowCancelledError(error) {
+    return error instanceof ImmersiveWorkflowCancelledError;
+  }
+  var WORKFLOW_COLLECT_PERCENT = 3;
+  var WORKFLOW_READY_PERCENT = 8;
+  var WORKFLOW_PROGRESS_RANGE = 92;
+  var WORKFLOW_PROGRESS_OFFSET = 5;
+  function clampPercent(percent) {
+    return Math.max(0, Math.min(100, Math.round(percent)));
+  }
+  function runningProgress(percent, label) {
+    return {
+      percent: clampPercent(percent),
+      label,
+      active: true,
+      error: false
+    };
+  }
+  function createImmersiveRunState(kind, scope, phase, details = {}) {
+    return {
+      kind,
+      scope,
+      phase,
+      ...details
+    };
+  }
+  function workflowLogDetailText(details) {
+    return Object.entries(details).filter(([, value]) => value !== void 0 && value !== "").map(([key, value]) => `${key}=${value}`).join(" ");
+  }
+  function formatImmersiveWorkflowLog(workflowLabel, event, details = {}, options = {}) {
+    const subject = [workflowLabel, options.surface].filter(Boolean).join(" ");
+    const eventText = event.replaceAll("_", "-");
+    const detailText = workflowLogDetailText(details);
+    return `[workflow] ${subject} ${eventText}${detailText ? ` ${detailText}` : ""}`;
+  }
+  function immersiveWorkflowCollectingProgress(label) {
+    return runningProgress(WORKFLOW_COLLECT_PERCENT, label);
+  }
+  function immersiveWorkflowReadyProgress(total, label) {
+    return runningProgress(WORKFLOW_READY_PERCENT, `${label} ${total}/${total}`);
+  }
+  function immersiveTranslationBatchStartProgress(progress, total, label) {
+    const current = Math.min(
+      progress.processedBefore + progress.batch.length,
+      total
+    );
+    return runningProgress(
+      progress.processedBefore / total * WORKFLOW_PROGRESS_RANGE + WORKFLOW_PROGRESS_OFFSET,
+      `${label} ${current}/${total}`
+    );
+  }
+  function immersiveTranslationBatchAppliedProgress(completed, total, label) {
+    return runningProgress(
+      Math.min(completed, total) / total * WORKFLOW_PROGRESS_RANGE + WORKFLOW_PROGRESS_OFFSET,
+      `${label} ${completed}`
+    );
+  }
+  function immersiveReadingModelBatchAppliedProgress(progress, total, label) {
+    const current = Math.min(
+      progress.processedBefore + progress.batch.length,
+      total
+    );
+    return runningProgress(
+      current / total * WORKFLOW_PROGRESS_RANGE + WORKFLOW_PROGRESS_OFFSET,
+      `${label} ${progress.appliedCount}`
+    );
+  }
+  function immersiveWorkflowCompleteProgress(label) {
+    return {
+      percent: 100,
+      label,
+      active: false,
+      error: false
+    };
+  }
+  function immersiveWorkflowErrorProgress(label) {
+    return {
+      percent: 100,
+      label,
+      active: false,
+      error: true
+    };
+  }
   function orderTranslationsByBlocks(translations, blocks) {
     const translationById = new Map(
       translations.map((translation) => [translation.id, translation])
@@ -22056,6 +22946,7 @@ ${normalized.slice(-tail)}`;
   }
   async function requestCompleteBatch(batch, requestTranslations, invalidTranslationsError) {
     let translations = [];
+    let requestedBlocks = batch.length;
     try {
       translations = await requestTranslations(batch);
     } catch (requestError) {
@@ -22066,6 +22957,7 @@ ${normalized.slice(-tail)}`;
     );
     const missingBlocks = batch.filter((block) => !translatedIds.has(block.id));
     if (missingBlocks.length) {
+      requestedBlocks += missingBlocks.length;
       const retry = await requestTranslations(missingBlocks);
       for (const translation of retry) {
         translations.push(translation);
@@ -22075,12 +22967,16 @@ ${normalized.slice(-tail)}`;
     if (translations.length !== batch.length) {
       throw invalidTranslationsError();
     }
-    return orderTranslationsByBlocks(translations, batch);
+    return {
+      translations: orderTranslationsByBlocks(translations, batch),
+      requestedBlocks
+    };
   }
   async function runImmersiveTranslationWorkflow({
     blocks,
     batchSize,
     concurrency,
+    signal,
     requestTranslations,
     applyTranslations: applyTranslations3,
     invalidTranslationsError,
@@ -22089,8 +22985,11 @@ ${normalized.slice(-tail)}`;
     onBatchApplied
   }) {
     let completed = 0;
+    let requestedBlocks = 0;
+    let translatedBlocks = 0;
     const batches = chunkItems(blocks, batchSize);
-    await mapWithConcurrency(batches, concurrency, async (batch, batchIndex) => {
+    const processBatch = async (batch, batchIndex) => {
+      assertImmersiveWorkflowNotCancelled(signal);
       const processedBefore = batchIndex * batchSize;
       await onBatchStart?.({
         batch,
@@ -22098,12 +22997,18 @@ ${normalized.slice(-tail)}`;
         processedBefore,
         completed
       });
-      const translations = await requestCompleteBatch(
+      const result = await requestCompleteBatch(
         batch,
         requestTranslations,
         invalidTranslationsError
       );
+      assertImmersiveWorkflowNotCancelled(signal);
+      requestedBlocks += result.requestedBlocks;
+      const translations = result.translations;
+      translatedBlocks += translations.length;
+      assertImmersiveWorkflowNotCancelled(signal);
       const applied = await applyTranslations3(translations);
+      assertImmersiveWorkflowNotCancelled(signal);
       if (applied !== translations.length) {
         throw applyCountMismatchError();
       }
@@ -22116,30 +23021,55 @@ ${normalized.slice(-tail)}`;
         translations,
         applied
       });
-    });
-    return { completed };
+    };
+    if (batches[0]) {
+      await processBatch(batches[0], 0);
+    }
+    await mapWithConcurrency(
+      batches.slice(1),
+      concurrency,
+      async (batch, batchIndex) => {
+        await processBatch(batch, batchIndex + 1);
+      }
+    );
+    return {
+      completed,
+      summary: createImmersiveWorkflowSummary({
+        totalBlocks: blocks.length,
+        requestedBlocks,
+        translatedBlocks,
+        appliedBlocks: completed
+      })
+    };
   }
   async function runImmersiveReadingModelPageWorkflow({
     blocks,
     batchSize,
     concurrency,
+    signal,
     requestTranslations,
     applyTranslations: applyTranslations3,
     onBatchApplied
   }) {
     let appliedCount = 0;
+    let requestedBlocks = 0;
     const translations = [];
     const seenSourceKeys = /* @__PURE__ */ new Set();
     const batches = chunkItems(blocks, batchSize);
-    await mapWithConcurrency(batches, concurrency, async (batch, batchIndex) => {
+    const processBatch = async (batch, batchIndex) => {
+      assertImmersiveWorkflowNotCancelled(signal);
+      requestedBlocks += batch.length;
       const batchTranslations = await requestTranslations(batch);
+      assertImmersiveWorkflowNotCancelled(signal);
       const orderedTranslations = dedupeImmersiveReadingTranslations(
         orderTranslationsByBlocks(batchTranslations, batch),
         batch,
         seenSourceKeys
       );
       translations.push(...orderedTranslations);
+      assertImmersiveWorkflowNotCancelled(signal);
       const applied = await applyTranslations3(orderedTranslations);
+      assertImmersiveWorkflowNotCancelled(signal);
       appliedCount += applied;
       const processedBefore = batchIndex * batchSize;
       await onBatchApplied?.({
@@ -22150,8 +23080,104 @@ ${normalized.slice(-tail)}`;
         applied,
         appliedCount
       });
-    });
-    return { translations, appliedCount };
+    };
+    if (batches[0]) {
+      await processBatch(batches[0], 0);
+    }
+    await mapWithConcurrency(
+      batches.slice(1),
+      concurrency,
+      async (batch, batchIndex) => {
+        await processBatch(batch, batchIndex + 1);
+      }
+    );
+    return {
+      translations,
+      appliedCount,
+      summary: createImmersiveWorkflowSummary({
+        totalBlocks: blocks.length,
+        requestedBlocks,
+        translatedBlocks: translations.length,
+        appliedBlocks: appliedCount
+      })
+    };
+  }
+  async function runImmersiveReadingLocalFirstWorkflow({
+    blocks,
+    signal,
+    buildPlan,
+    requestFallbackTranslations,
+    finalizePlan,
+    onPlanStart,
+    onPlanReady,
+    onFallbackRequest,
+    onFallbackComplete,
+    onFallbackFailed,
+    onFallbackSkipped,
+    onFinalize,
+    onFinalized
+  }) {
+    assertImmersiveWorkflowNotCancelled(signal);
+    await onPlanStart?.();
+    const plan = await buildPlan(blocks);
+    assertImmersiveWorkflowNotCancelled(signal);
+    await onPlanReady?.(plan);
+    let fallbackTranslations = [];
+    if (plan.fallbackTerms.length && requestFallbackTranslations) {
+      try {
+        await onFallbackRequest?.(plan.fallbackTerms);
+        fallbackTranslations = await requestFallbackTranslations(plan.fallbackTerms);
+        assertImmersiveWorkflowNotCancelled(signal);
+        await onFallbackComplete?.(fallbackTranslations);
+      } catch (error) {
+        fallbackTranslations = [];
+        await onFallbackFailed?.(error);
+      }
+    } else {
+      await onFallbackSkipped?.(plan.fallbackTerms);
+    }
+    await onFinalize?.(plan, fallbackTranslations);
+    const translations = await finalizePlan(plan.blocks, fallbackTranslations);
+    assertImmersiveWorkflowNotCancelled(signal);
+    await onFinalized?.(translations);
+    return {
+      plan,
+      fallbackTranslations,
+      translations,
+      summary: createImmersiveWorkflowSummary({
+        totalBlocks: blocks.length,
+        requestedBlocks: blocks.length,
+        translatedBlocks: translations.length,
+        appliedBlocks: 0
+      })
+    };
+  }
+  async function runImmersiveReadingFinalApplyWorkflow({
+    blocks,
+    translations,
+    summary,
+    signal,
+    applyTranslations: applyTranslations3,
+    onApplyStart,
+    onApplied
+  }) {
+    assertImmersiveWorkflowNotCancelled(signal);
+    const orderedTranslations = orderTranslationsByBlocks(translations, blocks);
+    await onApplyStart?.(orderedTranslations);
+    assertImmersiveWorkflowNotCancelled(signal);
+    const appliedCount = await applyTranslations3(orderedTranslations);
+    assertImmersiveWorkflowNotCancelled(signal);
+    await onApplied?.(appliedCount);
+    return {
+      translations: orderedTranslations,
+      appliedCount,
+      summary: createImmersiveWorkflowSummary({
+        totalBlocks: summary.totalBlocks,
+        requestedBlocks: summary.requestedBlocks,
+        translatedBlocks: summary.translatedBlocks,
+        appliedBlocks: appliedCount
+      })
+    };
   }
 
   // node_modules/dompurify/dist/purify.es.mjs
@@ -25220,6 +26246,12 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     height: 10px;
     stroke-width: 2.4;
   }
+  .md-auto-reply-button .webmind-logo-icon {
+    display: block;
+    width: 10px;
+    height: 10px;
+    object-fit: contain;
+  }
   .md-auto-reply-button .md-mini-spinner {
     width: 10px;
     height: 10px;
@@ -26447,8 +27479,24 @@ ${text2}`;
       moved: false
     });
     const immersiveShortcutCooldownRef = (0, import_react4.useRef)(0);
+    const immersiveRunRef = (0, import_react4.useRef)(null);
     const runEdgeImmersiveTranslateRef = (0, import_react4.useRef)(async () => {
     });
+    const beginImmersiveRun = () => {
+      immersiveRunRef.current?.controller.abort();
+      const run = {
+        id: crypto.randomUUID(),
+        controller: new AbortController()
+      };
+      immersiveRunRef.current = run;
+      return run;
+    };
+    const isCurrentImmersiveRun = (run) => immersiveRunRef.current?.id === run.id;
+    const finishImmersiveRun = (run) => {
+      if (isCurrentImmersiveRun(run)) {
+        immersiveRunRef.current = null;
+      }
+    };
     (0, import_react4.useEffect)(() => {
       showTranslationProgress = setTranslationProgress;
       return () => {
@@ -26909,7 +27957,7 @@ ${text2}`;
           activeSettings?.interfaceLanguage,
           "extractImageText"
         ),
-        icon: "ScanText",
+        icon: "WebMind",
         builtin: true,
         template: ""
       }),
@@ -27256,6 +28304,15 @@ ${t("currentResultLabel")}\uFF1A` : "",
         error: error2
       });
     };
+    const showImmersiveProgressUpdate = (update, title = t("immersiveTranslation")) => {
+      showImmersiveProgress(
+        update.percent,
+        update.label,
+        update.active,
+        update.error,
+        title
+      );
+    };
     const openSidePanel = async () => {
       setEdgeBusy(true);
       showEdgeResult(t("openSidebar"), t("openSidebarOpening"));
@@ -27293,9 +28350,26 @@ ${t("currentResultLabel")}\uFF1A` : "",
     const runEdgeImmersiveTranslate = async (requestedScope, options = {}) => {
       const scope = requestedScope ?? defaultImmersiveContentScope();
       if (edgeBusy && !options.ignoreBusy) return;
+      const workflowScope = scope === "paragraph" ? "paragraph" : scope;
+      const run = beginImmersiveRun();
+      let runState = createImmersiveRunState(
+        "translation",
+        workflowScope,
+        "collecting"
+      );
       setEdgeBusy(true);
+      emitDebugLog(
+        formatImmersiveWorkflowLog(
+          t("immersiveTranslation"),
+          "start",
+          { scope: workflowScope },
+          { surface: "edge" }
+        )
+      );
       showEdgeResult("");
-      showImmersiveProgress(3, immersiveCollectingLabel(scope));
+      showImmersiveProgressUpdate(
+        immersiveWorkflowCollectingProgress(immersiveCollectingLabel(scope))
+      );
       try {
         if (!translationProfile) throw new Error(t("modelEngineRequired"));
         const blocks = scope === "paragraph" ? prepareParagraphTranslationBlocks2(lastPointerTarget, "", {
@@ -27304,10 +28378,28 @@ ${t("currentResultLabel")}\uFF1A` : "",
           preserveRichText: true
         });
         if (!blocks.length) throw new Error(t("noTranslatableBlocks"));
-        const { completed } = await runImmersiveTranslationWorkflow({
+        runState = createImmersiveRunState(
+          "translation",
+          workflowScope,
+          "requesting",
+          { totalBlocks: blocks.length }
+        );
+        emitDebugLog(
+          formatImmersiveWorkflowLog(
+            t("immersiveTranslation"),
+            "blocks_collected",
+            {
+              scope: workflowScope,
+              blocks: blocks.length
+            },
+            { surface: "edge" }
+          )
+        );
+        const { completed, summary } = await runImmersiveTranslationWorkflow({
           blocks,
           batchSize: IMMERSIVE_TRANSLATION_BATCH_SIZE,
           concurrency: scope === "paragraph" ? 1 : IMMERSIVE_TRANSLATION_CONCURRENCY,
+          signal: run.controller.signal,
           requestTranslations: async (requestBlocks) => {
             const sourceText = requestBlocks.map((block) => block.text).join("\n");
             const response = await runtimeRequest2(
@@ -27340,55 +28432,151 @@ ${t("currentResultLabel")}\uFF1A` : "",
               )
             );
           },
-          applyTranslations: (translations) => applyTranslations2(
-            translations,
-            activeSettings?.immersiveTranslationStyle ?? "bilingual",
-            activeSettings?.immersiveTranslationDisplayStyle ?? "default",
-            activeSettings?.immersiveTranslationTextEffects ?? []
-          ),
+          applyTranslations: (translations) => {
+            runState = createImmersiveRunState(
+              "translation",
+              workflowScope,
+              "applying",
+              { totalBlocks: blocks.length }
+            );
+            return applyTranslations2(
+              translations,
+              activeSettings?.immersiveTranslationStyle ?? "bilingual",
+              activeSettings?.immersiveTranslationDisplayStyle ?? "default",
+              activeSettings?.immersiveTranslationTextEffects ?? []
+            );
+          },
           invalidTranslationsError: () => new Error(contentText("jsonArrayInvalid")),
           applyCountMismatchError: () => new Error(t("translationWriteFailed")),
-          onBatchStart: ({ batch, processedBefore }) => {
-            showImmersiveProgress(
-              processedBefore / blocks.length * 92 + 5,
-              `${t("translatingPageProgress")} ${Math.min(processedBefore + batch.length, blocks.length)}/${blocks.length}`
+          onBatchStart: (progress) => {
+            showImmersiveProgressUpdate(
+              immersiveTranslationBatchStartProgress(
+                progress,
+                blocks.length,
+                t("translatingPageProgress")
+              )
             );
           },
           onBatchApplied: ({ completed: completed2 }) => {
-            showImmersiveProgress(
-              Math.min(completed2, blocks.length) / blocks.length * 92 + 5,
-              `${t("translationWritten")} ${completed2}`
+            showImmersiveProgressUpdate(
+              immersiveTranslationBatchAppliedProgress(
+                completed2,
+                blocks.length,
+                t("translationWritten")
+              )
             );
           }
         });
-        showImmersiveProgress(
-          100,
-          `${t("translationComplete")}, ${t("translationApplied")} ${completed}`,
-          false
+        runState = createImmersiveRunState(
+          "translation",
+          workflowScope,
+          "completed",
+          {
+            totalBlocks: summary.totalBlocks,
+            appliedBlocks: summary.appliedBlocks
+          }
+        );
+        if (!isCurrentImmersiveRun(run)) return;
+        emitDebugLog(
+          formatImmersiveWorkflowLog(
+            t("immersiveTranslation"),
+            "complete",
+            {
+              scope: runState.scope,
+              applied: summary.appliedBlocks,
+              total: summary.totalBlocks
+            },
+            { surface: "edge" }
+          )
+        );
+        showImmersiveProgressUpdate(
+          immersiveWorkflowCompleteProgress(
+            `${t("translationComplete")}, ${t("translationApplied")} ${completed}`
+          )
         );
       } catch (requestError) {
-        showImmersiveProgress(100, errorMessage(requestError), false, true);
+        if (isImmersiveWorkflowCancelledError(requestError)) {
+          emitDebugLog(
+            formatImmersiveWorkflowLog(
+              t("immersiveTranslation"),
+              "cancelled",
+              { scope: workflowScope },
+              { surface: "edge" }
+            )
+          );
+          return;
+        }
+        if (!isCurrentImmersiveRun(run)) return;
+        const message = errorMessage(requestError);
+        const errorInfo = classifyImmersiveWorkflowError(message, {
+          missingProfile: t("modelEngineRequired"),
+          emptyContext: t("noTranslatableBlocks"),
+          modelResponseInvalid: contentText("jsonArrayInvalid"),
+          applyFailed: t("translationWriteFailed")
+        });
+        runState = createImmersiveRunState(
+          "translation",
+          workflowScope,
+          "failed",
+          { error: message }
+        );
+        emitDebugLog(
+          formatImmersiveWorkflowLog(
+            t("immersiveTranslation"),
+            "error",
+            {
+              scope: runState.scope,
+              code: errorInfo.code,
+              error: runState.error
+            },
+            { surface: "edge" }
+          )
+        );
+        showImmersiveProgressUpdate(
+          immersiveWorkflowErrorProgress(message)
+        );
       } finally {
-        setEdgeBusy(false);
+        if (isCurrentImmersiveRun(run)) {
+          setEdgeBusy(false);
+        }
+        finishImmersiveRun(run);
       }
     };
     runEdgeImmersiveTranslateRef.current = runEdgeImmersiveTranslate;
     const runEdgeImmersiveReading = async (requestedScope, options = {}) => {
       const scope = requestedScope ?? defaultImmersiveContentScope();
       if (edgeBusy && !options.ignoreBusy) return;
+      const workflowScope = scope === "paragraph" ? "paragraph" : scope;
+      const run = beginImmersiveRun();
+      let runState = createImmersiveRunState(
+        "reading",
+        workflowScope,
+        "collecting"
+      );
       setEdgeBusy(true);
-      emitDebugLog(`[workflow] immersive reading edge start scope=${scope}`);
+      emitDebugLog(
+        formatImmersiveWorkflowLog(
+          t("immersiveReading"),
+          "start",
+          { scope: workflowScope },
+          { surface: "edge" }
+        )
+      );
       showEdgeResult("");
-      showImmersiveProgress(
-        3,
-        immersiveCollectingLabel(scope),
-        true,
-        false,
+      showImmersiveProgressUpdate(
+        immersiveWorkflowCollectingProgress(immersiveCollectingLabel(scope)),
         t("immersiveReading")
       );
       try {
         if (!activeSettings) throw new Error(t("modelEngineRequired"));
-        emitDebugLog("[workflow] immersive reading edge collect text blocks");
+        emitDebugLog(
+          formatImmersiveWorkflowLog(
+            t("immersiveReading"),
+            "collect_blocks",
+            { scope: workflowScope },
+            { surface: "edge" }
+          )
+        );
         const blocks = scope === "paragraph" ? prepareParagraphTranslationBlocks2(lastPointerTarget, "", {
           preserveRichText: false,
           maxVisibleTextLength: 2400
@@ -27397,19 +28585,33 @@ ${t("currentResultLabel")}\uFF1A` : "",
           maxVisibleTextLength: 2400
         });
         if (!blocks.length) throw new Error(t("noTranslatableBlocks"));
+        runState = createImmersiveRunState("reading", workflowScope, "requesting", {
+          totalBlocks: blocks.length
+        });
         emitDebugLog(
-          `[workflow] immersive reading edge collected blocks=${blocks.length}`
+          formatImmersiveWorkflowLog(
+            t("immersiveReading"),
+            "blocks_collected",
+            { scope: workflowScope, blocks: blocks.length },
+            { surface: "edge" }
+          )
         );
         const pageLanguageSample = blocks.map((block) => block.text).join("\n").slice(0, 8e3);
         const useModelPage = activeSettings.immersiveReadingStrategy === "model-page";
         emitDebugLog(
-          `[workflow] immersive reading edge strategy=${useModelPage ? "model-page" : "local-first"} difficulty=${activeSettings.immersiveReadingDifficulty}`
+          formatImmersiveWorkflowLog(
+            t("immersiveReading"),
+            "strategy_selected",
+            {
+              scope: workflowScope,
+              strategy: useModelPage ? "model-page" : "local-first",
+              difficulty: activeSettings.immersiveReadingDifficulty
+            },
+            { surface: "edge" }
+          )
         );
-        showImmersiveProgress(
-          8,
-          `${t("immersiveReading")} ${blocks.length}/${blocks.length}`,
-          true,
-          false,
+        showImmersiveProgressUpdate(
+          immersiveWorkflowReadyProgress(blocks.length, t("immersiveReading")),
           t("immersiveReading")
         );
         const requestModelReading = async (requestBlocks) => {
@@ -27417,7 +28619,16 @@ ${t("currentResultLabel")}\uFF1A` : "",
             throw new Error(t("modelEngineRequired"));
           }
           emitDebugLog(
-            `[workflow] immersive reading edge model-page request blocks=${requestBlocks.length} model=${translationProfile.name}/${translationProfile.model}`
+            formatImmersiveWorkflowLog(
+              t("immersiveReading"),
+              "model_page_request",
+              {
+                scope: workflowScope,
+                blocks: requestBlocks.length,
+                model: `${translationProfile.name}/${translationProfile.model}`
+              },
+              { surface: "edge" }
+            )
           );
           const response = await runtimeRequest2(
             "model.complete",
@@ -27455,108 +28666,275 @@ ${t("currentResultLabel")}\uFF1A` : "",
         };
         let translations = [];
         let appliedDuringProcessing = null;
+        let workflowSummary = createImmersiveWorkflowSummary({
+          totalBlocks: blocks.length,
+          requestedBlocks: 0,
+          translatedBlocks: 0,
+          appliedBlocks: 0
+        });
         if (useModelPage) {
           const result2 = await runImmersiveReadingModelPageWorkflow({
             blocks,
             batchSize: IMMERSIVE_TRANSLATION_BATCH_SIZE,
             concurrency: IMMERSIVE_TRANSLATION_CONCURRENCY,
+            signal: run.controller.signal,
             requestTranslations: requestModelReading,
-            applyTranslations: (orderedTranslations) => applyImmersiveReading2(
-              orderedTranslations,
-              activeSettings.immersiveReadingMode,
-              activeSettings.immersiveReadingBackgroundStyle,
-              activeSettings.immersiveReadingOuterTextEffects,
-              activeSettings.immersiveReadingInnerTextEffects
-            ),
-            onBatchApplied: ({ batch, processedBefore, appliedCount }) => {
-              showImmersiveProgress(
-                Math.min(processedBefore + batch.length, blocks.length) / blocks.length * 92 + 5,
-                `${t("immersiveReadingApplied")} ${appliedCount}`,
-                true,
-                false,
+            applyTranslations: (orderedTranslations) => {
+              runState = createImmersiveRunState(
+                "reading",
+                workflowScope,
+                "applying",
+                { totalBlocks: blocks.length }
+              );
+              return applyImmersiveReading2(
+                orderedTranslations,
+                activeSettings.immersiveReadingMode,
+                activeSettings.immersiveReadingBackgroundStyle,
+                activeSettings.immersiveReadingOuterTextEffects,
+                activeSettings.immersiveReadingInnerTextEffects
+              );
+            },
+            onBatchApplied: (progress) => {
+              showImmersiveProgressUpdate(
+                immersiveReadingModelBatchAppliedProgress(
+                  progress,
+                  blocks.length,
+                  t("immersiveReadingApplied")
+                ),
                 t("immersiveReading")
               );
             }
           });
           translations = result2.translations;
           appliedDuringProcessing = result2.appliedCount;
+          workflowSummary = result2.summary;
           emitDebugLog(
-            `[workflow] immersive reading edge model-page aligned translations=${translations.length}`
+            formatImmersiveWorkflowLog(
+              t("immersiveReading"),
+              "model_page_aligned",
+              {
+                scope: workflowScope,
+                translations: workflowSummary.translatedBlocks
+              },
+              { surface: "edge" }
+            )
           );
         } else {
-          emitDebugLog(
-            "[workflow] immersive reading edge local-first build local plan"
-          );
-          const plan = await localReadingPlan(blocks, activeSettings);
-          emitDebugLog(
-            `[workflow] immersive reading edge local-first plan blocks=${plan.blocks.length} fallbackTerms=${plan.fallbackTerms.length}`
-          );
-          let fallbackTranslations = [];
-          if (plan.fallbackTerms.length && translationProfile) {
-            try {
+          const result2 = await runImmersiveReadingLocalFirstWorkflow({
+            blocks,
+            signal: run.controller.signal,
+            buildPlan: (requestBlocks) => localReadingPlan(requestBlocks, activeSettings),
+            requestFallbackTranslations: translationProfile ? (terms) => requestReadingFallbackTranslations(
+              terms,
+              translationProfile.id
+            ) : void 0,
+            finalizePlan: (planBlocks, fallbackTranslations) => finalizeLocalReadingPlan(planBlocks, fallbackTranslations),
+            onPlanStart: () => {
               emitDebugLog(
-                `[workflow] immersive reading edge local-first fallback request terms=${plan.fallbackTerms.length} model=${translationProfile.name}/${translationProfile.model}`
+                formatImmersiveWorkflowLog(
+                  t("immersiveReading"),
+                  "local_first_plan_start",
+                  { scope: workflowScope },
+                  { surface: "edge" }
+                )
               );
-              fallbackTranslations = await requestReadingFallbackTranslations(
-                plan.fallbackTerms,
-                translationProfile.id
-              );
+            },
+            onPlanReady: (plan) => {
               emitDebugLog(
-                `[workflow] immersive reading edge local-first fallback translations=${fallbackTranslations.length}`
+                formatImmersiveWorkflowLog(
+                  t("immersiveReading"),
+                  "local_first_plan_ready",
+                  {
+                    scope: workflowScope,
+                    blocks: plan.blocks.length,
+                    fallbackTerms: plan.fallbackTerms.length
+                  },
+                  { surface: "edge" }
+                )
               );
-            } catch {
+            },
+            onFallbackRequest: (terms) => {
               emitDebugLog(
-                "[workflow] immersive reading edge local-first fallback failed, continue with local dictionary results"
+                formatImmersiveWorkflowLog(
+                  t("immersiveReading"),
+                  "local_first_fallback_request",
+                  {
+                    scope: workflowScope,
+                    fallbackTerms: terms.length,
+                    model: translationProfile ? `${translationProfile.name}/${translationProfile.model}` : void 0
+                  },
+                  { surface: "edge" }
+                )
+              );
+            },
+            onFallbackComplete: (fallbackTranslations) => {
+              emitDebugLog(
+                formatImmersiveWorkflowLog(
+                  t("immersiveReading"),
+                  "local_first_fallback_complete",
+                  {
+                    scope: workflowScope,
+                    translations: fallbackTranslations.length
+                  },
+                  { surface: "edge" }
+                )
+              );
+            },
+            onFallbackFailed: () => {
+              emitDebugLog(
+                formatImmersiveWorkflowLog(
+                  t("immersiveReading"),
+                  "local_first_fallback_failed",
+                  { scope: workflowScope },
+                  { surface: "edge" }
+                )
+              );
+            },
+            onFallbackSkipped: (terms) => {
+              emitDebugLog(
+                formatImmersiveWorkflowLog(
+                  t("immersiveReading"),
+                  "local_first_fallback_skipped",
+                  {
+                    scope: workflowScope,
+                    fallbackTerms: terms.length
+                  },
+                  { surface: "edge" }
+                )
+              );
+            },
+            onFinalized: (finalTranslations) => {
+              emitDebugLog(
+                formatImmersiveWorkflowLog(
+                  t("immersiveReading"),
+                  "local_first_finalized",
+                  {
+                    scope: workflowScope,
+                    translations: finalTranslations.length
+                  },
+                  { surface: "edge" }
+                )
               );
             }
-          } else {
-            emitDebugLog(
-              `[workflow] immersive reading edge local-first fallback skipped terms=${plan.fallbackTerms.length}`
-            );
-          }
-          translations = finalizeLocalReadingPlan(
-            plan.blocks,
-            fallbackTranslations
-          );
-          emitDebugLog(
-            `[workflow] immersive reading edge local-first finalized translations=${translations.length}`
-          );
+          });
+          translations = result2.translations;
+          workflowSummary = result2.summary;
         }
         let completed = appliedDuringProcessing ?? 0;
         if (appliedDuringProcessing === null) {
-          translations = orderTranslationsByBlocks(translations, blocks);
-          completed = applyImmersiveReading2(
+          const applyResult = await runImmersiveReadingFinalApplyWorkflow({
+            blocks,
             translations,
-            activeSettings.immersiveReadingMode,
-            activeSettings.immersiveReadingBackgroundStyle,
-            activeSettings.immersiveReadingOuterTextEffects,
-            activeSettings.immersiveReadingInnerTextEffects
-          );
+            summary: workflowSummary,
+            signal: run.controller.signal,
+            onApplyStart: () => {
+              runState = createImmersiveRunState(
+                "reading",
+                workflowScope,
+                "applying",
+                { totalBlocks: blocks.length }
+              );
+            },
+            applyTranslations: (orderedTranslations) => applyImmersiveReading2(
+              orderedTranslations,
+              activeSettings.immersiveReadingMode,
+              activeSettings.immersiveReadingBackgroundStyle,
+              activeSettings.immersiveReadingOuterTextEffects,
+              activeSettings.immersiveReadingInnerTextEffects
+            )
+          });
+          translations = applyResult.translations;
+          completed = applyResult.appliedCount;
+          workflowSummary = applyResult.summary;
         }
+        runState = createImmersiveRunState("reading", workflowScope, "completed", {
+          totalBlocks: workflowSummary.totalBlocks,
+          appliedBlocks: workflowSummary.appliedBlocks
+        });
+        if (!isCurrentImmersiveRun(run)) return;
         emitDebugLog(
-          `[workflow] immersive reading edge applied blocks=${completed}/${translations.length}`
+          formatImmersiveWorkflowLog(
+            t("immersiveReading"),
+            "applied",
+            {
+              scope: runState.scope,
+              applied: workflowSummary.appliedBlocks,
+              total: workflowSummary.translatedBlocks
+            },
+            { surface: "edge" }
+          )
         );
-        showImmersiveProgress(
-          100,
-          `${t("immersiveReadingApplied")} ${completed}`,
-          false,
-          false,
+        showImmersiveProgressUpdate(
+          immersiveWorkflowCompleteProgress(
+            `${t("immersiveReadingApplied")} ${completed}`
+          ),
           t("immersiveReading")
         );
       } catch (requestError) {
-        showImmersiveProgress(
-          100,
-          errorMessage(requestError),
-          false,
-          true,
+        if (isImmersiveWorkflowCancelledError(requestError)) {
+          emitDebugLog(
+            formatImmersiveWorkflowLog(
+              t("immersiveReading"),
+              "cancelled",
+              { scope: workflowScope },
+              { surface: "edge" }
+            )
+          );
+          return;
+        }
+        if (!isCurrentImmersiveRun(run)) return;
+        const message = errorMessage(requestError);
+        const errorInfo = classifyImmersiveWorkflowError(message, {
+          missingProfile: t("modelEngineRequired"),
+          emptyContext: t("noTranslatableBlocks")
+        });
+        runState = createImmersiveRunState("reading", workflowScope, "failed", {
+          error: message
+        });
+        emitDebugLog(
+          formatImmersiveWorkflowLog(
+            t("immersiveReading"),
+            "error",
+            {
+              scope: runState.scope,
+              code: errorInfo.code,
+              error: runState.error
+            },
+            { surface: "edge" }
+          )
+        );
+        showImmersiveProgressUpdate(
+          immersiveWorkflowErrorProgress(message),
           t("immersiveReading")
         );
       } finally {
-        setEdgeBusy(false);
+        if (isCurrentImmersiveRun(run)) {
+          setEdgeBusy(false);
+        }
+        finishImmersiveRun(run);
       }
     };
     const runEdgeRestore = () => {
+      immersiveRunRef.current?.controller.abort();
+      immersiveRunRef.current = null;
+      const runState = createImmersiveRunState("translation", "page", "restoring");
+      emitDebugLog(
+        formatImmersiveWorkflowLog(
+          t("restorePage"),
+          "restore",
+          { scope: runState.scope },
+          { surface: "edge" }
+        )
+      );
       restorePage2();
+      emitDebugLog(
+        formatImmersiveWorkflowLog(
+          t("restorePage"),
+          "restored",
+          { scope: runState.scope },
+          { surface: "edge" }
+        )
+      );
       showEdgeResult(t("restorePage"), t("pageRestored"));
     };
     (0, import_react4.useEffect)(() => {
@@ -28078,7 +29456,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
             event.stopPropagation();
             void runAutoReply();
           },
-          children: autoReplyBusy ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "md-mini-spinner" }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(BotMessageSquare, {})
+          children: autoReplyBusy ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "md-mini-spinner" }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ToolIcon, { name: "WebMind" })
         }
       ),
       hoverDefinition && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
@@ -28131,7 +29509,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
             event.stopPropagation();
             void runImageTextExtraction(event.currentTarget);
           },
-          children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ScanText, {})
+          children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ToolIcon, { name: "WebMind" })
         }
       ),
       edgeQuickToolsEnabled && !edgeToolsBlocked && !edgeDismissed && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
@@ -28165,7 +29543,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                   "aria-label": t("immersiveTranslation"),
                   disabled: edgeBusy,
                   onClick: () => void runEdgeImmersiveTranslate(),
-                  children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ScanText, {})
+                  children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ArrowRightLeft, {})
                 }
               ),
               /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
@@ -28176,7 +29554,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                   "aria-label": t("immersiveReading"),
                   disabled: edgeBusy,
                   onClick: () => void runEdgeImmersiveReading(),
-                  children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(BookOpen, {})
+                  children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Highlighter, {})
                 }
               ),
               edgeTools.map((tool) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
@@ -28720,7 +30098,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
         return { ok: true };
       }
       if (message.type === "page.context") {
-        return extractPageContext(
+        return extractPageContextAsync(
           Boolean(message.ignoreSelection),
           settings?.interfaceLanguage,
           message.scope === "article" ? "article" : "page"
@@ -28731,6 +30109,22 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       }
       if (message.type === "page.article.restore") {
         return restoreAutomaticArticleSelection(settings?.interfaceLanguage);
+      }
+      if (message.type === "page.article.preview.highlight") {
+        return highlightArticlePreviewBlock(
+          String(message.text ?? ""),
+          typeof message.targetId === "string" ? message.targetId : void 0
+        );
+      }
+      if (message.type === "page.article.preview.remove") {
+        return removeArticlePreviewBlock(
+          String(message.text ?? ""),
+          typeof message.targetId === "string" ? message.targetId : void 0,
+          settings?.interfaceLanguage
+        );
+      }
+      if (message.type === "page.article.preview.prune") {
+        return pruneArticlePreviewBlocks(settings?.interfaceLanguage);
       }
       if (message.type === "page.translation.prepare") {
         return prepareTranslationBlocks2(

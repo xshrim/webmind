@@ -42,16 +42,18 @@ const TRANSLATION_FAMILY_LABELS: Record<TranslationLanguageFamily, string> = {
 
 function detectTranslationLanguage(text: string): TranslationLanguageFamily | null {
   const source = text.replace(/<[^>]*>/g, " ");
-  const latinCount = source.match(/[A-Za-z]/g)?.length ?? 0;
+  const latinWordCount = source.match(/[A-Za-z]+/g)?.length ?? 0;
   const chineseCount = source.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g)?.length ?? 0;
   const japaneseKanaCount = source.match(/[\u3040-\u30ff\u31f0-\u31ff]/g)?.length ?? 0;
   const koreanCount = source.match(/[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af]/g)?.length ?? 0;
   if (koreanCount) return "ko";
   if (japaneseKanaCount) return "ja";
-  if (chineseCount && chineseCount >= latinCount && chineseCount >= koreanCount) {
+  if (chineseCount >= 2 && chineseCount >= latinWordCount) {
     return "zh";
   }
-  if (latinCount >= 2) return "en";
+  if (latinWordCount >= 2 && latinWordCount > chineseCount) return "en";
+  if (chineseCount >= 2) return "zh";
+  if (latinWordCount >= 1 && chineseCount === 0) return "en";
   return null;
 }
 
@@ -594,7 +596,7 @@ export const BUILT_IN_TOOLS: ToolDefinition[] = [
     id: "explain-code",
     title: "代码解释",
     description: "分析流程、风险和改进点",
-    icon: "Code2",
+    icon: "CodeXml",
     builtin: true,
     template:
       "解释选中的代码：它做什么、数据如何流动、复杂度、边界条件、潜在缺陷与可验证的改进建议。"

@@ -1,14 +1,13 @@
 import {
-  BotMessageSquare,
+  ArrowRightLeft,
   Check,
   ChevronDown,
   Clipboard,
-  BookOpen,
   Copy,
   FileText,
+  Highlighter,
   PanelRightOpen,
   RotateCcw,
-  ScanText,
   Send,
   Sparkles,
   X
@@ -85,7 +84,11 @@ import {
 } from "./selection";
 import {
   extractPageContext,
+  extractPageContextAsync,
+  highlightArticlePreviewBlock,
   linkCitationMarkers,
+  pruneArticlePreviewBlocks,
+  removeArticlePreviewBlock,
   searchQuery,
   searchResultsContext,
   restoreAutomaticArticleSelection,
@@ -120,7 +123,21 @@ import {
   truncateText
 } from "../shared/utils";
 import {
-  orderTranslationsByBlocks,
+  classifyImmersiveWorkflowError,
+  createImmersiveRunState,
+  createImmersiveWorkflowSummary,
+  formatImmersiveWorkflowLog,
+  immersiveReadingModelBatchAppliedProgress,
+  immersiveTranslationBatchAppliedProgress,
+  immersiveTranslationBatchStartProgress,
+  immersiveWorkflowCollectingProgress,
+  immersiveWorkflowCompleteProgress,
+  immersiveWorkflowErrorProgress,
+  immersiveWorkflowReadyProgress,
+  isImmersiveWorkflowCancelledError,
+  type ImmersiveWorkflowProgressUpdate,
+  runImmersiveReadingFinalApplyWorkflow,
+  runImmersiveReadingLocalFirstWorkflow,
   runImmersiveReadingModelPageWorkflow,
   runImmersiveTranslationWorkflow
 } from "../shared/immersiveWorkflow";
@@ -1026,12 +1043,35 @@ function SelectionAssistant({ query }: { query: string | null }) {
     moved: false
   });
   const immersiveShortcutCooldownRef = useRef(0);
+  const immersiveRunRef = useRef<{
+    id: string;
+    controller: AbortController;
+  } | null>(null);
   const runEdgeImmersiveTranslateRef = useRef<
     (
       scope?: ImmersiveTranslationRunScope,
       options?: { ignoreBusy?: boolean }
     ) => Promise<void>
   >(async () => {});
+
+  const beginImmersiveRun = () => {
+    immersiveRunRef.current?.controller.abort();
+    const run = {
+      id: crypto.randomUUID(),
+      controller: new AbortController()
+    };
+    immersiveRunRef.current = run;
+    return run;
+  };
+
+  const isCurrentImmersiveRun = (run: { id: string }): boolean =>
+    immersiveRunRef.current?.id === run.id;
+
+  const finishImmersiveRun = (run: { id: string }) => {
+    if (isCurrentImmersiveRun(run)) {
+      immersiveRunRef.current = null;
+    }
+  };
 
   useEffect(() => {
     showTranslationProgress = setTranslationProgress;
@@ -1585,7 +1625,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
         activeSettings?.interfaceLanguage,
         "extractImageText"
       ),
-      icon: "ScanText",
+      icon: "WebMind",
       builtin: true,
       template: ""
     }),
@@ -1984,6 +2024,18 @@ function SelectionAssistant({ query }: { query: string | null }) {
       error
     });
   };
+  const showImmersiveProgressUpdate = (
+    update: ImmersiveWorkflowProgressUpdate,
+    title = t("immersiveTranslation")
+  ) => {
+    showImmersiveProgress(
+      update.percent,
+      update.label,
+      update.active,
+      update.error,
+      title
+    );
+  };
 
   const openSidePanel = async () => {
     setEdgeBusy(true);
@@ -2027,9 +2079,26 @@ function SelectionAssistant({ query }: { query: string | null }) {
   ) => {
     const scope = requestedScope ?? defaultImmersiveContentScope();
     if (edgeBusy && !options.ignoreBusy) return;
+    const workflowScope = scope === "paragraph" ? "paragraph" : scope;
+    const run = beginImmersiveRun();
+    let runState = createImmersiveRunState(
+      "translation",
+      workflowScope,
+      "collecting"
+    );
     setEdgeBusy(true);
+    emitDebugLog(
+      formatImmersiveWorkflowLog(
+        t("immersiveTranslation"),
+        "start",
+        { scope: workflowScope },
+        { surface: "edge" }
+      )
+    );
     showEdgeResult("");
-    showImmersiveProgress(3, immersiveCollectingLabel(scope));
+    showImmersiveProgressUpdate(
+      immersiveWorkflowCollectingProgress(immersiveCollectingLabel(scope))
+    );
     try {
       if (!translationProfile) throw new Error(t("modelEngineRequired"));
       const blocks =
@@ -2041,11 +2110,29 @@ function SelectionAssistant({ query }: { query: string | null }) {
               preserveRichText: true
             });
       if (!blocks.length) throw new Error(t("noTranslatableBlocks"));
-      const { completed } = await runImmersiveTranslationWorkflow({
+      runState = createImmersiveRunState(
+        "translation",
+        workflowScope,
+        "requesting",
+        { totalBlocks: blocks.length }
+      );
+      emitDebugLog(
+        formatImmersiveWorkflowLog(
+          t("immersiveTranslation"),
+          "blocks_collected",
+          {
+            scope: workflowScope,
+            blocks: blocks.length
+          },
+          { surface: "edge" }
+        )
+      );
+      const { completed, summary } = await runImmersiveTranslationWorkflow({
         blocks,
         batchSize: IMMERSIVE_TRANSLATION_BATCH_SIZE,
         concurrency:
           scope === "paragraph" ? 1 : IMMERSIVE_TRANSLATION_CONCURRENCY,
+        signal: run.controller.signal,
         requestTranslations: async (requestBlocks) => {
           const sourceText = requestBlocks.map((block) => block.text).join("\n");
           const response = await runtimeRequest<{ text: string }>(
@@ -2078,37 +2165,114 @@ function SelectionAssistant({ query }: { query: string | null }) {
             )
           );
         },
-        applyTranslations: (translations) =>
-          applyTranslations(
+        applyTranslations: (translations) => {
+          runState = createImmersiveRunState(
+            "translation",
+            workflowScope,
+            "applying",
+            { totalBlocks: blocks.length }
+          );
+          return applyTranslations(
             translations,
             activeSettings?.immersiveTranslationStyle ?? "bilingual",
             activeSettings?.immersiveTranslationDisplayStyle ?? "default",
             activeSettings?.immersiveTranslationTextEffects ?? []
-          ),
+          );
+        },
         invalidTranslationsError: () => new Error(contentText("jsonArrayInvalid")),
         applyCountMismatchError: () => new Error(t("translationWriteFailed")),
-        onBatchStart: ({ batch, processedBefore }) => {
-          showImmersiveProgress(
-            (processedBefore / blocks.length) * 92 + 5,
-            `${t("translatingPageProgress")} ${Math.min(processedBefore + batch.length, blocks.length)}/${blocks.length}`
+        onBatchStart: (progress) => {
+          showImmersiveProgressUpdate(
+            immersiveTranslationBatchStartProgress(
+              progress,
+              blocks.length,
+              t("translatingPageProgress")
+            )
           );
         },
         onBatchApplied: ({ completed }) => {
-          showImmersiveProgress(
-            (Math.min(completed, blocks.length) / blocks.length) * 92 + 5,
-            `${t("translationWritten")} ${completed}`
+          showImmersiveProgressUpdate(
+            immersiveTranslationBatchAppliedProgress(
+              completed,
+              blocks.length,
+              t("translationWritten")
+            )
           );
         }
       });
-      showImmersiveProgress(
-        100,
-        `${t("translationComplete")}, ${t("translationApplied")} ${completed}`,
-        false
+      runState = createImmersiveRunState(
+        "translation",
+        workflowScope,
+        "completed",
+        {
+          totalBlocks: summary.totalBlocks,
+          appliedBlocks: summary.appliedBlocks
+        }
+      );
+      if (!isCurrentImmersiveRun(run)) return;
+      emitDebugLog(
+        formatImmersiveWorkflowLog(
+          t("immersiveTranslation"),
+          "complete",
+          {
+            scope: runState.scope,
+            applied: summary.appliedBlocks,
+            total: summary.totalBlocks
+          },
+          { surface: "edge" }
+        )
+      );
+      showImmersiveProgressUpdate(
+        immersiveWorkflowCompleteProgress(
+          `${t("translationComplete")}, ${t("translationApplied")} ${completed}`
+        )
       );
     } catch (requestError) {
-      showImmersiveProgress(100, errorMessage(requestError), false, true);
+      if (isImmersiveWorkflowCancelledError(requestError)) {
+        emitDebugLog(
+          formatImmersiveWorkflowLog(
+            t("immersiveTranslation"),
+            "cancelled",
+            { scope: workflowScope },
+            { surface: "edge" }
+          )
+        );
+        return;
+      }
+      if (!isCurrentImmersiveRun(run)) return;
+      const message = errorMessage(requestError);
+      const errorInfo = classifyImmersiveWorkflowError(message, {
+        missingProfile: t("modelEngineRequired"),
+        emptyContext: t("noTranslatableBlocks"),
+        modelResponseInvalid: contentText("jsonArrayInvalid"),
+        applyFailed: t("translationWriteFailed")
+      });
+      runState = createImmersiveRunState(
+        "translation",
+        workflowScope,
+        "failed",
+        { error: message }
+      );
+      emitDebugLog(
+        formatImmersiveWorkflowLog(
+          t("immersiveTranslation"),
+          "error",
+          {
+            scope: runState.scope,
+            code: errorInfo.code,
+            error: runState.error
+          },
+          { surface: "edge" }
+        )
+      );
+      showImmersiveProgressUpdate(
+        immersiveWorkflowErrorProgress(message)
+      );
     } finally {
-      setEdgeBusy(false);
+      if (isCurrentImmersiveRun(run)) {
+        setEdgeBusy(false);
+      }
+      finishImmersiveRun(run);
     }
   };
   runEdgeImmersiveTranslateRef.current = runEdgeImmersiveTranslate;
@@ -2119,19 +2283,37 @@ function SelectionAssistant({ query }: { query: string | null }) {
   ) => {
     const scope = requestedScope ?? defaultImmersiveContentScope();
     if (edgeBusy && !options.ignoreBusy) return;
+    const workflowScope = scope === "paragraph" ? "paragraph" : scope;
+    const run = beginImmersiveRun();
+    let runState = createImmersiveRunState(
+      "reading",
+      workflowScope,
+      "collecting"
+    );
     setEdgeBusy(true);
-    emitDebugLog(`[workflow] immersive reading edge start scope=${scope}`);
+    emitDebugLog(
+      formatImmersiveWorkflowLog(
+        t("immersiveReading"),
+        "start",
+        { scope: workflowScope },
+        { surface: "edge" }
+      )
+    );
     showEdgeResult("");
-    showImmersiveProgress(
-      3,
-      immersiveCollectingLabel(scope),
-      true,
-      false,
+    showImmersiveProgressUpdate(
+      immersiveWorkflowCollectingProgress(immersiveCollectingLabel(scope)),
       t("immersiveReading")
     );
     try {
       if (!activeSettings) throw new Error(t("modelEngineRequired"));
-      emitDebugLog("[workflow] immersive reading edge collect text blocks");
+      emitDebugLog(
+        formatImmersiveWorkflowLog(
+          t("immersiveReading"),
+          "collect_blocks",
+          { scope: workflowScope },
+          { surface: "edge" }
+        )
+      );
       const blocks =
         scope === "paragraph"
           ? prepareParagraphTranslationBlocks(lastPointerTarget, "", {
@@ -2143,8 +2325,16 @@ function SelectionAssistant({ query }: { query: string | null }) {
               maxVisibleTextLength: 2400
             });
       if (!blocks.length) throw new Error(t("noTranslatableBlocks"));
+      runState = createImmersiveRunState("reading", workflowScope, "requesting", {
+        totalBlocks: blocks.length
+      });
       emitDebugLog(
-        `[workflow] immersive reading edge collected blocks=${blocks.length}`
+        formatImmersiveWorkflowLog(
+          t("immersiveReading"),
+          "blocks_collected",
+          { scope: workflowScope, blocks: blocks.length },
+          { surface: "edge" }
+        )
       );
       const pageLanguageSample = blocks
         .map((block) => block.text)
@@ -2153,15 +2343,19 @@ function SelectionAssistant({ query }: { query: string | null }) {
       const useModelPage =
         activeSettings.immersiveReadingStrategy === "model-page";
       emitDebugLog(
-        `[workflow] immersive reading edge strategy=${
-          useModelPage ? "model-page" : "local-first"
-        } difficulty=${activeSettings.immersiveReadingDifficulty}`
+        formatImmersiveWorkflowLog(
+          t("immersiveReading"),
+          "strategy_selected",
+          {
+            scope: workflowScope,
+            strategy: useModelPage ? "model-page" : "local-first",
+            difficulty: activeSettings.immersiveReadingDifficulty
+          },
+          { surface: "edge" }
+        )
       );
-      showImmersiveProgress(
-        8,
-        `${t("immersiveReading")} ${blocks.length}/${blocks.length}`,
-        true,
-        false,
+      showImmersiveProgressUpdate(
+        immersiveWorkflowReadyProgress(blocks.length, t("immersiveReading")),
         t("immersiveReading")
       );
       const requestModelReading = async (requestBlocks: PageTextBlock[]) => {
@@ -2169,7 +2363,16 @@ function SelectionAssistant({ query }: { query: string | null }) {
           throw new Error(t("modelEngineRequired"));
         }
         emitDebugLog(
-          `[workflow] immersive reading edge model-page request blocks=${requestBlocks.length} model=${translationProfile.name}/${translationProfile.model}`
+          formatImmersiveWorkflowLog(
+            t("immersiveReading"),
+            "model_page_request",
+            {
+              scope: workflowScope,
+              blocks: requestBlocks.length,
+              model: `${translationProfile.name}/${translationProfile.model}`
+            },
+            { surface: "edge" }
+          )
         );
         const response = await runtimeRequest<{ text: string }>(
           "model.complete",
@@ -2207,12 +2410,183 @@ function SelectionAssistant({ query }: { query: string | null }) {
       };
       let translations: PageTranslation[] = [];
       let appliedDuringProcessing: number | null = null;
+      let workflowSummary = createImmersiveWorkflowSummary({
+        totalBlocks: blocks.length,
+        requestedBlocks: 0,
+        translatedBlocks: 0,
+        appliedBlocks: 0
+      });
       if (useModelPage) {
         const result = await runImmersiveReadingModelPageWorkflow({
           blocks,
           batchSize: IMMERSIVE_TRANSLATION_BATCH_SIZE,
           concurrency: IMMERSIVE_TRANSLATION_CONCURRENCY,
+          signal: run.controller.signal,
           requestTranslations: requestModelReading,
+          applyTranslations: (orderedTranslations) => {
+            runState = createImmersiveRunState(
+              "reading",
+              workflowScope,
+              "applying",
+              { totalBlocks: blocks.length }
+            );
+            return applyImmersiveReading(
+              orderedTranslations,
+              activeSettings.immersiveReadingMode,
+              activeSettings.immersiveReadingBackgroundStyle,
+              activeSettings.immersiveReadingOuterTextEffects,
+              activeSettings.immersiveReadingInnerTextEffects
+            );
+          },
+          onBatchApplied: (progress) => {
+            showImmersiveProgressUpdate(
+              immersiveReadingModelBatchAppliedProgress(
+                progress,
+                blocks.length,
+                t("immersiveReadingApplied")
+              ),
+              t("immersiveReading")
+            );
+          }
+        });
+        translations = result.translations;
+        appliedDuringProcessing = result.appliedCount;
+        workflowSummary = result.summary;
+        emitDebugLog(
+          formatImmersiveWorkflowLog(
+            t("immersiveReading"),
+            "model_page_aligned",
+            {
+              scope: workflowScope,
+              translations: workflowSummary.translatedBlocks
+            },
+            { surface: "edge" }
+          )
+        );
+      } else {
+        const result = await runImmersiveReadingLocalFirstWorkflow({
+          blocks,
+          signal: run.controller.signal,
+          buildPlan: (requestBlocks) =>
+            localReadingPlan(requestBlocks, activeSettings),
+          requestFallbackTranslations: translationProfile
+            ? (terms) =>
+                requestReadingFallbackTranslations(
+                  terms,
+                  translationProfile.id
+                )
+            : undefined,
+          finalizePlan: (planBlocks, fallbackTranslations) =>
+            finalizeLocalReadingPlan(planBlocks, fallbackTranslations),
+          onPlanStart: () => {
+            emitDebugLog(
+              formatImmersiveWorkflowLog(
+                t("immersiveReading"),
+                "local_first_plan_start",
+                { scope: workflowScope },
+                { surface: "edge" }
+              )
+            );
+          },
+          onPlanReady: (plan) => {
+            emitDebugLog(
+              formatImmersiveWorkflowLog(
+                t("immersiveReading"),
+                "local_first_plan_ready",
+                {
+                  scope: workflowScope,
+                  blocks: plan.blocks.length,
+                  fallbackTerms: plan.fallbackTerms.length
+                },
+                { surface: "edge" }
+              )
+            );
+          },
+          onFallbackRequest: (terms) => {
+            emitDebugLog(
+              formatImmersiveWorkflowLog(
+                t("immersiveReading"),
+                "local_first_fallback_request",
+                {
+                  scope: workflowScope,
+                  fallbackTerms: terms.length,
+                  model: translationProfile
+                    ? `${translationProfile.name}/${translationProfile.model}`
+                    : undefined
+                },
+                { surface: "edge" }
+              )
+            );
+          },
+          onFallbackComplete: (fallbackTranslations) => {
+            emitDebugLog(
+              formatImmersiveWorkflowLog(
+                t("immersiveReading"),
+                "local_first_fallback_complete",
+                {
+                  scope: workflowScope,
+                  translations: fallbackTranslations.length
+                },
+                { surface: "edge" }
+              )
+            );
+          },
+          onFallbackFailed: () => {
+            emitDebugLog(
+              formatImmersiveWorkflowLog(
+                t("immersiveReading"),
+                "local_first_fallback_failed",
+                { scope: workflowScope },
+                { surface: "edge" }
+              )
+            );
+            // Local-first mode treats model fallback as best-effort.
+          },
+          onFallbackSkipped: (terms) => {
+            emitDebugLog(
+              formatImmersiveWorkflowLog(
+                t("immersiveReading"),
+                "local_first_fallback_skipped",
+                {
+                  scope: workflowScope,
+                  fallbackTerms: terms.length
+                },
+                { surface: "edge" }
+              )
+            );
+          },
+          onFinalized: (finalTranslations) => {
+            emitDebugLog(
+              formatImmersiveWorkflowLog(
+                t("immersiveReading"),
+                "local_first_finalized",
+                {
+                  scope: workflowScope,
+                  translations: finalTranslations.length
+                },
+                { surface: "edge" }
+              )
+            );
+          }
+        });
+        translations = result.translations;
+        workflowSummary = result.summary;
+      }
+      let completed = appliedDuringProcessing ?? 0;
+      if (appliedDuringProcessing === null) {
+        const applyResult = await runImmersiveReadingFinalApplyWorkflow({
+          blocks,
+          translations,
+          summary: workflowSummary,
+          signal: run.controller.signal,
+          onApplyStart: () => {
+            runState = createImmersiveRunState(
+              "reading",
+              workflowScope,
+              "applying",
+              { totalBlocks: blocks.length }
+            );
+          },
           applyTranslations: (orderedTranslations) =>
             applyImmersiveReading(
               orderedTranslations,
@@ -2220,101 +2594,101 @@ function SelectionAssistant({ query }: { query: string | null }) {
               activeSettings.immersiveReadingBackgroundStyle,
               activeSettings.immersiveReadingOuterTextEffects,
               activeSettings.immersiveReadingInnerTextEffects
-            ),
-          onBatchApplied: ({ batch, processedBefore, appliedCount }) => {
-            showImmersiveProgress(
-              (Math.min(processedBefore + batch.length, blocks.length) /
-                blocks.length) *
-                92 +
-                5,
-              `${t("immersiveReadingApplied")} ${appliedCount}`,
-              true,
-              false,
-              t("immersiveReading")
-            );
-          }
+            )
         });
-        translations = result.translations;
-        appliedDuringProcessing = result.appliedCount;
-        emitDebugLog(
-          `[workflow] immersive reading edge model-page aligned translations=${translations.length}`
-        );
-      } else {
-        emitDebugLog(
-          "[workflow] immersive reading edge local-first build local plan"
-        );
-        const plan = await localReadingPlan(blocks, activeSettings);
-        emitDebugLog(
-          `[workflow] immersive reading edge local-first plan blocks=${plan.blocks.length} fallbackTerms=${plan.fallbackTerms.length}`
-        );
-        let fallbackTranslations: ReadingFallbackTranslation[] = [];
-        if (plan.fallbackTerms.length && translationProfile) {
-          try {
-            emitDebugLog(
-              `[workflow] immersive reading edge local-first fallback request terms=${plan.fallbackTerms.length} model=${translationProfile.name}/${translationProfile.model}`
-            );
-            fallbackTranslations = await requestReadingFallbackTranslations(
-              plan.fallbackTerms,
-              translationProfile.id
-            );
-            emitDebugLog(
-              `[workflow] immersive reading edge local-first fallback translations=${fallbackTranslations.length}`
-            );
-          } catch {
-            emitDebugLog(
-              "[workflow] immersive reading edge local-first fallback failed, continue with local dictionary results"
-            );
-            // Local-first mode treats model fallback as best-effort.
-          }
-        } else {
-          emitDebugLog(
-            `[workflow] immersive reading edge local-first fallback skipped terms=${plan.fallbackTerms.length}`
-          );
-        }
-        translations = finalizeLocalReadingPlan(
-          plan.blocks,
-          fallbackTranslations
-        );
-        emitDebugLog(
-          `[workflow] immersive reading edge local-first finalized translations=${translations.length}`
-        );
+        translations = applyResult.translations;
+        completed = applyResult.appliedCount;
+        workflowSummary = applyResult.summary;
       }
-      let completed = appliedDuringProcessing ?? 0;
-      if (appliedDuringProcessing === null) {
-        translations = orderTranslationsByBlocks(translations, blocks);
-        completed = applyImmersiveReading(
-          translations,
-          activeSettings.immersiveReadingMode,
-          activeSettings.immersiveReadingBackgroundStyle,
-          activeSettings.immersiveReadingOuterTextEffects,
-          activeSettings.immersiveReadingInnerTextEffects
-        );
-      }
+      runState = createImmersiveRunState("reading", workflowScope, "completed", {
+        totalBlocks: workflowSummary.totalBlocks,
+        appliedBlocks: workflowSummary.appliedBlocks
+      });
+      if (!isCurrentImmersiveRun(run)) return;
       emitDebugLog(
-        `[workflow] immersive reading edge applied blocks=${completed}/${translations.length}`
+        formatImmersiveWorkflowLog(
+          t("immersiveReading"),
+          "applied",
+          {
+            scope: runState.scope,
+            applied: workflowSummary.appliedBlocks,
+            total: workflowSummary.translatedBlocks
+          },
+          { surface: "edge" }
+        )
       );
-      showImmersiveProgress(
-        100,
-        `${t("immersiveReadingApplied")} ${completed}`,
-        false,
-        false,
+      showImmersiveProgressUpdate(
+        immersiveWorkflowCompleteProgress(
+          `${t("immersiveReadingApplied")} ${completed}`
+        ),
         t("immersiveReading")
       );
     } catch (requestError) {
-      showImmersiveProgress(
-        100,
-        errorMessage(requestError),
-        false,
-        true,
+      if (isImmersiveWorkflowCancelledError(requestError)) {
+        emitDebugLog(
+          formatImmersiveWorkflowLog(
+            t("immersiveReading"),
+            "cancelled",
+            { scope: workflowScope },
+            { surface: "edge" }
+          )
+        );
+        return;
+      }
+      if (!isCurrentImmersiveRun(run)) return;
+      const message = errorMessage(requestError);
+      const errorInfo = classifyImmersiveWorkflowError(message, {
+        missingProfile: t("modelEngineRequired"),
+        emptyContext: t("noTranslatableBlocks")
+      });
+      runState = createImmersiveRunState("reading", workflowScope, "failed", {
+        error: message
+      });
+      emitDebugLog(
+        formatImmersiveWorkflowLog(
+          t("immersiveReading"),
+          "error",
+          {
+            scope: runState.scope,
+            code: errorInfo.code,
+            error: runState.error
+          },
+          { surface: "edge" }
+        )
+      );
+      showImmersiveProgressUpdate(
+        immersiveWorkflowErrorProgress(message),
         t("immersiveReading")
       );
     } finally {
-      setEdgeBusy(false);
+      if (isCurrentImmersiveRun(run)) {
+        setEdgeBusy(false);
+      }
+      finishImmersiveRun(run);
     }
   };
 
   const runEdgeRestore = () => {
+    immersiveRunRef.current?.controller.abort();
+    immersiveRunRef.current = null;
+    const runState = createImmersiveRunState("translation", "page", "restoring");
+    emitDebugLog(
+      formatImmersiveWorkflowLog(
+        t("restorePage"),
+        "restore",
+        { scope: runState.scope },
+        { surface: "edge" }
+      )
+    );
     restorePage();
+    emitDebugLog(
+      formatImmersiveWorkflowLog(
+        t("restorePage"),
+        "restored",
+        { scope: runState.scope },
+        { surface: "edge" }
+      )
+    );
     showEdgeResult(t("restorePage"), t("pageRestored"));
   };
 
@@ -2924,7 +3298,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
           {autoReplyBusy ? (
             <span className="md-mini-spinner" />
           ) : (
-            <BotMessageSquare />
+            <ToolIcon name="WebMind" />
           )}
         </button>
       )}
@@ -2983,7 +3357,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
               void runImageTextExtraction(event.currentTarget);
             }}
           >
-            <ScanText />
+            <ToolIcon name="WebMind" />
           </button>
         )}
       {edgeQuickToolsEnabled && !edgeToolsBlocked && !edgeDismissed && (
@@ -3015,7 +3389,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
               disabled={edgeBusy}
               onClick={() => void runEdgeImmersiveTranslate()}
             >
-              <ScanText />
+              <ArrowRightLeft />
             </button>
             <button
               type="button"
@@ -3024,7 +3398,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
               disabled={edgeBusy}
               onClick={() => void runEdgeImmersiveReading()}
             >
-              <BookOpen />
+              <Highlighter />
             </button>
             {edgeTools.map((tool) => (
               <button
@@ -3613,7 +3987,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       return { ok: true };
     }
     if (message.type === "page.context") {
-      return extractPageContext(
+      return extractPageContextAsync(
         Boolean(message.ignoreSelection),
         settings?.interfaceLanguage,
         message.scope === "article" ? "article" : "page"
@@ -3624,6 +3998,22 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     }
     if (message.type === "page.article.restore") {
       return restoreAutomaticArticleSelection(settings?.interfaceLanguage);
+    }
+    if (message.type === "page.article.preview.highlight") {
+      return highlightArticlePreviewBlock(
+        String(message.text ?? ""),
+        typeof message.targetId === "string" ? message.targetId : undefined
+      );
+    }
+    if (message.type === "page.article.preview.remove") {
+      return removeArticlePreviewBlock(
+        String(message.text ?? ""),
+        typeof message.targetId === "string" ? message.targetId : undefined,
+        settings?.interfaceLanguage
+      );
+    }
+    if (message.type === "page.article.preview.prune") {
+      return pruneArticlePreviewBlocks(settings?.interfaceLanguage);
     }
     if (message.type === "page.translation.prepare") {
       return prepareTranslationBlocks(

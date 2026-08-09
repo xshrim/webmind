@@ -1,8 +1,55 @@
 import { describe, expect, it } from "vitest";
-import { createProviderProfile } from "./defaults";
-import { normalizeSettings } from "./storage";
+import { createProviderProfile, DEFAULT_SETTINGS } from "./defaults";
+import {
+  normalizeSettings,
+  SETTINGS_EXPORT_FORMAT,
+  SETTINGS_EXPORT_VERSION
+} from "./storage";
+
+const DEPRECATED_SETTINGS_KEYS = [
+  "selectedContent",
+  "selectionContent",
+  "customArticleContext",
+  "manualArticleContext",
+  "manualArticleScope",
+  "contextPreviewScope",
+  "immersiveTranslationShortcut",
+  "immersiveReadingShortcut",
+  "hoverDefinitionHotkey",
+  "selectionOverlayHotkey",
+  "quickToolsEnabled",
+  "edgeDockMenuEnabled",
+  "autoReplyEnabled"
+];
+
+function sortedKeys(value: object): string[] {
+  return Object.keys(value).sort();
+}
 
 describe("settings normalization", () => {
+  it("keeps normalized empty settings identical to the current defaults", () => {
+    expect(normalizeSettings()).toEqual(DEFAULT_SETTINGS);
+  });
+
+  it("keeps normalized settings and defaults on the same schema keys", () => {
+    expect(sortedKeys(normalizeSettings())).toEqual(sortedKeys(DEFAULT_SETTINGS));
+  });
+
+  it("keeps explicit settings export schema identifiers centralized", () => {
+    expect(SETTINGS_EXPORT_FORMAT).toBe("webmind-settings");
+    expect(SETTINGS_EXPORT_VERSION).toBe(3);
+  });
+
+  it("does not reintroduce deprecated settings fields", () => {
+    const defaultKeys = new Set(Object.keys(DEFAULT_SETTINGS));
+    const normalizedKeys = new Set(Object.keys(normalizeSettings()));
+
+    for (const key of DEPRECATED_SETTINGS_KEYS) {
+      expect(defaultKeys.has(key)).toBe(false);
+      expect(normalizedKeys.has(key)).toBe(false);
+    }
+  });
+
   it("uses zero seconds as the model thinking timeout default", () => {
     expect(normalizeSettings().modelThinkingTimeoutSeconds).toBe(0);
   });

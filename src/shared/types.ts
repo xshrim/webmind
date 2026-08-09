@@ -231,15 +231,20 @@ export interface ArticleQualitySummary {
   continuity: number;
   clutterPenalty: number;
   languageConsistency: number;
-  source: "readability" | "dom" | "manual";
+  source: "readability" | "dom" | "manual" | "edited";
   selector?: string;
   blockCount: number;
   wordCount: number;
+  warnings?: ArticleQualityWarning[];
 }
+
+export type ArticleQualityWarning = "virtualizedContentMayBeIncomplete";
 
 export interface ArticlePreviewBlock {
   id: string;
   text: string;
+  sourceText?: string;
+  targetId?: string;
 }
 
 export interface PageTextBlock {
