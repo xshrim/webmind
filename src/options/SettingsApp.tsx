@@ -44,6 +44,7 @@ import {
 } from "../shared/storage";
 import { allTools } from "../shared/tools";
 import type {
+  ArticleExtractionRule,
   AppSettings,
   AppLanguage,
   CustomTool,
@@ -1007,6 +1008,48 @@ export function SettingsApp() {
         [surface]: Array.from(new Set(toolIds))
       }
     });
+  };
+
+  const updateArticleExtractionRules = async (
+    rules: ArticleExtractionRule[]
+  ) => {
+    if (!settings) return;
+    await persist({
+      ...settings,
+      articleExtractionRules: rules
+    });
+  };
+
+  const updateArticleExtractionRule = async (
+    ruleId: string,
+    patch: Partial<Pick<ArticleExtractionRule, "urlPattern" | "selector">>
+  ) => {
+    const rules = settings?.articleExtractionRules ?? [];
+    await updateArticleExtractionRules(
+      rules.map((rule) =>
+        rule.id === ruleId ? { ...rule, ...patch } : rule
+      )
+    );
+  };
+
+  const addArticleExtractionRule = async () => {
+    const rules = settings?.articleExtractionRules ?? [];
+    await updateArticleExtractionRules([
+      ...rules,
+      {
+        id: crypto.randomUUID(),
+        urlPattern: "",
+        selector: ""
+      }
+    ]);
+  };
+
+  const deleteArticleExtractionRule = async (ruleId: string) => {
+    await updateArticleExtractionRules(
+      (settings?.articleExtractionRules ?? []).filter(
+        (rule) => rule.id !== ruleId
+      )
+    );
   };
 
   const updateSearchAnswerEnabled = async (enabled: boolean) => {
@@ -2250,6 +2293,67 @@ export function SettingsApp() {
                 />
               </article>
             ))}
+          </div>
+        </section>
+
+        <section className="settings-section">
+          <div className="section-heading">
+            <div>
+              <h2>{t("articleRecognition")}</h2>
+              <p>{t("articleExtractionRulesHelp")}</p>
+            </div>
+          </div>
+          <div className="article-rule-panel">
+            <div className="article-rule-panel-head">
+              <strong>{t("recognitionRules")}</strong>
+              <button
+                className="secondary-button compact"
+                type="button"
+                onClick={() => void addArticleExtractionRule()}
+              >
+                <CirclePlus />
+                {t("add")}
+              </button>
+            </div>
+            <div className="article-rule-list">
+              {(settings.articleExtractionRules ?? []).map((rule) => (
+                <div className="article-rule-row" key={rule.id}>
+                  <input
+                    value={rule.urlPattern}
+                    onChange={(event) =>
+                      void updateArticleExtractionRule(rule.id, {
+                        urlPattern: event.target.value
+                      })
+                    }
+                    placeholder={t("articleExtractionUrlPatternPlaceholder")}
+                    spellCheck={false}
+                  />
+                  <input
+                    value={rule.selector}
+                    onChange={(event) =>
+                      void updateArticleExtractionRule(rule.id, {
+                        selector: event.target.value
+                      })
+                    }
+                    placeholder={t("articleExtractionSelectorPlaceholder")}
+                    spellCheck={false}
+                  />
+                  <button
+                    className="icon-button danger"
+                    type="button"
+                    title={t("deleteArticleExtractionRule")}
+                    onClick={() => void deleteArticleExtractionRule(rule.id)}
+                  >
+                    <Trash2 />
+                  </button>
+                </div>
+              ))}
+              {!settings.articleExtractionRules?.length && (
+                <div className="empty-band">
+                  {t("noArticleExtractionRules")}
+                </div>
+              )}
+            </div>
           </div>
         </section>
 

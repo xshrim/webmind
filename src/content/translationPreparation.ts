@@ -1,6 +1,11 @@
-import type { PageTextBlock } from "../shared/types";
+import type {
+  ArticleExtractionRule,
+  ArticlePreviewBlock,
+  PageTextBlock
+} from "../shared/types";
 import { protectTranslationText } from "../shared/utils";
 import {
+  articlePreviewElementById,
   findBestArticleRoot,
   isEditedArticleBlockExcluded
 } from "./pageContext";
@@ -15,6 +20,8 @@ export interface TranslationBlockOptions {
   preserveRichText?: boolean;
   maxVisibleTextLength?: number;
   minVisibleTextLength?: number;
+  articleExtractionRules?: ArticleExtractionRule[];
+  articlePreviewBlocks?: ArticlePreviewBlock[];
 }
 
 export interface TranslationPreparationDependencies {
@@ -74,6 +81,52 @@ function hasDirectText(element: HTMLElement): boolean {
 
 function translationElementVisibleText(element: HTMLElement): string {
   return translationVisibleText(translationTextFromElement(element, []));
+}
+
+function articleScopeTextMatchesCandidate(
+  articleText: string,
+  candidateText: string
+): boolean {
+  const normalizedCandidate = normalizedBlockText(candidateText);
+  if (!articleText || !normalizedCandidate) return true;
+  return (
+    articleText === normalizedCandidate ||
+    articleText.includes(normalizedCandidate)
+  );
+}
+
+function articlePreviewBlockElement(
+  block: ArticlePreviewBlock,
+  root: HTMLElement,
+  dependencies: TranslationPreparationDependencies
+): HTMLElement | null {
+  const direct = articlePreviewElementById(block.targetId);
+  if (direct?.isConnected) return direct;
+  const target = normalizedBlockText(block.sourceText ?? block.text);
+  if (!target) return null;
+  const candidates = articleContentCandidatesFromRoot(
+    root,
+    { maxVisibleTextLength: 20000 },
+    dependencies
+  )
+    .filter((element) => dependencies.isVisible(element))
+    .map((element, order) => {
+      const text = normalizedBlockText(translationElementVisibleText(element));
+      const contains =
+        text === target || text.includes(target) || target.includes(text);
+      return {
+        element,
+        order,
+        text,
+        score: contains ? Math.abs(text.length - target.length) : Infinity
+      };
+    })
+    .filter((candidate) => Number.isFinite(candidate.score))
+    .sort((left, right) => {
+      if (left.score !== right.score) return left.score - right.score;
+      return left.order - right.order;
+    });
+  return candidates[0]?.element ?? null;
 }
 
 function articleContentCandidatesFromRoot(
@@ -442,7 +495,7 @@ export function prepareTranslationBlocks(
   }
   const root =
     scope === "article"
-      ? findBestArticleRoot() ??
+      ? findBestArticleRoot(options.articleExtractionRules) ??
         document.querySelector("article") ??
         document.querySelector("main") ??
         document.querySelector('[role="main"]') ??
@@ -459,6 +512,47 @@ export function prepareTranslationBlocks(
           )
         }
       : options;
+  const articleScopeText =
+    scope === "article" ? normalizedBlockText(textFallback) : "";
+  const seen = new Set<string>();
+  const blocks: PageTextBlock[] = [];
+  if (scope === "article" && options.articlePreviewBlocks?.length) {
+    for (const previewBlock of options.articlePreviewBlocks) {
+      const rawSourceText = (previewBlock.sourceText ?? previewBlock.text).trim();
+      const sourceText = normalizedBlockText(rawSourceText);
+      if (!sourceText) continue;
+      if (
+        articleScopeText &&
+        !articleScopeText.includes(sourceText) &&
+        !sourceText.includes(articleScopeText)
+      ) {
+        continue;
+      }
+      const element = articlePreviewBlockElement(
+        previewBlock,
+        root,
+        dependencies
+      );
+      if (!element || !dependencies.isVisible(element)) continue;
+      if (isWebMindGeneratedElement(element)) continue;
+      if (isEditedArticleBlockExcluded(element)) continue;
+      const id = element.dataset.webmindBlockId ?? dependencies.nextBlockId();
+      element.dataset.webmindBlockId = id;
+      const prepared = prepareTranslationBlock(
+        element,
+        id,
+        false,
+        articleOptions,
+        dependencies
+      );
+      if (!prepared) continue;
+      if (seen.has(id) || seen.has(sourceText)) continue;
+      seen.add(id);
+      seen.add(sourceText);
+      blocks.push({ id: prepared.id, text: rawSourceText });
+    }
+    return blocks;
+  }
   const rootCandidates =
     scope === "article"
       ? articleContentCandidatesFromRoot(root, articleOptions, dependencies)
@@ -489,9 +583,16 @@ export function prepareTranslationBlocks(
     .map(({ element }) => element);
   const candidates =
     scope === "article" ? orderedCandidates : orderedCandidates.slice(0, 160);
-  const seen = new Set<string>();
-  const blocks: PageTextBlock[] = [];
   for (const element of candidates) {
+    if (
+      articleScopeText &&
+      !articleScopeTextMatchesCandidate(
+        articleScopeText,
+        translationElementVisibleText(element)
+      )
+    ) {
+      continue;
+    }
     const id = element.dataset.webmindBlockId ?? dependencies.nextBlockId();
     element.dataset.webmindBlockId = id;
     const block = prepareTranslationBlock(

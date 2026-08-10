@@ -1,7 +1,5 @@
 import {
-  ArrowRightLeft,
   ArrowUp,
-  BookOpen,
   Bot,
   Check,
   ChevronDown,
@@ -12,12 +10,11 @@ import {
   Eraser,
   FileText,
   ImagePlus,
-  Highlighter,
   Link2,
   LoaderCircle,
   MessageCirclePlus,
   MessageSquareText,
-  Newspaper,
+  MousePointerClick,
   Paperclip,
   PanelTop,
   PenLine,
@@ -29,8 +26,11 @@ import {
   Settings,
   Sparkles,
   Square,
+  StickyNote,
+  TextAlignStart,
   TextSelect,
   Trash2,
+  Undo2,
   UserRound,
   Wand2,
   WandSparkles,
@@ -39,8 +39,10 @@ import {
 import {
   useCallback,
   useEffect,
+  lazy,
   useMemo,
   useRef,
+  Suspense,
   useState
 } from "react";
 import {
@@ -80,6 +82,7 @@ import {
 import type {
   AppSettings,
   AppLogLevel,
+  ArticleExtractionRule,
   ArticlePreviewBlock,
   ChatRunRequest,
   ChatMessage,
@@ -103,7 +106,8 @@ import {
   alignPageTranslations,
   buildPageTranslationSystemPrompt,
   buildPageTranslationUserPrompt,
-  buildProtectedTranslationPrompt,
+  buildProtectedTranslationInput,
+  buildProtectedTranslationInstruction,
   createMessage,
   errorMessage,
   extractPageTranslationEntries,
@@ -152,7 +156,6 @@ import {
 } from "./context";
 import {
   NAV_ITEMS,
-  TOOL_ICON_CHOICES,
   TOOL_TAB_PRIORITY,
   ToolIcon
 } from "./toolIcons";
@@ -166,8 +169,18 @@ import {
   logLevelTextKey,
   logLevelWeight
 } from "./display";
+import {
+  ImmersiveReadingIcon,
+  ImmersiveTranslateIcon
+} from "./customIcons";
 
 type ViewId = "chat" | "tools" | "history" | "logs";
+
+const LazyToolIconPicker = lazy(() =>
+  import("./ToolIconPicker").then((module) => ({
+    default: module.ToolIconPicker
+  }))
+);
 
 interface OperationLogEntry {
   id: string;
@@ -231,7 +244,6 @@ export function App() {
   const [customTools, setCustomTools] = useState<CustomTool[]>([]);
   const [toolEditorOpen, setToolEditorOpen] = useState(false);
   const [toolIconPickerOpen, setToolIconPickerOpen] = useState(false);
-  const [toolIconSearch, setToolIconSearch] = useState("");
   const [editingToolId, setEditingToolId] = useState<string | null>(null);
   const [toolDraft, setToolDraft] = useState({
     title: "",
@@ -239,6 +251,7 @@ export function App() {
     template: "",
     icon: ""
   });
+  const [bodyCopied, setBodyCopied] = useState(false);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [editingMessageText, setEditingMessageText] = useState("");
@@ -251,6 +264,11 @@ export function App() {
   const [chatToolsExpanded, setChatToolsExpanded] = useState(false);
   const [chatToolsHiddenDuringRequest, setChatToolsHiddenDuringRequest] =
     useState(false);
+  const [articleRuleEditorOpen, setArticleRuleEditorOpen] = useState(false);
+  const [articleRuleDraft, setArticleRuleDraft] = useState({
+    urlPattern: "",
+    selector: ""
+  });
 
   const messagesRef = useRef(messages);
   const settingsRef = useRef(settings);
@@ -277,6 +295,12 @@ export function App() {
   const selectionContextVersionRef = useRef(0);
   const pendingSelectionContextRef = useRef<PageContext | null>(null);
   const activeTabContextVersionRef = useRef(0);
+  const activeTabIdRef = useRef<number | null>(null);
+  const articlePickingRef = useRef(false);
+  const articlePickRunRef = useRef<{
+    id: string;
+    tabId: number;
+  } | null>(null);
   const contextModeRef = useRef<ContextMode>("page");
   const demoTimerRef = useRef<number | null>(null);
   const immersiveRunRef = useRef<{
@@ -302,6 +326,20 @@ export function App() {
       immersiveRunRef.current = null;
     }
   };
+
+  const cancelArticlePicking = useCallback((tabId?: number) => {
+    if (!articlePickingRef.current && !articlePickRunRef.current) return;
+    const targetTabId = tabId ?? articlePickRunRef.current?.tabId;
+    articlePickRunRef.current = null;
+    articlePickingRef.current = false;
+    setArticlePicking(false);
+    setToolStatus("");
+    if (targetTabId) {
+      void sendToTab(targetTabId, { type: "page.article.pick.cancel" }).catch(
+        () => undefined
+      );
+    }
+  }, []);
 
   const updateMessages = useCallback(
     (
@@ -420,6 +458,36 @@ export function App() {
     const timer = window.setTimeout(() => setToolStatus(""), 5000);
     return () => window.clearTimeout(timer);
   }, [settings?.interfaceLanguage, toolStatus]);
+
+  useEffect(() => {
+    articlePickingRef.current = articlePicking;
+  }, [articlePicking]);
+
+  useEffect(() => {
+    const previousTabId = activeTabIdRef.current;
+    const nextTabId = activeTab?.id ?? null;
+    if (
+      articlePickingRef.current &&
+      previousTabId !== null &&
+      previousTabId !== nextTabId
+    ) {
+      cancelArticlePicking(previousTabId);
+    }
+    activeTabIdRef.current = nextTabId;
+  }, [activeTab?.id, cancelArticlePicking]);
+
+  useEffect(() => {
+    if (!articlePicking || !activeTab?.id) return;
+    const tabId = activeTab.id;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      event.stopPropagation();
+      cancelArticlePicking(tabId);
+    };
+    window.addEventListener("keydown", onKeyDown, true);
+    return () => window.removeEventListener("keydown", onKeyDown, true);
+  }, [activeTab?.id, articlePicking, cancelArticlePicking]);
 
   const toolsFor = useCallback(
     (surface: ToolSurface): ToolDefinition[] => {
@@ -701,6 +769,9 @@ export function App() {
     if (!isExtensionRuntime()) return;
     let refreshTimer: number | null = null;
     const scheduleRefresh = (reason: string) => {
+      if (articlePickingRef.current) {
+        cancelArticlePicking(activeTabIdRef.current ?? undefined);
+      }
       if (refreshTimer !== null) window.clearTimeout(refreshTimer);
       refreshTimer = window.setTimeout(() => {
         refreshTimer = null;
@@ -735,7 +806,7 @@ export function App() {
       chrome.tabs.onUpdated.removeListener(handleUpdated);
       chrome.windows.onFocusChanged.removeListener(handleFocusChanged);
     };
-  }, [refreshActivePageContext]);
+  }, [cancelArticlePicking, refreshActivePageContext]);
 
   useEffect(() => {
     if (!isExtensionRuntime()) return;
@@ -1284,19 +1355,27 @@ export function App() {
   };
 
   const pickCurrentBodyRange = async () => {
-    if (!activeTab?.id) {
+    const tabId = activeTab?.id;
+    if (!tabId) {
       setNotice(t("noReadableTab"));
       return;
     }
+    cancelArticlePicking(tabId);
+    const run = {
+      id: crypto.randomUUID(),
+      tabId
+    };
+    articlePickRunRef.current = run;
+    articlePickingRef.current = true;
     setArticlePicking(true);
     setToolStatus(t("selectingBodyRange"));
     setNotice("");
     try {
-      const next = await sendToTab<PageContext | null>(activeTab.id, {
+      const next = await sendToTab<PageContext | null>(tabId, {
         type: "page.article.pick"
       });
+      if (articlePickRunRef.current?.id !== run.id) return;
       if (!next || next.kind !== "article" || !next.text.trim()) {
-        setNotice(t("manualBodySelectionCancelled"));
         return;
       }
       const normalized = normalizePageContext(next);
@@ -1309,11 +1388,16 @@ export function App() {
       setBodyPreviewExpanded(true);
       appendOperationLog(t("selectCurrentBody"), "success");
     } catch (error) {
+      if (articlePickRunRef.current?.id !== run.id) return;
       setNotice(errorMessage(error));
       appendOperationLog(errorMessage(error), "error");
     } finally {
-      setArticlePicking(false);
-      setToolStatus("");
+      if (articlePickRunRef.current?.id === run.id) {
+        articlePickRunRef.current = null;
+        articlePickingRef.current = false;
+        setArticlePicking(false);
+        setToolStatus("");
+      }
     }
   };
 
@@ -1405,6 +1489,62 @@ export function App() {
       setArticlePicking(false);
       setToolStatus("");
     }
+  };
+
+  const copyCurrentBodyText = async () => {
+    const text = pageContext?.kind === "article" ? pageContext.text.trim() : "";
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      setBodyCopied(true);
+      window.setTimeout(() => setBodyCopied(false), 1400);
+    } catch (error) {
+      setNotice(errorMessage(error));
+      appendOperationLog(errorMessage(error), "error");
+    }
+  };
+
+  const openArticleRuleEditor = () => {
+    const url = pageContext?.url || activeTab?.url || "";
+    setArticleRuleDraft({
+      urlPattern: url,
+      selector: articleQuality?.selector ?? ""
+    });
+    setArticleRuleEditorOpen(true);
+  };
+
+  const saveArticleExtractionRule = async () => {
+    const currentSettings = settingsRef.current;
+    const urlPattern = articleRuleDraft.urlPattern.trim();
+    const selector = articleRuleDraft.selector.trim();
+    if (!currentSettings || !urlPattern || !selector) {
+      setNotice(t("articleExtractionRuleInvalid"));
+      return;
+    }
+    const nextRule: ArticleExtractionRule = {
+      id: crypto.randomUUID(),
+      urlPattern,
+      selector
+    };
+    const nextSettings: AppSettings = {
+      ...currentSettings,
+      articleExtractionRules: [
+        nextRule,
+        ...(currentSettings.articleExtractionRules ?? []).filter(
+          (rule) =>
+            rule.urlPattern !== nextRule.urlPattern ||
+            rule.selector !== nextRule.selector
+        )
+      ]
+    };
+    settingsRef.current = nextSettings;
+    setSettings(nextSettings);
+    await saveSettings(nextSettings);
+    setArticleRuleEditorOpen(false);
+    setNotice(t("articleExtractionRuleSaved"));
+    appendOperationLog(t("articleExtractionRuleSaved"), "success");
+    await refreshActivePageContext("article-extraction-rule-saved", true);
+    setBodyPreviewExpanded(true);
   };
 
   useEffect(() => {
@@ -1528,6 +1668,8 @@ export function App() {
         modelHistoryOverride?: ChatMessage[];
         hideToolsUntilResponse?: boolean;
         translationProtection?: ProtectedTranslationText;
+        requestModelContent?: string;
+        requestSystemInstruction?: string;
         purpose?: ModelPurpose;
       } = {}
     ): Promise<boolean> => {
@@ -1612,19 +1754,31 @@ export function App() {
           : null;
       const requestTranslationProtection =
         options.translationProtection ?? contextualTranslationProtection;
-      const modelContent =
+      const protectedContextText =
+        contextualTranslationProtection?.text ?? context?.text ?? "";
+      const truncatedProtectedContextText =
         options.contextAsInput && context?.text.trim()
-          ? buildProtectedTranslationPrompt(
+          ? truncateText(
+              protectedContextText,
+              profile.maxContextChars,
+              settingsRef.current?.interfaceLanguage
+            )
+          : "";
+      const contextualTranslationSystemInstruction =
+        options.contextAsInput && context?.text.trim()
+          ? buildProtectedTranslationInstruction(
               settingsRef.current ?? undefined,
               context.text,
-              truncateText(
-                contextualTranslationProtection?.text ?? context.text,
-                profile.maxContextChars,
-                settingsRef.current?.interfaceLanguage
-              ),
               { dictionaryForShortInput: options.dictionaryForShortInput }
             )
           : undefined;
+      const modelContent =
+        options.requestModelContent ??
+        (options.contextAsInput && context?.text.trim()
+          ? buildProtectedTranslationInput(truncatedProtectedContextText)
+          : undefined);
+      const requestSystemInstruction =
+        options.requestSystemInstruction ?? contextualTranslationSystemInstruction;
       const invocationContext: ToolInvocationContext =
         options.toolInvocationContext ??
         (context?.kind === "selection"
@@ -1688,13 +1842,22 @@ export function App() {
         requestTranslationRawTextRef.current.set(requestId, "");
       }
       setStreamingId(requestId);
+      const baseSystemMessage = buildSystemMessage(
+        options.contextAsInput ? null : context,
+        results,
+        profile,
+        settingsRef.current?.interfaceLanguage
+      );
       const modelMessages = [
-        buildSystemMessage(
-          options.contextAsInput ? null : context,
-          results,
-          profile,
-          settingsRef.current?.interfaceLanguage
-        ),
+        requestSystemInstruction
+          ? {
+              ...baseSystemMessage,
+              content: [
+                baseSystemMessage.content,
+                requestSystemInstruction
+              ].filter(Boolean).join("\n\n")
+            }
+          : baseSystemMessage,
         ...modelHistory
           .filter((message) => message.id !== assistantMessage.id)
           .slice(-18)
@@ -2004,15 +2167,17 @@ export function App() {
     if (tool.id === "translate-text" || tool.id === "translate-document") {
       const protection = protectTranslationText(content);
       await sendMessage(
-        buildProtectedTranslationPrompt(
-          settingsRef.current ?? undefined,
-          content,
-          protection.text,
-          { dictionaryForShortInput: tool.id === "translate-text" }
-        ),
+        toolInstruction(tool, settings ?? undefined),
         {
           skipPageContext: true,
           skipWebSearch: true,
+          modelHistoryOverride: [],
+          requestModelContent: buildProtectedTranslationInput(protection.text),
+          requestSystemInstruction: buildProtectedTranslationInstruction(
+            settingsRef.current ?? undefined,
+            content,
+            { dictionaryForShortInput: tool.id === "translate-text" }
+          ),
           toolInvocation: tool,
           toolInvocationContext: { kind: "answer", text: content },
           translationProtection: protection,
@@ -2144,7 +2309,16 @@ export function App() {
         type: "page.translation.prepare",
         purpose: "translation",
         scope,
-        text: scope === "selection" ? pageContext?.text ?? "" : ""
+        articlePreview:
+          scope === "article"
+            ? articleContextForActivePage()?.articlePreview ?? []
+            : [],
+        text:
+          scope === "selection"
+            ? pageContext?.text ?? ""
+            : scope === "article"
+              ? articleContextForActivePage()?.text ?? ""
+              : ""
       });
       if (!blocks.length) throw new Error(t("noTranslatableBlocks"));
       runState = createImmersiveRunState("translation", scope, "requesting", {
@@ -2368,7 +2542,16 @@ export function App() {
         type: "page.translation.prepare",
         purpose: "reading",
         scope,
-        text: scope === "selection" ? pageContext?.text ?? "" : ""
+        articlePreview:
+          scope === "article"
+            ? articleContextForActivePage()?.articlePreview ?? []
+            : [],
+        text:
+          scope === "selection"
+            ? pageContext?.text ?? ""
+            : scope === "article"
+              ? articleContextForActivePage()?.text ?? ""
+              : ""
       });
       if (!blocks.length) throw new Error(t("noTranslatableBlocks"));
       runState = createImmersiveRunState("reading", scope, "requesting", {
@@ -2820,10 +3003,11 @@ export function App() {
       toolInstruction(tool, settings ?? undefined),
       {
         forceIncludePage: !respectCurrentContext,
+        skipWebSearch: isTranslationTool,
         contextAsInput: isTranslationTool,
         contextOverride: currentContextForTool,
         dictionaryForShortInput: tool.id === "translate-text",
-        modelHistoryOverride,
+        modelHistoryOverride: isTranslationTool ? [] : modelHistoryOverride,
         toolInvocation: tool,
         purpose: modelPurposeForToolId(tool.id)
       }
@@ -2901,7 +3085,6 @@ export function App() {
     setEditingToolId(null);
     setToolDraft({ title: "", description: "", template: "", icon: "" });
     setToolIconPickerOpen(false);
-    setToolIconSearch("");
   };
 
   const openNewToolEditor = () => {
@@ -2923,7 +3106,6 @@ export function App() {
   const closeToolEditor = () => {
     setToolEditorOpen(false);
     setToolIconPickerOpen(false);
-    setToolIconSearch("");
     resetToolDraft();
   };
 
@@ -3030,7 +3212,7 @@ export function App() {
     {
       id: "article" as const,
       title: uiText(settings?.interfaceLanguage, "currentBody"),
-      icon: Newspaper
+      icon: StickyNote
     },
     {
       id: "selection" as const,
@@ -3121,9 +3303,7 @@ export function App() {
       )
       .filter(Boolean) ?? [];
   const bodySourceLabel =
-    articleQuality?.source === "manual"
-      ? t("currentBodySourceManual")
-      : articleQuality?.source === "edited"
+    articleQuality?.source === "edited"
         ? t("currentBodySourceEdited")
       : articleQuality?.source === "readability"
       ? t("currentBodySourceReadability")
@@ -3134,9 +3314,6 @@ export function App() {
     articleQuality?.blockCount ?? articlePreview.length;
   const bodyCharCount =
     articleQuality?.wordCount ?? pageContext?.text?.length ?? 0;
-  const filteredToolIconChoices = TOOL_ICON_CHOICES.filter((icon) =>
-    icon.toLowerCase().includes(toolIconSearch.trim().toLowerCase())
-  );
 
   if (!settings) {
     return <div className="panel-loading">{t("loading")} WebMind…</div>;
@@ -3152,7 +3329,7 @@ export function App() {
             title={`${t("immersiveTranslation")}: ${selectedContextOption.title}`}
             onClick={() => void runHeaderImmersiveTranslate()}
           >
-            <ArrowRightLeft />
+            <ImmersiveTranslateIcon />
           </button>
           <button
             className="brand-tool-button"
@@ -3160,7 +3337,7 @@ export function App() {
             title={`${t("immersiveReading")}: ${selectedContextOption.title}`}
             onClick={() => void runHeaderImmersiveReading()}
           >
-            <Highlighter />
+            <ImmersiveReadingIcon />
           </button>
           <strong>WebMind</strong>
         </div>
@@ -3887,14 +4064,16 @@ export function App() {
               }
             >
               <summary>
-                <BookOpen />
-                <span>{t("currentBodyPreview")}</span>
+                <TextAlignStart />
+                <span>{t("currentBody")}</span>
                 <span className="body-preview-summary-actions">
                   {(articleQuality?.source === "manual" ||
                     articleQuality?.source === "edited") && (
                     <button
-                      className="body-preview-action body-restore-button"
+                      className="body-preview-action icon-only body-restore-button"
                       type="button"
+                      title={t("restoreCurrentBody")}
+                      aria-label={t("restoreCurrentBody")}
                       disabled={articlePicking}
                       onClick={(event) => {
                         event.preventDefault();
@@ -3902,13 +4081,22 @@ export function App() {
                         void restoreCurrentBody();
                       }}
                     >
-                      <RefreshCcw />
-                      {t("restoreCurrentBody")}
+                      <Undo2 />
                     </button>
                   )}
                   <button
-                    className="body-preview-action"
+                    className="body-preview-action icon-only"
                     type="button"
+                    title={
+                      articlePicking
+                        ? t("selectingBodyRange")
+                        : t("selectCurrentBody")
+                    }
+                    aria-label={
+                      articlePicking
+                        ? t("selectingBodyRange")
+                        : t("selectCurrentBody")
+                    }
                     disabled={articlePicking}
                     onClick={(event) => {
                       event.preventDefault();
@@ -3916,10 +4104,21 @@ export function App() {
                       void pickCurrentBodyRange();
                     }}
                   >
-                    <TextSelect />
-                    {articlePicking
-                      ? t("selectingBodyRange")
-                      : t("selectCurrentBody")}
+                    <MousePointerClick />
+                  </button>
+                  <button
+                    className="body-preview-action icon-only"
+                    type="button"
+                    title={t("copyCurrentBody")}
+                    aria-label={t("copyCurrentBody")}
+                    disabled={!pageContext.text.trim()}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      void copyCurrentBodyText();
+                    }}
+                  >
+                    {bodyCopied ? <Check /> : <Copy />}
                   </button>
                   {articleQuality && (
                     <strong>
@@ -3957,6 +4156,17 @@ export function App() {
                   <Eraser />
                   {t("smartPruneCurrentBody")}
                 </button>
+                {articleQuality?.selector && (
+                  <button
+                    className="body-quality-action body-preview-selector"
+                    type="button"
+                    title={articleQuality.selector}
+                    onClick={() => openArticleRuleEditor()}
+                  >
+                    {articleQuality.selector}
+                  </button>
+                )}
+                {bodySourceLabel && <span>{bodySourceLabel}</span>}
                 <span>
                   {t("currentBodyBlocks").replace(
                     "{count}",
@@ -3969,12 +4179,6 @@ export function App() {
                     String(bodyCharCount)
                   )}
                 </span>
-                {bodySourceLabel && <span>{bodySourceLabel}</span>}
-                {articleQuality?.selector && (
-                  <span title={articleQuality.selector}>
-                    {articleQuality.selector}
-                  </span>
-                )}
               </div>
               {articleQualityMetrics.length > 0 && (
                 <div className="body-quality-grid">
@@ -4002,12 +4206,6 @@ export function App() {
                       role="button"
                       tabIndex={0}
                       onClick={() =>
-                        void highlightCurrentBodyPreviewBlock(block)
-                      }
-                      onFocus={() =>
-                        void highlightCurrentBodyPreviewBlock(block)
-                      }
-                      onMouseEnter={() =>
                         void highlightCurrentBodyPreviewBlock(block)
                       }
                       onKeyDown={(event) => {
@@ -4235,6 +4433,83 @@ export function App() {
         })}
       </nav>
 
+      {articleRuleEditorOpen && (
+        <div className="modal-backdrop">
+          <section
+            className="modal article-rule-editor"
+            role="dialog"
+            aria-modal="true"
+          >
+            <header className="modal-header">
+              <div>
+                <p className="eyebrow">{t("currentBody")}</p>
+                <h2>{t("articleExtractionRules")}</h2>
+              </div>
+              <button
+                className="icon-button"
+                type="button"
+                title={t("close")}
+                onClick={() => setArticleRuleEditorOpen(false)}
+              >
+                <X />
+              </button>
+            </header>
+            <div className="modal-body form-stack">
+              <label className="field">
+                <span className="field-label">
+                  {t("articleExtractionUrlPattern")}
+                </span>
+                <input
+                  value={articleRuleDraft.urlPattern}
+                  onChange={(event) =>
+                    setArticleRuleDraft((current) => ({
+                      ...current,
+                      urlPattern: event.target.value
+                    }))
+                  }
+                  placeholder="example.com, *.example.com, https://example.com/*"
+                  spellCheck={false}
+                />
+                <small>{t("articleExtractionRulesHelp")}</small>
+              </label>
+              <label className="field">
+                <span className="field-label">
+                  {t("articleExtractionSelector")}
+                </span>
+                <input
+                  value={articleRuleDraft.selector}
+                  onChange={(event) =>
+                    setArticleRuleDraft((current) => ({
+                      ...current,
+                      selector: event.target.value
+                    }))
+                  }
+                  placeholder="main article, article, #content, .post-body"
+                  spellCheck={false}
+                />
+              </label>
+            </div>
+            <footer className="modal-footer">
+              <button
+                className="secondary-button"
+                type="button"
+                onClick={() => setArticleRuleEditorOpen(false)}
+              >
+                {t("cancel")}
+              </button>
+              <button
+                className="primary-button"
+                type="button"
+                onClick={() => void saveArticleExtractionRule()}
+              >
+                <CirclePlus />
+                {t("addArticleExtractionRule")}
+              </button>
+            </footer>
+          </section>
+        </div>
+      )}
+
       {toolEditorOpen && (
         <div className="modal-backdrop">
           <section className="modal prompt-editor" role="dialog" aria-modal="true">
@@ -4268,7 +4543,6 @@ export function App() {
                     title={toolDraft.icon || t("noIcon")}
                     aria-label={t("chooseIcon")}
                     onClick={() => {
-                      setToolIconSearch("");
                       setToolIconPickerOpen((current) => !current);
                     }}
                   >
@@ -4286,52 +4560,26 @@ export function App() {
                 </div>
               </div>
               {toolIconPickerOpen && (
-                <div className="tool-icon-picker" role="dialog" aria-label={t("chooseIcon")}>
-                  <label className="tool-icon-search">
-                    <Search />
-                    <input
-                      value={toolIconSearch}
-                      placeholder={t("searchIcon")}
-                      onChange={(event) => setToolIconSearch(event.target.value)}
-                    />
-                  </label>
-                  <div className="tool-icon-grid">
-                    <button
-                      className={`tool-icon-choice ${
-                        toolDraft.icon ? "" : "active empty"
-                      }`}
-                      type="button"
-                      title={t("noIcon")}
-                      aria-label={t("noIcon")}
-                      onClick={() => {
-                        setToolDraft((current) => ({ ...current, icon: "" }));
-                        setToolIconPickerOpen(false);
-                        setToolIconSearch("");
-                      }}
-                    />
-                    {filteredToolIconChoices.map((icon) => (
-                      <button
-                        key={icon}
-                        className={`tool-icon-choice ${
-                          toolDraft.icon === icon ? "active" : ""
-                        }`}
-                        type="button"
-                        title={icon}
-                        aria-label={icon}
-                        onClick={() => {
-                          setToolDraft((current) => ({ ...current, icon }));
-                          setToolIconPickerOpen(false);
-                          setToolIconSearch("");
-                        }}
-                      >
-                        <ToolIcon name={icon} />
-                      </button>
-                    ))}
-                  </div>
-                  {!filteredToolIconChoices.length && (
-                    <div className="tool-icon-empty">{t("noIconMatches")}</div>
-                  )}
-                </div>
+                <Suspense
+                  fallback={
+                    <div
+                      className="tool-icon-picker"
+                      role="dialog"
+                      aria-label={t("chooseIcon")}
+                    >
+                      <div className="tool-icon-empty">{t("loading")}</div>
+                    </div>
+                  }
+                >
+                  <LazyToolIconPicker
+                    currentIcon={toolDraft.icon}
+                    language={settings?.interfaceLanguage}
+                    onSelect={(icon) => {
+                      setToolDraft((current) => ({ ...current, icon }));
+                      setToolIconPickerOpen(false);
+                    }}
+                  />
+                </Suspense>
               )}
               <label className="field">
                 <span className="field-label">{t("description")}</span>

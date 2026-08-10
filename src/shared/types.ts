@@ -133,6 +133,7 @@ export interface AppSettings {
   inputAutoReplyDisableSingleLine: boolean;
   imageTextExtractionEnabled: boolean;
   imageTextExtractionMinSize: number;
+  articleExtractionRules: ArticleExtractionRule[];
   enabledToolIds: Record<ToolSurface, string[]>;
   chromeSyncEnabled: boolean;
   searchAnswerEnabled: boolean;
@@ -245,6 +246,12 @@ export interface ArticlePreviewBlock {
   text: string;
   sourceText?: string;
   targetId?: string;
+}
+
+export interface ArticleExtractionRule {
+  id: string;
+  urlPattern: string;
+  selector: string;
 }
 
 export interface PageTextBlock {

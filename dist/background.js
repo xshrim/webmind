@@ -135,6 +135,7 @@ var UI_TEXT = {
     selectMoreTools: "\u9009\u62E9\u66F4\u591A\u5DE5\u5177",
     moreTools: "\u66F4\u591A\u5DE5\u5177",
     copyContent: "\u590D\u5236\u5185\u5BB9",
+    copyCurrentBody: "\u590D\u5236\u6B63\u6587",
     copyUrl: "\u590D\u5236\u7F51\u9875 URL",
     copied: "\u5DF2\u590D\u5236",
     regenerate: "\u91CD\u65B0\u56DE\u7B54",
@@ -161,9 +162,22 @@ var UI_TEXT = {
     highlightCurrentBodyBlock: "\u5728\u9875\u9762\u4E2D\u9AD8\u4EAE\u8FD9\u4E00\u6BB5",
     removeCurrentBodyBlock: "\u4ECE\u5F53\u524D\u6B63\u6587\u4E2D\u5220\u9664\u8FD9\u4E00\u6BB5",
     smartPruneCurrentBody: "\u667A\u80FD\u5254\u9664",
+    articleRecognition: "\u6B63\u6587\u8BC6\u522B",
+    recognitionRules: "\u8BC6\u522B\u89C4\u5219",
+    articleExtractionRules: "\u6B63\u6587\u63D0\u53D6\u89C4\u5219",
+    articleExtractionRulesHelp: "\u6BCF\u6761\u89C4\u5219\u5305\u542B\u9002\u914D\u9875\u9762\u5730\u5740\u548C\u6B63\u6587 selector\uFF1B\u5730\u5740\u652F\u6301\u57DF\u540D\u3001\u901A\u914D\u7B26\u548C URL \u7247\u6BB5\u3002",
+    articleExtractionUrlPattern: "\u9002\u914D\u9875\u9762\u5730\u5740",
+    articleExtractionSelector: "\u6B63\u6587 selector",
+    articleExtractionUrlPatternPlaceholder: "\u9875\u9762\u5730\u5740\uFF0C\u4F8B\u5982 example.com\u3001*.example.com\u3001https://example.com/*",
+    articleExtractionSelectorPlaceholder: "CSS selector\uFF0C\u4F8B\u5982 article\u3001main\u3001#content\u3001.post-body",
+    addArticleExtractionRule: "\u6DFB\u52A0\u6B63\u6587\u89C4\u5219",
+    deleteArticleExtractionRule: "\u5220\u9664\u6B63\u6587\u89C4\u5219",
+    noArticleExtractionRules: "\u8FD8\u6CA1\u6709\u6B63\u6587\u63D0\u53D6\u89C4\u5219",
+    articleExtractionRuleSaved: "\u6B63\u6587\u63D0\u53D6\u89C4\u5219\u5DF2\u4FDD\u5B58",
+    articleExtractionRuleInvalid: "\u8BF7\u586B\u5199\u9875\u9762\u5730\u5740\u548C selector",
     currentBodyVirtualizedWarning: "\u7591\u4F3C\u865A\u62DF\u6EDA\u52A8\u9875\u9762\uFF0C\u9884\u89C8\u53EF\u80FD\u53EA\u5305\u542B\u5F53\u524D\u5DF2\u6E32\u67D3\u5185\u5BB9\u3002",
     selectingBodyRange: "\u6B63\u5728\u9009\u62E9\u6B63\u6587\u8303\u56F4",
-    manualBodySelectionHint: "\u6EDA\u8F6E/\u65B9\u5411\u952E\u8C03\u6574\u5C42\u7EA7\uFF0C\u70B9\u51FB\u786E\u8BA4\uFF0CEsc \u53D6\u6D88",
+    manualBodySelectionHint: "\u6EDA\u8F6E/\u65B9\u5411\u952E\u8C03\u6574\u8303\u56F4\uFF0C\u70B9\u51FB\u786E\u8BA4\uFF0CESC\u53D6\u6D88",
     manualBodySelectionCancelled: "\u5DF2\u53D6\u6D88\u6B63\u6587\u6846\u9009",
     textDensity: "\u6587\u672C\u5BC6\u5EA6",
     linkRatio: "\u94FE\u63A5\u6BD4\u4F8B",
@@ -649,6 +663,7 @@ var UI_TEXT = {
     selectMoreTools: "\u9078\u64C7\u66F4\u591A\u5DE5\u5177",
     moreTools: "\u66F4\u591A\u5DE5\u5177",
     copyContent: "\u8907\u88FD\u5167\u5BB9",
+    copyCurrentBody: "\u8907\u88FD\u6B63\u6587",
     copyUrl: "\u8907\u88FD\u7DB2\u9801 URL",
     copied: "\u5DF2\u8907\u88FD",
     regenerate: "\u91CD\u65B0\u56DE\u7B54",
@@ -675,9 +690,22 @@ var UI_TEXT = {
     highlightCurrentBodyBlock: "\u5728\u9801\u9762\u4E2D\u9AD8\u4EAE\u9019\u4E00\u6BB5",
     removeCurrentBodyBlock: "\u5F9E\u76EE\u524D\u6B63\u6587\u4E2D\u522A\u9664\u9019\u4E00\u6BB5",
     smartPruneCurrentBody: "\u667A\u6167\u5254\u9664",
+    articleRecognition: "\u6B63\u6587\u8B58\u5225",
+    recognitionRules: "\u8B58\u5225\u898F\u5247",
+    articleExtractionRules: "\u6B63\u6587\u64F7\u53D6\u898F\u5247",
+    articleExtractionRulesHelp: "\u6BCF\u689D\u898F\u5247\u5305\u542B\u9069\u914D\u9801\u9762\u5730\u5740\u548C\u6B63\u6587 selector\uFF1B\u5730\u5740\u652F\u63F4\u7DB2\u57DF\u3001\u842C\u7528\u5B57\u5143\u548C URL \u7247\u6BB5\u3002",
+    articleExtractionUrlPattern: "\u9069\u914D\u9801\u9762\u5730\u5740",
+    articleExtractionSelector: "\u6B63\u6587 selector",
+    articleExtractionUrlPatternPlaceholder: "\u9801\u9762\u5730\u5740\uFF0C\u4F8B\u5982 example.com\u3001*.example.com\u3001https://example.com/*",
+    articleExtractionSelectorPlaceholder: "CSS selector\uFF0C\u4F8B\u5982 article\u3001main\u3001#content\u3001.post-body",
+    addArticleExtractionRule: "\u65B0\u589E\u6B63\u6587\u898F\u5247",
+    deleteArticleExtractionRule: "\u522A\u9664\u6B63\u6587\u898F\u5247",
+    noArticleExtractionRules: "\u9084\u6C92\u6709\u6B63\u6587\u64F7\u53D6\u898F\u5247",
+    articleExtractionRuleSaved: "\u6B63\u6587\u64F7\u53D6\u898F\u5247\u5DF2\u5132\u5B58",
+    articleExtractionRuleInvalid: "\u8ACB\u586B\u5BEB\u9801\u9762\u5730\u5740\u548C selector",
     currentBodyVirtualizedWarning: "\u7591\u4F3C\u865B\u64EC\u6372\u52D5\u9801\u9762\uFF0C\u9810\u89BD\u53EF\u80FD\u53EA\u5305\u542B\u76EE\u524D\u5DF2\u6E32\u67D3\u5167\u5BB9\u3002",
     selectingBodyRange: "\u6B63\u5728\u9078\u53D6\u6B63\u6587\u7BC4\u570D",
-    manualBodySelectionHint: "\u6EFE\u8F2A/\u65B9\u5411\u9375\u8ABF\u6574\u5C64\u7D1A\uFF0C\u9EDE\u64CA\u78BA\u8A8D\uFF0CEsc \u53D6\u6D88",
+    manualBodySelectionHint: "\u6EFE\u8F2A/\u65B9\u5411\u9375\u8ABF\u6574\u7BC4\u570D\uFF0C\u9EDE\u64CA\u78BA\u8A8D\uFF0CESC\u53D6\u6D88",
     manualBodySelectionCancelled: "\u5DF2\u53D6\u6D88\u6B63\u6587\u6846\u9078",
     textDensity: "\u6587\u5B57\u5BC6\u5EA6",
     linkRatio: "\u9023\u7D50\u6BD4\u4F8B",
@@ -1163,6 +1191,7 @@ var UI_TEXT = {
     selectMoreTools: "Select More Tools",
     moreTools: "More Tools",
     copyContent: "Copy Content",
+    copyCurrentBody: "Copy Body",
     copyUrl: "Copy Page URL",
     copied: "Copied",
     regenerate: "Retry Answer",
@@ -1189,9 +1218,22 @@ var UI_TEXT = {
     highlightCurrentBodyBlock: "Highlight this block on the page",
     removeCurrentBodyBlock: "Remove this block from current body",
     smartPruneCurrentBody: "Smart Prune",
+    articleRecognition: "Body Recognition",
+    recognitionRules: "Recognition Rules",
+    articleExtractionRules: "Body Extraction Rules",
+    articleExtractionRulesHelp: "Each rule includes a page URL pattern and body selector; URL patterns support domains, wildcards, and URL fragments.",
+    articleExtractionUrlPattern: "Page URL Pattern",
+    articleExtractionSelector: "Body Selector",
+    articleExtractionUrlPatternPlaceholder: "Page URL, e.g. example.com, *.example.com, https://example.com/*",
+    articleExtractionSelectorPlaceholder: "CSS selector, e.g. article, main, #content, .post-body",
+    addArticleExtractionRule: "Add Body Rule",
+    deleteArticleExtractionRule: "Delete Body Rule",
+    noArticleExtractionRules: "No body extraction rules yet",
+    articleExtractionRuleSaved: "Body extraction rule saved",
+    articleExtractionRuleInvalid: "Enter both a page URL pattern and selector",
     currentBodyVirtualizedWarning: "This looks like a virtualized page, so the preview may include only currently rendered content.",
     selectingBodyRange: "Selecting body range",
-    manualBodySelectionHint: "Wheel/arrow keys adjust level, click to confirm, Esc to cancel",
+    manualBodySelectionHint: "Wheel/arrow keys adjust range, click to confirm, Esc to cancel",
     manualBodySelectionCancelled: "Body range selection cancelled",
     textDensity: "Text Density",
     linkRatio: "Link Ratio",
@@ -1677,6 +1719,7 @@ var UI_TEXT = {
     selectMoreTools: "\u4ED6\u306E\u30C4\u30FC\u30EB\u3092\u9078\u629E",
     moreTools: "\u305D\u306E\u4ED6\u306E\u30C4\u30FC\u30EB",
     copyContent: "\u5185\u5BB9\u3092\u30B3\u30D4\u30FC",
+    copyCurrentBody: "\u672C\u6587\u3092\u30B3\u30D4\u30FC",
     copyUrl: "\u30DA\u30FC\u30B8 URL \u3092\u30B3\u30D4\u30FC",
     copied: "\u30B3\u30D4\u30FC\u6E08\u307F",
     regenerate: "\u518D\u56DE\u7B54",
@@ -1703,9 +1746,22 @@ var UI_TEXT = {
     highlightCurrentBodyBlock: "\u30DA\u30FC\u30B8\u4E0A\u3067\u3053\u306E\u6BB5\u843D\u3092\u30CF\u30A4\u30E9\u30A4\u30C8",
     removeCurrentBodyBlock: "\u73FE\u5728\u306E\u672C\u6587\u304B\u3089\u3053\u306E\u30D6\u30ED\u30C3\u30AF\u3092\u524A\u9664",
     smartPruneCurrentBody: "\u30B9\u30DE\u30FC\u30C8\u9664\u5916",
+    articleRecognition: "\u672C\u6587\u8A8D\u8B58",
+    recognitionRules: "\u8A8D\u8B58\u30EB\u30FC\u30EB",
+    articleExtractionRules: "\u672C\u6587\u62BD\u51FA\u30EB\u30FC\u30EB",
+    articleExtractionRulesHelp: "\u5404\u30EB\u30FC\u30EB\u306B\u306F\u5BFE\u8C61\u30DA\u30FC\u30B8 URL \u3068\u672C\u6587 selector \u3092\u542B\u3081\u307E\u3059\u3002URL \u306F\u30C9\u30E1\u30A4\u30F3\u3001\u30EF\u30A4\u30EB\u30C9\u30AB\u30FC\u30C9\u3001URL \u65AD\u7247\u306B\u5BFE\u5FDC\u3057\u307E\u3059\u3002",
+    articleExtractionUrlPattern: "\u5BFE\u8C61\u30DA\u30FC\u30B8 URL",
+    articleExtractionSelector: "\u672C\u6587 selector",
+    articleExtractionUrlPatternPlaceholder: "\u30DA\u30FC\u30B8 URL\u3002\u4F8B: example.com\u3001*.example.com\u3001https://example.com/*",
+    articleExtractionSelectorPlaceholder: "CSS selector\u3002\u4F8B: article\u3001main\u3001#content\u3001.post-body",
+    addArticleExtractionRule: "\u672C\u6587\u30EB\u30FC\u30EB\u3092\u8FFD\u52A0",
+    deleteArticleExtractionRule: "\u672C\u6587\u30EB\u30FC\u30EB\u3092\u524A\u9664",
+    noArticleExtractionRules: "\u672C\u6587\u62BD\u51FA\u30EB\u30FC\u30EB\u306F\u307E\u3060\u3042\u308A\u307E\u305B\u3093",
+    articleExtractionRuleSaved: "\u672C\u6587\u62BD\u51FA\u30EB\u30FC\u30EB\u3092\u4FDD\u5B58\u3057\u307E\u3057\u305F",
+    articleExtractionRuleInvalid: "\u30DA\u30FC\u30B8 URL \u3068 selector \u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044",
     currentBodyVirtualizedWarning: "\u4EEE\u60F3\u30B9\u30AF\u30ED\u30FC\u30EB\u30DA\u30FC\u30B8\u306E\u53EF\u80FD\u6027\u304C\u3042\u308A\u3001\u30D7\u30EC\u30D3\u30E5\u30FC\u306F\u73FE\u5728\u63CF\u753B\u3055\u308C\u3066\u3044\u308B\u5185\u5BB9\u3060\u3051\u304B\u3082\u3057\u308C\u307E\u305B\u3093\u3002",
     selectingBodyRange: "\u672C\u6587\u7BC4\u56F2\u3092\u9078\u629E\u4E2D",
-    manualBodySelectionHint: "\u30DB\u30A4\u30FC\u30EB/\u77E2\u5370\u30AD\u30FC\u3067\u968E\u5C64\u8ABF\u6574\u3001\u30AF\u30EA\u30C3\u30AF\u3067\u78BA\u5B9A\u3001Esc \u3067\u30AD\u30E3\u30F3\u30BB\u30EB",
+    manualBodySelectionHint: "\u30DB\u30A4\u30FC\u30EB/\u77E2\u5370\u30AD\u30FC\u3067\u7BC4\u56F2\u8ABF\u6574\u3001\u30AF\u30EA\u30C3\u30AF\u3067\u78BA\u5B9A\u3001Esc \u3067\u30AD\u30E3\u30F3\u30BB\u30EB",
     manualBodySelectionCancelled: "\u672C\u6587\u7BC4\u56F2\u306E\u9078\u629E\u3092\u30AD\u30E3\u30F3\u30BB\u30EB\u3057\u307E\u3057\u305F",
     textDensity: "\u30C6\u30AD\u30B9\u30C8\u5BC6\u5EA6",
     linkRatio: "\u30EA\u30F3\u30AF\u6BD4\u7387",
@@ -2191,6 +2247,7 @@ var UI_TEXT = {
     selectMoreTools: "\uB354 \uB9CE\uC740 \uB3C4\uAD6C \uC120\uD0DD",
     moreTools: "\uB354 \uB9CE\uC740 \uB3C4\uAD6C",
     copyContent: "\uB0B4\uC6A9 \uBCF5\uC0AC",
+    copyCurrentBody: "\uBCF8\uBB38 \uBCF5\uC0AC",
     copyUrl: "\uD398\uC774\uC9C0 URL \uBCF5\uC0AC",
     copied: "\uBCF5\uC0AC\uB428",
     regenerate: "\uB2E4\uC2DC \uB2F5\uBCC0",
@@ -2217,9 +2274,22 @@ var UI_TEXT = {
     highlightCurrentBodyBlock: "\uD398\uC774\uC9C0\uC5D0\uC11C \uC774 \uBE14\uB85D \uAC15\uC870",
     removeCurrentBodyBlock: "\uD604\uC7AC \uBCF8\uBB38\uC5D0\uC11C \uC774 \uBE14\uB85D \uC0AD\uC81C",
     smartPruneCurrentBody: "\uC2A4\uB9C8\uD2B8 \uC81C\uAC70",
+    articleRecognition: "\uBCF8\uBB38 \uC778\uC2DD",
+    recognitionRules: "\uC778\uC2DD \uADDC\uCE59",
+    articleExtractionRules: "\uBCF8\uBB38 \uCD94\uCD9C \uADDC\uCE59",
+    articleExtractionRulesHelp: "\uAC01 \uADDC\uCE59\uC5D0\uB294 \uC801\uC6A9\uD560 \uD398\uC774\uC9C0 URL\uACFC \uBCF8\uBB38 selector\uAC00 \uD3EC\uD568\uB429\uB2C8\uB2E4. URL\uC740 \uB3C4\uBA54\uC778, \uC640\uC77C\uB4DC\uCE74\uB4DC, URL \uC870\uAC01\uC744 \uC9C0\uC6D0\uD569\uB2C8\uB2E4.",
+    articleExtractionUrlPattern: "\uC801\uC6A9 \uD398\uC774\uC9C0 URL",
+    articleExtractionSelector: "\uBCF8\uBB38 selector",
+    articleExtractionUrlPatternPlaceholder: "\uD398\uC774\uC9C0 URL \uC608: example.com, *.example.com, https://example.com/*",
+    articleExtractionSelectorPlaceholder: "CSS selector \uC608: article, main, #content, .post-body",
+    addArticleExtractionRule: "\uBCF8\uBB38 \uADDC\uCE59 \uCD94\uAC00",
+    deleteArticleExtractionRule: "\uBCF8\uBB38 \uADDC\uCE59 \uC0AD\uC81C",
+    noArticleExtractionRules: "\uBCF8\uBB38 \uCD94\uCD9C \uADDC\uCE59\uC774 \uC544\uC9C1 \uC5C6\uC2B5\uB2C8\uB2E4",
+    articleExtractionRuleSaved: "\uBCF8\uBB38 \uCD94\uCD9C \uADDC\uCE59\uC744 \uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4",
+    articleExtractionRuleInvalid: "\uD398\uC774\uC9C0 URL\uACFC selector\uB97C \uC785\uB825\uD558\uC138\uC694",
     currentBodyVirtualizedWarning: "\uAC00\uC0C1 \uC2A4\uD06C\uB864 \uD398\uC774\uC9C0\uC77C \uC218 \uC788\uC5B4 \uBBF8\uB9AC\uBCF4\uAE30\uC5D0\uB294 \uD604\uC7AC \uB80C\uB354\uB9C1\uB41C \uB0B4\uC6A9\uB9CC \uD3EC\uD568\uB420 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
     selectingBodyRange: "\uBCF8\uBB38 \uBC94\uC704 \uC120\uD0DD \uC911",
-    manualBodySelectionHint: "\uD720/\uD654\uC0B4\uD45C \uD0A4\uB85C \uACC4\uCE35 \uC870\uC815, \uD074\uB9AD\uC73C\uB85C \uD655\uC815, Esc\uB85C \uCDE8\uC18C",
+    manualBodySelectionHint: "\uD720/\uD654\uC0B4\uD45C \uD0A4\uB85C \uBC94\uC704 \uC870\uC815, \uD074\uB9AD\uC73C\uB85C \uD655\uC815, Esc\uB85C \uCDE8\uC18C",
     manualBodySelectionCancelled: "\uBCF8\uBB38 \uBC94\uC704 \uC120\uD0DD\uC744 \uCDE8\uC18C\uD588\uC2B5\uB2C8\uB2E4",
     textDensity: "\uD14D\uC2A4\uD2B8 \uBC00\uB3C4",
     linkRatio: "\uB9C1\uD06C \uBE44\uC728",
@@ -3291,10 +3361,34 @@ function protectedTokenPattern(kind, index) {
   );
 }
 function protectedTokenSource(kind, index) {
-  return `\`?(?:\\{\\{\\s*WEBMIND_${kind}_${index}\\s*\\}\\}|\\[\\s*WEBMIND_${kind}_${index}\\s*\\]|WEBMIND_${kind}_${index})\`?`;
+  const token = `WEBMIND_${kind}_${index}(?!\\d)`;
+  return `\`?(?:\\{\\{\\s*${token}\\s*\\}\\}|\\[\\s*${token}\\s*\\]|${token})\`?`;
 }
 function visibleTextFromHtmlFragment(value) {
   return value.replace(/<script\b[\s\S]*?<\/script>/gi, " ").replace(/<style\b[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+var BRACKET_CITATION_MARKER_SOURCE = "\\[\\s*\\d+(?:\\s*[-,\u2013\u2014]\\s*\\d+)*\\s*\\]";
+var CITATION_EXPLANATION_BEFORE_MARKER_PATTERN = new RegExp(
+  [
+    "(^|[\\s([{\uFF08\u3010\u300C\u300E\u201C\u2018\\]])",
+    "(?:\\*\\*\\s*)?",
+    "(?:",
+    "\\d+\\s+(?:citations?|references?)\\s+(?:from\\s+)?(?:multiple|several|various|many)\\s+(?:sources?|references?|outlets?)",
+    "|(?:citations?|references?|sources?)\\s+\\d+\\s+(?:from|based\\s+on)\\s+[^\\[\\]\\n*]{1,80}?",
+    ")",
+    "(?:\\s*\\*\\*)?",
+    "\\s*",
+    `(${BRACKET_CITATION_MARKER_SOURCE})`
+  ].join(""),
+  "gi"
+);
+function stripTranslationTaskPreface(text) {
+  let cleaned = text;
+  const prefacePattern = /^\s*(?:(?:这是(?:一个|一项)?翻译任务[。.!！]?\s*)?(?:以下是(?:根据您提供的内容进行的)?翻译|翻译(?:如下|结果)|译文如下|以下为译文)[：:。.!！]?\s*)+/i;
+  while (prefacePattern.test(cleaned)) {
+    cleaned = cleaned.replace(prefacePattern, "");
+  }
+  return cleaned.trimStart();
 }
 function stripCitationExplanationNoise(text, citationCount) {
   let cleaned = text;
@@ -3371,10 +3465,14 @@ function stripCitationMarkerExplanationNoise(text, markers) {
   });
   return cleaned;
 }
+function stripBrokenTranslationPlaceholderFragments(text) {
+  return text.replace(/\{+\s*WEBMIND_[A-Z0-9_]+\s*\}+/gi, "").replace(/\[\s*WEBMIND_[A-Z0-9_]+\s*\]/gi, "").replace(/WEBMIND_[A-Z0-9_]+/gi, "").replace(/\{+\s*\d+\s*\}+/g, "").replace(/\{+[ \t]*(?=$|[\r\n])/g, "").replace(/(^|[\r\n])[ \t]*\}+/g, "$1").replace(/\[\s*\d+\s*\]/g, (match) => match.trim()).replace(/[ \t]{2,}/g, " ");
+}
 function protectTranslationText(text) {
   const citations = [];
   const links = [];
   const formats = [];
+  const htmlTags = [];
   const paragraphBreaks = [];
   const protectFormat = (tag, value) => {
     const visibleText = visibleTextFromHtmlFragment(value);
@@ -3406,11 +3504,18 @@ function protectTranslationText(text) {
     citations.push(marker);
     return `{{WEBMIND_CITATION_${citations.length}}}`;
   });
-  const protectedText = withCitations.replace(/\r\n?/g, "\n").replace(/\n[\t ]*\n+/g, (separator) => {
+  const withHtmlTags = withCitations.replace(
+    /<\/?[A-Za-z][A-Za-z0-9:-]*(?:\s+[^<>]*?)?\s*\/?>/g,
+    (tag) => {
+      htmlTags.push(tag);
+      return `{{WEBMIND_HTML_TAG_${htmlTags.length}}}`;
+    }
+  );
+  const protectedText = withHtmlTags.replace(/\r\n?/g, "\n").replace(/\n[\t ]*\n+/g, (separator) => {
     paragraphBreaks.push(separator);
     return `{{WEBMIND_PARAGRAPH_BREAK_${paragraphBreaks.length}}}`;
   });
-  return { text: protectedText, citations, links, formats, paragraphBreaks };
+  return { text: protectedText, citations, links, formats, htmlTags, paragraphBreaks };
 }
 function restoreTranslationText(text, protection) {
   let restored = stripCitationExplanationNoise(
@@ -3459,6 +3564,12 @@ function restoreTranslationText(text, protection) {
     });
     restored = restored.replace(protectedTokenPattern("FORMAT_START", index + 1), "").replace(protectedTokenPattern("FORMAT_END", index + 1), "");
   });
+  (protection.htmlTags ?? []).forEach((tag, index) => {
+    restored = restored.replace(
+      protectedTokenPattern("HTML_TAG", index + 1),
+      tag
+    );
+  });
   const missingCitations = protection.citations.filter(
     (marker) => marker && !restored.includes(marker)
   );
@@ -3466,9 +3577,17 @@ function restoreTranslationText(text, protection) {
     restored = `${restored.trimEnd()} ${missingCitations.join(" ")}`;
   }
   restored = stripCitationMarkerExplanationNoise(restored, protection.citations);
+  restored = stripBrokenTranslationPlaceholderFragments(restored);
+  restored = stripTranslationTaskPreface(restored);
   return restored.replace(/\n[\t ]*\n(?:[\t ]*\n)+/g, "\n\n");
 }
 function buildProtectedTranslationPrompt(config, sourceText, protectedText, options = {}) {
+  return [
+    buildProtectedTranslationInstruction(config, sourceText, options),
+    buildProtectedTranslationInput(protectedText)
+  ].filter(Boolean).join("\n");
+}
+function buildProtectedTranslationInstruction(config, sourceText, options = {}) {
   const dictionaryMode = options.dictionaryForShortInput && isDictionaryTranslationInput(sourceText);
   return [
     dictionaryMode ? dictionaryTranslationInstruction(config, sourceText) : autoTranslateInstruction(config, sourceText),
@@ -3477,7 +3596,11 @@ function buildProtectedTranslationPrompt(config, sourceText, protectedText, opti
     dictionaryMode ? "" : uiText(
       typeof config === "object" ? config?.interfaceLanguage : config,
       "translationOutputOnlyInstruction"
-    ),
+    )
+  ].filter(Boolean).join("\n");
+}
+function buildProtectedTranslationInput(protectedText) {
+  return [
     "<translation-input>",
     protectedText,
     "</translation-input>"
@@ -3703,6 +3826,7 @@ var DEFAULT_SETTINGS = {
   inputAutoReplyDisableSingleLine: true,
   imageTextExtractionEnabled: false,
   imageTextExtractionMinSize: 160,
+  articleExtractionRules: [],
   enabledToolIds: {
     selection: [...DEFAULT_SELECTION_TOOL_IDS],
     home: [...DEFAULT_HOME_TOOL_IDS],
@@ -3774,6 +3898,13 @@ function normalizeEnabledToolIds(stored) {
     ...DEFAULT_SETTINGS.enabledToolIds,
     ...stored ?? {}
   };
+}
+function normalizeArticleExtractionRules(rules = []) {
+  return rules.map((rule) => ({
+    id: String(rule.id || crypto.randomUUID()),
+    urlPattern: String(rule.urlPattern ?? "").trim(),
+    selector: String(rule.selector ?? "").trim()
+  })).filter((rule) => rule.urlPattern && rule.selector);
 }
 function normalizeSettings(stored = {}) {
   const profiles = stored.profiles ?? [];
@@ -3855,6 +3986,9 @@ function normalizeSettings(stored = {}) {
     selectionOverlayUrlBlacklist: stored.selectionOverlayUrlBlacklist ?? [],
     imageTextExtractionEnabled: stored.imageTextExtractionEnabled ?? false,
     imageTextExtractionMinSize: stored.imageTextExtractionMinSize ?? 160,
+    articleExtractionRules: normalizeArticleExtractionRules(
+      stored.articleExtractionRules
+    ),
     edgeQuickToolUrlBlacklist: quickToolsUrlBlacklist,
     chromeSyncEnabled: stored.chromeSyncEnabled ?? false,
     enabledToolIds: normalizeEnabledToolIds(stored.enabledToolIds),

@@ -14811,19 +14811,33 @@
     }
   });
 
-  // node_modules/lucide-react/dist/esm/createLucideIcon.js
-  var import_react2 = __toESM(require_react());
+  // node_modules/lucide-react/dist/esm/createLucideIcon.mjs
+  var import_react3 = __toESM(require_react(), 1);
 
-  // node_modules/lucide-react/dist/esm/shared/src/utils.js
-  var toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+  // node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs
   var mergeClasses = (...classes) => classes.filter((className, index, array) => {
     return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index;
   }).join(" ").trim();
 
-  // node_modules/lucide-react/dist/esm/Icon.js
-  var import_react = __toESM(require_react());
+  // node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.mjs
+  var toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
 
-  // node_modules/lucide-react/dist/esm/defaultAttributes.js
+  // node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.mjs
+  var toCamelCase = (string) => string.replace(
+    /^([A-Z])|[\s-_]+(\w)/g,
+    (match, p1, p2) => p2 ? p2.toUpperCase() : p1.toLowerCase()
+  );
+
+  // node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.mjs
+  var toPascalCase = (string) => {
+    const camelCase = toCamelCase(string);
+    return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+  };
+
+  // node_modules/lucide-react/dist/esm/Icon.mjs
+  var import_react2 = __toESM(require_react(), 1);
+
+  // node_modules/lucide-react/dist/esm/defaultAttributes.mjs
   var defaultAttributes = {
     xmlns: "http://www.w3.org/2000/svg",
     width: 24,
@@ -14836,82 +14850,103 @@
     strokeLinejoin: "round"
   };
 
-  // node_modules/lucide-react/dist/esm/Icon.js
-  var Icon = (0, import_react.forwardRef)(
-    ({
-      color = "currentColor",
-      size = 24,
-      strokeWidth = 2,
-      absoluteStrokeWidth,
-      className = "",
-      children,
-      iconNode,
-      ...rest
-    }, ref) => {
-      return (0, import_react.createElement)(
+  // node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.mjs
+  var hasA11yProp = (props) => {
+    for (const prop in props) {
+      if (prop.startsWith("aria-") || prop === "role" || prop === "title") {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // node_modules/lucide-react/dist/esm/context.mjs
+  var import_react = __toESM(require_react(), 1);
+  var LucideContext = (0, import_react.createContext)({});
+  var useLucideContext = () => (0, import_react.useContext)(LucideContext);
+
+  // node_modules/lucide-react/dist/esm/Icon.mjs
+  var Icon = (0, import_react2.forwardRef)(
+    ({ color, size, strokeWidth, absoluteStrokeWidth, className = "", children, iconNode, ...rest }, ref) => {
+      const {
+        size: contextSize = 24,
+        strokeWidth: contextStrokeWidth = 2,
+        absoluteStrokeWidth: contextAbsoluteStrokeWidth = false,
+        color: contextColor = "currentColor",
+        className: contextClass = ""
+      } = useLucideContext() ?? {};
+      const calculatedStrokeWidth = absoluteStrokeWidth ?? contextAbsoluteStrokeWidth ? Number(strokeWidth ?? contextStrokeWidth) * 24 / Number(size ?? contextSize) : strokeWidth ?? contextStrokeWidth;
+      return (0, import_react2.createElement)(
         "svg",
         {
           ref,
           ...defaultAttributes,
-          width: size,
-          height: size,
-          stroke: color,
-          strokeWidth: absoluteStrokeWidth ? Number(strokeWidth) * 24 / Number(size) : strokeWidth,
-          className: mergeClasses("lucide", className),
+          width: size ?? contextSize ?? defaultAttributes.width,
+          height: size ?? contextSize ?? defaultAttributes.height,
+          stroke: color ?? contextColor,
+          strokeWidth: calculatedStrokeWidth,
+          className: mergeClasses("lucide", contextClass, className),
+          ...!children && !hasA11yProp(rest) && { "aria-hidden": "true" },
           ...rest
         },
         [
-          ...iconNode.map(([tag, attrs]) => (0, import_react.createElement)(tag, attrs)),
+          ...iconNode.map(([tag, attrs]) => (0, import_react2.createElement)(tag, attrs)),
           ...Array.isArray(children) ? children : [children]
         ]
       );
     }
   );
 
-  // node_modules/lucide-react/dist/esm/createLucideIcon.js
+  // node_modules/lucide-react/dist/esm/createLucideIcon.mjs
   var createLucideIcon = (iconName, iconNode) => {
-    const Component = (0, import_react2.forwardRef)(
-      ({ className, ...props }, ref) => (0, import_react2.createElement)(Icon, {
+    const Component = (0, import_react3.forwardRef)(
+      ({ className, ...props }, ref) => (0, import_react3.createElement)(Icon, {
         ref,
         iconNode,
-        className: mergeClasses(`lucide-${toKebabCase(iconName)}`, className),
+        className: mergeClasses(
+          `lucide-${toKebabCase(toPascalCase(iconName))}`,
+          `lucide-${iconName}`,
+          className
+        ),
         ...props
       })
     );
-    Component.displayName = `${iconName}`;
+    Component.displayName = toPascalCase(iconName);
     return Component;
   };
 
-  // node_modules/lucide-react/dist/esm/icons/arrow-right-left.js
-  var ArrowRightLeft = createLucideIcon("ArrowRightLeft", [
+  // node_modules/lucide-react/dist/esm/icons/arrow-right-left.mjs
+  var __iconNode = [
     ["path", { d: "m16 3 4 4-4 4", key: "1x1c3m" }],
     ["path", { d: "M20 7H4", key: "zbl0bi" }],
     ["path", { d: "m8 21-4-4 4-4", key: "h9nckh" }],
     ["path", { d: "M4 17h16", key: "g4d7ey" }]
-  ]);
+  ];
+  var ArrowRightLeft = createLucideIcon("arrow-right-left", __iconNode);
 
-  // node_modules/lucide-react/dist/esm/icons/book-open.js
-  var BookOpen = createLucideIcon("BookOpen", [
-    ["path", { d: "M12 7v14", key: "1akyts" }],
+  // node_modules/lucide-react/dist/esm/icons/book-open.mjs
+  var __iconNode2 = [
+    ["path", { d: "M12 5v16", key: "1f6ucr" }],
     [
       "path",
       {
-        d: "M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z",
-        key: "ruj8y"
+        d: "M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z",
+        key: "1fyvmf"
       }
     ]
-  ]);
+  ];
+  var BookOpen = createLucideIcon("book-open", __iconNode2);
 
-  // node_modules/lucide-react/dist/esm/icons/check.js
-  var Check = createLucideIcon("Check", [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]]);
+  // node_modules/lucide-react/dist/esm/icons/check.mjs
+  var __iconNode3 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+  var Check = createLucideIcon("check", __iconNode3);
 
-  // node_modules/lucide-react/dist/esm/icons/chevron-down.js
-  var ChevronDown = createLucideIcon("ChevronDown", [
-    ["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]
-  ]);
+  // node_modules/lucide-react/dist/esm/icons/chevron-down.mjs
+  var __iconNode4 = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+  var ChevronDown = createLucideIcon("chevron-down", __iconNode4);
 
-  // node_modules/lucide-react/dist/esm/icons/clipboard.js
-  var Clipboard = createLucideIcon("Clipboard", [
+  // node_modules/lucide-react/dist/esm/icons/clipboard.mjs
+  var __iconNode5 = [
     ["rect", { width: "8", height: "4", x: "8", y: "2", rx: "1", ry: "1", key: "tgr4d6" }],
     [
       "path",
@@ -14920,23 +14955,26 @@
         key: "116196"
       }
     ]
-  ]);
+  ];
+  var Clipboard = createLucideIcon("clipboard", __iconNode5);
 
-  // node_modules/lucide-react/dist/esm/icons/code-xml.js
-  var CodeXml = createLucideIcon("CodeXml", [
+  // node_modules/lucide-react/dist/esm/icons/code-xml.mjs
+  var __iconNode6 = [
     ["path", { d: "m18 16 4-4-4-4", key: "1inbqp" }],
     ["path", { d: "m6 8-4 4 4 4", key: "15zrgr" }],
     ["path", { d: "m14.5 4-5 16", key: "e7oirm" }]
-  ]);
+  ];
+  var CodeXml = createLucideIcon("code-xml", __iconNode6);
 
-  // node_modules/lucide-react/dist/esm/icons/copy.js
-  var Copy = createLucideIcon("Copy", [
+  // node_modules/lucide-react/dist/esm/icons/copy.mjs
+  var __iconNode7 = [
     ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
     ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
-  ]);
+  ];
+  var Copy = createLucideIcon("copy", __iconNode7);
 
-  // node_modules/lucide-react/dist/esm/icons/earth.js
-  var Earth = createLucideIcon("Earth", [
+  // node_modules/lucide-react/dist/esm/icons/earth.mjs
+  var __iconNode8 = [
     ["path", { d: "M21.54 15H17a2 2 0 0 0-2 2v4.54", key: "1djwo0" }],
     [
       "path",
@@ -14947,44 +14985,55 @@
     ],
     ["path", { d: "M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05", key: "14pb5j" }],
     ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
-  ]);
+  ];
+  var Earth = createLucideIcon("earth", __iconNode8);
 
-  // node_modules/lucide-react/dist/esm/icons/file-text.js
-  var FileText = createLucideIcon("FileText", [
-    ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
-    ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
+  // node_modules/lucide-react/dist/esm/icons/file-text.mjs
+  var __iconNode9 = [
+    [
+      "path",
+      {
+        d: "M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z",
+        key: "1oefj6"
+      }
+    ],
+    ["path", { d: "M14 2v5a1 1 0 0 0 1 1h5", key: "wfsgrz" }],
     ["path", { d: "M10 9H8", key: "b1mrlr" }],
     ["path", { d: "M16 13H8", key: "t4e002" }],
     ["path", { d: "M16 17H8", key: "z1uh3a" }]
-  ]);
+  ];
+  var FileText = createLucideIcon("file-text", __iconNode9);
 
-  // node_modules/lucide-react/dist/esm/icons/highlighter.js
-  var Highlighter = createLucideIcon("Highlighter", [
+  // node_modules/lucide-react/dist/esm/icons/highlighter.mjs
+  var __iconNode10 = [
     ["path", { d: "m9 11-6 6v3h9l3-3", key: "1a3l36" }],
     ["path", { d: "m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4", key: "14a9rk" }]
-  ]);
+  ];
+  var Highlighter = createLucideIcon("highlighter", __iconNode10);
 
-  // node_modules/lucide-react/dist/esm/icons/image-plus.js
-  var ImagePlus = createLucideIcon("ImagePlus", [
+  // node_modules/lucide-react/dist/esm/icons/image-plus.mjs
+  var __iconNode11 = [
     ["path", { d: "M16 5h6", key: "1vod17" }],
     ["path", { d: "M19 2v6", key: "4bpg5p" }],
     ["path", { d: "M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5", key: "1ue2ih" }],
     ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }],
     ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }]
-  ]);
+  ];
+  var ImagePlus = createLucideIcon("image-plus", __iconNode11);
 
-  // node_modules/lucide-react/dist/esm/icons/languages.js
-  var Languages = createLucideIcon("Languages", [
+  // node_modules/lucide-react/dist/esm/icons/languages.mjs
+  var __iconNode12 = [
     ["path", { d: "m5 8 6 6", key: "1wu5hv" }],
     ["path", { d: "m4 14 6-6 2-3", key: "1k1g8d" }],
     ["path", { d: "M2 5h12", key: "or177f" }],
     ["path", { d: "M7 2h1", key: "1t2jsx" }],
     ["path", { d: "m22 22-5-10-5 10", key: "don7ne" }],
     ["path", { d: "M14 18h6", key: "1m8k6r" }]
-  ]);
+  ];
+  var Languages = createLucideIcon("languages", __iconNode12);
 
-  // node_modules/lucide-react/dist/esm/icons/lightbulb.js
-  var Lightbulb = createLucideIcon("Lightbulb", [
+  // node_modules/lucide-react/dist/esm/icons/lightbulb.mjs
+  var __iconNode13 = [
     [
       "path",
       {
@@ -14994,87 +15043,111 @@
     ],
     ["path", { d: "M9 18h6", key: "x1upvd" }],
     ["path", { d: "M10 22h4", key: "ceow96" }]
-  ]);
+  ];
+  var Lightbulb = createLucideIcon("lightbulb", __iconNode13);
 
-  // node_modules/lucide-react/dist/esm/icons/list-checks.js
-  var ListChecks = createLucideIcon("ListChecks", [
-    ["path", { d: "m3 17 2 2 4-4", key: "1jhpwq" }],
-    ["path", { d: "m3 7 2 2 4-4", key: "1obspn" }],
-    ["path", { d: "M13 6h8", key: "15sg57" }],
+  // node_modules/lucide-react/dist/esm/icons/list-checks.mjs
+  var __iconNode14 = [
+    ["path", { d: "M13 5h8", key: "a7qcls" }],
     ["path", { d: "M13 12h8", key: "h98zly" }],
-    ["path", { d: "M13 18h8", key: "oe0vm4" }]
-  ]);
+    ["path", { d: "M13 19h8", key: "c3s6r1" }],
+    ["path", { d: "m3 17 2 2 4-4", key: "1jhpwq" }],
+    ["path", { d: "m3 7 2 2 4-4", key: "1obspn" }]
+  ];
+  var ListChecks = createLucideIcon("list-checks", __iconNode14);
 
-  // node_modules/lucide-react/dist/esm/icons/maximize-2.js
-  var Maximize2 = createLucideIcon("Maximize2", [
-    ["polyline", { points: "15 3 21 3 21 9", key: "mznyad" }],
-    ["polyline", { points: "9 21 3 21 3 15", key: "1avn1i" }],
-    ["line", { x1: "21", x2: "14", y1: "3", y2: "10", key: "ota7mn" }],
-    ["line", { x1: "3", x2: "10", y1: "21", y2: "14", key: "1atl0r" }]
-  ]);
+  // node_modules/lucide-react/dist/esm/icons/maximize-2.mjs
+  var __iconNode15 = [
+    ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
+    ["path", { d: "m21 3-7 7", key: "1l2asr" }],
+    ["path", { d: "m3 21 7-7", key: "tjx5ai" }],
+    ["path", { d: "M9 21H3v-6", key: "wtvkvv" }]
+  ];
+  var Maximize2 = createLucideIcon("maximize-2", __iconNode15);
 
-  // node_modules/lucide-react/dist/esm/icons/message-square-reply.js
-  var MessageSquareReply = createLucideIcon("MessageSquareReply", [
-    ["path", { d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z", key: "1lielz" }],
-    ["path", { d: "m10 7-3 3 3 3", key: "1eugdv" }],
-    ["path", { d: "M17 13v-1a2 2 0 0 0-2-2H7", key: "ernfh3" }]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/message-square-text.js
-  var MessageSquareText = createLucideIcon("MessageSquareText", [
-    ["path", { d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z", key: "1lielz" }],
-    ["path", { d: "M13 8H7", key: "14i4kc" }],
-    ["path", { d: "M17 12H7", key: "16if0g" }]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/minimize-2.js
-  var Minimize2 = createLucideIcon("Minimize2", [
-    ["polyline", { points: "4 14 10 14 10 20", key: "11kfnr" }],
-    ["polyline", { points: "20 10 14 10 14 4", key: "rlmsce" }],
-    ["line", { x1: "14", x2: "21", y1: "10", y2: "3", key: "o5lafz" }],
-    ["line", { x1: "3", x2: "10", y1: "21", y2: "14", key: "1atl0r" }]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/panel-right-open.js
-  var PanelRightOpen = createLucideIcon("PanelRightOpen", [
-    ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }],
-    ["path", { d: "M15 3v18", key: "14nvp0" }],
-    ["path", { d: "m10 15-3-3 3-3", key: "1pgupc" }]
-  ]);
-
-  // node_modules/lucide-react/dist/esm/icons/pen-line.js
-  var PenLine = createLucideIcon("PenLine", [
-    ["path", { d: "M12 20h9", key: "t2du7b" }],
+  // node_modules/lucide-react/dist/esm/icons/message-square-reply.mjs
+  var __iconNode16 = [
     [
       "path",
       {
-        d: "M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z",
-        key: "1ykcvy"
+        d: "M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z",
+        key: "18887p"
+      }
+    ],
+    ["path", { d: "m10 8-3 3 3 3", key: "fp6dz7" }],
+    ["path", { d: "M17 14v-1a2 2 0 0 0-2-2H7", key: "1tkjnz" }]
+  ];
+  var MessageSquareReply = createLucideIcon("message-square-reply", __iconNode16);
+
+  // node_modules/lucide-react/dist/esm/icons/message-square-text.mjs
+  var __iconNode17 = [
+    [
+      "path",
+      {
+        d: "M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z",
+        key: "18887p"
+      }
+    ],
+    ["path", { d: "M7 11h10", key: "1twpyw" }],
+    ["path", { d: "M7 15h6", key: "d9of3u" }],
+    ["path", { d: "M7 7h8", key: "af5zfr" }]
+  ];
+  var MessageSquareText = createLucideIcon("message-square-text", __iconNode17);
+
+  // node_modules/lucide-react/dist/esm/icons/minimize-2.mjs
+  var __iconNode18 = [
+    ["path", { d: "m14 10 7-7", key: "oa77jy" }],
+    ["path", { d: "M20 10h-6V4", key: "mjg0md" }],
+    ["path", { d: "m3 21 7-7", key: "tjx5ai" }],
+    ["path", { d: "M4 14h6v6", key: "rmj7iw" }]
+  ];
+  var Minimize2 = createLucideIcon("minimize-2", __iconNode18);
+
+  // node_modules/lucide-react/dist/esm/icons/panel-right-open.mjs
+  var __iconNode19 = [
+    ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }],
+    ["path", { d: "M15 3v18", key: "14nvp0" }],
+    ["path", { d: "m10 15-3-3 3-3", key: "1pgupc" }]
+  ];
+  var PanelRightOpen = createLucideIcon("panel-right-open", __iconNode19);
+
+  // node_modules/lucide-react/dist/esm/icons/pen-line.mjs
+  var __iconNode20 = [
+    ["path", { d: "M13 21h8", key: "1jsn5i" }],
+    [
+      "path",
+      {
+        d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
+        key: "1a8usu"
       }
     ]
-  ]);
+  ];
+  var PenLine = createLucideIcon("pen-line", __iconNode20);
 
-  // node_modules/lucide-react/dist/esm/icons/presentation.js
-  var Presentation = createLucideIcon("Presentation", [
+  // node_modules/lucide-react/dist/esm/icons/presentation.mjs
+  var __iconNode21 = [
     ["path", { d: "M2 3h20", key: "91anmk" }],
     ["path", { d: "M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3", key: "2k9sn8" }],
     ["path", { d: "m7 21 5-5 5 5", key: "bip4we" }]
-  ]);
+  ];
+  var Presentation = createLucideIcon("presentation", __iconNode21);
 
-  // node_modules/lucide-react/dist/esm/icons/reply.js
-  var Reply = createLucideIcon("Reply", [
-    ["polyline", { points: "9 17 4 12 9 7", key: "hvgpf2" }],
-    ["path", { d: "M20 18v-2a4 4 0 0 0-4-4H4", key: "5vmcpk" }]
-  ]);
+  // node_modules/lucide-react/dist/esm/icons/reply.mjs
+  var __iconNode22 = [
+    ["path", { d: "M20 18v-2a4 4 0 0 0-4-4H4", key: "5vmcpk" }],
+    ["path", { d: "m9 17-5-5 5-5", key: "nvlc11" }]
+  ];
+  var Reply = createLucideIcon("reply", __iconNode22);
 
-  // node_modules/lucide-react/dist/esm/icons/rotate-ccw.js
-  var RotateCcw = createLucideIcon("RotateCcw", [
+  // node_modules/lucide-react/dist/esm/icons/rotate-ccw.mjs
+  var __iconNode23 = [
     ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
     ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
-  ]);
+  ];
+  var RotateCcw = createLucideIcon("rotate-ccw", __iconNode23);
 
-  // node_modules/lucide-react/dist/esm/icons/scan-text.js
-  var ScanText = createLucideIcon("ScanText", [
+  // node_modules/lucide-react/dist/esm/icons/scan-text.mjs
+  var __iconNode24 = [
     ["path", { d: "M3 7V5a2 2 0 0 1 2-2h2", key: "aa7l1z" }],
     ["path", { d: "M17 3h2a2 2 0 0 1 2 2v2", key: "4qcy5o" }],
     ["path", { d: "M21 17v2a2 2 0 0 1-2 2h-2", key: "6vwrx8" }],
@@ -15082,16 +15155,18 @@
     ["path", { d: "M7 8h8", key: "1jbsf9" }],
     ["path", { d: "M7 12h10", key: "b7w52i" }],
     ["path", { d: "M7 16h6", key: "1vyc9m" }]
-  ]);
+  ];
+  var ScanText = createLucideIcon("scan-text", __iconNode24);
 
-  // node_modules/lucide-react/dist/esm/icons/search.js
-  var Search = createLucideIcon("Search", [
-    ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }],
-    ["path", { d: "m21 21-4.3-4.3", key: "1qie3q" }]
-  ]);
+  // node_modules/lucide-react/dist/esm/icons/search.mjs
+  var __iconNode25 = [
+    ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
+    ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
+  ];
+  var Search = createLucideIcon("search", __iconNode25);
 
-  // node_modules/lucide-react/dist/esm/icons/send.js
-  var Send = createLucideIcon("Send", [
+  // node_modules/lucide-react/dist/esm/icons/send.mjs
+  var __iconNode26 = [
     [
       "path",
       {
@@ -15100,44 +15175,46 @@
       }
     ],
     ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
-  ]);
+  ];
+  var Send = createLucideIcon("send", __iconNode26);
 
-  // node_modules/lucide-react/dist/esm/icons/sparkles.js
-  var Sparkles = createLucideIcon("Sparkles", [
+  // node_modules/lucide-react/dist/esm/icons/sparkles.mjs
+  var __iconNode27 = [
     [
       "path",
       {
-        d: "M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z",
-        key: "4pj2yx"
+        d: "M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z",
+        key: "1s2grr"
       }
     ],
-    ["path", { d: "M20 3v4", key: "1olli1" }],
-    ["path", { d: "M22 5h-4", key: "1gvqau" }],
-    ["path", { d: "M4 17v2", key: "vumght" }],
-    ["path", { d: "M5 18H3", key: "zchphs" }]
-  ]);
+    ["path", { d: "M20 2v4", key: "1rf3ol" }],
+    ["path", { d: "M22 4h-4", key: "gwowj6" }],
+    ["circle", { cx: "4", cy: "20", r: "2", key: "6kqj1y" }]
+  ];
+  var Sparkles = createLucideIcon("sparkles", __iconNode27);
 
-  // node_modules/lucide-react/dist/esm/icons/text-select.js
-  var TextSelect = createLucideIcon("TextSelect", [
-    ["path", { d: "M5 3a2 2 0 0 0-2 2", key: "y57alp" }],
-    ["path", { d: "M19 3a2 2 0 0 1 2 2", key: "18rm91" }],
-    ["path", { d: "M21 19a2 2 0 0 1-2 2", key: "1j7049" }],
-    ["path", { d: "M5 21a2 2 0 0 1-2-2", key: "sbafld" }],
-    ["path", { d: "M9 3h1", key: "1yesri" }],
-    ["path", { d: "M9 21h1", key: "15o7lz" }],
-    ["path", { d: "M14 3h1", key: "1ec4yj" }],
+  // node_modules/lucide-react/dist/esm/icons/square-dashed-text.mjs
+  var __iconNode28 = [
     ["path", { d: "M14 21h1", key: "v9vybs" }],
-    ["path", { d: "M3 9v1", key: "1r0deq" }],
+    ["path", { d: "M14 3h1", key: "1ec4yj" }],
+    ["path", { d: "M19 3a2 2 0 0 1 2 2", key: "18rm91" }],
+    ["path", { d: "M21 14v1", key: "169vum" }],
+    ["path", { d: "M21 19a2 2 0 0 1-2 2", key: "1j7049" }],
     ["path", { d: "M21 9v1", key: "mxsmne" }],
     ["path", { d: "M3 14v1", key: "vnatye" }],
-    ["path", { d: "M21 14v1", key: "169vum" }],
-    ["line", { x1: "7", x2: "15", y1: "8", y2: "8", key: "1758g8" }],
-    ["line", { x1: "7", x2: "17", y1: "12", y2: "12", key: "197423" }],
-    ["line", { x1: "7", x2: "13", y1: "16", y2: "16", key: "37cgm6" }]
-  ]);
+    ["path", { d: "M3 9v1", key: "1r0deq" }],
+    ["path", { d: "M5 21a2 2 0 0 1-2-2", key: "sbafld" }],
+    ["path", { d: "M5 3a2 2 0 0 0-2 2", key: "y57alp" }],
+    ["path", { d: "M7 12h10", key: "b7w52i" }],
+    ["path", { d: "M7 16h6", key: "1vyc9m" }],
+    ["path", { d: "M7 8h8", key: "1jbsf9" }],
+    ["path", { d: "M9 21h1", key: "15o7lz" }],
+    ["path", { d: "M9 3h1", key: "1yesri" }]
+  ];
+  var SquareDashedText = createLucideIcon("square-dashed-text", __iconNode28);
 
-  // node_modules/lucide-react/dist/esm/icons/wand-sparkles.js
-  var WandSparkles = createLucideIcon("WandSparkles", [
+  // node_modules/lucide-react/dist/esm/icons/wand-sparkles.mjs
+  var __iconNode29 = [
     [
       "path",
       {
@@ -15152,16 +15229,18 @@
     ["path", { d: "M7 8H3", key: "zfb6yr" }],
     ["path", { d: "M21 16h-4", key: "1cnmox" }],
     ["path", { d: "M11 3H9", key: "1obp7u" }]
-  ]);
+  ];
+  var WandSparkles = createLucideIcon("wand-sparkles", __iconNode29);
 
-  // node_modules/lucide-react/dist/esm/icons/x.js
-  var X = createLucideIcon("X", [
+  // node_modules/lucide-react/dist/esm/icons/x.mjs
+  var __iconNode30 = [
     ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
     ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
-  ]);
+  ];
+  var X = createLucideIcon("x", __iconNode30);
 
   // src/content/index.tsx
-  var import_react4 = __toESM(require_react(), 1);
+  var import_react5 = __toESM(require_react(), 1);
   var import_client = __toESM(require_client(), 1);
 
   // src/shared/i18n.ts
@@ -15301,6 +15380,7 @@
       selectMoreTools: "\u9009\u62E9\u66F4\u591A\u5DE5\u5177",
       moreTools: "\u66F4\u591A\u5DE5\u5177",
       copyContent: "\u590D\u5236\u5185\u5BB9",
+      copyCurrentBody: "\u590D\u5236\u6B63\u6587",
       copyUrl: "\u590D\u5236\u7F51\u9875 URL",
       copied: "\u5DF2\u590D\u5236",
       regenerate: "\u91CD\u65B0\u56DE\u7B54",
@@ -15327,9 +15407,22 @@
       highlightCurrentBodyBlock: "\u5728\u9875\u9762\u4E2D\u9AD8\u4EAE\u8FD9\u4E00\u6BB5",
       removeCurrentBodyBlock: "\u4ECE\u5F53\u524D\u6B63\u6587\u4E2D\u5220\u9664\u8FD9\u4E00\u6BB5",
       smartPruneCurrentBody: "\u667A\u80FD\u5254\u9664",
+      articleRecognition: "\u6B63\u6587\u8BC6\u522B",
+      recognitionRules: "\u8BC6\u522B\u89C4\u5219",
+      articleExtractionRules: "\u6B63\u6587\u63D0\u53D6\u89C4\u5219",
+      articleExtractionRulesHelp: "\u6BCF\u6761\u89C4\u5219\u5305\u542B\u9002\u914D\u9875\u9762\u5730\u5740\u548C\u6B63\u6587 selector\uFF1B\u5730\u5740\u652F\u6301\u57DF\u540D\u3001\u901A\u914D\u7B26\u548C URL \u7247\u6BB5\u3002",
+      articleExtractionUrlPattern: "\u9002\u914D\u9875\u9762\u5730\u5740",
+      articleExtractionSelector: "\u6B63\u6587 selector",
+      articleExtractionUrlPatternPlaceholder: "\u9875\u9762\u5730\u5740\uFF0C\u4F8B\u5982 example.com\u3001*.example.com\u3001https://example.com/*",
+      articleExtractionSelectorPlaceholder: "CSS selector\uFF0C\u4F8B\u5982 article\u3001main\u3001#content\u3001.post-body",
+      addArticleExtractionRule: "\u6DFB\u52A0\u6B63\u6587\u89C4\u5219",
+      deleteArticleExtractionRule: "\u5220\u9664\u6B63\u6587\u89C4\u5219",
+      noArticleExtractionRules: "\u8FD8\u6CA1\u6709\u6B63\u6587\u63D0\u53D6\u89C4\u5219",
+      articleExtractionRuleSaved: "\u6B63\u6587\u63D0\u53D6\u89C4\u5219\u5DF2\u4FDD\u5B58",
+      articleExtractionRuleInvalid: "\u8BF7\u586B\u5199\u9875\u9762\u5730\u5740\u548C selector",
       currentBodyVirtualizedWarning: "\u7591\u4F3C\u865A\u62DF\u6EDA\u52A8\u9875\u9762\uFF0C\u9884\u89C8\u53EF\u80FD\u53EA\u5305\u542B\u5F53\u524D\u5DF2\u6E32\u67D3\u5185\u5BB9\u3002",
       selectingBodyRange: "\u6B63\u5728\u9009\u62E9\u6B63\u6587\u8303\u56F4",
-      manualBodySelectionHint: "\u6EDA\u8F6E/\u65B9\u5411\u952E\u8C03\u6574\u5C42\u7EA7\uFF0C\u70B9\u51FB\u786E\u8BA4\uFF0CEsc \u53D6\u6D88",
+      manualBodySelectionHint: "\u6EDA\u8F6E/\u65B9\u5411\u952E\u8C03\u6574\u8303\u56F4\uFF0C\u70B9\u51FB\u786E\u8BA4\uFF0CESC\u53D6\u6D88",
       manualBodySelectionCancelled: "\u5DF2\u53D6\u6D88\u6B63\u6587\u6846\u9009",
       textDensity: "\u6587\u672C\u5BC6\u5EA6",
       linkRatio: "\u94FE\u63A5\u6BD4\u4F8B",
@@ -15815,6 +15908,7 @@
       selectMoreTools: "\u9078\u64C7\u66F4\u591A\u5DE5\u5177",
       moreTools: "\u66F4\u591A\u5DE5\u5177",
       copyContent: "\u8907\u88FD\u5167\u5BB9",
+      copyCurrentBody: "\u8907\u88FD\u6B63\u6587",
       copyUrl: "\u8907\u88FD\u7DB2\u9801 URL",
       copied: "\u5DF2\u8907\u88FD",
       regenerate: "\u91CD\u65B0\u56DE\u7B54",
@@ -15841,9 +15935,22 @@
       highlightCurrentBodyBlock: "\u5728\u9801\u9762\u4E2D\u9AD8\u4EAE\u9019\u4E00\u6BB5",
       removeCurrentBodyBlock: "\u5F9E\u76EE\u524D\u6B63\u6587\u4E2D\u522A\u9664\u9019\u4E00\u6BB5",
       smartPruneCurrentBody: "\u667A\u6167\u5254\u9664",
+      articleRecognition: "\u6B63\u6587\u8B58\u5225",
+      recognitionRules: "\u8B58\u5225\u898F\u5247",
+      articleExtractionRules: "\u6B63\u6587\u64F7\u53D6\u898F\u5247",
+      articleExtractionRulesHelp: "\u6BCF\u689D\u898F\u5247\u5305\u542B\u9069\u914D\u9801\u9762\u5730\u5740\u548C\u6B63\u6587 selector\uFF1B\u5730\u5740\u652F\u63F4\u7DB2\u57DF\u3001\u842C\u7528\u5B57\u5143\u548C URL \u7247\u6BB5\u3002",
+      articleExtractionUrlPattern: "\u9069\u914D\u9801\u9762\u5730\u5740",
+      articleExtractionSelector: "\u6B63\u6587 selector",
+      articleExtractionUrlPatternPlaceholder: "\u9801\u9762\u5730\u5740\uFF0C\u4F8B\u5982 example.com\u3001*.example.com\u3001https://example.com/*",
+      articleExtractionSelectorPlaceholder: "CSS selector\uFF0C\u4F8B\u5982 article\u3001main\u3001#content\u3001.post-body",
+      addArticleExtractionRule: "\u65B0\u589E\u6B63\u6587\u898F\u5247",
+      deleteArticleExtractionRule: "\u522A\u9664\u6B63\u6587\u898F\u5247",
+      noArticleExtractionRules: "\u9084\u6C92\u6709\u6B63\u6587\u64F7\u53D6\u898F\u5247",
+      articleExtractionRuleSaved: "\u6B63\u6587\u64F7\u53D6\u898F\u5247\u5DF2\u5132\u5B58",
+      articleExtractionRuleInvalid: "\u8ACB\u586B\u5BEB\u9801\u9762\u5730\u5740\u548C selector",
       currentBodyVirtualizedWarning: "\u7591\u4F3C\u865B\u64EC\u6372\u52D5\u9801\u9762\uFF0C\u9810\u89BD\u53EF\u80FD\u53EA\u5305\u542B\u76EE\u524D\u5DF2\u6E32\u67D3\u5167\u5BB9\u3002",
       selectingBodyRange: "\u6B63\u5728\u9078\u53D6\u6B63\u6587\u7BC4\u570D",
-      manualBodySelectionHint: "\u6EFE\u8F2A/\u65B9\u5411\u9375\u8ABF\u6574\u5C64\u7D1A\uFF0C\u9EDE\u64CA\u78BA\u8A8D\uFF0CEsc \u53D6\u6D88",
+      manualBodySelectionHint: "\u6EFE\u8F2A/\u65B9\u5411\u9375\u8ABF\u6574\u7BC4\u570D\uFF0C\u9EDE\u64CA\u78BA\u8A8D\uFF0CESC\u53D6\u6D88",
       manualBodySelectionCancelled: "\u5DF2\u53D6\u6D88\u6B63\u6587\u6846\u9078",
       textDensity: "\u6587\u5B57\u5BC6\u5EA6",
       linkRatio: "\u9023\u7D50\u6BD4\u4F8B",
@@ -16329,6 +16436,7 @@
       selectMoreTools: "Select More Tools",
       moreTools: "More Tools",
       copyContent: "Copy Content",
+      copyCurrentBody: "Copy Body",
       copyUrl: "Copy Page URL",
       copied: "Copied",
       regenerate: "Retry Answer",
@@ -16355,9 +16463,22 @@
       highlightCurrentBodyBlock: "Highlight this block on the page",
       removeCurrentBodyBlock: "Remove this block from current body",
       smartPruneCurrentBody: "Smart Prune",
+      articleRecognition: "Body Recognition",
+      recognitionRules: "Recognition Rules",
+      articleExtractionRules: "Body Extraction Rules",
+      articleExtractionRulesHelp: "Each rule includes a page URL pattern and body selector; URL patterns support domains, wildcards, and URL fragments.",
+      articleExtractionUrlPattern: "Page URL Pattern",
+      articleExtractionSelector: "Body Selector",
+      articleExtractionUrlPatternPlaceholder: "Page URL, e.g. example.com, *.example.com, https://example.com/*",
+      articleExtractionSelectorPlaceholder: "CSS selector, e.g. article, main, #content, .post-body",
+      addArticleExtractionRule: "Add Body Rule",
+      deleteArticleExtractionRule: "Delete Body Rule",
+      noArticleExtractionRules: "No body extraction rules yet",
+      articleExtractionRuleSaved: "Body extraction rule saved",
+      articleExtractionRuleInvalid: "Enter both a page URL pattern and selector",
       currentBodyVirtualizedWarning: "This looks like a virtualized page, so the preview may include only currently rendered content.",
       selectingBodyRange: "Selecting body range",
-      manualBodySelectionHint: "Wheel/arrow keys adjust level, click to confirm, Esc to cancel",
+      manualBodySelectionHint: "Wheel/arrow keys adjust range, click to confirm, Esc to cancel",
       manualBodySelectionCancelled: "Body range selection cancelled",
       textDensity: "Text Density",
       linkRatio: "Link Ratio",
@@ -16843,6 +16964,7 @@
       selectMoreTools: "\u4ED6\u306E\u30C4\u30FC\u30EB\u3092\u9078\u629E",
       moreTools: "\u305D\u306E\u4ED6\u306E\u30C4\u30FC\u30EB",
       copyContent: "\u5185\u5BB9\u3092\u30B3\u30D4\u30FC",
+      copyCurrentBody: "\u672C\u6587\u3092\u30B3\u30D4\u30FC",
       copyUrl: "\u30DA\u30FC\u30B8 URL \u3092\u30B3\u30D4\u30FC",
       copied: "\u30B3\u30D4\u30FC\u6E08\u307F",
       regenerate: "\u518D\u56DE\u7B54",
@@ -16869,9 +16991,22 @@
       highlightCurrentBodyBlock: "\u30DA\u30FC\u30B8\u4E0A\u3067\u3053\u306E\u6BB5\u843D\u3092\u30CF\u30A4\u30E9\u30A4\u30C8",
       removeCurrentBodyBlock: "\u73FE\u5728\u306E\u672C\u6587\u304B\u3089\u3053\u306E\u30D6\u30ED\u30C3\u30AF\u3092\u524A\u9664",
       smartPruneCurrentBody: "\u30B9\u30DE\u30FC\u30C8\u9664\u5916",
+      articleRecognition: "\u672C\u6587\u8A8D\u8B58",
+      recognitionRules: "\u8A8D\u8B58\u30EB\u30FC\u30EB",
+      articleExtractionRules: "\u672C\u6587\u62BD\u51FA\u30EB\u30FC\u30EB",
+      articleExtractionRulesHelp: "\u5404\u30EB\u30FC\u30EB\u306B\u306F\u5BFE\u8C61\u30DA\u30FC\u30B8 URL \u3068\u672C\u6587 selector \u3092\u542B\u3081\u307E\u3059\u3002URL \u306F\u30C9\u30E1\u30A4\u30F3\u3001\u30EF\u30A4\u30EB\u30C9\u30AB\u30FC\u30C9\u3001URL \u65AD\u7247\u306B\u5BFE\u5FDC\u3057\u307E\u3059\u3002",
+      articleExtractionUrlPattern: "\u5BFE\u8C61\u30DA\u30FC\u30B8 URL",
+      articleExtractionSelector: "\u672C\u6587 selector",
+      articleExtractionUrlPatternPlaceholder: "\u30DA\u30FC\u30B8 URL\u3002\u4F8B: example.com\u3001*.example.com\u3001https://example.com/*",
+      articleExtractionSelectorPlaceholder: "CSS selector\u3002\u4F8B: article\u3001main\u3001#content\u3001.post-body",
+      addArticleExtractionRule: "\u672C\u6587\u30EB\u30FC\u30EB\u3092\u8FFD\u52A0",
+      deleteArticleExtractionRule: "\u672C\u6587\u30EB\u30FC\u30EB\u3092\u524A\u9664",
+      noArticleExtractionRules: "\u672C\u6587\u62BD\u51FA\u30EB\u30FC\u30EB\u306F\u307E\u3060\u3042\u308A\u307E\u305B\u3093",
+      articleExtractionRuleSaved: "\u672C\u6587\u62BD\u51FA\u30EB\u30FC\u30EB\u3092\u4FDD\u5B58\u3057\u307E\u3057\u305F",
+      articleExtractionRuleInvalid: "\u30DA\u30FC\u30B8 URL \u3068 selector \u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044",
       currentBodyVirtualizedWarning: "\u4EEE\u60F3\u30B9\u30AF\u30ED\u30FC\u30EB\u30DA\u30FC\u30B8\u306E\u53EF\u80FD\u6027\u304C\u3042\u308A\u3001\u30D7\u30EC\u30D3\u30E5\u30FC\u306F\u73FE\u5728\u63CF\u753B\u3055\u308C\u3066\u3044\u308B\u5185\u5BB9\u3060\u3051\u304B\u3082\u3057\u308C\u307E\u305B\u3093\u3002",
       selectingBodyRange: "\u672C\u6587\u7BC4\u56F2\u3092\u9078\u629E\u4E2D",
-      manualBodySelectionHint: "\u30DB\u30A4\u30FC\u30EB/\u77E2\u5370\u30AD\u30FC\u3067\u968E\u5C64\u8ABF\u6574\u3001\u30AF\u30EA\u30C3\u30AF\u3067\u78BA\u5B9A\u3001Esc \u3067\u30AD\u30E3\u30F3\u30BB\u30EB",
+      manualBodySelectionHint: "\u30DB\u30A4\u30FC\u30EB/\u77E2\u5370\u30AD\u30FC\u3067\u7BC4\u56F2\u8ABF\u6574\u3001\u30AF\u30EA\u30C3\u30AF\u3067\u78BA\u5B9A\u3001Esc \u3067\u30AD\u30E3\u30F3\u30BB\u30EB",
       manualBodySelectionCancelled: "\u672C\u6587\u7BC4\u56F2\u306E\u9078\u629E\u3092\u30AD\u30E3\u30F3\u30BB\u30EB\u3057\u307E\u3057\u305F",
       textDensity: "\u30C6\u30AD\u30B9\u30C8\u5BC6\u5EA6",
       linkRatio: "\u30EA\u30F3\u30AF\u6BD4\u7387",
@@ -17357,6 +17492,7 @@
       selectMoreTools: "\uB354 \uB9CE\uC740 \uB3C4\uAD6C \uC120\uD0DD",
       moreTools: "\uB354 \uB9CE\uC740 \uB3C4\uAD6C",
       copyContent: "\uB0B4\uC6A9 \uBCF5\uC0AC",
+      copyCurrentBody: "\uBCF8\uBB38 \uBCF5\uC0AC",
       copyUrl: "\uD398\uC774\uC9C0 URL \uBCF5\uC0AC",
       copied: "\uBCF5\uC0AC\uB428",
       regenerate: "\uB2E4\uC2DC \uB2F5\uBCC0",
@@ -17383,9 +17519,22 @@
       highlightCurrentBodyBlock: "\uD398\uC774\uC9C0\uC5D0\uC11C \uC774 \uBE14\uB85D \uAC15\uC870",
       removeCurrentBodyBlock: "\uD604\uC7AC \uBCF8\uBB38\uC5D0\uC11C \uC774 \uBE14\uB85D \uC0AD\uC81C",
       smartPruneCurrentBody: "\uC2A4\uB9C8\uD2B8 \uC81C\uAC70",
+      articleRecognition: "\uBCF8\uBB38 \uC778\uC2DD",
+      recognitionRules: "\uC778\uC2DD \uADDC\uCE59",
+      articleExtractionRules: "\uBCF8\uBB38 \uCD94\uCD9C \uADDC\uCE59",
+      articleExtractionRulesHelp: "\uAC01 \uADDC\uCE59\uC5D0\uB294 \uC801\uC6A9\uD560 \uD398\uC774\uC9C0 URL\uACFC \uBCF8\uBB38 selector\uAC00 \uD3EC\uD568\uB429\uB2C8\uB2E4. URL\uC740 \uB3C4\uBA54\uC778, \uC640\uC77C\uB4DC\uCE74\uB4DC, URL \uC870\uAC01\uC744 \uC9C0\uC6D0\uD569\uB2C8\uB2E4.",
+      articleExtractionUrlPattern: "\uC801\uC6A9 \uD398\uC774\uC9C0 URL",
+      articleExtractionSelector: "\uBCF8\uBB38 selector",
+      articleExtractionUrlPatternPlaceholder: "\uD398\uC774\uC9C0 URL \uC608: example.com, *.example.com, https://example.com/*",
+      articleExtractionSelectorPlaceholder: "CSS selector \uC608: article, main, #content, .post-body",
+      addArticleExtractionRule: "\uBCF8\uBB38 \uADDC\uCE59 \uCD94\uAC00",
+      deleteArticleExtractionRule: "\uBCF8\uBB38 \uADDC\uCE59 \uC0AD\uC81C",
+      noArticleExtractionRules: "\uBCF8\uBB38 \uCD94\uCD9C \uADDC\uCE59\uC774 \uC544\uC9C1 \uC5C6\uC2B5\uB2C8\uB2E4",
+      articleExtractionRuleSaved: "\uBCF8\uBB38 \uCD94\uCD9C \uADDC\uCE59\uC744 \uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4",
+      articleExtractionRuleInvalid: "\uD398\uC774\uC9C0 URL\uACFC selector\uB97C \uC785\uB825\uD558\uC138\uC694",
       currentBodyVirtualizedWarning: "\uAC00\uC0C1 \uC2A4\uD06C\uB864 \uD398\uC774\uC9C0\uC77C \uC218 \uC788\uC5B4 \uBBF8\uB9AC\uBCF4\uAE30\uC5D0\uB294 \uD604\uC7AC \uB80C\uB354\uB9C1\uB41C \uB0B4\uC6A9\uB9CC \uD3EC\uD568\uB420 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
       selectingBodyRange: "\uBCF8\uBB38 \uBC94\uC704 \uC120\uD0DD \uC911",
-      manualBodySelectionHint: "\uD720/\uD654\uC0B4\uD45C \uD0A4\uB85C \uACC4\uCE35 \uC870\uC815, \uD074\uB9AD\uC73C\uB85C \uD655\uC815, Esc\uB85C \uCDE8\uC18C",
+      manualBodySelectionHint: "\uD720/\uD654\uC0B4\uD45C \uD0A4\uB85C \uBC94\uC704 \uC870\uC815, \uD074\uB9AD\uC73C\uB85C \uD655\uC815, Esc\uB85C \uCDE8\uC18C",
       manualBodySelectionCancelled: "\uBCF8\uBB38 \uBC94\uC704 \uC120\uD0DD\uC744 \uCDE8\uC18C\uD588\uC2B5\uB2C8\uB2E4",
       textDensity: "\uD14D\uC2A4\uD2B8 \uBC00\uB3C4",
       linkRatio: "\uB9C1\uD06C \uBE44\uC728",
@@ -19291,6 +19440,7 @@
     inputAutoReplyDisableSingleLine: true,
     imageTextExtractionEnabled: false,
     imageTextExtractionMinSize: 160,
+    articleExtractionRules: [],
     enabledToolIds: {
       selection: [...DEFAULT_SELECTION_TOOL_IDS],
       home: [...DEFAULT_HOME_TOOL_IDS],
@@ -19381,6 +19531,13 @@
       ...stored ?? {}
     };
   }
+  function normalizeArticleExtractionRules(rules = []) {
+    return rules.map((rule) => ({
+      id: String(rule.id || crypto.randomUUID()),
+      urlPattern: String(rule.urlPattern ?? "").trim(),
+      selector: String(rule.selector ?? "").trim()
+    })).filter((rule) => rule.urlPattern && rule.selector);
+  }
   function normalizeSettings(stored = {}) {
     const profiles = stored.profiles ?? [];
     const quickToolsUrlBlacklist = stored.edgeQuickToolUrlBlacklist ?? [];
@@ -19461,6 +19618,9 @@
       selectionOverlayUrlBlacklist: stored.selectionOverlayUrlBlacklist ?? [],
       imageTextExtractionEnabled: stored.imageTextExtractionEnabled ?? false,
       imageTextExtractionMinSize: stored.imageTextExtractionMinSize ?? 160,
+      articleExtractionRules: normalizeArticleExtractionRules(
+        stored.articleExtractionRules
+      ),
       edgeQuickToolUrlBlacklist: quickToolsUrlBlacklist,
       chromeSyncEnabled: stored.chromeSyncEnabled ?? false,
       enabledToolIds: normalizeEnabledToolIds(stored.enabledToolIds),
@@ -19864,10 +20024,46 @@
     );
   }
   function protectedTokenSource(kind, index) {
-    return `\`?(?:\\{\\{\\s*WEBMIND_${kind}_${index}\\s*\\}\\}|\\[\\s*WEBMIND_${kind}_${index}\\s*\\]|WEBMIND_${kind}_${index})\`?`;
+    const token = `WEBMIND_${kind}_${index}(?!\\d)`;
+    return `\`?(?:\\{\\{\\s*${token}\\s*\\}\\}|\\[\\s*${token}\\s*\\]|${token})\`?`;
   }
   function visibleTextFromHtmlFragment(value) {
     return value.replace(/<script\b[\s\S]*?<\/script>/gi, " ").replace(/<style\b[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  }
+  var BRACKET_CITATION_MARKER_SOURCE = "\\[\\s*\\d+(?:\\s*[-,\u2013\u2014]\\s*\\d+)*\\s*\\]";
+  var CITATION_EXPLANATION_BEFORE_MARKER_PATTERN = new RegExp(
+    [
+      "(^|[\\s([{\uFF08\u3010\u300C\u300E\u201C\u2018\\]])",
+      "(?:\\*\\*\\s*)?",
+      "(?:",
+      "\\d+\\s+(?:citations?|references?)\\s+(?:from\\s+)?(?:multiple|several|various|many)\\s+(?:sources?|references?|outlets?)",
+      "|(?:citations?|references?|sources?)\\s+\\d+\\s+(?:from|based\\s+on)\\s+[^\\[\\]\\n*]{1,80}?",
+      ")",
+      "(?:\\s*\\*\\*)?",
+      "\\s*",
+      `(${BRACKET_CITATION_MARKER_SOURCE})`
+    ].join(""),
+    "gi"
+  );
+  function cleanCitationExplanationText(text2) {
+    let cleaned = text2;
+    let previous = "";
+    while (cleaned !== previous) {
+      previous = cleaned;
+      cleaned = cleaned.replace(
+        CITATION_EXPLANATION_BEFORE_MARKER_PATTERN,
+        "$1$2"
+      );
+    }
+    return cleaned;
+  }
+  function stripTranslationTaskPreface(text2) {
+    let cleaned = text2;
+    const prefacePattern = /^\s*(?:(?:这是(?:一个|一项)?翻译任务[。.!！]?\s*)?(?:以下是(?:根据您提供的内容进行的)?翻译|翻译(?:如下|结果)|译文如下|以下为译文)[：:。.!！]?\s*)+/i;
+    while (prefacePattern.test(cleaned)) {
+      cleaned = cleaned.replace(prefacePattern, "");
+    }
+    return cleaned.trimStart();
   }
   function stripCitationExplanationNoise(text2, citationCount) {
     let cleaned = text2;
@@ -19944,10 +20140,14 @@
     });
     return cleaned;
   }
+  function stripBrokenTranslationPlaceholderFragments(text2) {
+    return text2.replace(/\{+\s*WEBMIND_[A-Z0-9_]+\s*\}+/gi, "").replace(/\[\s*WEBMIND_[A-Z0-9_]+\s*\]/gi, "").replace(/WEBMIND_[A-Z0-9_]+/gi, "").replace(/\{+\s*\d+\s*\}+/g, "").replace(/\{+[ \t]*(?=$|[\r\n])/g, "").replace(/(^|[\r\n])[ \t]*\}+/g, "$1").replace(/\[\s*\d+\s*\]/g, (match) => match.trim()).replace(/[ \t]{2,}/g, " ");
+  }
   function protectTranslationText(text2) {
     const citations = [];
     const links = [];
     const formats = [];
+    const htmlTags = [];
     const paragraphBreaks = [];
     const protectFormat = (tag, value) => {
       const visibleText = visibleTextFromHtmlFragment(value);
@@ -19979,11 +20179,18 @@
       citations.push(marker);
       return `{{WEBMIND_CITATION_${citations.length}}}`;
     });
-    const protectedText = withCitations.replace(/\r\n?/g, "\n").replace(/\n[\t ]*\n+/g, (separator) => {
+    const withHtmlTags = withCitations.replace(
+      /<\/?[A-Za-z][A-Za-z0-9:-]*(?:\s+[^<>]*?)?\s*\/?>/g,
+      (tag) => {
+        htmlTags.push(tag);
+        return `{{WEBMIND_HTML_TAG_${htmlTags.length}}}`;
+      }
+    );
+    const protectedText = withHtmlTags.replace(/\r\n?/g, "\n").replace(/\n[\t ]*\n+/g, (separator) => {
       paragraphBreaks.push(separator);
       return `{{WEBMIND_PARAGRAPH_BREAK_${paragraphBreaks.length}}}`;
     });
-    return { text: protectedText, citations, links, formats, paragraphBreaks };
+    return { text: protectedText, citations, links, formats, htmlTags, paragraphBreaks };
   }
   function restoreTranslationText(text2, protection) {
     let restored = stripCitationExplanationNoise(
@@ -20032,6 +20239,12 @@
       });
       restored = restored.replace(protectedTokenPattern("FORMAT_START", index + 1), "").replace(protectedTokenPattern("FORMAT_END", index + 1), "");
     });
+    (protection.htmlTags ?? []).forEach((tag, index) => {
+      restored = restored.replace(
+        protectedTokenPattern("HTML_TAG", index + 1),
+        tag
+      );
+    });
     const missingCitations = protection.citations.filter(
       (marker) => marker && !restored.includes(marker)
     );
@@ -20039,6 +20252,8 @@
       restored = `${restored.trimEnd()} ${missingCitations.join(" ")}`;
     }
     restored = stripCitationMarkerExplanationNoise(restored, protection.citations);
+    restored = stripBrokenTranslationPlaceholderFragments(restored);
+    restored = stripTranslationTaskPreface(restored);
     return restored.replace(/\n[\t ]*\n(?:[\t ]*\n)+/g, "\n\n");
   }
   function buildPageTranslationSystemPrompt(config, sourceText) {
@@ -20767,7 +20982,7 @@ ${normalized.slice(-tail)}`;
       }
     };
     for (const child of Array.from(element.childNodes)) visit(child);
-    return parts.join("").replace(/\u00a0/g, " ").replace(/\r\n?/g, "\n").replace(/[^\S\n]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+    return cleanCitationExplanationText(parts.join("").replace(/\u00a0/g, " ").replace(/\r\n?/g, "\n").replace(/[^\S\n]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim());
   }
   function textFromElementWithLinks(element) {
     if (!element) return "";
@@ -20810,7 +21025,7 @@ ${normalized.slice(-tail)}`;
       }
     };
     for (const child of Array.from(element.childNodes)) visit(child);
-    return parts.join("").replace(/\u00a0/g, " ").replace(/\r\n?/g, "\n").replace(/[^\S\n]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+    return cleanCitationExplanationText(parts.join("").replace(/\u00a0/g, " ").replace(/\r\n?/g, "\n").replace(/[^\S\n]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim());
   }
   function selectionTextWithLayout(selection) {
     if (!selection?.rangeCount) return "";
@@ -20821,7 +21036,7 @@ ${normalized.slice(-tail)}`;
       if (structured) return structured;
     } catch {
     }
-    return selection.toString().replace(/\r\n?/g, "\n").replace(/[^\S\n]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+    return cleanCitationExplanationText(selection.toString().replace(/\r\n?/g, "\n").replace(/[^\S\n]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim());
   }
   function pageSelectionText() {
     const active = document.activeElement;
@@ -21004,6 +21219,44 @@ ${normalized.slice(-tail)}`;
     };
   }
 
+  // src/content/urlRules.ts
+  function normalizePattern(value) {
+    return value.trim().toLowerCase();
+  }
+  function wildcardMatch(value, pattern) {
+    const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*");
+    return new RegExp(`^${escaped}$`, "i").test(value);
+  }
+  function urlMatchesRule(url, rule) {
+    const pattern = normalizePattern(rule);
+    if (!pattern) return false;
+    const current = new URL(url);
+    const href = current.href.toLowerCase();
+    const host = current.hostname.toLowerCase();
+    if (pattern.includes("://") || pattern.includes("/") || pattern.includes("*")) {
+      return wildcardMatch(href, pattern) || href.includes(pattern.replace(/\*/g, ""));
+    }
+    return host === pattern || host.endsWith(`.${pattern}`);
+  }
+  function urlMatchesBlacklist(url, rules = []) {
+    return rules.some((rule) => {
+      try {
+        return urlMatchesRule(url, rule);
+      } catch {
+        return false;
+      }
+    });
+  }
+  function urlMatchesWhitelist(url, rules = []) {
+    return rules.some((rule) => {
+      try {
+        return urlMatchesRule(url, rule);
+      } catch {
+        return false;
+      }
+    });
+  }
+
   // src/content/pageContext.ts
   function searchQuery() {
     return searchQueryFromUrl(location.href);
@@ -21035,6 +21288,7 @@ ${normalized.slice(-tail)}`;
   var manualArticleRoot = null;
   var editedArticleRoot = null;
   var articlePickerSession = null;
+  var cancelArticlePickerSession = null;
   var articlePreviewIdCounter = 0;
   var activeArticleExtractionCache = null;
   var articlePreviewTargets = /* @__PURE__ */ new Map();
@@ -21045,6 +21299,16 @@ ${normalized.slice(-tail)}`;
   var ARTICLE_ROOT_CANDIDATE_LIMIT = 80;
   var ARTICLE_BLOCK_CANDIDATE_LIMIT = 400;
   var SHADOW_HOST_SCAN_LIMIT = 1200;
+  var STRUCTURED_ARTICLE_TYPES = /* @__PURE__ */ new Set([
+    "article",
+    "blogposting",
+    "discussionforumposting",
+    "newsarticle",
+    "reportagenewsarticle",
+    "scholarlyarticle",
+    "socialmediaposting",
+    "techarticle"
+  ]);
   function waitForPageIdle(timeout = 120) {
     return new Promise((resolve) => {
       const requestIdle = window.requestIdleCallback?.bind(window);
@@ -21059,7 +21323,7 @@ ${normalized.slice(-tail)}`;
     return Math.max(min, Math.min(max, value));
   }
   function normalizedText(value) {
-    return value.replace(/\s+/g, " ").trim();
+    return cleanCitationExplanationText(value).replace(/\s+/g, " ").trim();
   }
   function articleBlockTextKey(value) {
     return normalizedText(value).toLowerCase();
@@ -21124,7 +21388,7 @@ ${normalized.slice(-tail)}`;
       }
     };
     visit(element);
-    const text2 = parts.join("").replace(/\u00a0/g, " ").replace(/\r\n?/g, "\n").replace(/[^\S\n]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+    const text2 = cleanCitationExplanationText(parts.join("").replace(/\u00a0/g, " ").replace(/\r\n?/g, "\n").replace(/[^\S\n]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim());
     activeArticleExtractionCache?.text.set(element, text2);
     return text2;
   }
@@ -21252,14 +21516,86 @@ ${text2}`;
     const viewportArea = Math.max(1, window.innerWidth * window.innerHeight);
     return clamp(visibleArea / Math.max(1, viewportArea * 0.35));
   }
+  function cssEscapeIdentifier(value) {
+    return globalThis.CSS?.escape ? globalThis.CSS.escape(value) : value.replace(/(^-?\d)|[^a-zA-Z0-9_-]/g, (match) => `\\${match}`);
+  }
+  function selectorSegment(element) {
+    const tag = element.tagName.toLowerCase();
+    if (element.id) {
+      return {
+        segment: `${tag}#${cssEscapeIdentifier(element.id)}`,
+        terminal: true
+      };
+    }
+    const className = Array.from(element.classList).filter((item) => !item.startsWith("webmind-")).slice(0, 3).map((item) => `.${cssEscapeIdentifier(item)}`).join("");
+    const siblings = element.parentElement ? Array.from(element.parentElement.children).filter(
+      (item) => item.tagName === element.tagName
+    ) : [];
+    const nth = siblings.length > 1 ? `:nth-of-type(${siblings.indexOf(element) + 1})` : "";
+    return {
+      segment: `${tag}${className}${nth}`,
+      terminal: tag === "body"
+    };
+  }
   function selectorHint(element) {
     if (!element) return void 0;
-    if (element.dataset.webmindManualArticle === "true") {
-      return "manual";
+    const segments = [];
+    let current = element;
+    while (current && current !== document.documentElement) {
+      const { segment, terminal } = selectorSegment(current);
+      segments.unshift(segment);
+      if (terminal) break;
+      current = current.parentElement;
     }
-    if (element.id) return `${element.tagName.toLowerCase()}#${element.id}`;
-    const className = Array.from(element.classList).slice(0, 2).join(".");
-    return className ? `${element.tagName.toLowerCase()}.${className}` : element.tagName.toLowerCase();
+    return segments.join(" > ");
+  }
+  function queryOpenShadowSelector(selector) {
+    const hosts = Array.from(document.querySelectorAll("*")).slice(
+      0,
+      SHADOW_HOST_SCAN_LIMIT
+    );
+    for (const host of hosts) {
+      const match = host.shadowRoot?.querySelector(selector);
+      if (match) return match;
+    }
+    return null;
+  }
+  function elementForArticleRuleSelector(selector) {
+    try {
+      const element = document.querySelector(selector) ?? queryOpenShadowSelector(selector);
+      if (element instanceof HTMLIFrameElement) {
+        return element.contentDocument?.body ?? null;
+      }
+      if (element) return element;
+      for (const body of sameOriginIframeBodies()) {
+        const frameMatch = body.querySelector(selector);
+        if (frameMatch) return frameMatch;
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+  function configuredArticleCandidate(rules = []) {
+    for (const rule of rules) {
+      if (!rule.urlPattern || !rule.selector || !urlMatchesWhitelist(location.href, [rule.urlPattern])) {
+        continue;
+      }
+      const element = elementForArticleRuleSelector(rule.selector);
+      if (!element || !isElementVisible(element)) continue;
+      const text2 = visibleTextFromElement(element);
+      if (textLength(text2) < 40) continue;
+      const titleSource = articleTitleSourceFromElement(element);
+      return {
+        title: titleSource.text,
+        titleElement: titleSource.element,
+        text: text2,
+        element,
+        source: "dom",
+        selector: rule.selector
+      };
+    }
+    return null;
   }
   function linkRatio(element, text2) {
     const total = textLength(text2);
@@ -21321,7 +21657,7 @@ ${text2}`;
       const sourceBlock = typeof block === "string" ? { text: block } : block;
       return {
         id: `preview-${index + 1}`,
-        text: truncateText(sourceBlock.text, 320),
+        text: sourceBlock.text,
         sourceText: sourceBlock.text,
         targetId: articlePreviewTargetId(sourceBlock.element)
       };
@@ -21397,6 +21733,141 @@ ${text2}`;
       minimumOrder = match.order;
       return { text: text2, element: match.element };
     });
+  }
+  function isJsonObject(value) {
+    return Boolean(value && typeof value === "object" && !Array.isArray(value));
+  }
+  function jsonLdTypeNames(value) {
+    const values = Array.isArray(value) ? value : [value];
+    return values.flatMap((item) => typeof item === "string" ? [item] : []).map((item) => item.replace(/^https?:\/\/schema\.org\//i, "").toLowerCase());
+  }
+  function isStructuredArticleRecord(record) {
+    return jsonLdTypeNames(record["@type"]).some(
+      (type) => STRUCTURED_ARTICLE_TYPES.has(type)
+    );
+  }
+  function structuredString(value) {
+    if (typeof value === "string") return value;
+    if (Array.isArray(value)) {
+      return value.map(structuredString).filter(Boolean).join("\n\n");
+    }
+    return "";
+  }
+  function structuredArticleBody(record) {
+    const articleBody = normalizedText(structuredString(record.articleBody));
+    if (textLength(articleBody) >= 120) {
+      return { text: articleBody, field: "articleBody" };
+    }
+    const text2 = normalizedText(structuredString(record.text));
+    if (textLength(text2) >= 120) {
+      return { text: text2, field: "text" };
+    }
+    return null;
+  }
+  function structuredUrl(value) {
+    if (typeof value === "string") return value;
+    if (isJsonObject(value)) {
+      const id = value["@id"];
+      if (typeof id === "string") return id;
+      const url = value.url;
+      if (typeof url === "string") return url;
+    }
+    return null;
+  }
+  function normalizedUrlForMatch(value) {
+    try {
+      const url = new URL(value, location.href);
+      url.hash = "";
+      return url;
+    } catch {
+      return null;
+    }
+  }
+  function structuredUrlMatchesPage(record) {
+    const values = [
+      structuredUrl(record.url),
+      structuredUrl(record.mainEntityOfPage)
+    ].filter((value) => Boolean(value));
+    if (!values.length) return true;
+    const pageUrl = normalizedUrlForMatch(location.href);
+    if (!pageUrl) return true;
+    return values.some((value) => {
+      const candidate = normalizedUrlForMatch(value);
+      if (!candidate) return false;
+      return candidate.href === pageUrl.href || candidate.origin === pageUrl.origin && candidate.pathname === pageUrl.pathname;
+    });
+  }
+  function flattenJsonLdRecords(value) {
+    if (Array.isArray(value)) {
+      return value.flatMap(flattenJsonLdRecords);
+    }
+    if (!isJsonObject(value)) return [];
+    const records = [value];
+    const graph = value["@graph"];
+    if (Array.isArray(graph)) {
+      records.push(...graph.flatMap(flattenJsonLdRecords));
+    }
+    return records;
+  }
+  function structuredArticleElement(text2) {
+    const target = normalizedText(text2);
+    const candidates = Array.from(
+      /* @__PURE__ */ new Set([
+        ...articleRootElements(document),
+        ...continuousRootCandidates(document),
+        ...articleBlockElements(document)
+      ])
+    ).filter((element) => !isArticleNoiseElement(element) && isElementVisible(element)).map((element, order) => {
+      const candidateText = normalizedText(visibleTextFromElement(element));
+      return {
+        element,
+        order,
+        text: candidateText,
+        score: articlePreviewTextMatchScore(candidateText, target)
+      };
+    }).filter(
+      (candidate) => Number.isFinite(candidate.score) && textLength(candidate.text) >= Math.min(120, textLength(target))
+    ).sort((left, right) => {
+      if (left.score !== right.score) return right.score - left.score;
+      const leftIsBlock = left.element.matches(ARTICLE_BLOCK_SELECTOR) ? 1 : 0;
+      const rightIsBlock = right.element.matches(ARTICLE_BLOCK_SELECTOR) ? 1 : 0;
+      if (leftIsBlock !== rightIsBlock) return leftIsBlock - rightIsBlock;
+      const leftDelta = Math.abs(left.text.length - target.length);
+      const rightDelta = Math.abs(right.text.length - target.length);
+      if (leftDelta !== rightDelta) return leftDelta - rightDelta;
+      return left.order - right.order;
+    });
+    return candidates[0]?.element;
+  }
+  function structuredArticleCandidate() {
+    const scripts = Array.from(
+      document.querySelectorAll(
+        'script[type="application/ld+json"]'
+      )
+    );
+    const candidates = [];
+    scripts.forEach((script) => {
+      try {
+        const parsed = JSON.parse(script.textContent ?? "");
+        flattenJsonLdRecords(parsed).filter(isStructuredArticleRecord).filter(structuredUrlMatchesPage).forEach((record) => {
+          const body = structuredArticleBody(record);
+          if (!body) return;
+          const title = normalizedText(structuredString(record.headline)) || normalizedText(structuredString(record.name));
+          const description = normalizedText(structuredString(record.description));
+          const element = structuredArticleElement(body.text);
+          candidates.push({
+            title,
+            text: body.text,
+            description,
+            element,
+            source: "dom",
+            selector: selectorHint(element) ?? `json-ld:${body.field}`
+          });
+        });
+      } catch {
+      }
+    });
+    return candidates.sort((left, right) => textLength(right.text) - textLength(left.text))[0] ?? null;
   }
   function articleQualityWarnings(blockCount, totalTextLength) {
     const viewportHeight = Math.max(1, window.innerHeight || 1);
@@ -21619,10 +22090,14 @@ ${text2}`;
       )
     );
   }
-  function findBestArticleRoot() {
+  function findBestArticleRoot(articleExtractionRules = []) {
     return withArticleExtractionCache(() => {
       if (manualArticleRoot?.isConnected) return manualArticleRoot;
       if (editedArticleRoot?.isConnected) return editedArticleRoot;
+      const configured = configuredArticleCandidate(articleExtractionRules);
+      if (configured?.element) return configured.element;
+      const structured = structuredArticleCandidate();
+      if (structured?.element) return structured.element;
       const best = articleCandidates().filter((candidate) => candidate.element).map((candidate) => scoreArticleCandidate(candidate, { includePreview: false })).sort((left, right) => (right.score?.score ?? 0) - (left.score?.score ?? 0))[0];
       return best?.element ?? null;
     });
@@ -21707,16 +22182,16 @@ ${text2}`;
     if (!match) return { ok: false };
     return applyArticlePreviewHighlight(match.element);
   }
-  function setEditedArticleRootFromCurrent() {
-    const root = manualArticleRoot?.isConnected ? manualArticleRoot : editedArticleRoot?.isConnected ? editedArticleRoot : findBestArticleRoot();
+  function setEditedArticleRootFromCurrent(articleExtractionRules = []) {
+    const root = manualArticleRoot?.isConnected ? manualArticleRoot : editedArticleRoot?.isConnected ? editedArticleRoot : findBestArticleRoot(articleExtractionRules);
     if (root?.isConnected) {
       editedArticleRoot = root;
       return root;
     }
     return null;
   }
-  function removeArticlePreviewBlock(text2, targetId, language) {
-    setEditedArticleRootFromCurrent();
+  function removeArticlePreviewBlock(text2, targetId, language, articleExtractionRules = []) {
+    setEditedArticleRootFromCurrent(articleExtractionRules);
     const normalized = normalizedText(text2);
     const target = articlePreviewElementById(targetId);
     if (target) {
@@ -21725,7 +22200,7 @@ ${text2}`;
     if (normalized) {
       removedArticleBlockTextKeys.add(articleBlockTextKey(normalized));
     }
-    return extractPageContext(true, language, "article");
+    return extractPageContext(true, language, "article", articleExtractionRules);
   }
   function elementMetadataText(element) {
     if (!element) return "";
@@ -21761,9 +22236,9 @@ ${text2}`;
     const looksLikeShortLabel = length <= 18 && !/[。！？.!?，,；;：:]/.test(text2) && !/\s{2,}/.test(text2) && /^[\p{L}\p{N}_@#.\-\s·]+$/u.test(text2);
     return Boolean(target && isArticleNoiseElement(target)) || linkHeavy || looksLikeMetaElement || looksLikeBreadcrumb || looksLikeTime || looksLikeStats || looksLikeShortLabel;
   }
-  function pruneArticlePreviewBlocks(language) {
-    setEditedArticleRootFromCurrent();
-    const snapshot = readableArticleText();
+  function pruneArticlePreviewBlocks(language, articleExtractionRules = []) {
+    setEditedArticleRootFromCurrent(articleExtractionRules);
+    const snapshot = readableArticleText(articleExtractionRules);
     const preview = snapshot.preview ?? [];
     const removable = preview.filter(isLikelyNonArticlePreviewBlock);
     const removableKeys = new Set(
@@ -21783,7 +22258,7 @@ ${text2}`;
         if (text2) removedArticleBlockTextKeys.add(articleBlockTextKey(text2));
       });
     }
-    return extractPageContext(true, language, "article");
+    return extractPageContext(true, language, "article", articleExtractionRules);
   }
   function pickerTextLength(element) {
     return textLength(element.innerText || element.textContent || "");
@@ -21808,10 +22283,8 @@ ${text2}`;
   }
   function articlePickerLabel(element, level) {
     const tag = element.tagName.toLowerCase();
-    const id = element.id ? `#${element.id}` : "";
-    const className = Array.from(element.classList).slice(0, 2).join(".");
-    const classHint = className ? `.${className}` : "";
-    return `${tag}${id}${classHint} \xB7 L${level + 1} \xB7 ${pickerTextLength(element)}`;
+    const selector = selectorHint(element) ?? tag;
+    return `${tag}\xB7L${level + 1}\xB7${pickerTextLength(element)}\xB7${selector}`;
   }
   function startManualArticleSelection(language) {
     if (articlePickerSession) return articlePickerSession;
@@ -21819,6 +22292,7 @@ ${text2}`;
       let candidates = [];
       let level = 0;
       let current = null;
+      let settled = false;
       const overlay = document.createElement("div");
       const badge = document.createElement("div");
       overlay.className = "webmind-article-picker-ui";
@@ -21835,7 +22309,7 @@ ${text2}`;
       Object.assign(badge.style, {
         position: "fixed",
         zIndex: "2147483647",
-        maxWidth: "min(420px, calc(100vw - 16px))",
+        maxWidth: "min(620px, calc(100vw - 16px))",
         padding: "7px 9px",
         border: "1px solid #d8ddda",
         borderRadius: "6px",
@@ -21844,6 +22318,8 @@ ${text2}`;
         boxShadow: "0 10px 28px rgba(15, 26, 23, 0.2)",
         font: "12px/1.4 Inter, ui-sans-serif, system-ui, sans-serif",
         pointerEvents: "none",
+        whiteSpace: "pre-wrap",
+        overflowWrap: "anywhere",
         display: "none"
       });
       document.body.append(overlay, badge);
@@ -21862,12 +22338,11 @@ ${text2}`;
         overlay.style.height = `${Math.max(0, Math.min(window.innerHeight, rect.bottom) - Math.max(0, rect.top))}px`;
         badge.style.display = "block";
         badge.style.left = `${Math.min(window.innerWidth - 16, Math.max(8, rect.left))}px`;
-        badge.style.top = `${Math.min(window.innerHeight - 64, Math.max(8, rect.top - 42))}px`;
+        badge.style.top = `${Math.min(window.innerHeight - 80, Math.max(8, rect.top - 56))}px`;
         badge.textContent = [
-          uiText(language, "selectingBodyRange"),
           articlePickerLabel(current, level),
           uiText(language, "manualBodySelectionHint")
-        ].join(" \xB7 ");
+        ].join("\n");
       };
       const cleanup = () => {
         window.removeEventListener("pointermove", onPointerMove, true);
@@ -21878,9 +22353,12 @@ ${text2}`;
         window.removeEventListener("resize", updateOverlay, true);
         overlay.remove();
         badge.remove();
+        cancelArticlePickerSession = null;
         articlePickerSession = null;
       };
       const finish = (element) => {
+        if (settled) return;
+        settled = true;
         cleanup();
         if (!element) {
           resolve(null);
@@ -21894,6 +22372,7 @@ ${text2}`;
         manualArticleRoot.dataset.webmindManualArticle = "true";
         resolve(extractPageContext(true, language, "article"));
       };
+      cancelArticlePickerSession = () => finish(null);
       function onPointerMove(event) {
         candidates = pickerCandidatesFromEvent(event);
         level = 0;
@@ -21946,20 +22425,25 @@ ${text2}`;
     });
     return articlePickerSession;
   }
-  function restoreAutomaticArticleSelection(language) {
+  function cancelManualArticleSelection() {
+    if (!cancelArticlePickerSession) return { ok: false };
+    cancelArticlePickerSession();
+    return { ok: true };
+  }
+  function restoreAutomaticArticleSelection(language, articleExtractionRules = []) {
     if (manualArticleRoot) {
       delete manualArticleRoot.dataset.webmindManualArticle;
     }
     manualArticleRoot = null;
     clearArticleBlockEdits();
-    return extractPageContext(true, language, "article");
+    return extractPageContext(true, language, "article", articleExtractionRules);
   }
-  function readableArticleText() {
+  function readableArticleText(articleExtractionRules = []) {
     return withArticleExtractionCache(() => {
       articlePreviewTargets.clear();
       if (manualArticleRoot?.isConnected) {
         const manualText = visibleTextFromElement(manualArticleRoot);
-        if (textLength(manualText) >= 40) {
+        if (textLength(manualText) > 0) {
           const manual = scoreArticleCandidate({
             text: manualText,
             element: manualArticleRoot,
@@ -21992,6 +22476,28 @@ ${text2}`;
             preview: edited.preview
           };
         }
+      }
+      const configured = configuredArticleCandidate(articleExtractionRules);
+      if (configured) {
+        const scored = scoreArticleCandidate(configured);
+        return {
+          title: scored.title,
+          text: scored.text,
+          description: scored.description,
+          quality: scored.score,
+          preview: scored.preview
+        };
+      }
+      const structured = structuredArticleCandidate();
+      if (structured) {
+        const scored = scoreArticleCandidate(structured);
+        return {
+          title: scored.title,
+          text: scored.text,
+          description: scored.description,
+          quality: scored.score,
+          preview: scored.preview
+        };
       }
       const scoredCandidates = articleCandidates().map((candidate) => scoreArticleCandidate(candidate, { includePreview: false })).sort((left, right) => (right.score?.score ?? 0) - (left.score?.score ?? 0));
       const best = scoredCandidates[0];
@@ -22033,7 +22539,7 @@ ${text2}`;
       };
     });
   }
-  function extractPageContext(ignoreSelection = false, language, scope = "page") {
+  function extractPageContext(ignoreSelection = false, language, scope = "page", articleExtractionRules = []) {
     const selection = ignoreSelection ? void 0 : pageSelectionText() || void 0;
     const description = document.querySelector('meta[name="description"]')?.content ?? document.querySelector('meta[property="og:description"]')?.content;
     const siteName = document.querySelector('meta[property="og:site_name"]')?.content ?? location.hostname;
@@ -22053,7 +22559,7 @@ ${text2}`;
       };
     }
     if (scope === "article") {
-      const article2 = readableArticleText();
+      const article2 = readableArticleText(articleExtractionRules);
       return {
         kind: "article",
         title: article2.title || document.title || location.hostname,
@@ -22066,7 +22572,7 @@ ${text2}`;
         articlePreview: article2.preview
       };
     }
-    const article = readableArticleText();
+    const article = readableArticleText(articleExtractionRules);
     let text2 = article.text;
     if (text2.trim().length < 500) {
       text2 = textFromElement(document.querySelector("main")) || textFromElement(document.querySelector('[role="main"]')) || textFromElement(document.body) || "";
@@ -22082,12 +22588,17 @@ ${text2}`;
       siteName
     };
   }
-  async function extractPageContextAsync(ignoreSelection = false, language, scope = "page") {
+  async function extractPageContextAsync(ignoreSelection = false, language, scope = "page", articleExtractionRules = []) {
     const selection = ignoreSelection ? void 0 : pageSelectionText() || void 0;
     if (!selection) {
       await waitForPageIdle();
     }
-    return extractPageContext(ignoreSelection, language, scope);
+    return extractPageContext(
+      ignoreSelection,
+      language,
+      scope,
+      articleExtractionRules
+    );
   }
 
   // src/content/translationPreparation.ts
@@ -22121,6 +22632,35 @@ ${text2}`;
   }
   function translationElementVisibleText(element) {
     return translationVisibleText(translationTextFromElement(element, []));
+  }
+  function articleScopeTextMatchesCandidate(articleText, candidateText) {
+    const normalizedCandidate = normalizedBlockText4(candidateText);
+    if (!articleText || !normalizedCandidate) return true;
+    return articleText === normalizedCandidate || articleText.includes(normalizedCandidate);
+  }
+  function articlePreviewBlockElement(block, root, dependencies) {
+    const direct = articlePreviewElementById(block.targetId);
+    if (direct?.isConnected) return direct;
+    const target = normalizedBlockText4(block.sourceText ?? block.text);
+    if (!target) return null;
+    const candidates = articleContentCandidatesFromRoot(
+      root,
+      { maxVisibleTextLength: 2e4 },
+      dependencies
+    ).filter((element) => dependencies.isVisible(element)).map((element, order) => {
+      const text2 = normalizedBlockText4(translationElementVisibleText(element));
+      const contains = text2 === target || text2.includes(target) || target.includes(text2);
+      return {
+        element,
+        order,
+        text: text2,
+        score: contains ? Math.abs(text2.length - target.length) : Infinity
+      };
+    }).filter((candidate) => Number.isFinite(candidate.score)).sort((left, right) => {
+      if (left.score !== right.score) return left.score - right.score;
+      return left.order - right.order;
+    });
+    return candidates[0]?.element ?? null;
   }
   function articleContentCandidatesFromRoot(root, options, dependencies) {
     const maxVisibleTextLength = options.maxVisibleTextLength ?? 900;
@@ -22391,7 +22931,7 @@ ${text2}`;
       const block = prepareTranslationBlock(wrapper, id, true, options, dependencies);
       return block ? [block] : [];
     }
-    const root = scope === "article" ? findBestArticleRoot() ?? document.querySelector("article") ?? document.querySelector("main") ?? document.querySelector('[role="main"]') ?? document.body : document.body;
+    const root = scope === "article" ? findBestArticleRoot(options.articleExtractionRules) ?? document.querySelector("article") ?? document.querySelector("main") ?? document.querySelector('[role="main"]') ?? document.body : document.body;
     const articleOptions = scope === "article" ? {
       ...options,
       minVisibleTextLength: 1,
@@ -22400,6 +22940,42 @@ ${text2}`;
         2e4
       )
     } : options;
+    const articleScopeText = scope === "article" ? normalizedBlockText4(textFallback) : "";
+    const seen = /* @__PURE__ */ new Set();
+    const blocks = [];
+    if (scope === "article" && options.articlePreviewBlocks?.length) {
+      for (const previewBlock of options.articlePreviewBlocks) {
+        const rawSourceText = (previewBlock.sourceText ?? previewBlock.text).trim();
+        const sourceText = normalizedBlockText4(rawSourceText);
+        if (!sourceText) continue;
+        if (articleScopeText && !articleScopeText.includes(sourceText) && !sourceText.includes(articleScopeText)) {
+          continue;
+        }
+        const element = articlePreviewBlockElement(
+          previewBlock,
+          root,
+          dependencies
+        );
+        if (!element || !dependencies.isVisible(element)) continue;
+        if (isWebMindGeneratedElement(element)) continue;
+        if (isEditedArticleBlockExcluded(element)) continue;
+        const id = element.dataset.webmindBlockId ?? dependencies.nextBlockId();
+        element.dataset.webmindBlockId = id;
+        const prepared = prepareTranslationBlock(
+          element,
+          id,
+          false,
+          articleOptions,
+          dependencies
+        );
+        if (!prepared) continue;
+        if (seen.has(id) || seen.has(sourceText)) continue;
+        seen.add(id);
+        seen.add(sourceText);
+        blocks.push({ id: prepared.id, text: rawSourceText });
+      }
+      return blocks;
+    }
     const rootCandidates = scope === "article" ? articleContentCandidatesFromRoot(root, articleOptions, dependencies) : blockCandidatesFromRoot(root);
     const candidatesForScope = scope === "article" ? [
       ...articleHeadingCandidates(root).filter(
@@ -22418,9 +22994,13 @@ ${text2}`;
       priority: dependencies.viewportPriority(candidate.element, candidate.order)
     })).sort((left, right) => left.priority - right.priority).map(({ element }) => element);
     const candidates = scope === "article" ? orderedCandidates : orderedCandidates.slice(0, 160);
-    const seen = /* @__PURE__ */ new Set();
-    const blocks = [];
     for (const element of candidates) {
+      if (articleScopeText && !articleScopeTextMatchesCandidate(
+        articleScopeText,
+        translationElementVisibleText(element)
+      )) {
+        continue;
+      }
       const id = element.dataset.webmindBlockId ?? dependencies.nextBlockId();
       element.dataset.webmindBlockId = id;
       const block = prepareTranslationBlock(
@@ -22571,44 +23151,6 @@ ${text2}`;
   function shortcutWeight(shortcut) {
     if (shortcut === "off") return 0;
     return shortcut.split("-").length;
-  }
-
-  // src/content/urlRules.ts
-  function normalizePattern(value) {
-    return value.trim().toLowerCase();
-  }
-  function wildcardMatch(value, pattern) {
-    const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*");
-    return new RegExp(`^${escaped}$`, "i").test(value);
-  }
-  function urlMatchesRule(url, rule) {
-    const pattern = normalizePattern(rule);
-    if (!pattern) return false;
-    const current = new URL(url);
-    const href = current.href.toLowerCase();
-    const host = current.hostname.toLowerCase();
-    if (pattern.includes("://") || pattern.includes("/") || pattern.includes("*")) {
-      return wildcardMatch(href, pattern) || href.includes(pattern.replace(/\*/g, ""));
-    }
-    return host === pattern || host.endsWith(`.${pattern}`);
-  }
-  function urlMatchesBlacklist(url, rules = []) {
-    return rules.some((rule) => {
-      try {
-        return urlMatchesRule(url, rule);
-      } catch {
-        return false;
-      }
-    });
-  }
-  function urlMatchesWhitelist(url, rules = []) {
-    return rules.some((rule) => {
-      try {
-        return urlMatchesRule(url, rule);
-      } catch {
-        return false;
-      }
-    });
   }
 
   // src/shared/browser.ts
@@ -22798,7 +23340,7 @@ ${text2}`;
     Search,
     ScanText,
     Sparkles,
-    TextSelect,
+    TextSelect: SquareDashedText,
     Wand2: WandSparkles,
     WandSparkles
   };
@@ -25864,14 +26406,14 @@ Please report this to https://github.com/markedjs/marked.`, e) {
   var Kt = x.lex;
 
   // src/ui/Markdown.tsx
-  var import_react3 = __toESM(require_react(), 1);
+  var import_react4 = __toESM(require_react(), 1);
   var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
   k.setOptions({
     breaks: true,
     gfm: true
   });
   function Markdown({ content }) {
-    const html2 = (0, import_react3.useMemo)(() => {
+    const html2 = (0, import_react4.useMemo)(() => {
       const rendered = k.parse(content);
       return purify.sanitize(rendered, {
         ADD_ATTR: ["target", "rel"]
@@ -27316,7 +27858,10 @@ ${text2}`;
     return prepareTranslationBlocks(
       scope,
       textFallback,
-      options,
+      {
+        ...options,
+        articleExtractionRules: settings?.articleExtractionRules ?? []
+      },
       translationPreparationDependencies()
     );
   }
@@ -27396,62 +27941,62 @@ ${text2}`;
     });
   }
   function SelectionAssistant({ query }) {
-    const [snapshot, setSnapshot] = (0, import_react4.useState)(null);
-    const [activeTool, setActiveTool] = (0, import_react4.useState)(null);
-    const [localSettings, setLocalSettings] = (0, import_react4.useState)(settings);
-    const [currentHref, setCurrentHref] = (0, import_react4.useState)(location.href);
-    const [customTools, setCustomTools] = (0, import_react4.useState)([]);
-    const [result, setResult] = (0, import_react4.useState)("");
-    const [error, setError] = (0, import_react4.useState)("");
-    const [resultBusy, setResultBusy] = (0, import_react4.useState)(false);
-    const [copied, setCopied] = (0, import_react4.useState)(false);
-    const [selectionCopied, setSelectionCopied] = (0, import_react4.useState)(false);
-    const [hoverOpen, setHoverOpen] = (0, import_react4.useState)(false);
-    const [hoverDefinition, setHoverDefinition] = (0, import_react4.useState)(null);
-    const [selectedResultToolId, setSelectedResultToolId] = (0, import_react4.useState)("");
-    const [resultToolMenuOpen, setResultToolMenuOpen] = (0, import_react4.useState)(false);
-    const [followUpQuestion, setFollowUpQuestion] = (0, import_react4.useState)("");
-    const [edgeResultTitle, setEdgeResultTitle] = (0, import_react4.useState)("");
-    const [edgeResult, setEdgeResult] = (0, import_react4.useState)("");
-    const [edgeError, setEdgeError] = (0, import_react4.useState)("");
-    const [edgeBusy, setEdgeBusy] = (0, import_react4.useState)(false);
-    const [edgeDismissed, setEdgeDismissed] = (0, import_react4.useState)(false);
-    const [edgeBottomOverride, setEdgeBottomOverride] = (0, import_react4.useState)(
+    const [snapshot, setSnapshot] = (0, import_react5.useState)(null);
+    const [activeTool, setActiveTool] = (0, import_react5.useState)(null);
+    const [localSettings, setLocalSettings] = (0, import_react5.useState)(settings);
+    const [currentHref, setCurrentHref] = (0, import_react5.useState)(location.href);
+    const [customTools, setCustomTools] = (0, import_react5.useState)([]);
+    const [result, setResult] = (0, import_react5.useState)("");
+    const [error, setError] = (0, import_react5.useState)("");
+    const [resultBusy, setResultBusy] = (0, import_react5.useState)(false);
+    const [copied, setCopied] = (0, import_react5.useState)(false);
+    const [selectionCopied, setSelectionCopied] = (0, import_react5.useState)(false);
+    const [hoverOpen, setHoverOpen] = (0, import_react5.useState)(false);
+    const [hoverDefinition, setHoverDefinition] = (0, import_react5.useState)(null);
+    const [selectedResultToolId, setSelectedResultToolId] = (0, import_react5.useState)("");
+    const [resultToolMenuOpen, setResultToolMenuOpen] = (0, import_react5.useState)(false);
+    const [followUpQuestion, setFollowUpQuestion] = (0, import_react5.useState)("");
+    const [edgeResultTitle, setEdgeResultTitle] = (0, import_react5.useState)("");
+    const [edgeResult, setEdgeResult] = (0, import_react5.useState)("");
+    const [edgeError, setEdgeError] = (0, import_react5.useState)("");
+    const [edgeBusy, setEdgeBusy] = (0, import_react5.useState)(false);
+    const [edgeDismissed, setEdgeDismissed] = (0, import_react5.useState)(false);
+    const [edgeBottomOverride, setEdgeBottomOverride] = (0, import_react5.useState)(
       null
     );
-    const [autoReplyTarget, setAutoReplyTarget] = (0, import_react4.useState)(null);
-    const [autoReplyBusy, setAutoReplyBusy] = (0, import_react4.useState)(false);
-    const [autoReplyError, setAutoReplyError] = (0, import_react4.useState)("");
-    const [imageTextTarget, setImageTextTarget] = (0, import_react4.useState)(null);
-    const [imageTextVisible, setImageTextVisible] = (0, import_react4.useState)(false);
-    const [imageTextBusy, setImageTextBusy] = (0, import_react4.useState)(false);
-    const [resultPositionOverride, setResultPositionOverride] = (0, import_react4.useState)(null);
-    const [searchAnswer, setSearchAnswer] = (0, import_react4.useState)({
+    const [autoReplyTarget, setAutoReplyTarget] = (0, import_react5.useState)(null);
+    const [autoReplyBusy, setAutoReplyBusy] = (0, import_react5.useState)(false);
+    const [autoReplyError, setAutoReplyError] = (0, import_react5.useState)("");
+    const [imageTextTarget, setImageTextTarget] = (0, import_react5.useState)(null);
+    const [imageTextVisible, setImageTextVisible] = (0, import_react5.useState)(false);
+    const [imageTextBusy, setImageTextBusy] = (0, import_react5.useState)(false);
+    const [resultPositionOverride, setResultPositionOverride] = (0, import_react5.useState)(null);
+    const [searchAnswer, setSearchAnswer] = (0, import_react5.useState)({
       text: "",
       error: "",
       busy: false,
       results: []
     });
-    const [searchAnswerPosition, setSearchAnswerPosition] = (0, import_react4.useState)(null);
-    const [searchAnswerDismissed, setSearchAnswerDismissed] = (0, import_react4.useState)(false);
-    const [searchAnswerRefreshToken, setSearchAnswerRefreshToken] = (0, import_react4.useState)(0);
-    const [translationProgress, setTranslationProgress] = (0, import_react4.useState)(null);
-    const resultRef = (0, import_react4.useRef)(null);
-    const activeToolRef = (0, import_react4.useRef)(null);
-    const hoverTimeoutRef = (0, import_react4.useRef)(null);
-    const hoverDefinitionTimerRef = (0, import_react4.useRef)(null);
-    const hoverDefinitionCandidateRef = (0, import_react4.useRef)(
+    const [searchAnswerPosition, setSearchAnswerPosition] = (0, import_react5.useState)(null);
+    const [searchAnswerDismissed, setSearchAnswerDismissed] = (0, import_react5.useState)(false);
+    const [searchAnswerRefreshToken, setSearchAnswerRefreshToken] = (0, import_react5.useState)(0);
+    const [translationProgress, setTranslationProgress] = (0, import_react5.useState)(null);
+    const resultRef = (0, import_react5.useRef)(null);
+    const activeToolRef = (0, import_react5.useRef)(null);
+    const hoverTimeoutRef = (0, import_react5.useRef)(null);
+    const hoverDefinitionTimerRef = (0, import_react5.useRef)(null);
+    const hoverDefinitionCandidateRef = (0, import_react5.useRef)(
       null
     );
-    const hoverDefinitionPointerRef = (0, import_react4.useRef)(null);
-    const hoverDefinitionShortcutPressedRef = (0, import_react4.useRef)(false);
-    const imageHoverTimeoutRef = (0, import_react4.useRef)(null);
-    const imageHoverHideTimeoutRef = (0, import_react4.useRef)(null);
-    const imageHoverCandidateRef = (0, import_react4.useRef)(null);
-    const imageTextRunRef = (0, import_react4.useRef)("");
-    const searchAnswerKeyRef = (0, import_react4.useRef)("");
-    const autoImmersiveRunKeyRef = (0, import_react4.useRef)("");
-    const searchAnswerDragRef = (0, import_react4.useRef)({
+    const hoverDefinitionPointerRef = (0, import_react5.useRef)(null);
+    const hoverDefinitionShortcutPressedRef = (0, import_react5.useRef)(false);
+    const imageHoverTimeoutRef = (0, import_react5.useRef)(null);
+    const imageHoverHideTimeoutRef = (0, import_react5.useRef)(null);
+    const imageHoverCandidateRef = (0, import_react5.useRef)(null);
+    const imageTextRunRef = (0, import_react5.useRef)("");
+    const searchAnswerKeyRef = (0, import_react5.useRef)("");
+    const autoImmersiveRunKeyRef = (0, import_react5.useRef)("");
+    const searchAnswerDragRef = (0, import_react5.useRef)({
       active: false,
       pointerId: 0,
       startX: 0,
@@ -27461,7 +28006,7 @@ ${text2}`;
       width: 360,
       height: 420
     });
-    const resultPanelDragRef = (0, import_react4.useRef)({
+    const resultPanelDragRef = (0, import_react5.useRef)({
       active: false,
       pointerId: 0,
       startX: 0,
@@ -27471,16 +28016,16 @@ ${text2}`;
       width: 420,
       height: 360
     });
-    const edgeDragRef = (0, import_react4.useRef)({
+    const edgeDragRef = (0, import_react5.useRef)({
       active: false,
       pointerId: 0,
       startY: 0,
       startBottom: 36,
       moved: false
     });
-    const immersiveShortcutCooldownRef = (0, import_react4.useRef)(0);
-    const immersiveRunRef = (0, import_react4.useRef)(null);
-    const runEdgeImmersiveTranslateRef = (0, import_react4.useRef)(async () => {
+    const immersiveShortcutCooldownRef = (0, import_react5.useRef)(0);
+    const immersiveRunRef = (0, import_react5.useRef)(null);
+    const runEdgeImmersiveTranslateRef = (0, import_react5.useRef)(async () => {
     });
     const beginImmersiveRun = () => {
       immersiveRunRef.current?.controller.abort();
@@ -27497,13 +28042,13 @@ ${text2}`;
         immersiveRunRef.current = null;
       }
     };
-    (0, import_react4.useEffect)(() => {
+    (0, import_react5.useEffect)(() => {
       showTranslationProgress = setTranslationProgress;
       return () => {
         showTranslationProgress = null;
       };
     }, []);
-    (0, import_react4.useEffect)(() => {
+    (0, import_react5.useEffect)(() => {
       const panel = resultRef.current;
       if (!panel || !activeTool || !snapshot) return;
       const handleWheel = (event) => {
@@ -27519,12 +28064,12 @@ ${text2}`;
       panel.addEventListener("wheel", handleWheel, { passive: false });
       return () => panel.removeEventListener("wheel", handleWheel);
     }, [activeTool, snapshot]);
-    (0, import_react4.useEffect)(() => {
+    (0, import_react5.useEffect)(() => {
       if (!translationProgress || translationProgress.active) return;
       const timer = window.setTimeout(() => setTranslationProgress(null), 1800);
       return () => window.clearTimeout(timer);
     }, [translationProgress]);
-    (0, import_react4.useEffect)(() => {
+    (0, import_react5.useEffect)(() => {
       let lastHref = location.href;
       const refreshHref = () => {
         if (location.href === lastHref) return;
@@ -27540,12 +28085,12 @@ ${text2}`;
         window.removeEventListener("hashchange", refreshHref);
       };
     }, []);
-    (0, import_react4.useEffect)(() => {
+    (0, import_react5.useEffect)(() => {
       setSearchAnswerDismissed(false);
       setSearchAnswerPosition(null);
       searchAnswerKeyRef.current = "";
     }, [query]);
-    (0, import_react4.useLayoutEffect)(() => {
+    (0, import_react5.useLayoutEffect)(() => {
       showSelection = (next) => {
         if (activeToolRef.current) return;
         imageTextRunRef.current = "";
@@ -27567,10 +28112,10 @@ ${text2}`;
         showSelection = null;
       };
     }, []);
-    (0, import_react4.useEffect)(() => {
+    (0, import_react5.useEffect)(() => {
       activeToolRef.current = activeTool;
     }, [activeTool]);
-    (0, import_react4.useEffect)(() => {
+    (0, import_react5.useEffect)(() => {
       void Promise.all([loadSettings(), loadCustomTools()]).then(
         ([nextSettings, nextTools]) => {
           setLocalSettings(nextSettings);
@@ -27598,17 +28143,17 @@ ${text2}`;
       return immersiveShortcutContextScope ?? defaultImmersiveContentScope();
     };
     const immersiveCollectingLabel = (scope) => scope === "paragraph" || scope === "selection" ? t("collectingSelection") : scope === "article" ? t("collectingCurrentBody") : t("collectingPageBody");
-    const activeProfile = (0, import_react4.useMemo)(
+    const activeProfile = (0, import_react5.useMemo)(
       () => activeSettings?.profiles.find(
         (profile) => profile.id === activeSettings.activeProfileId
       ) ?? null,
       [activeSettings]
     );
-    const translationProfile = (0, import_react4.useMemo)(
+    const translationProfile = (0, import_react5.useMemo)(
       () => activeSettings ? profileForPurpose(activeSettings, "translation") : null,
       [activeSettings]
     );
-    const visionProfile = (0, import_react4.useMemo)(
+    const visionProfile = (0, import_react5.useMemo)(
       () => activeSettings ? profileForPurpose(activeSettings, "vision") : null,
       [activeSettings]
     );
@@ -27640,7 +28185,7 @@ ${text2}`;
       currentHref,
       activeSettings?.hoverDefinitionUrlBlacklist ?? []
     );
-    (0, import_react4.useEffect)(() => {
+    (0, import_react5.useEffect)(() => {
       const clearTimer = () => {
         if (hoverDefinitionTimerRef.current !== null) {
           window.clearTimeout(hoverDefinitionTimerRef.current);
@@ -27767,7 +28312,7 @@ ${text2}`;
         hide();
       };
     }, [hoverDefinitionBlocked, hoverDefinitionMode, hoverDefinitionShortcut]);
-    (0, import_react4.useEffect)(() => {
+    (0, import_react5.useEffect)(() => {
       if (!inputAutoReplyEnabled || autoReplyBlocked) {
         setAutoReplyTarget(null);
         return;
@@ -27815,7 +28360,7 @@ ${text2}`;
       inputAutoReplyDisableSingleLine,
       inputAutoReplyEnabled
     ]);
-    const clearImageHoverTimers = (0, import_react4.useCallback)(() => {
+    const clearImageHoverTimers = (0, import_react5.useCallback)(() => {
       if (imageHoverTimeoutRef.current !== null) {
         window.clearTimeout(imageHoverTimeoutRef.current);
         imageHoverTimeoutRef.current = null;
@@ -27825,7 +28370,7 @@ ${text2}`;
         imageHoverHideTimeoutRef.current = null;
       }
     }, []);
-    const imageTextTargetFromImage = (0, import_react4.useCallback)(
+    const imageTextTargetFromImage = (0, import_react5.useCallback)(
       (image) => {
         if (!imageTextExtractionEnabled || imageTextExtractionBlocked) {
           return null;
@@ -27853,7 +28398,7 @@ ${text2}`;
         imageTextExtractionEnabled
       ]
     );
-    (0, import_react4.useEffect)(() => {
+    (0, import_react5.useEffect)(() => {
       if (!imageTextExtractionEnabled || imageTextExtractionBlocked) {
         clearImageHoverTimers();
         imageHoverCandidateRef.current = null;
@@ -27928,11 +28473,11 @@ ${text2}`;
       imageTextExtractionEnabled,
       imageTextTargetFromImage
     ]);
-    const availableTools = (0, import_react4.useMemo)(
+    const availableTools = (0, import_react5.useMemo)(
       () => allTools(customTools, activeSettings ?? void 0),
       [customTools, activeSettings]
     );
-    const askSelectionTool = (0, import_react4.useMemo)(
+    const askSelectionTool = (0, import_react5.useMemo)(
       () => availableTools.find((tool) => tool.id === "ask-selection") ?? {
         id: "ask-selection",
         title: uiText(activeSettings?.interfaceLanguage, "askSelectionTitle"),
@@ -27946,7 +28491,7 @@ ${text2}`;
       },
       [activeSettings?.interfaceLanguage, availableTools]
     );
-    const imageTextExtractionTool = (0, import_react4.useMemo)(
+    const imageTextExtractionTool = (0, import_react5.useMemo)(
       () => ({
         id: IMAGE_TEXT_EXTRACTION_TOOL_ID,
         title: uiText(
@@ -27963,20 +28508,20 @@ ${text2}`;
       }),
       [activeSettings?.interfaceLanguage]
     );
-    const selectionTools = (0, import_react4.useMemo)(() => {
+    const selectionTools = (0, import_react5.useMemo)(() => {
       const ids = activeSettings?.enabledToolIds?.selection ?? availableTools.map((tool) => tool.id);
       return ids.map((id) => availableTools.find((tool) => tool.id === id)).filter(
         (tool) => Boolean(tool) && tool?.id !== "ask-selection"
       );
     }, [activeSettings, availableTools]);
     const edgeToolIds = activeSettings?.enabledToolIds?.edge ?? ["summary"];
-    const edgeTools = (0, import_react4.useMemo)(
+    const edgeTools = (0, import_react5.useMemo)(
       () => edgeToolIds.map((id) => availableTools.find((tool) => tool.id === id)).filter(
         (tool) => Boolean(tool) && tool?.id !== "ask-selection"
       ),
       [availableTools, edgeToolIds]
     );
-    (0, import_react4.useEffect)(() => {
+    (0, import_react5.useEffect)(() => {
       if (!query || !searchAnswerEnabled || searchAnswerDismissed) {
         setSearchAnswer({ text: "", error: "", busy: false, results: [] });
         return;
@@ -28071,7 +28616,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
         setHoverOpen(false);
       }, 220);
     };
-    (0, import_react4.useEffect)(() => {
+    (0, import_react5.useEffect)(() => {
       const hide = () => {
         if (!activeTool) setSnapshot(null);
       };
@@ -28082,7 +28627,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
         window.removeEventListener("resize", hide);
       };
     }, [activeTool]);
-    const position = (0, import_react4.useMemo)(() => {
+    const position = (0, import_react5.useMemo)(() => {
       if (!snapshot) return { left: 10, top: 10 };
       const width = Math.min(
         430,
@@ -28096,7 +28641,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
       const top = below + 46 < window.innerHeight ? below : Math.max(10, snapshot.rect.top - 48);
       return { left, top };
     }, [selectionTools.length, snapshot]);
-    const dotPosition = (0, import_react4.useMemo)(() => {
+    const dotPosition = (0, import_react5.useMemo)(() => {
       if (!snapshot) return { left: 10, top: 10 };
       const left = Math.max(
         6,
@@ -28106,7 +28651,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
       const top = below + 12 < window.innerHeight ? below : Math.max(6, snapshot.rect.top - 15);
       return { left, top };
     }, [snapshot]);
-    const resultPosition = (0, import_react4.useMemo)(() => {
+    const resultPosition = (0, import_react5.useMemo)(() => {
       const width = Math.min(420, window.innerWidth - 20);
       const left = Math.max(
         10,
@@ -28144,7 +28689,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
       }
       return false;
     };
-    const runTool = (0, import_react4.useCallback)(
+    const runTool = (0, import_react5.useCallback)(
       async (tool) => {
         if (!snapshot) return;
         if (tool.id === "ask-selection") {
@@ -28194,7 +28739,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
       },
       [activeSettings, snapshot]
     );
-    const resultTools = (0, import_react4.useMemo)(() => {
+    const resultTools = (0, import_react5.useMemo)(() => {
       const tools = selectionTools.filter((tool) => tool.id !== "ask-selection");
       if (activeTool && activeTool.id !== IMAGE_TEXT_EXTRACTION_TOOL_ID && !tools.some((tool) => tool.id === activeTool.id)) {
         return [activeTool, ...tools];
@@ -28329,7 +28874,12 @@ ${t("currentResultLabel")}\uFF1A` : "",
       setEdgeBusy(true);
       showEdgeResult(tool.title, t("readCurrentPage"));
       try {
-        const context = extractPageContext(true, activeSettings?.interfaceLanguage);
+        const context = extractPageContext(
+          true,
+          activeSettings?.interfaceLanguage,
+          "page",
+          activeSettings?.articleExtractionRules ?? []
+        );
         if (!context.text.trim()) throw new Error(t("noProcessablePageBody"));
         showEdgeResult(tool.title, t("executingTool"));
         const response = await runtimeRequest2("model.tool", {
@@ -28372,10 +28922,17 @@ ${t("currentResultLabel")}\uFF1A` : "",
       );
       try {
         if (!translationProfile) throw new Error(t("modelEngineRequired"));
+        const articleContext = scope === "article" ? extractPageContext(
+          true,
+          activeSettings?.interfaceLanguage,
+          "article",
+          activeSettings?.articleExtractionRules ?? []
+        ) : null;
         const blocks = scope === "paragraph" ? prepareParagraphTranslationBlocks2(lastPointerTarget, "", {
           preserveRichText: true
-        }) : prepareTranslationBlocks2(scope, "", {
-          preserveRichText: true
+        }) : prepareTranslationBlocks2(scope, articleContext?.text ?? "", {
+          preserveRichText: true,
+          articlePreviewBlocks: articleContext?.kind === "article" ? articleContext.articlePreview ?? [] : []
         });
         if (!blocks.length) throw new Error(t("noTranslatableBlocks"));
         runState = createImmersiveRunState(
@@ -28577,12 +29134,19 @@ ${t("currentResultLabel")}\uFF1A` : "",
             { surface: "edge" }
           )
         );
+        const articleContext = scope === "article" ? extractPageContext(
+          true,
+          activeSettings.interfaceLanguage,
+          "article",
+          activeSettings.articleExtractionRules ?? []
+        ) : null;
         const blocks = scope === "paragraph" ? prepareParagraphTranslationBlocks2(lastPointerTarget, "", {
           preserveRichText: false,
           maxVisibleTextLength: 2400
-        }) : prepareTranslationBlocks2(scope, "", {
+        }) : prepareTranslationBlocks2(scope, articleContext?.text ?? "", {
           preserveRichText: false,
-          maxVisibleTextLength: 2400
+          maxVisibleTextLength: 2400,
+          articlePreviewBlocks: articleContext?.kind === "article" ? articleContext.articlePreview ?? [] : []
         });
         if (!blocks.length) throw new Error(t("noTranslatableBlocks"));
         runState = createImmersiveRunState("reading", workflowScope, "requesting", {
@@ -28937,7 +29501,7 @@ ${t("currentResultLabel")}\uFF1A` : "",
       );
       showEdgeResult(t("restorePage"), t("pageRestored"));
     };
-    (0, import_react4.useEffect)(() => {
+    (0, import_react5.useEffect)(() => {
       if (!activeSettings || !translationProfile) return;
       const translationRules = activeSettings.immersiveTranslationAutoWhitelist ?? [];
       const readingRules = activeSettings.immersiveReadingAutoWhitelist ?? [];
@@ -28972,7 +29536,7 @@ ${t("currentResultLabel")}\uFF1A` : "",
       runEdgeImmersiveTranslate,
       runEdgeImmersiveReading
     ]);
-    (0, import_react4.useEffect)(() => {
+    (0, import_react5.useEffect)(() => {
       if (!activeSettings) return;
       const preventShortcut = (event) => {
         event.preventDefault();
@@ -29269,7 +29833,7 @@ ${t("currentResultLabel")}\uFF1A` : "",
         Math.min(window.innerHeight - 20, imageTextTarget.rect.top + 2)
       )
     } : null;
-    const imageResultPosition = (0, import_react4.useMemo)(() => {
+    const imageResultPosition = (0, import_react5.useMemo)(() => {
       if (activeTool?.id !== IMAGE_TEXT_EXTRACTION_TOOL_ID || !imageTextButtonPosition) {
         return null;
       }
@@ -29360,7 +29924,12 @@ ${t("currentResultLabel")}\uFF1A` : "",
       setAutoReplyBusy(true);
       setAutoReplyError("");
       try {
-        const context = extractPageContext(true, activeSettings?.interfaceLanguage);
+        const context = extractPageContext(
+          true,
+          activeSettings?.interfaceLanguage,
+          "page",
+          activeSettings?.articleExtractionRules ?? []
+        );
         const draft = editableText(target.element).trim();
         const response = await runtimeRequest2(
           "model.complete",
@@ -30101,14 +30670,21 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
         return extractPageContextAsync(
           Boolean(message.ignoreSelection),
           settings?.interfaceLanguage,
-          message.scope === "article" ? "article" : "page"
+          message.scope === "article" ? "article" : "page",
+          settings?.articleExtractionRules ?? []
         );
       }
       if (message.type === "page.article.pick") {
         return startManualArticleSelection(settings?.interfaceLanguage);
       }
+      if (message.type === "page.article.pick.cancel") {
+        return cancelManualArticleSelection();
+      }
       if (message.type === "page.article.restore") {
-        return restoreAutomaticArticleSelection(settings?.interfaceLanguage);
+        return restoreAutomaticArticleSelection(
+          settings?.interfaceLanguage,
+          settings?.articleExtractionRules ?? []
+        );
       }
       if (message.type === "page.article.preview.highlight") {
         return highlightArticlePreviewBlock(
@@ -30120,11 +30696,15 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
         return removeArticlePreviewBlock(
           String(message.text ?? ""),
           typeof message.targetId === "string" ? message.targetId : void 0,
-          settings?.interfaceLanguage
+          settings?.interfaceLanguage,
+          settings?.articleExtractionRules ?? []
         );
       }
       if (message.type === "page.article.preview.prune") {
-        return pruneArticlePreviewBlocks(settings?.interfaceLanguage);
+        return pruneArticlePreviewBlocks(
+          settings?.interfaceLanguage,
+          settings?.articleExtractionRules ?? []
+        );
       }
       if (message.type === "page.translation.prepare") {
         return prepareTranslationBlocks2(
@@ -30132,7 +30712,8 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           String(message.text ?? ""),
           {
             preserveRichText: message.purpose === "translation" ? true : false,
-            maxVisibleTextLength: message.purpose === "reading" ? 2400 : 900
+            maxVisibleTextLength: message.purpose === "reading" ? 2400 : 900,
+            articlePreviewBlocks: Array.isArray(message.articlePreview) ? message.articlePreview : []
           }
         );
       }

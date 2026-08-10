@@ -1,6 +1,7 @@
 import { DEFAULT_SETTINGS } from "./defaults";
 import { uiText } from "./i18n";
 import type {
+  ArticleExtractionRule,
   AppLogLevel,
   AppSettings,
   Conversation,
@@ -155,6 +156,18 @@ function normalizeEnabledToolIds(
   };
 }
 
+function normalizeArticleExtractionRules(
+  rules: Partial<ArticleExtractionRule>[] = []
+): ArticleExtractionRule[] {
+  return rules
+    .map((rule) => ({
+      id: String(rule.id || crypto.randomUUID()),
+      urlPattern: String(rule.urlPattern ?? "").trim(),
+      selector: String(rule.selector ?? "").trim()
+    }))
+    .filter((rule) => rule.urlPattern && rule.selector);
+}
+
 export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSettings {
   const profiles = stored.profiles ?? [];
   const quickToolsUrlBlacklist = stored.edgeQuickToolUrlBlacklist ?? [];
@@ -285,6 +298,9 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
     selectionOverlayUrlBlacklist: stored.selectionOverlayUrlBlacklist ?? [],
     imageTextExtractionEnabled: stored.imageTextExtractionEnabled ?? false,
     imageTextExtractionMinSize: stored.imageTextExtractionMinSize ?? 160,
+    articleExtractionRules: normalizeArticleExtractionRules(
+      stored.articleExtractionRules
+    ),
     edgeQuickToolUrlBlacklist: quickToolsUrlBlacklist,
     chromeSyncEnabled: stored.chromeSyncEnabled ?? false,
     enabledToolIds: normalizeEnabledToolIds(stored.enabledToolIds),

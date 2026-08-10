@@ -1,4 +1,5 @@
 import { searchParamNamesFromUrl } from "../shared/searchEngines";
+import { cleanCitationExplanationText } from "../shared/utils";
 
 export interface SelectionSnapshot {
   text: string;
@@ -114,14 +115,14 @@ export function textFromElement(element: Element | null): string {
     }
   };
   for (const child of Array.from(element.childNodes)) visit(child);
-  return parts
+  return cleanCitationExplanationText(parts
     .join("")
     .replace(/\u00a0/g, " ")
     .replace(/\r\n?/g, "\n")
     .replace(/[^\S\n]+/g, " ")
     .replace(/ *\n */g, "\n")
     .replace(/\n{3,}/g, "\n\n")
-    .trim();
+    .trim());
 }
 
 export function textFromElementWithLinks(element: Element | null): string {
@@ -180,14 +181,14 @@ export function textFromElementWithLinks(element: Element | null): string {
     }
   };
   for (const child of Array.from(element.childNodes)) visit(child);
-  return parts
+  return cleanCitationExplanationText(parts
     .join("")
     .replace(/\u00a0/g, " ")
     .replace(/\r\n?/g, "\n")
     .replace(/[^\S\n]+/g, " ")
     .replace(/ *\n */g, "\n")
     .replace(/\n{3,}/g, "\n\n")
-    .trim();
+    .trim());
 }
 
 export function selectionTextWithLayout(selection: Selection | null): string {
@@ -200,13 +201,13 @@ export function selectionTextWithLayout(selection: Selection | null): string {
   } catch {
     // Fall back to the browser's plain-text selection below.
   }
-  return selection
+  return cleanCitationExplanationText(selection
     .toString()
     .replace(/\r\n?/g, "\n")
     .replace(/[^\S\n]+/g, " ")
     .replace(/ *\n */g, "\n")
     .replace(/\n{3,}/g, "\n\n")
-    .trim();
+    .trim());
 }
 
 export function pageSelectionText(): string {

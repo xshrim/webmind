@@ -19,6 +19,7 @@ export interface ProtectedTranslationText {
   citations: string[];
   links: ProtectedTranslationLink[];
   formats: ProtectedTranslationFormat[];
+  htmlTags: string[];
   paragraphBreaks: string[];
 }
 
@@ -75,7 +76,8 @@ function protectedTokenPattern(
     | "LINK_START"
     | "LINK_END"
     | "FORMAT_START"
-    | "FORMAT_END",
+    | "FORMAT_END"
+    | "HTML_TAG",
   index: number
 ) {
   return new RegExp(
@@ -91,10 +93,12 @@ function protectedTokenSource(
     | "LINK_START"
     | "LINK_END"
     | "FORMAT_START"
-    | "FORMAT_END",
+    | "FORMAT_END"
+    | "HTML_TAG",
   index: number
 ): string {
-  return `\`?(?:\\{\\{\\s*WEBMIND_${kind}_${index}\\s*\\}\\}|\\[\\s*WEBMIND_${kind}_${index}\\s*\\]|WEBMIND_${kind}_${index})\`?`;
+  const token = `WEBMIND_${kind}_${index}(?!\\d)`;
+  return `\`?(?:\\{\\{\\s*${token}\\s*\\}\\}|\\[\\s*${token}\\s*\\]|${token})\`?`;
 }
 
 function visibleTextFromHtmlFragment(value: string): string {
@@ -104,6 +108,47 @@ function visibleTextFromHtmlFragment(value: string): string {
     .replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+const BRACKET_CITATION_MARKER_SOURCE =
+  "\\[\\s*\\d+(?:\\s*[-,–—]\\s*\\d+)*\\s*\\]";
+
+const CITATION_EXPLANATION_BEFORE_MARKER_PATTERN = new RegExp(
+  [
+    "(^|[\\s([{（【「『“‘\\]])",
+    "(?:\\*\\*\\s*)?",
+    "(?:",
+    "\\d+\\s+(?:citations?|references?)\\s+(?:from\\s+)?(?:multiple|several|various|many)\\s+(?:sources?|references?|outlets?)",
+    "|(?:citations?|references?|sources?)\\s+\\d+\\s+(?:from|based\\s+on)\\s+[^\\[\\]\\n*]{1,80}?",
+    ")",
+    "(?:\\s*\\*\\*)?",
+    "\\s*",
+    `(${BRACKET_CITATION_MARKER_SOURCE})`
+  ].join(""),
+  "gi"
+);
+
+export function cleanCitationExplanationText(text: string): string {
+  let cleaned = text;
+  let previous = "";
+  while (cleaned !== previous) {
+    previous = cleaned;
+    cleaned = cleaned.replace(
+      CITATION_EXPLANATION_BEFORE_MARKER_PATTERN,
+      "$1$2"
+    );
+  }
+  return cleaned;
+}
+
+function stripTranslationTaskPreface(text: string): string {
+  let cleaned = text;
+  const prefacePattern =
+    /^\s*(?:(?:这是(?:一个|一项)?翻译任务[。.!！]?\s*)?(?:以下是(?:根据您提供的内容进行的)?翻译|翻译(?:如下|结果)|译文如下|以下为译文)[：:。.!！]?\s*)+/i;
+  while (prefacePattern.test(cleaned)) {
+    cleaned = cleaned.replace(prefacePattern, "");
+  }
+  return cleaned.trimStart();
 }
 
 function stripCitationExplanationNoise(
@@ -191,10 +236,23 @@ function stripCitationMarkerExplanationNoise(
   return cleaned;
 }
 
+function stripBrokenTranslationPlaceholderFragments(text: string): string {
+  return text
+    .replace(/\{+\s*WEBMIND_[A-Z0-9_]+\s*\}+/gi, "")
+    .replace(/\[\s*WEBMIND_[A-Z0-9_]+\s*\]/gi, "")
+    .replace(/WEBMIND_[A-Z0-9_]+/gi, "")
+    .replace(/\{+\s*\d+\s*\}+/g, "")
+    .replace(/\{+[ \t]*(?=$|[\r\n])/g, "")
+    .replace(/(^|[\r\n])[ \t]*\}+/g, "$1")
+    .replace(/\[\s*\d+\s*\]/g, (match) => match.trim())
+    .replace(/[ \t]{2,}/g, " ");
+}
+
 export function protectTranslationText(text: string): ProtectedTranslationText {
   const citations: string[] = [];
   const links: ProtectedTranslationLink[] = [];
   const formats: ProtectedTranslationFormat[] = [];
+  const htmlTags: string[] = [];
   const paragraphBreaks: string[] = [];
   const protectFormat = (tag: "sup" | "sub", value: string) => {
     const visibleText = visibleTextFromHtmlFragment(value);
@@ -239,19 +297,26 @@ export function protectTranslationText(text: string): ProtectedTranslationText {
     citations.push(marker);
     return `{{WEBMIND_CITATION_${citations.length}}}`;
   });
-  const protectedText = withCitations
+  const withHtmlTags = withCitations.replace(
+    /<\/?[A-Za-z][A-Za-z0-9:-]*(?:\s+[^<>]*?)?\s*\/?>/g,
+    (tag) => {
+      htmlTags.push(tag);
+      return `{{WEBMIND_HTML_TAG_${htmlTags.length}}}`;
+    }
+  );
+  const protectedText = withHtmlTags
     .replace(/\r\n?/g, "\n")
     .replace(/\n[\t ]*\n+/g, (separator) => {
       paragraphBreaks.push(separator);
       return `{{WEBMIND_PARAGRAPH_BREAK_${paragraphBreaks.length}}}`;
     });
-  return { text: protectedText, citations, links, formats, paragraphBreaks };
+  return { text: protectedText, citations, links, formats, htmlTags, paragraphBreaks };
 }
 
 export function restoreTranslationText(
   text: string,
   protection: Pick<ProtectedTranslationText, "citations" | "paragraphBreaks"> &
-    Partial<Pick<ProtectedTranslationText, "links" | "formats">>
+    Partial<Pick<ProtectedTranslationText, "links" | "formats" | "htmlTags">>
 ): string {
   let restored = stripCitationExplanationNoise(
     text,
@@ -303,6 +368,12 @@ export function restoreTranslationText(
       .replace(protectedTokenPattern("FORMAT_START", index + 1), "")
       .replace(protectedTokenPattern("FORMAT_END", index + 1), "");
   });
+  (protection.htmlTags ?? []).forEach((tag, index) => {
+    restored = restored.replace(
+      protectedTokenPattern("HTML_TAG", index + 1),
+      tag
+    );
+  });
   const missingCitations = protection.citations.filter(
     (marker) => marker && !restored.includes(marker)
   );
@@ -310,6 +381,8 @@ export function restoreTranslationText(
     restored = `${restored.trimEnd()} ${missingCitations.join(" ")}`;
   }
   restored = stripCitationMarkerExplanationNoise(restored, protection.citations);
+  restored = stripBrokenTranslationPlaceholderFragments(restored);
+  restored = stripTranslationTaskPreface(restored);
   return restored.replace(/\n[\t ]*\n(?:[\t ]*\n)+/g, "\n\n");
 }
 
@@ -317,6 +390,17 @@ export function buildProtectedTranslationPrompt(
   config: PromptConfigSource | undefined,
   sourceText: string,
   protectedText: string,
+  options: { dictionaryForShortInput?: boolean } = {}
+): string {
+  return [
+    buildProtectedTranslationInstruction(config, sourceText, options),
+    buildProtectedTranslationInput(protectedText)
+  ].filter(Boolean).join("\n");
+}
+
+export function buildProtectedTranslationInstruction(
+  config: PromptConfigSource | undefined,
+  sourceText: string,
   options: { dictionaryForShortInput?: boolean } = {}
 ): string {
   const dictionaryMode =
@@ -332,7 +416,12 @@ export function buildProtectedTranslationPrompt(
       : uiText(
           typeof config === "object" ? config?.interfaceLanguage : config,
           "translationOutputOnlyInstruction"
-        ),
+        )
+  ].filter(Boolean).join("\n");
+}
+
+export function buildProtectedTranslationInput(protectedText: string): string {
+  return [
     "<translation-input>",
     protectedText,
     "</translation-input>"

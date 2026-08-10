@@ -223,6 +223,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   inputAutoReplyDisableSingleLine: true,
   imageTextExtractionEnabled: false,
   imageTextExtractionMinSize: 160,
+  articleExtractionRules: [],
   enabledToolIds: {
     selection: [...DEFAULT_SELECTION_TOOL_IDS],
     home: [...DEFAULT_HOME_TOOL_IDS],

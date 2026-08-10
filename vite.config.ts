@@ -14,6 +14,12 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (!id.includes("node_modules")) return undefined;
+          if (id.includes("lucide-react/dist/esm/icons/")) {
+            const fileName = id.split("/").pop() ?? "";
+            const firstChar = fileName.charAt(0).toLowerCase();
+            const group = /[a-z0-9]/.test(firstChar) ? firstChar : "misc";
+            return `lucide-icons-${group}`;
+          }
           if (id.includes("lucide-react") || id.includes("lucide")) {
             return "vendor-icons";
           }

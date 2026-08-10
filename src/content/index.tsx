@@ -83,6 +83,7 @@ import {
   type SelectionSnapshot
 } from "./selection";
 import {
+  cancelManualArticleSelection,
   extractPageContext,
   extractPageContextAsync,
   highlightArticlePreviewBlock,
@@ -839,7 +840,10 @@ function prepareTranslationBlocks(
   return prepareTranslationBlocksPrepared(
     scope,
     textFallback,
-    options,
+    {
+      ...options,
+      articleExtractionRules: settings?.articleExtractionRules ?? []
+    },
     translationPreparationDependencies()
   );
 }
@@ -2054,7 +2058,12 @@ function SelectionAssistant({ query }: { query: string | null }) {
     setEdgeBusy(true);
     showEdgeResult(tool.title, t("readCurrentPage"));
     try {
-      const context = extractPageContext(true, activeSettings?.interfaceLanguage);
+      const context = extractPageContext(
+        true,
+        activeSettings?.interfaceLanguage,
+        "page",
+        activeSettings?.articleExtractionRules ?? []
+      );
       if (!context.text.trim()) throw new Error(t("noProcessablePageBody"));
       showEdgeResult(tool.title, t("executingTool"));
       const response = await runtimeRequest<{ text: string }>("model.tool", {
@@ -2101,13 +2110,26 @@ function SelectionAssistant({ query }: { query: string | null }) {
     );
     try {
       if (!translationProfile) throw new Error(t("modelEngineRequired"));
+      const articleContext =
+        scope === "article"
+          ? extractPageContext(
+              true,
+              activeSettings?.interfaceLanguage,
+              "article",
+              activeSettings?.articleExtractionRules ?? []
+            )
+          : null;
       const blocks =
         scope === "paragraph"
           ? prepareParagraphTranslationBlocks(lastPointerTarget, "", {
               preserveRichText: true
             })
-          : prepareTranslationBlocks(scope, "", {
-              preserveRichText: true
+          : prepareTranslationBlocks(scope, articleContext?.text ?? "", {
+              preserveRichText: true,
+              articlePreviewBlocks:
+                articleContext?.kind === "article"
+                  ? articleContext.articlePreview ?? []
+                  : []
             });
       if (!blocks.length) throw new Error(t("noTranslatableBlocks"));
       runState = createImmersiveRunState(
@@ -2314,15 +2336,28 @@ function SelectionAssistant({ query }: { query: string | null }) {
           { surface: "edge" }
         )
       );
+      const articleContext =
+        scope === "article"
+          ? extractPageContext(
+              true,
+              activeSettings.interfaceLanguage,
+              "article",
+              activeSettings.articleExtractionRules ?? []
+            )
+          : null;
       const blocks =
         scope === "paragraph"
           ? prepareParagraphTranslationBlocks(lastPointerTarget, "", {
               preserveRichText: false,
               maxVisibleTextLength: 2400
             })
-          : prepareTranslationBlocks(scope, "", {
+          : prepareTranslationBlocks(scope, articleContext?.text ?? "", {
               preserveRichText: false,
-              maxVisibleTextLength: 2400
+              maxVisibleTextLength: 2400,
+              articlePreviewBlocks:
+                articleContext?.kind === "article"
+                  ? articleContext.articlePreview ?? []
+                  : []
             });
       if (!blocks.length) throw new Error(t("noTranslatableBlocks"));
       runState = createImmersiveRunState("reading", workflowScope, "requesting", {
@@ -3183,7 +3218,12 @@ function SelectionAssistant({ query }: { query: string | null }) {
     setAutoReplyBusy(true);
     setAutoReplyError("");
     try {
-      const context = extractPageContext(true, activeSettings?.interfaceLanguage);
+      const context = extractPageContext(
+        true,
+        activeSettings?.interfaceLanguage,
+        "page",
+        activeSettings?.articleExtractionRules ?? []
+      );
       const draft = editableText(target.element).trim();
       const response = await runtimeRequest<{ text: string }>(
         "model.complete",
@@ -3990,14 +4030,21 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       return extractPageContextAsync(
         Boolean(message.ignoreSelection),
         settings?.interfaceLanguage,
-        message.scope === "article" ? "article" : "page"
+        message.scope === "article" ? "article" : "page",
+        settings?.articleExtractionRules ?? []
       );
     }
     if (message.type === "page.article.pick") {
       return startManualArticleSelection(settings?.interfaceLanguage);
     }
+    if (message.type === "page.article.pick.cancel") {
+      return cancelManualArticleSelection();
+    }
     if (message.type === "page.article.restore") {
-      return restoreAutomaticArticleSelection(settings?.interfaceLanguage);
+      return restoreAutomaticArticleSelection(
+        settings?.interfaceLanguage,
+        settings?.articleExtractionRules ?? []
+      );
     }
     if (message.type === "page.article.preview.highlight") {
       return highlightArticlePreviewBlock(
@@ -4009,11 +4056,15 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       return removeArticlePreviewBlock(
         String(message.text ?? ""),
         typeof message.targetId === "string" ? message.targetId : undefined,
-        settings?.interfaceLanguage
+        settings?.interfaceLanguage,
+        settings?.articleExtractionRules ?? []
       );
     }
     if (message.type === "page.article.preview.prune") {
-      return pruneArticlePreviewBlocks(settings?.interfaceLanguage);
+      return pruneArticlePreviewBlocks(
+        settings?.interfaceLanguage,
+        settings?.articleExtractionRules ?? []
+      );
     }
     if (message.type === "page.translation.prepare") {
       return prepareTranslationBlocks(
@@ -4025,7 +4076,10 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         String(message.text ?? ""),
         {
           preserveRichText: message.purpose === "translation" ? true : false,
-          maxVisibleTextLength: message.purpose === "reading" ? 2400 : 900
+          maxVisibleTextLength: message.purpose === "reading" ? 2400 : 900,
+          articlePreviewBlocks: Array.isArray(message.articlePreview)
+            ? message.articlePreview
+            : []
         }
       );
     }

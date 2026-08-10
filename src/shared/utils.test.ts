@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   alignPageTranslations,
+  cleanCitationExplanationText,
   extractJsonArray,
   extractPageTranslationEntries,
   isPointInsideAnyRect,
@@ -230,6 +231,24 @@ describe("shared utilities", () => {
     expect(protection.text).not.toContain("two");
   });
 
+  it("protects general HTML tags while translating visible text", () => {
+    const protection = protectTranslationText(
+      'Read <span class="secret" hidden>hidden</span> and <br/> keep going.'
+    );
+
+    expect(protection.text).toContain(
+      "{{WEBMIND_HTML_TAG_1}}hidden{{WEBMIND_HTML_TAG_2}}"
+    );
+    expect(protection.text).toContain("{{WEBMIND_HTML_TAG_3}}");
+    expect(protection.text).not.toContain('class="secret"');
+    expect(
+      restoreTranslationText(
+        "阅读 {{WEBMIND_HTML_TAG_1}}隐藏{{WEBMIND_HTML_TAG_2}} 并 {{WEBMIND_HTML_TAG_3}} 继续。",
+        protection
+      )
+    ).toBe('阅读 <span class="secret" hidden>隐藏</span> 并 <br/> 继续。');
+  });
+
   it("falls back to plain visible text when rich-text boundary tokens are incomplete", () => {
     const protection = protectTranslationText(
       "Read [the documentation](https://example.com/path) and H<sub>2</sub>O."
@@ -251,6 +270,15 @@ describe("shared utilities", () => {
     );
   });
 
+  it("keeps citation markers while removing extracted citation labels", () => {
+    const source =
+      "A total solar eclipse will cross a narrow corridor **4 citations from multiple sources**[1-4]. Totality will last up to two minutes **Citation 5 from theguardian.com**[5]**Citation 2 from npr.org**[2]. NASA reported this [9].";
+
+    expect(cleanCitationExplanationText(source)).toBe(
+      "A total solar eclipse will cross a narrow corridor [1-4]. Totality will last up to two minutes [5][2]. NASA reported this [9]."
+    );
+  });
+
   it("removes citation explanations hallucinated around placeholders", () => {
     const protection = protectTranslationText("This claim [5] is important.");
 
@@ -262,6 +290,28 @@ describe("shared utilities", () => {
     ).toBe("这个说法[5] 很重要。");
   });
 
+  it("removes invented WebMind placeholder fragments from translations", () => {
+    const protection = protectTranslationText("First [1].\n\nSecond.");
+
+    expect(
+      restoreTranslationText(
+        "第一{{WEBMIND_CITATION_1}}。{{WEBMIND_PARAGRAPH_BREAK_1}}第二。{WEBMIND_CITATION_14}}来自 example.com",
+        protection
+      )
+    ).toBe("第一[1]。\n\n第二。来自 example.com");
+  });
+
+  it("removes partial brace placeholder fragments from translations", () => {
+    const protection = protectTranslationText("Alpha.\n\nBeta.");
+
+    expect(
+      restoreTranslationText(
+        "阿尔法。{{WEBMIND_PARAGR\n\n{{3}}贝塔。",
+        protection
+      )
+    ).toBe("阿尔法。\n\n贝塔。");
+  });
+
   it("removes English source labels hallucinated before restored citation markers", () => {
     const protection = protectTranslationText("Alpha [1]. Beta [2].");
 
@@ -271,5 +321,16 @@ describe("shared utilities", () => {
         protection
       )
     ).toBe("阿尔法[1]。贝塔[2]。");
+  });
+
+  it("removes repeated translation-task prefaces from translated text", () => {
+    const protection = protectTranslationText("Hello.");
+
+    expect(
+      restoreTranslationText(
+        "这是一个翻译任务。以下是根据您提供的内容进行的翻译：\n\n这是一个翻译任务。以下是根据您提供的内容进行的翻译：\n\n你好。",
+        protection
+      )
+    ).toBe("你好。");
   });
 });

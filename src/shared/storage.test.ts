@@ -101,4 +101,24 @@ describe("settings normalization", () => {
     expect(settings.translationProfileId).toBeNull();
     expect(settings.visionProfileId).toBeNull();
   });
+
+  it("normalizes article extraction rules", () => {
+    const settings = normalizeSettings({
+      articleExtractionRules: [
+        { id: "rule-1", urlPattern: " example.com ", selector: " article " },
+        { id: "", urlPattern: "*.example.com/*", selector: "main" },
+        { id: "empty-selector", urlPattern: "example.org", selector: "" }
+      ]
+    });
+
+    expect(settings.articleExtractionRules).toHaveLength(2);
+    expect(settings.articleExtractionRules[0]).toEqual({
+      id: "rule-1",
+      urlPattern: "example.com",
+      selector: "article"
+    });
+    expect(settings.articleExtractionRules[1].id).toBeTruthy();
+    expect(settings.articleExtractionRules[1].urlPattern).toBe("*.example.com/*");
+    expect(settings.articleExtractionRules[1].selector).toBe("main");
+  });
 });

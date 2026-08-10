@@ -3,13 +3,15 @@ import { uiText } from "../shared/i18n";
 import { searchQueryFromUrl } from "../shared/searchEngines";
 import type {
   AppSettings,
+  ArticleExtractionRule,
   ArticlePreviewBlock,
   ArticleQualitySummary,
   PageContext,
   WebSearchResult
 } from "../shared/types";
-import { truncateText } from "../shared/utils";
+import { cleanCitationExplanationText, truncateText } from "../shared/utils";
 import { pageSelectionText, textFromElement } from "./selection";
+import { urlMatchesWhitelist } from "./urlRules";
 
 export function searchQuery(): string | null {
   return searchQueryFromUrl(location.href);
@@ -81,9 +83,15 @@ interface ArticleExtractionCache {
   text: WeakMap<HTMLElement, string>;
 }
 
+interface StructuredArticleBody {
+  text: string;
+  field: "articleBody" | "text";
+}
+
 let manualArticleRoot: HTMLElement | null = null;
 let editedArticleRoot: HTMLElement | null = null;
 let articlePickerSession: Promise<PageContext | null> | null = null;
+let cancelArticlePickerSession: (() => void) | null = null;
 let articlePreviewIdCounter = 0;
 let activeArticleExtractionCache: ArticleExtractionCache | null = null;
 const articlePreviewTargets = new Map<string, HTMLElement>();
@@ -98,6 +106,16 @@ const ARTICLE_PREVIEW_HIGHLIGHT_STYLE_ID =
 const ARTICLE_ROOT_CANDIDATE_LIMIT = 80;
 const ARTICLE_BLOCK_CANDIDATE_LIMIT = 400;
 const SHADOW_HOST_SCAN_LIMIT = 1200;
+const STRUCTURED_ARTICLE_TYPES = new Set([
+  "article",
+  "blogposting",
+  "discussionforumposting",
+  "newsarticle",
+  "reportagenewsarticle",
+  "scholarlyarticle",
+  "socialmediaposting",
+  "techarticle"
+]);
 
 function waitForPageIdle(timeout = 120): Promise<void> {
   return new Promise((resolve) => {
@@ -115,7 +133,7 @@ function clamp(value: number, min = 0, max = 1): number {
 }
 
 function normalizedText(value: string): string {
-  return value.replace(/\s+/g, " ").trim();
+  return cleanCitationExplanationText(value).replace(/\s+/g, " ").trim();
 }
 
 function articleBlockTextKey(value: string): string {
@@ -193,14 +211,14 @@ function visibleTextFromElement(element: HTMLElement): string {
     }
   };
   visit(element);
-  const text = parts
+  const text = cleanCitationExplanationText(parts
     .join("")
     .replace(/\u00a0/g, " ")
     .replace(/\r\n?/g, "\n")
     .replace(/[^\S\n]+/g, " ")
     .replace(/ *\n */g, "\n")
     .replace(/\n{3,}/g, "\n\n")
-    .trim();
+    .trim());
   activeArticleExtractionCache?.text.set(element, text);
   return text;
 }
@@ -381,16 +399,113 @@ function elementVisibleArea(element?: HTMLElement): number {
   return clamp(visibleArea / Math.max(1, viewportArea * 0.35));
 }
 
+function cssEscapeIdentifier(value: string): string {
+  return globalThis.CSS?.escape
+    ? globalThis.CSS.escape(value)
+    : value.replace(/(^-?\d)|[^a-zA-Z0-9_-]/g, (match) => `\\${match}`);
+}
+
+function selectorSegment(element: HTMLElement): {
+  segment: string;
+  terminal: boolean;
+} {
+  const tag = element.tagName.toLowerCase();
+  if (element.id) {
+    return {
+      segment: `${tag}#${cssEscapeIdentifier(element.id)}`,
+      terminal: true
+    };
+  }
+  const className = Array.from(element.classList)
+    .filter((item) => !item.startsWith("webmind-"))
+    .slice(0, 3)
+    .map((item) => `.${cssEscapeIdentifier(item)}`)
+    .join("");
+  const siblings = element.parentElement
+    ? Array.from(element.parentElement.children).filter(
+        (item) => item.tagName === element.tagName
+      )
+    : [];
+  const nth =
+    siblings.length > 1
+      ? `:nth-of-type(${siblings.indexOf(element) + 1})`
+      : "";
+  return {
+    segment: `${tag}${className}${nth}`,
+    terminal: tag === "body"
+  };
+}
+
 function selectorHint(element?: HTMLElement): string | undefined {
   if (!element) return undefined;
-  if (element.dataset.webmindManualArticle === "true") {
-    return "manual";
+  const segments: string[] = [];
+  let current: HTMLElement | null = element;
+  while (current && current !== document.documentElement) {
+    const { segment, terminal } = selectorSegment(current);
+    segments.unshift(segment);
+    if (terminal) break;
+    current = current.parentElement;
   }
-  if (element.id) return `${element.tagName.toLowerCase()}#${element.id}`;
-  const className = Array.from(element.classList).slice(0, 2).join(".");
-  return className
-    ? `${element.tagName.toLowerCase()}.${className}`
-    : element.tagName.toLowerCase();
+  return segments.join(" > ");
+}
+
+function queryOpenShadowSelector(selector: string): HTMLElement | null {
+  const hosts = Array.from(document.querySelectorAll<HTMLElement>("*")).slice(
+    0,
+    SHADOW_HOST_SCAN_LIMIT
+  );
+  for (const host of hosts) {
+    const match = host.shadowRoot?.querySelector<HTMLElement>(selector);
+    if (match) return match;
+  }
+  return null;
+}
+
+function elementForArticleRuleSelector(selector: string): HTMLElement | null {
+  try {
+    const element =
+      document.querySelector<HTMLElement>(selector) ??
+      queryOpenShadowSelector(selector);
+    if (element instanceof HTMLIFrameElement) {
+      return element.contentDocument?.body ?? null;
+    }
+    if (element) return element;
+    for (const body of sameOriginIframeBodies()) {
+      const frameMatch = body.querySelector<HTMLElement>(selector);
+      if (frameMatch) return frameMatch;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function configuredArticleCandidate(
+  rules: ArticleExtractionRule[] = []
+): ArticleCandidate | null {
+  for (const rule of rules) {
+    if (
+      !rule.urlPattern ||
+      !rule.selector ||
+      !urlMatchesWhitelist(location.href, [rule.urlPattern])
+    ) {
+      continue;
+    }
+    const element = elementForArticleRuleSelector(rule.selector);
+    if (!element || !isElementVisible(element)) continue;
+    const text = visibleTextFromElement(element);
+    if (textLength(text) < 40) continue;
+    const titleSource = articleTitleSourceFromElement(element);
+    return {
+      title: titleSource.text,
+      titleElement: titleSource.element,
+      text,
+      element,
+      source: "dom",
+      selector: rule.selector
+    };
+  }
+  return null;
 }
 
 function linkRatio(element: HTMLElement | undefined, text: string): number {
@@ -442,7 +557,7 @@ function articlePreviewTargetId(element?: HTMLElement): string | undefined {
   return id;
 }
 
-function articlePreviewElementById(targetId?: string): HTMLElement | null {
+export function articlePreviewElementById(targetId?: string): HTMLElement | null {
   if (!targetId) return null;
   const target = articlePreviewTargets.get(targetId);
   return target?.isConnected ? target : null;
@@ -472,7 +587,7 @@ function articlePreview(
       typeof block === "string" ? { text: block } : block;
     return {
       id: `preview-${index + 1}`,
-      text: truncateText(sourceBlock.text, 320),
+      text: sourceBlock.text,
       sourceText: sourceBlock.text,
       targetId: articlePreviewTargetId(sourceBlock.element)
     };
@@ -575,6 +690,175 @@ function alignPreviewBlocksToDom(
     minimumOrder = match.order;
     return { text, element: match.element };
   });
+}
+
+function isJsonObject(value: unknown): value is Record<string, unknown> {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
+}
+
+function jsonLdTypeNames(value: unknown): string[] {
+  const values = Array.isArray(value) ? value : [value];
+  return values
+    .flatMap((item) => (typeof item === "string" ? [item] : []))
+    .map((item) => item.replace(/^https?:\/\/schema\.org\//i, "").toLowerCase());
+}
+
+function isStructuredArticleRecord(record: Record<string, unknown>): boolean {
+  return jsonLdTypeNames(record["@type"]).some((type) =>
+    STRUCTURED_ARTICLE_TYPES.has(type)
+  );
+}
+
+function structuredString(value: unknown): string {
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) {
+    return value
+      .map(structuredString)
+      .filter(Boolean)
+      .join("\n\n");
+  }
+  return "";
+}
+
+function structuredArticleBody(
+  record: Record<string, unknown>
+): StructuredArticleBody | null {
+  const articleBody = normalizedText(structuredString(record.articleBody));
+  if (textLength(articleBody) >= 120) {
+    return { text: articleBody, field: "articleBody" };
+  }
+  const text = normalizedText(structuredString(record.text));
+  if (textLength(text) >= 120) {
+    return { text, field: "text" };
+  }
+  return null;
+}
+
+function structuredUrl(value: unknown): string | null {
+  if (typeof value === "string") return value;
+  if (isJsonObject(value)) {
+    const id = value["@id"];
+    if (typeof id === "string") return id;
+    const url = value.url;
+    if (typeof url === "string") return url;
+  }
+  return null;
+}
+
+function normalizedUrlForMatch(value: string): URL | null {
+  try {
+    const url = new URL(value, location.href);
+    url.hash = "";
+    return url;
+  } catch {
+    return null;
+  }
+}
+
+function structuredUrlMatchesPage(record: Record<string, unknown>): boolean {
+  const values = [
+    structuredUrl(record.url),
+    structuredUrl(record.mainEntityOfPage)
+  ].filter((value): value is string => Boolean(value));
+  if (!values.length) return true;
+  const pageUrl = normalizedUrlForMatch(location.href);
+  if (!pageUrl) return true;
+  return values.some((value) => {
+    const candidate = normalizedUrlForMatch(value);
+    if (!candidate) return false;
+    return (
+      candidate.href === pageUrl.href ||
+      (candidate.origin === pageUrl.origin && candidate.pathname === pageUrl.pathname)
+    );
+  });
+}
+
+function flattenJsonLdRecords(value: unknown): Record<string, unknown>[] {
+  if (Array.isArray(value)) {
+    return value.flatMap(flattenJsonLdRecords);
+  }
+  if (!isJsonObject(value)) return [];
+  const records = [value];
+  const graph = value["@graph"];
+  if (Array.isArray(graph)) {
+    records.push(...graph.flatMap(flattenJsonLdRecords));
+  }
+  return records;
+}
+
+function structuredArticleElement(text: string): HTMLElement | undefined {
+  const target = normalizedText(text);
+  const candidates = Array.from(
+    new Set([
+      ...articleRootElements(document),
+      ...continuousRootCandidates(document),
+      ...articleBlockElements(document)
+    ])
+  )
+    .filter((element) => !isArticleNoiseElement(element) && isElementVisible(element))
+    .map((element, order) => {
+      const candidateText = normalizedText(visibleTextFromElement(element));
+      return {
+        element,
+        order,
+        text: candidateText,
+        score: articlePreviewTextMatchScore(candidateText, target)
+      };
+    })
+    .filter(
+      (candidate) =>
+        Number.isFinite(candidate.score) &&
+        textLength(candidate.text) >= Math.min(120, textLength(target))
+    )
+    .sort((left, right) => {
+      if (left.score !== right.score) return right.score - left.score;
+      const leftIsBlock = left.element.matches(ARTICLE_BLOCK_SELECTOR) ? 1 : 0;
+      const rightIsBlock = right.element.matches(ARTICLE_BLOCK_SELECTOR) ? 1 : 0;
+      if (leftIsBlock !== rightIsBlock) return leftIsBlock - rightIsBlock;
+      const leftDelta = Math.abs(left.text.length - target.length);
+      const rightDelta = Math.abs(right.text.length - target.length);
+      if (leftDelta !== rightDelta) return leftDelta - rightDelta;
+      return left.order - right.order;
+    });
+  return candidates[0]?.element;
+}
+
+function structuredArticleCandidate(): ArticleCandidate | null {
+  const scripts = Array.from(
+    document.querySelectorAll<HTMLScriptElement>(
+      'script[type="application/ld+json"]'
+    )
+  );
+  const candidates: ArticleCandidate[] = [];
+  scripts.forEach((script) => {
+    try {
+      const parsed: unknown = JSON.parse(script.textContent ?? "");
+      flattenJsonLdRecords(parsed)
+        .filter(isStructuredArticleRecord)
+        .filter(structuredUrlMatchesPage)
+        .forEach((record) => {
+          const body = structuredArticleBody(record);
+          if (!body) return;
+          const title =
+            normalizedText(structuredString(record.headline)) ||
+            normalizedText(structuredString(record.name));
+          const description = normalizedText(structuredString(record.description));
+          const element = structuredArticleElement(body.text);
+          candidates.push({
+            title,
+            text: body.text,
+            description,
+            element,
+            source: "dom" as const,
+            selector: selectorHint(element) ?? `json-ld:${body.field}`
+          });
+        });
+    } catch {
+      // Ignore malformed structured data; DOM and Readability candidates remain.
+    }
+  });
+  return candidates
+    .sort((left, right) => textLength(right.text) - textLength(left.text))[0] ?? null;
 }
 
 function articleQualityWarnings(
@@ -867,10 +1151,16 @@ function articleCandidates(): ArticleCandidate[] {
   );
 }
 
-export function findBestArticleRoot(): HTMLElement | null {
+export function findBestArticleRoot(
+  articleExtractionRules: ArticleExtractionRule[] = []
+): HTMLElement | null {
   return withArticleExtractionCache(() => {
     if (manualArticleRoot?.isConnected) return manualArticleRoot;
     if (editedArticleRoot?.isConnected) return editedArticleRoot;
+    const configured = configuredArticleCandidate(articleExtractionRules);
+    if (configured?.element) return configured.element;
+    const structured = structuredArticleCandidate();
+    if (structured?.element) return structured.element;
     const best = articleCandidates()
       .filter((candidate) => candidate.element)
       .map((candidate) => scoreArticleCandidate(candidate, { includePreview: false }))
@@ -977,13 +1267,15 @@ export function highlightArticlePreviewBlock(
   return applyArticlePreviewHighlight(match.element);
 }
 
-function setEditedArticleRootFromCurrent(): HTMLElement | null {
+function setEditedArticleRootFromCurrent(
+  articleExtractionRules: ArticleExtractionRule[] = []
+): HTMLElement | null {
   const root =
     manualArticleRoot?.isConnected
       ? manualArticleRoot
       : editedArticleRoot?.isConnected
         ? editedArticleRoot
-        : findBestArticleRoot();
+        : findBestArticleRoot(articleExtractionRules);
   if (root?.isConnected) {
     editedArticleRoot = root;
     return root;
@@ -994,9 +1286,10 @@ function setEditedArticleRootFromCurrent(): HTMLElement | null {
 export function removeArticlePreviewBlock(
   text: string,
   targetId?: string,
-  language?: AppSettings["interfaceLanguage"]
+  language?: AppSettings["interfaceLanguage"],
+  articleExtractionRules: ArticleExtractionRule[] = []
 ): PageContext {
-  setEditedArticleRootFromCurrent();
+  setEditedArticleRootFromCurrent(articleExtractionRules);
   const normalized = normalizedText(text);
   const target = articlePreviewElementById(targetId);
   if (target) {
@@ -1005,7 +1298,7 @@ export function removeArticlePreviewBlock(
   if (normalized) {
     removedArticleBlockTextKeys.add(articleBlockTextKey(normalized));
   }
-  return extractPageContext(true, language, "article");
+  return extractPageContext(true, language, "article", articleExtractionRules);
 }
 
 function elementMetadataText(element?: HTMLElement): string {
@@ -1072,10 +1365,11 @@ function isLikelyNonArticlePreviewBlock(block: ArticlePreviewBlock): boolean {
 }
 
 export function pruneArticlePreviewBlocks(
-  language?: AppSettings["interfaceLanguage"]
+  language?: AppSettings["interfaceLanguage"],
+  articleExtractionRules: ArticleExtractionRule[] = []
 ): PageContext {
-  setEditedArticleRootFromCurrent();
-  const snapshot = readableArticleText();
+  setEditedArticleRootFromCurrent(articleExtractionRules);
+  const snapshot = readableArticleText(articleExtractionRules);
   const preview = snapshot.preview ?? [];
   const removable = preview.filter(isLikelyNonArticlePreviewBlock);
   const removableKeys = new Set(
@@ -1095,7 +1389,7 @@ export function pruneArticlePreviewBlocks(
       if (text) removedArticleBlockTextKeys.add(articleBlockTextKey(text));
     });
   }
-  return extractPageContext(true, language, "article");
+  return extractPageContext(true, language, "article", articleExtractionRules);
 }
 
 function pickerTextLength(element: HTMLElement): number {
@@ -1124,10 +1418,8 @@ function pickerCandidatesFromEvent(event: Event): HTMLElement[] {
 
 function articlePickerLabel(element: HTMLElement, level: number): string {
   const tag = element.tagName.toLowerCase();
-  const id = element.id ? `#${element.id}` : "";
-  const className = Array.from(element.classList).slice(0, 2).join(".");
-  const classHint = className ? `.${className}` : "";
-  return `${tag}${id}${classHint} · L${level + 1} · ${pickerTextLength(element)}`;
+  const selector = selectorHint(element) ?? tag;
+  return `${tag}·L${level + 1}·${pickerTextLength(element)}·${selector}`;
 }
 
 export function startManualArticleSelection(
@@ -1138,6 +1430,7 @@ export function startManualArticleSelection(
     let candidates: HTMLElement[] = [];
     let level = 0;
     let current: HTMLElement | null = null;
+    let settled = false;
     const overlay = document.createElement("div");
     const badge = document.createElement("div");
     overlay.className = "webmind-article-picker-ui";
@@ -1154,7 +1447,7 @@ export function startManualArticleSelection(
     Object.assign(badge.style, {
       position: "fixed",
       zIndex: "2147483647",
-      maxWidth: "min(420px, calc(100vw - 16px))",
+      maxWidth: "min(620px, calc(100vw - 16px))",
       padding: "7px 9px",
       border: "1px solid #d8ddda",
       borderRadius: "6px",
@@ -1163,6 +1456,8 @@ export function startManualArticleSelection(
       boxShadow: "0 10px 28px rgba(15, 26, 23, 0.2)",
       font: "12px/1.4 Inter, ui-sans-serif, system-ui, sans-serif",
       pointerEvents: "none",
+      whiteSpace: "pre-wrap",
+      overflowWrap: "anywhere",
       display: "none"
     });
     document.body.append(overlay, badge);
@@ -1182,12 +1477,11 @@ export function startManualArticleSelection(
       overlay.style.height = `${Math.max(0, Math.min(window.innerHeight, rect.bottom) - Math.max(0, rect.top))}px`;
       badge.style.display = "block";
       badge.style.left = `${Math.min(window.innerWidth - 16, Math.max(8, rect.left))}px`;
-      badge.style.top = `${Math.min(window.innerHeight - 64, Math.max(8, rect.top - 42))}px`;
+      badge.style.top = `${Math.min(window.innerHeight - 80, Math.max(8, rect.top - 56))}px`;
       badge.textContent = [
-        uiText(language, "selectingBodyRange"),
         articlePickerLabel(current, level),
         uiText(language, "manualBodySelectionHint")
-      ].join(" · ");
+      ].join("\n");
     };
 
     const cleanup = () => {
@@ -1199,10 +1493,13 @@ export function startManualArticleSelection(
       window.removeEventListener("resize", updateOverlay, true);
       overlay.remove();
       badge.remove();
+      cancelArticlePickerSession = null;
       articlePickerSession = null;
     };
 
     const finish = (element: HTMLElement | null) => {
+      if (settled) return;
+      settled = true;
       cleanup();
       if (!element) {
         resolve(null);
@@ -1216,6 +1513,8 @@ export function startManualArticleSelection(
       manualArticleRoot.dataset.webmindManualArticle = "true";
       resolve(extractPageContext(true, language, "article"));
     };
+
+    cancelArticlePickerSession = () => finish(null);
 
     function onPointerMove(event: PointerEvent) {
       candidates = pickerCandidatesFromEvent(event);
@@ -1274,18 +1573,27 @@ export function startManualArticleSelection(
   return articlePickerSession;
 }
 
+export function cancelManualArticleSelection(): { ok: boolean } {
+  if (!cancelArticlePickerSession) return { ok: false };
+  cancelArticlePickerSession();
+  return { ok: true };
+}
+
 export function restoreAutomaticArticleSelection(
-  language?: AppSettings["interfaceLanguage"]
+  language?: AppSettings["interfaceLanguage"],
+  articleExtractionRules: ArticleExtractionRule[] = []
 ): PageContext {
   if (manualArticleRoot) {
     delete manualArticleRoot.dataset.webmindManualArticle;
   }
   manualArticleRoot = null;
   clearArticleBlockEdits();
-  return extractPageContext(true, language, "article");
+  return extractPageContext(true, language, "article", articleExtractionRules);
 }
 
-function readableArticleText(): {
+function readableArticleText(
+  articleExtractionRules: ArticleExtractionRule[] = []
+): {
   title?: string;
   text: string;
   description?: string;
@@ -1296,7 +1604,7 @@ function readableArticleText(): {
     articlePreviewTargets.clear();
     if (manualArticleRoot?.isConnected) {
       const manualText = visibleTextFromElement(manualArticleRoot);
-      if (textLength(manualText) >= 40) {
+      if (textLength(manualText) > 0) {
         const manual = scoreArticleCandidate({
           text: manualText,
           element: manualArticleRoot,
@@ -1329,6 +1637,28 @@ function readableArticleText(): {
           preview: edited.preview
         };
       }
+    }
+    const configured = configuredArticleCandidate(articleExtractionRules);
+    if (configured) {
+      const scored = scoreArticleCandidate(configured);
+      return {
+        title: scored.title,
+        text: scored.text,
+        description: scored.description,
+        quality: scored.score,
+        preview: scored.preview
+      };
+    }
+    const structured = structuredArticleCandidate();
+    if (structured) {
+      const scored = scoreArticleCandidate(structured);
+      return {
+        title: scored.title,
+        text: scored.text,
+        description: scored.description,
+        quality: scored.score,
+        preview: scored.preview
+      };
     }
     const scoredCandidates = articleCandidates()
       .map((candidate) => scoreArticleCandidate(candidate, { includePreview: false }))
@@ -1381,7 +1711,8 @@ function readableArticleText(): {
 export function extractPageContext(
   ignoreSelection = false,
   language?: AppSettings["interfaceLanguage"],
-  scope: "page" | "article" = "page"
+  scope: "page" | "article" = "page",
+  articleExtractionRules: ArticleExtractionRule[] = []
 ): PageContext {
   const selection = ignoreSelection ? undefined : pageSelectionText() || undefined;
   const description =
@@ -1406,7 +1737,7 @@ export function extractPageContext(
     };
   }
   if (scope === "article") {
-    const article = readableArticleText();
+    const article = readableArticleText(articleExtractionRules);
     return {
       kind: "article",
       title: article.title || document.title || location.hostname,
@@ -1419,7 +1750,7 @@ export function extractPageContext(
       articlePreview: article.preview
     };
   }
-  const article = readableArticleText();
+  const article = readableArticleText(articleExtractionRules);
   let text = article.text;
   if (text.trim().length < 500) {
     text =
@@ -1443,11 +1774,17 @@ export function extractPageContext(
 export async function extractPageContextAsync(
   ignoreSelection = false,
   language?: AppSettings["interfaceLanguage"],
-  scope: "page" | "article" = "page"
+  scope: "page" | "article" = "page",
+  articleExtractionRules: ArticleExtractionRule[] = []
 ): Promise<PageContext> {
   const selection = ignoreSelection ? undefined : pageSelectionText() || undefined;
   if (!selection) {
     await waitForPageIdle();
   }
-  return extractPageContext(ignoreSelection, language, scope);
+  return extractPageContext(
+    ignoreSelection,
+    language,
+    scope,
+    articleExtractionRules
+  );
 }
