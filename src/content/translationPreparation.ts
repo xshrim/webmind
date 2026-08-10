@@ -41,6 +41,8 @@ export interface TranslationPreparationDependencies {
 const TRANSLATABLE_BLOCK_SELECTOR =
   "h1, h2, h3, h4, h5, h6, p, li, blockquote, figcaption, td, dt, dd, [role='heading'], [role='paragraph']";
 const TRANSLATABLE_PAGE_SELECTOR = TRANSLATABLE_BLOCK_SELECTOR;
+const TRANSLATABLE_ARTICLE_UNIT_SELECTOR =
+  `${TRANSLATABLE_BLOCK_SELECTOR}, pre, table, ul, ol, dl, figure, details`;
 const CITATION_MARKER_PATTERN =
   /^(?:\[\s*\d+(?:\s*[-,–]\s*\d+)*\s*\]|[（(【]?\s*\d+(?:\s*[-,–]\s*\d+)*\s*[)）】]?|[¹²³⁴⁵⁶⁷⁸⁹⁰]+)$/;
 const CITATION_TOKEN_PATTERN =
@@ -129,6 +131,108 @@ function articlePreviewBlockElement(
   return candidates[0]?.element ?? null;
 }
 
+interface TextRunChar {
+  char: string;
+  node: Text;
+  offset: number;
+}
+
+function collectTextRuns(root: HTMLElement): TextRunChar[][] {
+  const runs: TextRunChar[][] = [];
+  let current: TextRunChar[] = [];
+  const flush = () => {
+    if (normalizedBlockText(current.map((item) => item.char).join(""))) {
+      runs.push(current);
+    }
+    current = [];
+  };
+  const visit = (node: Node) => {
+    if (node instanceof Text) {
+      const parent = node.parentElement;
+      if (!parent || isVisuallyHiddenTranslationElement(parent)) return;
+      const value = node.textContent ?? "";
+      for (let offset = 0; offset < value.length; offset += 1) {
+        current.push({ char: value[offset], node, offset });
+      }
+      return;
+    }
+    if (!(node instanceof HTMLElement)) return;
+    if (isVisuallyHiddenTranslationElement(node)) return;
+    if (node.tagName === "BR") {
+      flush();
+      return;
+    }
+    for (const child of Array.from(node.childNodes)) visit(child);
+    if (
+      /^(?:ADDRESS|ARTICLE|ASIDE|BLOCKQUOTE|DIV|FIGCAPTION|H[1-6]|LI|P|PRE|SECTION|TR)$/.test(
+        node.tagName
+      )
+    ) {
+      flush();
+    }
+  };
+  for (const child of Array.from(root.childNodes)) visit(child);
+  flush();
+  return runs;
+}
+
+function normalizedRun(run: TextRunChar[]): {
+  text: string;
+  positions: TextRunChar[];
+} {
+  let text = "";
+  const positions: TextRunChar[] = [];
+  let pendingSpace: TextRunChar | null = null;
+  for (const item of run) {
+    if (/\s/.test(item.char)) {
+      pendingSpace = pendingSpace ?? item;
+      continue;
+    }
+    if (pendingSpace && text) {
+      text += " ";
+      positions.push(pendingSpace);
+    }
+    pendingSpace = null;
+    text += item.char;
+    positions.push(item);
+  }
+  return { text, positions };
+}
+
+function wrapArticlePreviewText(
+  element: HTMLElement,
+  text: string,
+  id: string
+): HTMLElement | null {
+  const target = normalizedBlockText(text);
+  if (!target) return null;
+  if (normalizedBlockText(translationElementVisibleText(element)) === target) {
+    return element;
+  }
+  for (const run of collectTextRuns(element)) {
+    const normalized = normalizedRun(run);
+    const start = normalized.text.indexOf(target);
+    if (start < 0) continue;
+    const first = normalized.positions[start];
+    const last = normalized.positions[start + target.length - 1];
+    if (!first || !last) continue;
+    const range = document.createRange();
+    range.setStart(first.node, first.offset);
+    range.setEnd(last.node, last.offset + 1);
+    const wrapper = document.createElement("span");
+    wrapper.className = "webmind-immersive-source";
+    wrapper.dataset.webmindBlockId = id;
+    try {
+      wrapper.append(range.extractContents());
+      range.insertNode(wrapper);
+    } catch {
+      return null;
+    }
+    return wrapper.isConnected ? wrapper : null;
+  }
+  return null;
+}
+
 function articleContentCandidatesFromRoot(
   root: HTMLElement,
   options: TranslationBlockOptions,
@@ -156,7 +260,7 @@ function articleContentCandidatesFromRoot(
       text.length <= maxVisibleTextLength &&
       (hasDirectText(element) ||
         !textChildren.length ||
-        element.matches(TRANSLATABLE_BLOCK_SELECTOR));
+        element.matches(TRANSLATABLE_ARTICLE_UNIT_SELECTOR));
     if (canUseWholeElement) {
       candidates.push(element);
       return;
@@ -516,7 +620,7 @@ export function prepareTranslationBlocks(
     scope === "article" ? normalizedBlockText(textFallback) : "";
   const seen = new Set<string>();
   const blocks: PageTextBlock[] = [];
-  if (scope === "article" && options.articlePreviewBlocks?.length) {
+  if (scope === "article" && Array.isArray(options.articlePreviewBlocks)) {
     for (const previewBlock of options.articlePreviewBlocks) {
       const rawSourceText = (previewBlock.sourceText ?? previewBlock.text).trim();
       const sourceText = normalizedBlockText(rawSourceText);
@@ -536,19 +640,27 @@ export function prepareTranslationBlocks(
       if (!element || !dependencies.isVisible(element)) continue;
       if (isWebMindGeneratedElement(element)) continue;
       if (isEditedArticleBlockExcluded(element)) continue;
-      const id = element.dataset.webmindBlockId ?? dependencies.nextBlockId();
-      element.dataset.webmindBlockId = id;
+      let id = dependencies.nextBlockId();
+      let sourceElement: HTMLElement | null = element;
+      if (
+        normalizedBlockText(translationElementVisibleText(element)) === sourceText
+      ) {
+        id = element.dataset.webmindBlockId ?? id;
+      } else {
+        sourceElement = wrapArticlePreviewText(element, rawSourceText, id);
+      }
+      if (!sourceElement || !dependencies.isVisible(sourceElement)) continue;
+      sourceElement.dataset.webmindBlockId = id;
       const prepared = prepareTranslationBlock(
-        element,
+        sourceElement,
         id,
         false,
         articleOptions,
         dependencies
       );
       if (!prepared) continue;
-      if (seen.has(id) || seen.has(sourceText)) continue;
+      if (seen.has(id)) continue;
       seen.add(id);
-      seen.add(sourceText);
       blocks.push({ id: prepared.id, text: rawSourceText });
     }
     return blocks;

@@ -128,6 +128,13 @@ function PageFavicon({ url }: { url?: string }) {
   );
 }
 
+function toolInvocationExcerpt(text?: string): string | undefined {
+  const normalized = text?.replace(/\s+/g, " ").trim();
+  if (!normalized) return undefined;
+  if (normalized.length <= 180) return normalized;
+  return `${normalized.slice(0, 177)}...`;
+}
+
 export function ToolInvocationBubble({
   invocation,
   language
@@ -165,6 +172,28 @@ export function ToolInvocationBubble({
           : context.kind === "none"
             ? Square
             : null;
+  const contextDisplayText = toolInvocationExcerpt(context.text);
+  const snapshotLines =
+    context.kind === "page" || context.kind === "article"
+      ? [context.title, contextDisplayText].filter(Boolean)
+      : [];
+  const copyValue =
+    context.kind === "page"
+      ? context.url
+      : context.kind === "article" ||
+          context.kind === "selection" ||
+          context.kind === "answer"
+        ? context.text
+        : undefined;
+  const copyKind = context.kind === "page" ? "url" : "content";
+  const copyLabelKey: UiTextKey =
+    context.kind === "page"
+      ? "copyUrl"
+      : context.kind === "article"
+        ? "copyCurrentBody"
+        : context.kind === "selection"
+          ? "copySelection"
+          : "copyContent";
   const copyContext = async (value: string, kind: "url" | "content") => {
     await navigator.clipboard.writeText(value);
     setCopiedContext(kind);
@@ -205,65 +234,48 @@ export function ToolInvocationBubble({
           </span>
           {context.kind === "page" || context.kind === "article" ? (
             <span className="tool-invocation-page-snapshot">
-              {[context.title, context.text]
-                .filter(Boolean)
-                .map((line, index) => (
+              {snapshotLines.map((line, index) => (
+                <span
+                  className="tool-invocation-tooltip-anchor"
+                  data-tooltip={line}
+                  key={`${index}-${line}`}
+                >
                   <span
-                    className="tool-invocation-tooltip-anchor"
-                    data-tooltip={line}
-                    key={`${index}-${line}`}
+                    className={
+                      index === 0
+                        ? "tool-invocation-page-title"
+                        : "tool-invocation-page-excerpt"
+                    }
                   >
-                    <span
-                      className={
-                        index === 0
-                          ? "tool-invocation-page-title"
-                          : "tool-invocation-page-excerpt"
-                      }
-                    >
-                      {line}
-                    </span>
+                    {line}
                   </span>
-                ))}
+                </span>
+              ))}
             </span>
           ) : (
             <span
               className="tool-invocation-tooltip-anchor"
-              data-tooltip={contextValue}
+              data-tooltip={contextDisplayText ?? contextValue}
             >
               <span className="tool-invocation-context-value">
-                {contextValue}
+                {contextDisplayText ?? contextValue}
               </span>
             </span>
           )}
         </div>
-        {(context.kind === "page" || context.kind === "article") && context.url && (
+        {copyValue && (
           <button
             className="tool-invocation-copy-button"
             type="button"
             title={
-              copiedContext === "url"
+              copiedContext === copyKind
                 ? uiText(language, "copied")
-                : uiText(language, "copyUrl")
+                : uiText(language, copyLabelKey)
             }
-            aria-label={uiText(language, "copyUrl")}
-            onClick={() => void copyContext(context.url ?? "", "url")}
+            aria-label={uiText(language, copyLabelKey)}
+            onClick={() => void copyContext(copyValue, copyKind)}
           >
-            {copiedContext === "url" ? <Check /> : <Copy />}
-          </button>
-        )}
-        {context.kind === "selection" && context.text && (
-          <button
-            className="tool-invocation-copy-button"
-            type="button"
-            title={
-              copiedContext === "content"
-                ? uiText(language, "copied")
-                : uiText(language, "copySelection")
-            }
-            aria-label={uiText(language, "copySelection")}
-            onClick={() => void copyContext(context.text ?? "", "content")}
-          >
-            {copiedContext === "content" ? <Check /> : <Copy />}
+            {copiedContext === copyKind ? <Check /> : <Copy />}
           </button>
         )}
       </div>

@@ -214,6 +214,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   immersiveReadingAutoWhitelist: [],
   hoverDefinitionMode: "off",
   hoverDefinitionShortcut: "off",
+  hoverDefinitionStyle: "none",
   hoverDefinitionUrlBlacklist: [],
   edgeQuickToolsEnabled: false,
   edgeQuickToolBottom: 36,

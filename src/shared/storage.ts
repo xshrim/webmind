@@ -290,6 +290,11 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
     )
       ? (stored.hoverDefinitionShortcut as HoverDefinitionShortcut)
       : DEFAULT_SETTINGS.hoverDefinitionShortcut,
+    hoverDefinitionStyle:
+      stored.hoverDefinitionStyle === "highlight" ||
+      stored.hoverDefinitionStyle === "underline"
+        ? stored.hoverDefinitionStyle
+        : DEFAULT_SETTINGS.hoverDefinitionStyle,
     hoverDefinitionUrlBlacklist: stored.hoverDefinitionUrlBlacklist ?? [],
     edgeQuickToolsEnabled:
       stored.edgeQuickToolsEnabled ?? DEFAULT_SETTINGS.edgeQuickToolsEnabled,

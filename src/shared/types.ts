@@ -55,6 +55,7 @@ export type ImmersiveReadingStrategy = "local-first" | "model-page";
 export type ImmersiveReadingBackgroundStyle = "none" | "uniform" | "leveled";
 export type HoverDefinitionMode = "off" | "zh" | "en" | "both";
 export type HoverDefinitionShortcut = ImmersiveShortcut;
+export type HoverDefinitionStyle = "none" | "highlight" | "underline";
 export type SelectionOverlayShortcut = HoverDefinitionShortcut;
 export type ToolSurface = "selection" | "home" | "tools" | "edge";
 export type ModelPurpose = "default" | "translation" | "vision";
@@ -124,6 +125,7 @@ export interface AppSettings {
   immersiveReadingAutoWhitelist: string[];
   hoverDefinitionMode: HoverDefinitionMode;
   hoverDefinitionShortcut: HoverDefinitionShortcut;
+  hoverDefinitionStyle: HoverDefinitionStyle;
   hoverDefinitionUrlBlacklist: string[];
   edgeQuickToolsEnabled: boolean;
   edgeQuickToolBottom: number;
@@ -220,26 +222,31 @@ export interface PageContext {
   description?: string;
   language?: string;
   siteName?: string;
-  articleQuality?: ArticleQualitySummary;
+  articleSummary?: ArticleSummary;
   articlePreview?: ArticlePreviewBlock[];
 }
 
-export interface ArticleQualitySummary {
-  score: number;
-  textDensity: number;
-  linkRatio: number;
-  visibleArea: number;
-  continuity: number;
-  clutterPenalty: number;
-  languageConsistency: number;
-  source: "readability" | "dom" | "manual" | "edited";
-  selector?: string;
-  blockCount: number;
-  wordCount: number;
-  warnings?: ArticleQualityWarning[];
+export type ArticleSource = "rule" | "dom" | "manual" | "edited";
+
+export interface ArticleScoreMetrics {
+  length: number;
+  structure: number;
+  heading: number;
+  semantics: number;
+  density: number;
+  linkPurity: number;
+  focus: number;
+  cleanliness: number;
 }
 
-export type ArticleQualityWarning = "virtualizedContentMayBeIncomplete";
+export interface ArticleSummary {
+  source: ArticleSource;
+  selector?: string;
+  blockCount: number;
+  charCount: number;
+  score?: number;
+  scoreMetrics?: ArticleScoreMetrics;
+}
 
 export interface ArticlePreviewBlock {
   id: string;

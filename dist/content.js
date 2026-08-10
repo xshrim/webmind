@@ -12710,2065 +12710,6 @@
     }
   });
 
-  // node_modules/@mozilla/readability/Readability.js
-  var require_Readability = __commonJS({
-    "node_modules/@mozilla/readability/Readability.js"(exports, module) {
-      function Readability2(doc, options) {
-        if (options && options.documentElement) {
-          doc = options;
-          options = arguments[2];
-        } else if (!doc || !doc.documentElement) {
-          throw new Error(
-            "First argument to Readability constructor should be a document object."
-          );
-        }
-        options = options || {};
-        this._doc = doc;
-        this._docJSDOMParser = this._doc.firstChild.__JSDOMParser__;
-        this._articleTitle = null;
-        this._articleByline = null;
-        this._articleDir = null;
-        this._articleSiteName = null;
-        this._attempts = [];
-        this._metadata = {};
-        this._debug = !!options.debug;
-        this._maxElemsToParse = options.maxElemsToParse || this.DEFAULT_MAX_ELEMS_TO_PARSE;
-        this._nbTopCandidates = options.nbTopCandidates || this.DEFAULT_N_TOP_CANDIDATES;
-        this._charThreshold = options.charThreshold || this.DEFAULT_CHAR_THRESHOLD;
-        this._classesToPreserve = this.CLASSES_TO_PRESERVE.concat(
-          options.classesToPreserve || []
-        );
-        this._keepClasses = !!options.keepClasses;
-        this._serializer = options.serializer || function(el) {
-          return el.innerHTML;
-        };
-        this._disableJSONLD = !!options.disableJSONLD;
-        this._allowedVideoRegex = options.allowedVideoRegex || this.REGEXPS.videos;
-        this._linkDensityModifier = options.linkDensityModifier || 0;
-        this._flags = this.FLAG_STRIP_UNLIKELYS | this.FLAG_WEIGHT_CLASSES | this.FLAG_CLEAN_CONDITIONALLY;
-        if (this._debug) {
-          let logNode = function(node) {
-            if (node.nodeType == node.TEXT_NODE) {
-              return `${node.nodeName} ("${node.textContent}")`;
-            }
-            let attrPairs = Array.from(node.attributes || [], function(attr) {
-              return `${attr.name}="${attr.value}"`;
-            }).join(" ");
-            return `<${node.localName} ${attrPairs}>`;
-          };
-          this.log = function() {
-            if (typeof console !== "undefined") {
-              let args = Array.from(arguments, (arg) => {
-                if (arg && arg.nodeType == this.ELEMENT_NODE) {
-                  return logNode(arg);
-                }
-                return arg;
-              });
-              args.unshift("Reader: (Readability)");
-              console.log(...args);
-            } else if (typeof dump !== "undefined") {
-              var msg = Array.prototype.map.call(arguments, function(x2) {
-                return x2 && x2.nodeName ? logNode(x2) : x2;
-              }).join(" ");
-              dump("Reader: (Readability) " + msg + "\n");
-            }
-          };
-        } else {
-          this.log = function() {
-          };
-        }
-      }
-      Readability2.prototype = {
-        FLAG_STRIP_UNLIKELYS: 1,
-        FLAG_WEIGHT_CLASSES: 2,
-        FLAG_CLEAN_CONDITIONALLY: 4,
-        // https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
-        ELEMENT_NODE: 1,
-        TEXT_NODE: 3,
-        // Max number of nodes supported by this parser. Default: 0 (no limit)
-        DEFAULT_MAX_ELEMS_TO_PARSE: 0,
-        // The number of top candidates to consider when analysing how
-        // tight the competition is among candidates.
-        DEFAULT_N_TOP_CANDIDATES: 5,
-        // Element tags to score by default.
-        DEFAULT_TAGS_TO_SCORE: "section,h2,h3,h4,h5,h6,p,td,pre".toUpperCase().split(","),
-        // The default number of chars an article must have in order to return a result
-        DEFAULT_CHAR_THRESHOLD: 500,
-        // All of the regular expressions in use within readability.
-        // Defined up here so we don't instantiate them repeatedly in loops.
-        REGEXPS: {
-          // NOTE: These two regular expressions are duplicated in
-          // Readability-readerable.js. Please keep both copies in sync.
-          unlikelyCandidates: /-ad-|ai2html|banner|breadcrumbs|combx|comment|community|cover-wrap|disqus|extra|footer|gdpr|header|legends|menu|related|remark|replies|rss|shoutbox|sidebar|skyscraper|social|sponsor|supplemental|ad-break|agegate|pagination|pager|popup|yom-remote/i,
-          okMaybeItsACandidate: /and|article|body|column|content|main|shadow/i,
-          positive: /article|body|content|entry|hentry|h-entry|main|page|pagination|post|text|blog|story/i,
-          negative: /-ad-|hidden|^hid$| hid$| hid |^hid |banner|combx|comment|com-|contact|footer|gdpr|masthead|media|meta|outbrain|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|widget/i,
-          extraneous: /print|archive|comment|discuss|e[\-]?mail|share|reply|all|login|sign|single|utility/i,
-          byline: /byline|author|dateline|writtenby|p-author/i,
-          replaceFonts: /<(\/?)font[^>]*>/gi,
-          normalize: /\s{2,}/g,
-          videos: /\/\/(www\.)?((dailymotion|youtube|youtube-nocookie|player\.vimeo|v\.qq)\.com|(archive|upload\.wikimedia)\.org|player\.twitch\.tv)/i,
-          shareElements: /(\b|_)(share|sharedaddy)(\b|_)/i,
-          nextLink: /(next|weiter|continue|>([^\|]|$)|»([^\|]|$))/i,
-          prevLink: /(prev|earl|old|new|<|«)/i,
-          tokenize: /\W+/g,
-          whitespace: /^\s*$/,
-          hasContent: /\S$/,
-          hashUrl: /^#.+/,
-          srcsetUrl: /(\S+)(\s+[\d.]+[xw])?(\s*(?:,|$))/g,
-          b64DataUrl: /^data:\s*([^\s;,]+)\s*;\s*base64\s*,/i,
-          // Commas as used in Latin, Sindhi, Chinese and various other scripts.
-          // see: https://en.wikipedia.org/wiki/Comma#Comma_variants
-          commas: /\u002C|\u060C|\uFE50|\uFE10|\uFE11|\u2E41|\u2E34|\u2E32|\uFF0C/g,
-          // See: https://schema.org/Article
-          jsonLdArticleTypes: /^Article|AdvertiserContentArticle|NewsArticle|AnalysisNewsArticle|AskPublicNewsArticle|BackgroundNewsArticle|OpinionNewsArticle|ReportageNewsArticle|ReviewNewsArticle|Report|SatiricalArticle|ScholarlyArticle|MedicalScholarlyArticle|SocialMediaPosting|BlogPosting|LiveBlogPosting|DiscussionForumPosting|TechArticle|APIReference$/,
-          // used to see if a node's content matches words commonly used for ad blocks or loading indicators
-          adWords: /^(ad(vertising|vertisement)?|pub(licité)?|werb(ung)?|广告|Реклама|Anuncio)$/iu,
-          loadingWords: /^((loading|正在加载|Загрузка|chargement|cargando)(…|\.\.\.)?)$/iu
-        },
-        UNLIKELY_ROLES: [
-          "menu",
-          "menubar",
-          "complementary",
-          "navigation",
-          "alert",
-          "alertdialog",
-          "dialog"
-        ],
-        DIV_TO_P_ELEMS: /* @__PURE__ */ new Set([
-          "BLOCKQUOTE",
-          "DL",
-          "DIV",
-          "IMG",
-          "OL",
-          "P",
-          "PRE",
-          "TABLE",
-          "UL"
-        ]),
-        ALTER_TO_DIV_EXCEPTIONS: ["DIV", "ARTICLE", "SECTION", "P", "OL", "UL"],
-        PRESENTATIONAL_ATTRIBUTES: [
-          "align",
-          "background",
-          "bgcolor",
-          "border",
-          "cellpadding",
-          "cellspacing",
-          "frame",
-          "hspace",
-          "rules",
-          "style",
-          "valign",
-          "vspace"
-        ],
-        DEPRECATED_SIZE_ATTRIBUTE_ELEMS: ["TABLE", "TH", "TD", "HR", "PRE"],
-        // The commented out elements qualify as phrasing content but tend to be
-        // removed by readability when put into paragraphs, so we ignore them here.
-        PHRASING_ELEMS: [
-          // "CANVAS", "IFRAME", "SVG", "VIDEO",
-          "ABBR",
-          "AUDIO",
-          "B",
-          "BDO",
-          "BR",
-          "BUTTON",
-          "CITE",
-          "CODE",
-          "DATA",
-          "DATALIST",
-          "DFN",
-          "EM",
-          "EMBED",
-          "I",
-          "IMG",
-          "INPUT",
-          "KBD",
-          "LABEL",
-          "MARK",
-          "MATH",
-          "METER",
-          "NOSCRIPT",
-          "OBJECT",
-          "OUTPUT",
-          "PROGRESS",
-          "Q",
-          "RUBY",
-          "SAMP",
-          "SCRIPT",
-          "SELECT",
-          "SMALL",
-          "SPAN",
-          "STRONG",
-          "SUB",
-          "SUP",
-          "TEXTAREA",
-          "TIME",
-          "VAR",
-          "WBR"
-        ],
-        // These are the classes that readability sets itself.
-        CLASSES_TO_PRESERVE: ["page"],
-        // These are the list of HTML entities that need to be escaped.
-        HTML_ESCAPE_MAP: {
-          lt: "<",
-          gt: ">",
-          amp: "&",
-          quot: '"',
-          apos: "'"
-        },
-        /**
-         * Run any post-process modifications to article content as necessary.
-         *
-         * @param Element
-         * @return void
-         **/
-        _postProcessContent(articleContent) {
-          this._fixRelativeUris(articleContent);
-          this._simplifyNestedElements(articleContent);
-          if (!this._keepClasses) {
-            this._cleanClasses(articleContent);
-          }
-        },
-        /**
-         * Iterates over a NodeList, calls `filterFn` for each node and removes node
-         * if function returned `true`.
-         *
-         * If function is not passed, removes all the nodes in node list.
-         *
-         * @param NodeList nodeList The nodes to operate on
-         * @param Function filterFn the function to use as a filter
-         * @return void
-         */
-        _removeNodes(nodeList, filterFn) {
-          if (this._docJSDOMParser && nodeList._isLiveNodeList) {
-            throw new Error("Do not pass live node lists to _removeNodes");
-          }
-          for (var i = nodeList.length - 1; i >= 0; i--) {
-            var node = nodeList[i];
-            var parentNode = node.parentNode;
-            if (parentNode) {
-              if (!filterFn || filterFn.call(this, node, i, nodeList)) {
-                parentNode.removeChild(node);
-              }
-            }
-          }
-        },
-        /**
-         * Iterates over a NodeList, and calls _setNodeTag for each node.
-         *
-         * @param NodeList nodeList The nodes to operate on
-         * @param String newTagName the new tag name to use
-         * @return void
-         */
-        _replaceNodeTags(nodeList, newTagName) {
-          if (this._docJSDOMParser && nodeList._isLiveNodeList) {
-            throw new Error("Do not pass live node lists to _replaceNodeTags");
-          }
-          for (const node of nodeList) {
-            this._setNodeTag(node, newTagName);
-          }
-        },
-        /**
-         * Iterate over a NodeList, which doesn't natively fully implement the Array
-         * interface.
-         *
-         * For convenience, the current object context is applied to the provided
-         * iterate function.
-         *
-         * @param  NodeList nodeList The NodeList.
-         * @param  Function fn       The iterate function.
-         * @return void
-         */
-        _forEachNode(nodeList, fn) {
-          Array.prototype.forEach.call(nodeList, fn, this);
-        },
-        /**
-         * Iterate over a NodeList, and return the first node that passes
-         * the supplied test function
-         *
-         * For convenience, the current object context is applied to the provided
-         * test function.
-         *
-         * @param  NodeList nodeList The NodeList.
-         * @param  Function fn       The test function.
-         * @return void
-         */
-        _findNode(nodeList, fn) {
-          return Array.prototype.find.call(nodeList, fn, this);
-        },
-        /**
-         * Iterate over a NodeList, return true if any of the provided iterate
-         * function calls returns true, false otherwise.
-         *
-         * For convenience, the current object context is applied to the
-         * provided iterate function.
-         *
-         * @param  NodeList nodeList The NodeList.
-         * @param  Function fn       The iterate function.
-         * @return Boolean
-         */
-        _someNode(nodeList, fn) {
-          return Array.prototype.some.call(nodeList, fn, this);
-        },
-        /**
-         * Iterate over a NodeList, return true if all of the provided iterate
-         * function calls return true, false otherwise.
-         *
-         * For convenience, the current object context is applied to the
-         * provided iterate function.
-         *
-         * @param  NodeList nodeList The NodeList.
-         * @param  Function fn       The iterate function.
-         * @return Boolean
-         */
-        _everyNode(nodeList, fn) {
-          return Array.prototype.every.call(nodeList, fn, this);
-        },
-        _getAllNodesWithTag(node, tagNames) {
-          if (node.querySelectorAll) {
-            return node.querySelectorAll(tagNames.join(","));
-          }
-          return [].concat.apply(
-            [],
-            tagNames.map(function(tag) {
-              var collection = node.getElementsByTagName(tag);
-              return Array.isArray(collection) ? collection : Array.from(collection);
-            })
-          );
-        },
-        /**
-         * Removes the class="" attribute from every element in the given
-         * subtree, except those that match CLASSES_TO_PRESERVE and
-         * the classesToPreserve array from the options object.
-         *
-         * @param Element
-         * @return void
-         */
-        _cleanClasses(node) {
-          var classesToPreserve = this._classesToPreserve;
-          var className = (node.getAttribute("class") || "").split(/\s+/).filter((cls) => classesToPreserve.includes(cls)).join(" ");
-          if (className) {
-            node.setAttribute("class", className);
-          } else {
-            node.removeAttribute("class");
-          }
-          for (node = node.firstElementChild; node; node = node.nextElementSibling) {
-            this._cleanClasses(node);
-          }
-        },
-        /**
-         * Tests whether a string is a URL or not.
-         *
-         * @param {string} str The string to test
-         * @return {boolean} true if str is a URL, false if not
-         */
-        _isUrl(str) {
-          try {
-            new URL(str);
-            return true;
-          } catch {
-            return false;
-          }
-        },
-        /**
-         * Converts each <a> and <img> uri in the given element to an absolute URI,
-         * ignoring #ref URIs.
-         *
-         * @param Element
-         * @return void
-         */
-        _fixRelativeUris(articleContent) {
-          var baseURI = this._doc.baseURI;
-          var documentURI = this._doc.documentURI;
-          function toAbsoluteURI(uri) {
-            if (baseURI == documentURI && uri.charAt(0) == "#") {
-              return uri;
-            }
-            try {
-              return new URL(uri, baseURI).href;
-            } catch (ex) {
-            }
-            return uri;
-          }
-          var links = this._getAllNodesWithTag(articleContent, ["a"]);
-          this._forEachNode(links, function(link) {
-            var href = link.getAttribute("href");
-            if (href) {
-              if (href.indexOf("javascript:") === 0) {
-                if (link.childNodes.length === 1 && link.childNodes[0].nodeType === this.TEXT_NODE) {
-                  var text2 = this._doc.createTextNode(link.textContent);
-                  link.parentNode.replaceChild(text2, link);
-                } else {
-                  var container = this._doc.createElement("span");
-                  while (link.firstChild) {
-                    container.appendChild(link.firstChild);
-                  }
-                  link.parentNode.replaceChild(container, link);
-                }
-              } else {
-                link.setAttribute("href", toAbsoluteURI(href));
-              }
-            }
-          });
-          var medias = this._getAllNodesWithTag(articleContent, [
-            "img",
-            "picture",
-            "figure",
-            "video",
-            "audio",
-            "source"
-          ]);
-          this._forEachNode(medias, function(media) {
-            var src = media.getAttribute("src");
-            var poster = media.getAttribute("poster");
-            var srcset = media.getAttribute("srcset");
-            if (src) {
-              media.setAttribute("src", toAbsoluteURI(src));
-            }
-            if (poster) {
-              media.setAttribute("poster", toAbsoluteURI(poster));
-            }
-            if (srcset) {
-              var newSrcset = srcset.replace(
-                this.REGEXPS.srcsetUrl,
-                function(_2, p1, p2, p3) {
-                  return toAbsoluteURI(p1) + (p2 || "") + p3;
-                }
-              );
-              media.setAttribute("srcset", newSrcset);
-            }
-          });
-        },
-        _simplifyNestedElements(articleContent) {
-          var node = articleContent;
-          while (node) {
-            if (node.parentNode && ["DIV", "SECTION"].includes(node.tagName) && !(node.id && node.id.startsWith("readability"))) {
-              if (this._isElementWithoutContent(node)) {
-                node = this._removeAndGetNext(node);
-                continue;
-              } else if (this._hasSingleTagInsideElement(node, "DIV") || this._hasSingleTagInsideElement(node, "SECTION")) {
-                var child = node.children[0];
-                for (var i = 0; i < node.attributes.length; i++) {
-                  child.setAttributeNode(node.attributes[i].cloneNode());
-                }
-                node.parentNode.replaceChild(child, node);
-                node = child;
-                continue;
-              }
-            }
-            node = this._getNextNode(node);
-          }
-        },
-        /**
-         * Get the article title as an H1.
-         *
-         * @return string
-         **/
-        _getArticleTitle() {
-          var doc = this._doc;
-          var curTitle = "";
-          var origTitle = "";
-          try {
-            curTitle = origTitle = doc.title.trim();
-            if (typeof curTitle !== "string") {
-              curTitle = origTitle = this._getInnerText(
-                doc.getElementsByTagName("title")[0]
-              );
-            }
-          } catch (e) {
-          }
-          var titleHadHierarchicalSeparators = false;
-          function wordCount(str) {
-            return str.split(/\s+/).length;
-          }
-          if (/ [\|\-\\\/>»] /.test(curTitle)) {
-            titleHadHierarchicalSeparators = / [\\\/>»] /.test(curTitle);
-            let allSeparators = Array.from(origTitle.matchAll(/ [\|\-\\\/>»] /gi));
-            curTitle = origTitle.substring(0, allSeparators.pop().index);
-            if (wordCount(curTitle) < 3) {
-              curTitle = origTitle.replace(/^[^\|\-\\\/>»]*[\|\-\\\/>»]/gi, "");
-            }
-          } else if (curTitle.includes(": ")) {
-            var headings = this._getAllNodesWithTag(doc, ["h1", "h2"]);
-            var trimmedTitle = curTitle.trim();
-            var match = this._someNode(headings, function(heading) {
-              return heading.textContent.trim() === trimmedTitle;
-            });
-            if (!match) {
-              curTitle = origTitle.substring(origTitle.lastIndexOf(":") + 1);
-              if (wordCount(curTitle) < 3) {
-                curTitle = origTitle.substring(origTitle.indexOf(":") + 1);
-              } else if (wordCount(origTitle.substr(0, origTitle.indexOf(":"))) > 5) {
-                curTitle = origTitle;
-              }
-            }
-          } else if (curTitle.length > 150 || curTitle.length < 15) {
-            var hOnes = doc.getElementsByTagName("h1");
-            if (hOnes.length === 1) {
-              curTitle = this._getInnerText(hOnes[0]);
-            }
-          }
-          curTitle = curTitle.trim().replace(this.REGEXPS.normalize, " ");
-          var curTitleWordCount = wordCount(curTitle);
-          if (curTitleWordCount <= 4 && (!titleHadHierarchicalSeparators || curTitleWordCount != wordCount(origTitle.replace(/[\|\-\\\/>»]+/g, "")) - 1)) {
-            curTitle = origTitle;
-          }
-          return curTitle;
-        },
-        /**
-         * Prepare the HTML document for readability to scrape it.
-         * This includes things like stripping javascript, CSS, and handling terrible markup.
-         *
-         * @return void
-         **/
-        _prepDocument() {
-          var doc = this._doc;
-          this._removeNodes(this._getAllNodesWithTag(doc, ["style"]));
-          if (doc.body) {
-            this._replaceBrs(doc.body);
-          }
-          this._replaceNodeTags(this._getAllNodesWithTag(doc, ["font"]), "SPAN");
-        },
-        /**
-         * Finds the next node, starting from the given node, and ignoring
-         * whitespace in between. If the given node is an element, the same node is
-         * returned.
-         */
-        _nextNode(node) {
-          var next = node;
-          while (next && next.nodeType != this.ELEMENT_NODE && this.REGEXPS.whitespace.test(next.textContent)) {
-            next = next.nextSibling;
-          }
-          return next;
-        },
-        /**
-         * Replaces 2 or more successive <br> elements with a single <p>.
-         * Whitespace between <br> elements are ignored. For example:
-         *   <div>foo<br>bar<br> <br><br>abc</div>
-         * will become:
-         *   <div>foo<br>bar<p>abc</p></div>
-         */
-        _replaceBrs(elem) {
-          this._forEachNode(this._getAllNodesWithTag(elem, ["br"]), function(br) {
-            var next = br.nextSibling;
-            var replaced = false;
-            while ((next = this._nextNode(next)) && next.tagName == "BR") {
-              replaced = true;
-              var brSibling = next.nextSibling;
-              next.remove();
-              next = brSibling;
-            }
-            if (replaced) {
-              var p = this._doc.createElement("p");
-              br.parentNode.replaceChild(p, br);
-              next = p.nextSibling;
-              while (next) {
-                if (next.tagName == "BR") {
-                  var nextElem = this._nextNode(next.nextSibling);
-                  if (nextElem && nextElem.tagName == "BR") {
-                    break;
-                  }
-                }
-                if (!this._isPhrasingContent(next)) {
-                  break;
-                }
-                var sibling = next.nextSibling;
-                p.appendChild(next);
-                next = sibling;
-              }
-              while (p.lastChild && this._isWhitespace(p.lastChild)) {
-                p.lastChild.remove();
-              }
-              if (p.parentNode.tagName === "P") {
-                this._setNodeTag(p.parentNode, "DIV");
-              }
-            }
-          });
-        },
-        _setNodeTag(node, tag) {
-          this.log("_setNodeTag", node, tag);
-          if (this._docJSDOMParser) {
-            node.localName = tag.toLowerCase();
-            node.tagName = tag.toUpperCase();
-            return node;
-          }
-          var replacement = node.ownerDocument.createElement(tag);
-          while (node.firstChild) {
-            replacement.appendChild(node.firstChild);
-          }
-          node.parentNode.replaceChild(replacement, node);
-          if (node.readability) {
-            replacement.readability = node.readability;
-          }
-          for (var i = 0; i < node.attributes.length; i++) {
-            replacement.setAttributeNode(node.attributes[i].cloneNode());
-          }
-          return replacement;
-        },
-        /**
-         * Prepare the article node for display. Clean out any inline styles,
-         * iframes, forms, strip extraneous <p> tags, etc.
-         *
-         * @param Element
-         * @return void
-         **/
-        _prepArticle(articleContent) {
-          this._cleanStyles(articleContent);
-          this._markDataTables(articleContent);
-          this._fixLazyImages(articleContent);
-          this._cleanConditionally(articleContent, "form");
-          this._cleanConditionally(articleContent, "fieldset");
-          this._clean(articleContent, "object");
-          this._clean(articleContent, "embed");
-          this._clean(articleContent, "footer");
-          this._clean(articleContent, "link");
-          this._clean(articleContent, "aside");
-          var shareElementThreshold = this.DEFAULT_CHAR_THRESHOLD;
-          this._forEachNode(articleContent.children, function(topCandidate) {
-            this._cleanMatchedNodes(topCandidate, function(node, matchString) {
-              return this.REGEXPS.shareElements.test(matchString) && node.textContent.length < shareElementThreshold;
-            });
-          });
-          this._clean(articleContent, "iframe");
-          this._clean(articleContent, "input");
-          this._clean(articleContent, "textarea");
-          this._clean(articleContent, "select");
-          this._clean(articleContent, "button");
-          this._cleanHeaders(articleContent);
-          this._cleanConditionally(articleContent, "table");
-          this._cleanConditionally(articleContent, "ul");
-          this._cleanConditionally(articleContent, "div");
-          this._replaceNodeTags(
-            this._getAllNodesWithTag(articleContent, ["h1"]),
-            "h2"
-          );
-          this._removeNodes(
-            this._getAllNodesWithTag(articleContent, ["p"]),
-            function(paragraph) {
-              var contentElementCount = this._getAllNodesWithTag(paragraph, [
-                "img",
-                "embed",
-                "object",
-                "iframe"
-              ]).length;
-              return contentElementCount === 0 && !this._getInnerText(paragraph, false);
-            }
-          );
-          this._forEachNode(
-            this._getAllNodesWithTag(articleContent, ["br"]),
-            function(br) {
-              var next = this._nextNode(br.nextSibling);
-              if (next && next.tagName == "P") {
-                br.remove();
-              }
-            }
-          );
-          this._forEachNode(
-            this._getAllNodesWithTag(articleContent, ["table"]),
-            function(table) {
-              var tbody = this._hasSingleTagInsideElement(table, "TBODY") ? table.firstElementChild : table;
-              if (this._hasSingleTagInsideElement(tbody, "TR")) {
-                var row = tbody.firstElementChild;
-                if (this._hasSingleTagInsideElement(row, "TD")) {
-                  var cell = row.firstElementChild;
-                  cell = this._setNodeTag(
-                    cell,
-                    this._everyNode(cell.childNodes, this._isPhrasingContent) ? "P" : "DIV"
-                  );
-                  table.parentNode.replaceChild(cell, table);
-                }
-              }
-            }
-          );
-        },
-        /**
-         * Initialize a node with the readability object. Also checks the
-         * className/id for special names to add to its score.
-         *
-         * @param Element
-         * @return void
-         **/
-        _initializeNode(node) {
-          node.readability = { contentScore: 0 };
-          switch (node.tagName) {
-            case "DIV":
-              node.readability.contentScore += 5;
-              break;
-            case "PRE":
-            case "TD":
-            case "BLOCKQUOTE":
-              node.readability.contentScore += 3;
-              break;
-            case "ADDRESS":
-            case "OL":
-            case "UL":
-            case "DL":
-            case "DD":
-            case "DT":
-            case "LI":
-            case "FORM":
-              node.readability.contentScore -= 3;
-              break;
-            case "H1":
-            case "H2":
-            case "H3":
-            case "H4":
-            case "H5":
-            case "H6":
-            case "TH":
-              node.readability.contentScore -= 5;
-              break;
-          }
-          node.readability.contentScore += this._getClassWeight(node);
-        },
-        _removeAndGetNext(node) {
-          var nextNode = this._getNextNode(node, true);
-          node.remove();
-          return nextNode;
-        },
-        /**
-         * Traverse the DOM from node to node, starting at the node passed in.
-         * Pass true for the second parameter to indicate this node itself
-         * (and its kids) are going away, and we want the next node over.
-         *
-         * Calling this in a loop will traverse the DOM depth-first.
-         *
-         * @param {Element} node
-         * @param {boolean} ignoreSelfAndKids
-         * @return {Element}
-         */
-        _getNextNode(node, ignoreSelfAndKids) {
-          if (!ignoreSelfAndKids && node.firstElementChild) {
-            return node.firstElementChild;
-          }
-          if (node.nextElementSibling) {
-            return node.nextElementSibling;
-          }
-          do {
-            node = node.parentNode;
-          } while (node && !node.nextElementSibling);
-          return node && node.nextElementSibling;
-        },
-        // compares second text to first one
-        // 1 = same text, 0 = completely different text
-        // works the way that it splits both texts into words and then finds words that are unique in second text
-        // the result is given by the lower length of unique parts
-        _textSimilarity(textA, textB) {
-          var tokensA = textA.toLowerCase().split(this.REGEXPS.tokenize).filter(Boolean);
-          var tokensB = textB.toLowerCase().split(this.REGEXPS.tokenize).filter(Boolean);
-          if (!tokensA.length || !tokensB.length) {
-            return 0;
-          }
-          var uniqTokensB = tokensB.filter((token) => !tokensA.includes(token));
-          var distanceB = uniqTokensB.join(" ").length / tokensB.join(" ").length;
-          return 1 - distanceB;
-        },
-        /**
-         * Checks whether an element node contains a valid byline
-         *
-         * @param node {Element}
-         * @param matchString {string}
-         * @return boolean
-         */
-        _isValidByline(node, matchString) {
-          var rel = node.getAttribute("rel");
-          var itemprop = node.getAttribute("itemprop");
-          var bylineLength = node.textContent.trim().length;
-          return (rel === "author" || itemprop && itemprop.includes("author") || this.REGEXPS.byline.test(matchString)) && !!bylineLength && bylineLength < 100;
-        },
-        _getNodeAncestors(node, maxDepth) {
-          maxDepth = maxDepth || 0;
-          var i = 0, ancestors = [];
-          while (node.parentNode) {
-            ancestors.push(node.parentNode);
-            if (maxDepth && ++i === maxDepth) {
-              break;
-            }
-            node = node.parentNode;
-          }
-          return ancestors;
-        },
-        /***
-         * grabArticle - Using a variety of metrics (content score, classname, element types), find the content that is
-         *         most likely to be the stuff a user wants to read. Then return it wrapped up in a div.
-         *
-         * @param page a document to run upon. Needs to be a full document, complete with body.
-         * @return Element
-         **/
-        /* eslint-disable-next-line complexity */
-        _grabArticle(page) {
-          this.log("**** grabArticle ****");
-          var doc = this._doc;
-          var isPaging = page !== null;
-          page = page ? page : this._doc.body;
-          if (!page) {
-            this.log("No body found in document. Abort.");
-            return null;
-          }
-          var pageCacheHtml = page.innerHTML;
-          while (true) {
-            this.log("Starting grabArticle loop");
-            var stripUnlikelyCandidates = this._flagIsActive(
-              this.FLAG_STRIP_UNLIKELYS
-            );
-            var elementsToScore = [];
-            var node = this._doc.documentElement;
-            let shouldRemoveTitleHeader = true;
-            while (node) {
-              if (node.tagName === "HTML") {
-                this._articleLang = node.getAttribute("lang");
-              }
-              var matchString = node.className + " " + node.id;
-              if (!this._isProbablyVisible(node)) {
-                this.log("Removing hidden node - " + matchString);
-                node = this._removeAndGetNext(node);
-                continue;
-              }
-              if (node.getAttribute("aria-modal") == "true" && node.getAttribute("role") == "dialog") {
-                node = this._removeAndGetNext(node);
-                continue;
-              }
-              if (!this._articleByline && !this._metadata.byline && this._isValidByline(node, matchString)) {
-                var endOfSearchMarkerNode = this._getNextNode(node, true);
-                var next = this._getNextNode(node);
-                var itemPropNameNode = null;
-                while (next && next != endOfSearchMarkerNode) {
-                  var itemprop = next.getAttribute("itemprop");
-                  if (itemprop && itemprop.includes("name")) {
-                    itemPropNameNode = next;
-                    break;
-                  } else {
-                    next = this._getNextNode(next);
-                  }
-                }
-                this._articleByline = (itemPropNameNode ?? node).textContent.trim();
-                node = this._removeAndGetNext(node);
-                continue;
-              }
-              if (shouldRemoveTitleHeader && this._headerDuplicatesTitle(node)) {
-                this.log(
-                  "Removing header: ",
-                  node.textContent.trim(),
-                  this._articleTitle.trim()
-                );
-                shouldRemoveTitleHeader = false;
-                node = this._removeAndGetNext(node);
-                continue;
-              }
-              if (stripUnlikelyCandidates) {
-                if (this.REGEXPS.unlikelyCandidates.test(matchString) && !this.REGEXPS.okMaybeItsACandidate.test(matchString) && !this._hasAncestorTag(node, "table") && !this._hasAncestorTag(node, "code") && node.tagName !== "BODY" && node.tagName !== "A") {
-                  this.log("Removing unlikely candidate - " + matchString);
-                  node = this._removeAndGetNext(node);
-                  continue;
-                }
-                if (this.UNLIKELY_ROLES.includes(node.getAttribute("role"))) {
-                  this.log(
-                    "Removing content with role " + node.getAttribute("role") + " - " + matchString
-                  );
-                  node = this._removeAndGetNext(node);
-                  continue;
-                }
-              }
-              if ((node.tagName === "DIV" || node.tagName === "SECTION" || node.tagName === "HEADER" || node.tagName === "H1" || node.tagName === "H2" || node.tagName === "H3" || node.tagName === "H4" || node.tagName === "H5" || node.tagName === "H6") && this._isElementWithoutContent(node)) {
-                node = this._removeAndGetNext(node);
-                continue;
-              }
-              if (this.DEFAULT_TAGS_TO_SCORE.includes(node.tagName)) {
-                elementsToScore.push(node);
-              }
-              if (node.tagName === "DIV") {
-                var p = null;
-                var childNode = node.firstChild;
-                while (childNode) {
-                  var nextSibling = childNode.nextSibling;
-                  if (this._isPhrasingContent(childNode)) {
-                    if (p !== null) {
-                      p.appendChild(childNode);
-                    } else if (!this._isWhitespace(childNode)) {
-                      p = doc.createElement("p");
-                      node.replaceChild(p, childNode);
-                      p.appendChild(childNode);
-                    }
-                  } else if (p !== null) {
-                    while (p.lastChild && this._isWhitespace(p.lastChild)) {
-                      p.lastChild.remove();
-                    }
-                    p = null;
-                  }
-                  childNode = nextSibling;
-                }
-                if (this._hasSingleTagInsideElement(node, "P") && this._getLinkDensity(node) < 0.25) {
-                  var newNode = node.children[0];
-                  node.parentNode.replaceChild(newNode, node);
-                  node = newNode;
-                  elementsToScore.push(node);
-                } else if (!this._hasChildBlockElement(node)) {
-                  node = this._setNodeTag(node, "P");
-                  elementsToScore.push(node);
-                }
-              }
-              node = this._getNextNode(node);
-            }
-            var candidates = [];
-            this._forEachNode(elementsToScore, function(elementToScore) {
-              if (!elementToScore.parentNode || typeof elementToScore.parentNode.tagName === "undefined") {
-                return;
-              }
-              var innerText = this._getInnerText(elementToScore);
-              if (innerText.length < 25) {
-                return;
-              }
-              var ancestors2 = this._getNodeAncestors(elementToScore, 5);
-              if (ancestors2.length === 0) {
-                return;
-              }
-              var contentScore = 0;
-              contentScore += 1;
-              contentScore += innerText.split(this.REGEXPS.commas).length;
-              contentScore += Math.min(Math.floor(innerText.length / 100), 3);
-              this._forEachNode(ancestors2, function(ancestor, level) {
-                if (!ancestor.tagName || !ancestor.parentNode || typeof ancestor.parentNode.tagName === "undefined") {
-                  return;
-                }
-                if (typeof ancestor.readability === "undefined") {
-                  this._initializeNode(ancestor);
-                  candidates.push(ancestor);
-                }
-                if (level === 0) {
-                  var scoreDivider = 1;
-                } else if (level === 1) {
-                  scoreDivider = 2;
-                } else {
-                  scoreDivider = level * 3;
-                }
-                ancestor.readability.contentScore += contentScore / scoreDivider;
-              });
-            });
-            var topCandidates = [];
-            for (var c = 0, cl = candidates.length; c < cl; c += 1) {
-              var candidate = candidates[c];
-              var candidateScore = candidate.readability.contentScore * (1 - this._getLinkDensity(candidate));
-              candidate.readability.contentScore = candidateScore;
-              this.log("Candidate:", candidate, "with score " + candidateScore);
-              for (var t = 0; t < this._nbTopCandidates; t++) {
-                var aTopCandidate = topCandidates[t];
-                if (!aTopCandidate || candidateScore > aTopCandidate.readability.contentScore) {
-                  topCandidates.splice(t, 0, candidate);
-                  if (topCandidates.length > this._nbTopCandidates) {
-                    topCandidates.pop();
-                  }
-                  break;
-                }
-              }
-            }
-            var topCandidate = topCandidates[0] || null;
-            var neededToCreateTopCandidate = false;
-            var parentOfTopCandidate;
-            if (topCandidate === null || topCandidate.tagName === "BODY") {
-              topCandidate = doc.createElement("DIV");
-              neededToCreateTopCandidate = true;
-              while (page.firstChild) {
-                this.log("Moving child out:", page.firstChild);
-                topCandidate.appendChild(page.firstChild);
-              }
-              page.appendChild(topCandidate);
-              this._initializeNode(topCandidate);
-            } else if (topCandidate) {
-              var alternativeCandidateAncestors = [];
-              for (var i = 1; i < topCandidates.length; i++) {
-                if (topCandidates[i].readability.contentScore / topCandidate.readability.contentScore >= 0.75) {
-                  alternativeCandidateAncestors.push(
-                    this._getNodeAncestors(topCandidates[i])
-                  );
-                }
-              }
-              var MINIMUM_TOPCANDIDATES = 3;
-              if (alternativeCandidateAncestors.length >= MINIMUM_TOPCANDIDATES) {
-                parentOfTopCandidate = topCandidate.parentNode;
-                while (parentOfTopCandidate.tagName !== "BODY") {
-                  var listsContainingThisAncestor = 0;
-                  for (var ancestorIndex = 0; ancestorIndex < alternativeCandidateAncestors.length && listsContainingThisAncestor < MINIMUM_TOPCANDIDATES; ancestorIndex++) {
-                    listsContainingThisAncestor += Number(
-                      alternativeCandidateAncestors[ancestorIndex].includes(
-                        parentOfTopCandidate
-                      )
-                    );
-                  }
-                  if (listsContainingThisAncestor >= MINIMUM_TOPCANDIDATES) {
-                    topCandidate = parentOfTopCandidate;
-                    break;
-                  }
-                  parentOfTopCandidate = parentOfTopCandidate.parentNode;
-                }
-              }
-              if (!topCandidate.readability) {
-                this._initializeNode(topCandidate);
-              }
-              parentOfTopCandidate = topCandidate.parentNode;
-              var lastScore = topCandidate.readability.contentScore;
-              var scoreThreshold = lastScore / 3;
-              while (parentOfTopCandidate.tagName !== "BODY") {
-                if (!parentOfTopCandidate.readability) {
-                  parentOfTopCandidate = parentOfTopCandidate.parentNode;
-                  continue;
-                }
-                var parentScore = parentOfTopCandidate.readability.contentScore;
-                if (parentScore < scoreThreshold) {
-                  break;
-                }
-                if (parentScore > lastScore) {
-                  topCandidate = parentOfTopCandidate;
-                  break;
-                }
-                lastScore = parentOfTopCandidate.readability.contentScore;
-                parentOfTopCandidate = parentOfTopCandidate.parentNode;
-              }
-              parentOfTopCandidate = topCandidate.parentNode;
-              while (parentOfTopCandidate.tagName != "BODY" && parentOfTopCandidate.children.length == 1) {
-                topCandidate = parentOfTopCandidate;
-                parentOfTopCandidate = topCandidate.parentNode;
-              }
-              if (!topCandidate.readability) {
-                this._initializeNode(topCandidate);
-              }
-            }
-            var articleContent = doc.createElement("DIV");
-            if (isPaging) {
-              articleContent.id = "readability-content";
-            }
-            var siblingScoreThreshold = Math.max(
-              10,
-              topCandidate.readability.contentScore * 0.2
-            );
-            parentOfTopCandidate = topCandidate.parentNode;
-            var siblings = parentOfTopCandidate.children;
-            for (var s = 0, sl = siblings.length; s < sl; s++) {
-              var sibling = siblings[s];
-              var append = false;
-              this.log(
-                "Looking at sibling node:",
-                sibling,
-                sibling.readability ? "with score " + sibling.readability.contentScore : ""
-              );
-              this.log(
-                "Sibling has score",
-                sibling.readability ? sibling.readability.contentScore : "Unknown"
-              );
-              if (sibling === topCandidate) {
-                append = true;
-              } else {
-                var contentBonus = 0;
-                if (sibling.className === topCandidate.className && topCandidate.className !== "") {
-                  contentBonus += topCandidate.readability.contentScore * 0.2;
-                }
-                if (sibling.readability && sibling.readability.contentScore + contentBonus >= siblingScoreThreshold) {
-                  append = true;
-                } else if (sibling.nodeName === "P") {
-                  var linkDensity = this._getLinkDensity(sibling);
-                  var nodeContent = this._getInnerText(sibling);
-                  var nodeLength = nodeContent.length;
-                  if (nodeLength > 80 && linkDensity < 0.25) {
-                    append = true;
-                  } else if (nodeLength < 80 && nodeLength > 0 && linkDensity === 0 && nodeContent.search(/\.( |$)/) !== -1) {
-                    append = true;
-                  }
-                }
-              }
-              if (append) {
-                this.log("Appending node:", sibling);
-                if (!this.ALTER_TO_DIV_EXCEPTIONS.includes(sibling.nodeName)) {
-                  this.log("Altering sibling:", sibling, "to div.");
-                  sibling = this._setNodeTag(sibling, "DIV");
-                }
-                articleContent.appendChild(sibling);
-                siblings = parentOfTopCandidate.children;
-                s -= 1;
-                sl -= 1;
-              }
-            }
-            if (this._debug) {
-              this.log("Article content pre-prep: " + articleContent.innerHTML);
-            }
-            this._prepArticle(articleContent);
-            if (this._debug) {
-              this.log("Article content post-prep: " + articleContent.innerHTML);
-            }
-            if (neededToCreateTopCandidate) {
-              topCandidate.id = "readability-page-1";
-              topCandidate.className = "page";
-            } else {
-              var div = doc.createElement("DIV");
-              div.id = "readability-page-1";
-              div.className = "page";
-              while (articleContent.firstChild) {
-                div.appendChild(articleContent.firstChild);
-              }
-              articleContent.appendChild(div);
-            }
-            if (this._debug) {
-              this.log("Article content after paging: " + articleContent.innerHTML);
-            }
-            var parseSuccessful = true;
-            var textLength2 = this._getInnerText(articleContent, true).length;
-            if (textLength2 < this._charThreshold) {
-              parseSuccessful = false;
-              page.innerHTML = pageCacheHtml;
-              this._attempts.push({
-                articleContent,
-                textLength: textLength2
-              });
-              if (this._flagIsActive(this.FLAG_STRIP_UNLIKELYS)) {
-                this._removeFlag(this.FLAG_STRIP_UNLIKELYS);
-              } else if (this._flagIsActive(this.FLAG_WEIGHT_CLASSES)) {
-                this._removeFlag(this.FLAG_WEIGHT_CLASSES);
-              } else if (this._flagIsActive(this.FLAG_CLEAN_CONDITIONALLY)) {
-                this._removeFlag(this.FLAG_CLEAN_CONDITIONALLY);
-              } else {
-                this._attempts.sort(function(a, b2) {
-                  return b2.textLength - a.textLength;
-                });
-                if (!this._attempts[0].textLength) {
-                  return null;
-                }
-                articleContent = this._attempts[0].articleContent;
-                parseSuccessful = true;
-              }
-            }
-            if (parseSuccessful) {
-              var ancestors = [parentOfTopCandidate, topCandidate].concat(
-                this._getNodeAncestors(parentOfTopCandidate)
-              );
-              this._someNode(ancestors, function(ancestor) {
-                if (!ancestor.tagName) {
-                  return false;
-                }
-                var articleDir = ancestor.getAttribute("dir");
-                if (articleDir) {
-                  this._articleDir = articleDir;
-                  return true;
-                }
-                return false;
-              });
-              return articleContent;
-            }
-          }
-        },
-        /**
-         * Converts some of the common HTML entities in string to their corresponding characters.
-         *
-         * @param str {string} - a string to unescape.
-         * @return string without HTML entity.
-         */
-        _unescapeHtmlEntities(str) {
-          if (!str) {
-            return str;
-          }
-          var htmlEscapeMap = this.HTML_ESCAPE_MAP;
-          return str.replace(/&(quot|amp|apos|lt|gt);/g, function(_2, tag) {
-            return htmlEscapeMap[tag];
-          }).replace(/&#(?:x([0-9a-f]+)|([0-9]+));/gi, function(_2, hex, numStr) {
-            var num = parseInt(hex || numStr, hex ? 16 : 10);
-            if (num == 0 || num > 1114111 || num >= 55296 && num <= 57343) {
-              num = 65533;
-            }
-            return String.fromCodePoint(num);
-          });
-        },
-        /**
-         * Try to extract metadata from JSON-LD object.
-         * For now, only Schema.org objects of type Article or its subtypes are supported.
-         * @return Object with any metadata that could be extracted (possibly none)
-         */
-        _getJSONLD(doc) {
-          var scripts = this._getAllNodesWithTag(doc, ["script"]);
-          var metadata;
-          this._forEachNode(scripts, function(jsonLdElement) {
-            if (!metadata && jsonLdElement.getAttribute("type") === "application/ld+json") {
-              try {
-                var content = jsonLdElement.textContent.replace(
-                  /^\s*<!\[CDATA\[|\]\]>\s*$/g,
-                  ""
-                );
-                var parsed = JSON.parse(content);
-                if (Array.isArray(parsed)) {
-                  parsed = parsed.find((it) => {
-                    return it["@type"] && it["@type"].match(this.REGEXPS.jsonLdArticleTypes);
-                  });
-                  if (!parsed) {
-                    return;
-                  }
-                }
-                var schemaDotOrgRegex = /^https?\:\/\/schema\.org\/?$/;
-                var matches = typeof parsed["@context"] === "string" && parsed["@context"].match(schemaDotOrgRegex) || typeof parsed["@context"] === "object" && typeof parsed["@context"]["@vocab"] == "string" && parsed["@context"]["@vocab"].match(schemaDotOrgRegex);
-                if (!matches) {
-                  return;
-                }
-                if (!parsed["@type"] && Array.isArray(parsed["@graph"])) {
-                  parsed = parsed["@graph"].find((it) => {
-                    return (it["@type"] || "").match(this.REGEXPS.jsonLdArticleTypes);
-                  });
-                }
-                if (!parsed || !parsed["@type"] || !parsed["@type"].match(this.REGEXPS.jsonLdArticleTypes)) {
-                  return;
-                }
-                metadata = {};
-                if (typeof parsed.name === "string" && typeof parsed.headline === "string" && parsed.name !== parsed.headline) {
-                  var title = this._getArticleTitle();
-                  var nameMatches = this._textSimilarity(parsed.name, title) > 0.75;
-                  var headlineMatches = this._textSimilarity(parsed.headline, title) > 0.75;
-                  if (headlineMatches && !nameMatches) {
-                    metadata.title = parsed.headline;
-                  } else {
-                    metadata.title = parsed.name;
-                  }
-                } else if (typeof parsed.name === "string") {
-                  metadata.title = parsed.name.trim();
-                } else if (typeof parsed.headline === "string") {
-                  metadata.title = parsed.headline.trim();
-                }
-                if (parsed.author) {
-                  if (typeof parsed.author.name === "string") {
-                    metadata.byline = parsed.author.name.trim();
-                  } else if (Array.isArray(parsed.author) && parsed.author[0] && typeof parsed.author[0].name === "string") {
-                    metadata.byline = parsed.author.filter(function(author) {
-                      return author && typeof author.name === "string";
-                    }).map(function(author) {
-                      return author.name.trim();
-                    }).join(", ");
-                  }
-                }
-                if (typeof parsed.description === "string") {
-                  metadata.excerpt = parsed.description.trim();
-                }
-                if (parsed.publisher && typeof parsed.publisher.name === "string") {
-                  metadata.siteName = parsed.publisher.name.trim();
-                }
-                if (typeof parsed.datePublished === "string") {
-                  metadata.datePublished = parsed.datePublished.trim();
-                }
-              } catch (err) {
-                this.log(err.message);
-              }
-            }
-          });
-          return metadata ? metadata : {};
-        },
-        /**
-         * Attempts to get excerpt and byline metadata for the article.
-         *
-         * @param {Object} jsonld — object containing any metadata that
-         * could be extracted from JSON-LD object.
-         *
-         * @return Object with optional "excerpt" and "byline" properties
-         */
-        _getArticleMetadata(jsonld) {
-          var metadata = {};
-          var values = {};
-          var metaElements = this._doc.getElementsByTagName("meta");
-          var propertyPattern = /\s*(article|dc|dcterm|og|twitter)\s*:\s*(author|creator|description|published_time|title|site_name)\s*/gi;
-          var namePattern = /^\s*(?:(dc|dcterm|og|twitter|parsely|weibo:(article|webpage))\s*[-\.:]\s*)?(author|creator|pub-date|description|title|site_name)\s*$/i;
-          this._forEachNode(metaElements, function(element) {
-            var elementName = element.getAttribute("name");
-            var elementProperty = element.getAttribute("property");
-            var content = element.getAttribute("content");
-            if (!content) {
-              return;
-            }
-            var matches = null;
-            var name = null;
-            if (elementProperty) {
-              matches = elementProperty.match(propertyPattern);
-              if (matches) {
-                name = matches[0].toLowerCase().replace(/\s/g, "");
-                values[name] = content.trim();
-              }
-            }
-            if (!matches && elementName && namePattern.test(elementName)) {
-              name = elementName;
-              if (content) {
-                name = name.toLowerCase().replace(/\s/g, "").replace(/\./g, ":");
-                values[name] = content.trim();
-              }
-            }
-          });
-          metadata.title = jsonld.title || values["dc:title"] || values["dcterm:title"] || values["og:title"] || values["weibo:article:title"] || values["weibo:webpage:title"] || values.title || values["twitter:title"] || values["parsely-title"];
-          if (!metadata.title) {
-            metadata.title = this._getArticleTitle();
-          }
-          const articleAuthor = typeof values["article:author"] === "string" && !this._isUrl(values["article:author"]) ? values["article:author"] : void 0;
-          metadata.byline = jsonld.byline || values["dc:creator"] || values["dcterm:creator"] || values.author || values["parsely-author"] || articleAuthor;
-          metadata.excerpt = jsonld.excerpt || values["dc:description"] || values["dcterm:description"] || values["og:description"] || values["weibo:article:description"] || values["weibo:webpage:description"] || values.description || values["twitter:description"];
-          metadata.siteName = jsonld.siteName || values["og:site_name"];
-          metadata.publishedTime = jsonld.datePublished || values["article:published_time"] || values["parsely-pub-date"] || null;
-          metadata.title = this._unescapeHtmlEntities(metadata.title);
-          metadata.byline = this._unescapeHtmlEntities(metadata.byline);
-          metadata.excerpt = this._unescapeHtmlEntities(metadata.excerpt);
-          metadata.siteName = this._unescapeHtmlEntities(metadata.siteName);
-          metadata.publishedTime = this._unescapeHtmlEntities(metadata.publishedTime);
-          return metadata;
-        },
-        /**
-         * Check if node is image, or if node contains exactly only one image
-         * whether as a direct child or as its descendants.
-         *
-         * @param Element
-         **/
-        _isSingleImage(node) {
-          while (node) {
-            if (node.tagName === "IMG") {
-              return true;
-            }
-            if (node.children.length !== 1 || node.textContent.trim() !== "") {
-              return false;
-            }
-            node = node.children[0];
-          }
-          return false;
-        },
-        /**
-         * Find all <noscript> that are located after <img> nodes, and which contain only one
-         * <img> element. Replace the first image with the image from inside the <noscript> tag,
-         * and remove the <noscript> tag. This improves the quality of the images we use on
-         * some sites (e.g. Medium).
-         *
-         * @param Element
-         **/
-        _unwrapNoscriptImages(doc) {
-          var imgs = Array.from(doc.getElementsByTagName("img"));
-          this._forEachNode(imgs, function(img) {
-            for (var i = 0; i < img.attributes.length; i++) {
-              var attr = img.attributes[i];
-              switch (attr.name) {
-                case "src":
-                case "srcset":
-                case "data-src":
-                case "data-srcset":
-                  return;
-              }
-              if (/\.(jpg|jpeg|png|webp)/i.test(attr.value)) {
-                return;
-              }
-            }
-            img.remove();
-          });
-          var noscripts = Array.from(doc.getElementsByTagName("noscript"));
-          this._forEachNode(noscripts, function(noscript) {
-            if (!this._isSingleImage(noscript)) {
-              return;
-            }
-            var tmp = doc.createElement("div");
-            tmp.innerHTML = noscript.innerHTML;
-            var prevElement = noscript.previousElementSibling;
-            if (prevElement && this._isSingleImage(prevElement)) {
-              var prevImg = prevElement;
-              if (prevImg.tagName !== "IMG") {
-                prevImg = prevElement.getElementsByTagName("img")[0];
-              }
-              var newImg = tmp.getElementsByTagName("img")[0];
-              for (var i = 0; i < prevImg.attributes.length; i++) {
-                var attr = prevImg.attributes[i];
-                if (attr.value === "") {
-                  continue;
-                }
-                if (attr.name === "src" || attr.name === "srcset" || /\.(jpg|jpeg|png|webp)/i.test(attr.value)) {
-                  if (newImg.getAttribute(attr.name) === attr.value) {
-                    continue;
-                  }
-                  var attrName = attr.name;
-                  if (newImg.hasAttribute(attrName)) {
-                    attrName = "data-old-" + attrName;
-                  }
-                  newImg.setAttribute(attrName, attr.value);
-                }
-              }
-              noscript.parentNode.replaceChild(tmp.firstElementChild, prevElement);
-            }
-          });
-        },
-        /**
-         * Removes script tags from the document.
-         *
-         * @param Element
-         **/
-        _removeScripts(doc) {
-          this._removeNodes(this._getAllNodesWithTag(doc, ["script", "noscript"]));
-        },
-        /**
-         * Check if this node has only whitespace and a single element with given tag
-         * Returns false if the DIV node contains non-empty text nodes
-         * or if it contains no element with given tag or more than 1 element.
-         *
-         * @param Element
-         * @param string tag of child element
-         **/
-        _hasSingleTagInsideElement(element, tag) {
-          if (element.children.length != 1 || element.children[0].tagName !== tag) {
-            return false;
-          }
-          return !this._someNode(element.childNodes, function(node) {
-            return node.nodeType === this.TEXT_NODE && this.REGEXPS.hasContent.test(node.textContent);
-          });
-        },
-        _isElementWithoutContent(node) {
-          return node.nodeType === this.ELEMENT_NODE && !node.textContent.trim().length && (!node.children.length || node.children.length == node.getElementsByTagName("br").length + node.getElementsByTagName("hr").length);
-        },
-        /**
-         * Determine whether element has any children block level elements.
-         *
-         * @param Element
-         */
-        _hasChildBlockElement(element) {
-          return this._someNode(element.childNodes, function(node) {
-            return this.DIV_TO_P_ELEMS.has(node.tagName) || this._hasChildBlockElement(node);
-          });
-        },
-        /***
-         * Determine if a node qualifies as phrasing content.
-         * https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories#Phrasing_content
-         **/
-        _isPhrasingContent(node) {
-          return node.nodeType === this.TEXT_NODE || this.PHRASING_ELEMS.includes(node.tagName) || (node.tagName === "A" || node.tagName === "DEL" || node.tagName === "INS") && this._everyNode(node.childNodes, this._isPhrasingContent);
-        },
-        _isWhitespace(node) {
-          return node.nodeType === this.TEXT_NODE && node.textContent.trim().length === 0 || node.nodeType === this.ELEMENT_NODE && node.tagName === "BR";
-        },
-        /**
-         * Get the inner text of a node - cross browser compatibly.
-         * This also strips out any excess whitespace to be found.
-         *
-         * @param Element
-         * @param Boolean normalizeSpaces (default: true)
-         * @return string
-         **/
-        _getInnerText(e, normalizeSpaces) {
-          normalizeSpaces = typeof normalizeSpaces === "undefined" ? true : normalizeSpaces;
-          var textContent = e.textContent.trim();
-          if (normalizeSpaces) {
-            return textContent.replace(this.REGEXPS.normalize, " ");
-          }
-          return textContent;
-        },
-        /**
-         * Get the number of times a string s appears in the node e.
-         *
-         * @param Element
-         * @param string - what to split on. Default is ","
-         * @return number (integer)
-         **/
-        _getCharCount(e, s) {
-          s = s || ",";
-          return this._getInnerText(e).split(s).length - 1;
-        },
-        /**
-         * Remove the style attribute on every e and under.
-         * TODO: Test if getElementsByTagName(*) is faster.
-         *
-         * @param Element
-         * @return void
-         **/
-        _cleanStyles(e) {
-          if (!e || e.tagName.toLowerCase() === "svg") {
-            return;
-          }
-          for (var i = 0; i < this.PRESENTATIONAL_ATTRIBUTES.length; i++) {
-            e.removeAttribute(this.PRESENTATIONAL_ATTRIBUTES[i]);
-          }
-          if (this.DEPRECATED_SIZE_ATTRIBUTE_ELEMS.includes(e.tagName)) {
-            e.removeAttribute("width");
-            e.removeAttribute("height");
-          }
-          var cur = e.firstElementChild;
-          while (cur !== null) {
-            this._cleanStyles(cur);
-            cur = cur.nextElementSibling;
-          }
-        },
-        /**
-         * Get the density of links as a percentage of the content
-         * This is the amount of text that is inside a link divided by the total text in the node.
-         *
-         * @param Element
-         * @return number (float)
-         **/
-        _getLinkDensity(element) {
-          var textLength2 = this._getInnerText(element).length;
-          if (textLength2 === 0) {
-            return 0;
-          }
-          var linkLength = 0;
-          this._forEachNode(element.getElementsByTagName("a"), function(linkNode) {
-            var href = linkNode.getAttribute("href");
-            var coefficient = href && this.REGEXPS.hashUrl.test(href) ? 0.3 : 1;
-            linkLength += this._getInnerText(linkNode).length * coefficient;
-          });
-          return linkLength / textLength2;
-        },
-        /**
-         * Get an elements class/id weight. Uses regular expressions to tell if this
-         * element looks good or bad.
-         *
-         * @param Element
-         * @return number (Integer)
-         **/
-        _getClassWeight(e) {
-          if (!this._flagIsActive(this.FLAG_WEIGHT_CLASSES)) {
-            return 0;
-          }
-          var weight = 0;
-          if (typeof e.className === "string" && e.className !== "") {
-            if (this.REGEXPS.negative.test(e.className)) {
-              weight -= 25;
-            }
-            if (this.REGEXPS.positive.test(e.className)) {
-              weight += 25;
-            }
-          }
-          if (typeof e.id === "string" && e.id !== "") {
-            if (this.REGEXPS.negative.test(e.id)) {
-              weight -= 25;
-            }
-            if (this.REGEXPS.positive.test(e.id)) {
-              weight += 25;
-            }
-          }
-          return weight;
-        },
-        /**
-         * Clean a node of all elements of type "tag".
-         * (Unless it's a youtube/vimeo video. People love movies.)
-         *
-         * @param Element
-         * @param string tag to clean
-         * @return void
-         **/
-        _clean(e, tag) {
-          var isEmbed = ["object", "embed", "iframe"].includes(tag);
-          this._removeNodes(this._getAllNodesWithTag(e, [tag]), function(element) {
-            if (isEmbed) {
-              for (var i = 0; i < element.attributes.length; i++) {
-                if (this._allowedVideoRegex.test(element.attributes[i].value)) {
-                  return false;
-                }
-              }
-              if (element.tagName === "object" && this._allowedVideoRegex.test(element.innerHTML)) {
-                return false;
-              }
-            }
-            return true;
-          });
-        },
-        /**
-         * Check if a given node has one of its ancestor tag name matching the
-         * provided one.
-         * @param  HTMLElement node
-         * @param  String      tagName
-         * @param  Number      maxDepth
-         * @param  Function    filterFn a filter to invoke to determine whether this node 'counts'
-         * @return Boolean
-         */
-        _hasAncestorTag(node, tagName, maxDepth, filterFn) {
-          maxDepth = maxDepth || 3;
-          tagName = tagName.toUpperCase();
-          var depth = 0;
-          while (node.parentNode) {
-            if (maxDepth > 0 && depth > maxDepth) {
-              return false;
-            }
-            if (node.parentNode.tagName === tagName && (!filterFn || filterFn(node.parentNode))) {
-              return true;
-            }
-            node = node.parentNode;
-            depth++;
-          }
-          return false;
-        },
-        /**
-         * Return an object indicating how many rows and columns this table has.
-         */
-        _getRowAndColumnCount(table) {
-          var rows = 0;
-          var columns = 0;
-          var trs = table.getElementsByTagName("tr");
-          for (var i = 0; i < trs.length; i++) {
-            var rowspan = trs[i].getAttribute("rowspan") || 0;
-            if (rowspan) {
-              rowspan = parseInt(rowspan, 10);
-            }
-            rows += rowspan || 1;
-            var columnsInThisRow = 0;
-            var cells = trs[i].getElementsByTagName("td");
-            for (var j2 = 0; j2 < cells.length; j2++) {
-              var colspan = cells[j2].getAttribute("colspan") || 0;
-              if (colspan) {
-                colspan = parseInt(colspan, 10);
-              }
-              columnsInThisRow += colspan || 1;
-            }
-            columns = Math.max(columns, columnsInThisRow);
-          }
-          return { rows, columns };
-        },
-        /**
-         * Look for 'data' (as opposed to 'layout') tables, for which we use
-         * similar checks as
-         * https://searchfox.org/mozilla-central/rev/f82d5c549f046cb64ce5602bfd894b7ae807c8f8/accessible/generic/TableAccessible.cpp#19
-         */
-        _markDataTables(root) {
-          var tables = root.getElementsByTagName("table");
-          for (var i = 0; i < tables.length; i++) {
-            var table = tables[i];
-            var role = table.getAttribute("role");
-            if (role == "presentation") {
-              table._readabilityDataTable = false;
-              continue;
-            }
-            var datatable = table.getAttribute("datatable");
-            if (datatable == "0") {
-              table._readabilityDataTable = false;
-              continue;
-            }
-            var summary = table.getAttribute("summary");
-            if (summary) {
-              table._readabilityDataTable = true;
-              continue;
-            }
-            var caption = table.getElementsByTagName("caption")[0];
-            if (caption && caption.childNodes.length) {
-              table._readabilityDataTable = true;
-              continue;
-            }
-            var dataTableDescendants = ["col", "colgroup", "tfoot", "thead", "th"];
-            var descendantExists = function(tag) {
-              return !!table.getElementsByTagName(tag)[0];
-            };
-            if (dataTableDescendants.some(descendantExists)) {
-              this.log("Data table because found data-y descendant");
-              table._readabilityDataTable = true;
-              continue;
-            }
-            if (table.getElementsByTagName("table")[0]) {
-              table._readabilityDataTable = false;
-              continue;
-            }
-            var sizeInfo = this._getRowAndColumnCount(table);
-            if (sizeInfo.columns == 1 || sizeInfo.rows == 1) {
-              table._readabilityDataTable = false;
-              continue;
-            }
-            if (sizeInfo.rows >= 10 || sizeInfo.columns > 4) {
-              table._readabilityDataTable = true;
-              continue;
-            }
-            table._readabilityDataTable = sizeInfo.rows * sizeInfo.columns > 10;
-          }
-        },
-        /* convert images and figures that have properties like data-src into images that can be loaded without JS */
-        _fixLazyImages(root) {
-          this._forEachNode(
-            this._getAllNodesWithTag(root, ["img", "picture", "figure"]),
-            function(elem) {
-              if (elem.src && this.REGEXPS.b64DataUrl.test(elem.src)) {
-                var parts = this.REGEXPS.b64DataUrl.exec(elem.src);
-                if (parts[1] === "image/svg+xml") {
-                  return;
-                }
-                var srcCouldBeRemoved = false;
-                for (var i = 0; i < elem.attributes.length; i++) {
-                  var attr = elem.attributes[i];
-                  if (attr.name === "src") {
-                    continue;
-                  }
-                  if (/\.(jpg|jpeg|png|webp)/i.test(attr.value)) {
-                    srcCouldBeRemoved = true;
-                    break;
-                  }
-                }
-                if (srcCouldBeRemoved) {
-                  var b64starts = parts[0].length;
-                  var b64length = elem.src.length - b64starts;
-                  if (b64length < 133) {
-                    elem.removeAttribute("src");
-                  }
-                }
-              }
-              if ((elem.src || elem.srcset && elem.srcset != "null") && !elem.className.toLowerCase().includes("lazy")) {
-                return;
-              }
-              for (var j2 = 0; j2 < elem.attributes.length; j2++) {
-                attr = elem.attributes[j2];
-                if (attr.name === "src" || attr.name === "srcset" || attr.name === "alt") {
-                  continue;
-                }
-                var copyTo = null;
-                if (/\.(jpg|jpeg|png|webp)\s+\d/.test(attr.value)) {
-                  copyTo = "srcset";
-                } else if (/^\s*\S+\.(jpg|jpeg|png|webp)\S*\s*$/.test(attr.value)) {
-                  copyTo = "src";
-                }
-                if (copyTo) {
-                  if (elem.tagName === "IMG" || elem.tagName === "PICTURE") {
-                    elem.setAttribute(copyTo, attr.value);
-                  } else if (elem.tagName === "FIGURE" && !this._getAllNodesWithTag(elem, ["img", "picture"]).length) {
-                    var img = this._doc.createElement("img");
-                    img.setAttribute(copyTo, attr.value);
-                    elem.appendChild(img);
-                  }
-                }
-              }
-            }
-          );
-        },
-        _getTextDensity(e, tags) {
-          var textLength2 = this._getInnerText(e, true).length;
-          if (textLength2 === 0) {
-            return 0;
-          }
-          var childrenLength = 0;
-          var children = this._getAllNodesWithTag(e, tags);
-          this._forEachNode(
-            children,
-            (child) => childrenLength += this._getInnerText(child, true).length
-          );
-          return childrenLength / textLength2;
-        },
-        /**
-         * Clean an element of all tags of type "tag" if they look fishy.
-         * "Fishy" is an algorithm based on content length, classnames, link density, number of images & embeds, etc.
-         *
-         * @return void
-         **/
-        _cleanConditionally(e, tag) {
-          if (!this._flagIsActive(this.FLAG_CLEAN_CONDITIONALLY)) {
-            return;
-          }
-          this._removeNodes(this._getAllNodesWithTag(e, [tag]), function(node) {
-            var isDataTable = function(t) {
-              return t._readabilityDataTable;
-            };
-            var isList = tag === "ul" || tag === "ol";
-            if (!isList) {
-              var listLength = 0;
-              var listNodes = this._getAllNodesWithTag(node, ["ul", "ol"]);
-              this._forEachNode(
-                listNodes,
-                (list) => listLength += this._getInnerText(list).length
-              );
-              isList = listLength / this._getInnerText(node).length > 0.9;
-            }
-            if (tag === "table" && isDataTable(node)) {
-              return false;
-            }
-            if (this._hasAncestorTag(node, "table", -1, isDataTable)) {
-              return false;
-            }
-            if (this._hasAncestorTag(node, "code")) {
-              return false;
-            }
-            if ([...node.getElementsByTagName("table")].some(
-              (tbl) => tbl._readabilityDataTable
-            )) {
-              return false;
-            }
-            var weight = this._getClassWeight(node);
-            this.log("Cleaning Conditionally", node);
-            var contentScore = 0;
-            if (weight + contentScore < 0) {
-              return true;
-            }
-            if (this._getCharCount(node, ",") < 10) {
-              var p = node.getElementsByTagName("p").length;
-              var img = node.getElementsByTagName("img").length;
-              var li = node.getElementsByTagName("li").length - 100;
-              var input = node.getElementsByTagName("input").length;
-              var headingDensity = this._getTextDensity(node, [
-                "h1",
-                "h2",
-                "h3",
-                "h4",
-                "h5",
-                "h6"
-              ]);
-              var embedCount = 0;
-              var embeds = this._getAllNodesWithTag(node, [
-                "object",
-                "embed",
-                "iframe"
-              ]);
-              for (var i = 0; i < embeds.length; i++) {
-                for (var j2 = 0; j2 < embeds[i].attributes.length; j2++) {
-                  if (this._allowedVideoRegex.test(embeds[i].attributes[j2].value)) {
-                    return false;
-                  }
-                }
-                if (embeds[i].tagName === "object" && this._allowedVideoRegex.test(embeds[i].innerHTML)) {
-                  return false;
-                }
-                embedCount++;
-              }
-              var innerText = this._getInnerText(node);
-              if (this.REGEXPS.adWords.test(innerText) || this.REGEXPS.loadingWords.test(innerText)) {
-                return true;
-              }
-              var contentLength = innerText.length;
-              var linkDensity = this._getLinkDensity(node);
-              var textishTags = ["SPAN", "LI", "TD"].concat(
-                Array.from(this.DIV_TO_P_ELEMS)
-              );
-              var textDensity = this._getTextDensity(node, textishTags);
-              var isFigureChild = this._hasAncestorTag(node, "figure");
-              const shouldRemoveNode = () => {
-                const errs = [];
-                if (!isFigureChild && img > 1 && p / img < 0.5) {
-                  errs.push(`Bad p to img ratio (img=${img}, p=${p})`);
-                }
-                if (!isList && li > p) {
-                  errs.push(`Too many li's outside of a list. (li=${li} > p=${p})`);
-                }
-                if (input > Math.floor(p / 3)) {
-                  errs.push(`Too many inputs per p. (input=${input}, p=${p})`);
-                }
-                if (!isList && !isFigureChild && headingDensity < 0.9 && contentLength < 25 && (img === 0 || img > 2) && linkDensity > 0) {
-                  errs.push(
-                    `Suspiciously short. (headingDensity=${headingDensity}, img=${img}, linkDensity=${linkDensity})`
-                  );
-                }
-                if (!isList && weight < 25 && linkDensity > 0.2 + this._linkDensityModifier) {
-                  errs.push(
-                    `Low weight and a little linky. (linkDensity=${linkDensity})`
-                  );
-                }
-                if (weight >= 25 && linkDensity > 0.5 + this._linkDensityModifier) {
-                  errs.push(
-                    `High weight and mostly links. (linkDensity=${linkDensity})`
-                  );
-                }
-                if (embedCount === 1 && contentLength < 75 || embedCount > 1) {
-                  errs.push(
-                    `Suspicious embed. (embedCount=${embedCount}, contentLength=${contentLength})`
-                  );
-                }
-                if (img === 0 && textDensity === 0) {
-                  errs.push(
-                    `No useful content. (img=${img}, textDensity=${textDensity})`
-                  );
-                }
-                if (errs.length) {
-                  this.log("Checks failed", errs);
-                  return true;
-                }
-                return false;
-              };
-              var haveToRemove = shouldRemoveNode();
-              if (isList && haveToRemove) {
-                for (var x2 = 0; x2 < node.children.length; x2++) {
-                  let child = node.children[x2];
-                  if (child.children.length > 1) {
-                    return haveToRemove;
-                  }
-                }
-                let li_count = node.getElementsByTagName("li").length;
-                if (img == li_count) {
-                  return false;
-                }
-              }
-              return haveToRemove;
-            }
-            return false;
-          });
-        },
-        /**
-         * Clean out elements that match the specified conditions
-         *
-         * @param Element
-         * @param Function determines whether a node should be removed
-         * @return void
-         **/
-        _cleanMatchedNodes(e, filter) {
-          var endOfSearchMarkerNode = this._getNextNode(e, true);
-          var next = this._getNextNode(e);
-          while (next && next != endOfSearchMarkerNode) {
-            if (filter.call(this, next, next.className + " " + next.id)) {
-              next = this._removeAndGetNext(next);
-            } else {
-              next = this._getNextNode(next);
-            }
-          }
-        },
-        /**
-         * Clean out spurious headers from an Element.
-         *
-         * @param Element
-         * @return void
-         **/
-        _cleanHeaders(e) {
-          let headingNodes = this._getAllNodesWithTag(e, ["h1", "h2"]);
-          this._removeNodes(headingNodes, function(node) {
-            let shouldRemove = this._getClassWeight(node) < 0;
-            if (shouldRemove) {
-              this.log("Removing header with low class weight:", node);
-            }
-            return shouldRemove;
-          });
-        },
-        /**
-         * Check if this node is an H1 or H2 element whose content is mostly
-         * the same as the article title.
-         *
-         * @param Element  the node to check.
-         * @return boolean indicating whether this is a title-like header.
-         */
-        _headerDuplicatesTitle(node) {
-          if (node.tagName != "H1" && node.tagName != "H2") {
-            return false;
-          }
-          var heading = this._getInnerText(node, false);
-          this.log("Evaluating similarity of header:", heading, this._articleTitle);
-          return this._textSimilarity(this._articleTitle, heading) > 0.75;
-        },
-        _flagIsActive(flag) {
-          return (this._flags & flag) > 0;
-        },
-        _removeFlag(flag) {
-          this._flags = this._flags & ~flag;
-        },
-        _isProbablyVisible(node) {
-          return (!node.style || node.style.display != "none") && (!node.style || node.style.visibility != "hidden") && !node.hasAttribute("hidden") && //check for "fallback-image" so that wikimedia math images are displayed
-          (!node.hasAttribute("aria-hidden") || node.getAttribute("aria-hidden") != "true" || node.className && node.className.includes && node.className.includes("fallback-image"));
-        },
-        /**
-         * Runs readability.
-         *
-         * Workflow:
-         *  1. Prep the document by removing script tags, css, etc.
-         *  2. Build readability's DOM tree.
-         *  3. Grab the article content from the current dom tree.
-         *  4. Replace the current DOM tree with the new one.
-         *  5. Read peacefully.
-         *
-         * @return void
-         **/
-        parse() {
-          if (this._maxElemsToParse > 0) {
-            var numTags = this._doc.getElementsByTagName("*").length;
-            if (numTags > this._maxElemsToParse) {
-              throw new Error(
-                "Aborting parsing document; " + numTags + " elements found"
-              );
-            }
-          }
-          this._unwrapNoscriptImages(this._doc);
-          var jsonLd = this._disableJSONLD ? {} : this._getJSONLD(this._doc);
-          this._removeScripts(this._doc);
-          this._prepDocument();
-          var metadata = this._getArticleMetadata(jsonLd);
-          this._metadata = metadata;
-          this._articleTitle = metadata.title;
-          var articleContent = this._grabArticle();
-          if (!articleContent) {
-            return null;
-          }
-          this.log("Grabbed: " + articleContent.innerHTML);
-          this._postProcessContent(articleContent);
-          if (!metadata.excerpt) {
-            var paragraphs = articleContent.getElementsByTagName("p");
-            if (paragraphs.length) {
-              metadata.excerpt = paragraphs[0].textContent.trim();
-            }
-          }
-          var textContent = articleContent.textContent;
-          return {
-            title: this._articleTitle,
-            byline: metadata.byline || this._articleByline,
-            dir: this._articleDir,
-            lang: this._articleLang,
-            content: this._serializer(articleContent),
-            textContent,
-            length: textContent.length,
-            excerpt: metadata.excerpt,
-            siteName: metadata.siteName || this._articleSiteName,
-            publishedTime: metadata.publishedTime
-          };
-        }
-      };
-      if (typeof module === "object") {
-        module.exports = Readability2;
-      }
-    }
-  });
-
-  // node_modules/@mozilla/readability/Readability-readerable.js
-  var require_Readability_readerable = __commonJS({
-    "node_modules/@mozilla/readability/Readability-readerable.js"(exports, module) {
-      var REGEXPS = {
-        // NOTE: These two regular expressions are duplicated in
-        // Readability.js. Please keep both copies in sync.
-        unlikelyCandidates: /-ad-|ai2html|banner|breadcrumbs|combx|comment|community|cover-wrap|disqus|extra|footer|gdpr|header|legends|menu|related|remark|replies|rss|shoutbox|sidebar|skyscraper|social|sponsor|supplemental|ad-break|agegate|pagination|pager|popup|yom-remote/i,
-        okMaybeItsACandidate: /and|article|body|column|content|main|shadow/i
-      };
-      function isNodeVisible(node) {
-        return (!node.style || node.style.display != "none") && !node.hasAttribute("hidden") && //check for "fallback-image" so that wikimedia math images are displayed
-        (!node.hasAttribute("aria-hidden") || node.getAttribute("aria-hidden") != "true" || node.className && node.className.includes && node.className.includes("fallback-image"));
-      }
-      function isProbablyReaderable(doc, options = {}) {
-        if (typeof options == "function") {
-          options = { visibilityChecker: options };
-        }
-        var defaultOptions = {
-          minScore: 20,
-          minContentLength: 140,
-          visibilityChecker: isNodeVisible
-        };
-        options = Object.assign(defaultOptions, options);
-        var nodes = doc.querySelectorAll("p, pre, article");
-        var brNodes = doc.querySelectorAll("div > br");
-        if (brNodes.length) {
-          var set = new Set(nodes);
-          [].forEach.call(brNodes, function(node) {
-            set.add(node.parentNode);
-          });
-          nodes = Array.from(set);
-        }
-        var score = 0;
-        return [].some.call(nodes, function(node) {
-          if (!options.visibilityChecker(node)) {
-            return false;
-          }
-          var matchString = node.className + " " + node.id;
-          if (REGEXPS.unlikelyCandidates.test(matchString) && !REGEXPS.okMaybeItsACandidate.test(matchString)) {
-            return false;
-          }
-          if (node.matches("li p")) {
-            return false;
-          }
-          var textContentLength = node.textContent.trim().length;
-          if (textContentLength < options.minContentLength) {
-            return false;
-          }
-          score += Math.sqrt(textContentLength - options.minContentLength);
-          if (score > options.minScore) {
-            return true;
-          }
-          return false;
-        });
-      }
-      if (typeof module === "object") {
-        module.exports = isProbablyReaderable;
-      }
-    }
-  });
-
-  // node_modules/@mozilla/readability/index.js
-  var require_readability = __commonJS({
-    "node_modules/@mozilla/readability/index.js"(exports, module) {
-      var Readability2 = require_Readability();
-      var isProbablyReaderable = require_Readability_readerable();
-      module.exports = {
-        Readability: Readability2,
-        isProbablyReaderable
-      };
-    }
-  });
-
   // node_modules/react/cjs/react-jsx-runtime.production.js
   var require_react_jsx_runtime_production = __commonJS({
     "node_modules/react/cjs/react-jsx-runtime.production.js"(exports) {
@@ -15395,11 +13336,19 @@
       currentBodyPreview: "\u5F53\u524D\u6B63\u6587\u9884\u89C8",
       expand: "\u5C55\u5F00",
       collapse: "\u6536\u8D77",
-      currentBodyQuality: "\u8D28\u91CF",
       currentBodyBlocks: "{count} \u6BB5",
       currentBodyChars: "{count} \u5B57",
-      currentBodySourceReadability: "Readability",
+      currentBodyScore: "\u6B63\u6587\u8BC4\u5206\uFF1A{score}",
+      articleMetricLength: "\u957F\u5EA6",
+      articleMetricStructure: "\u7ED3\u6784",
+      articleMetricHeading: "\u6807\u9898",
+      articleMetricSemantics: "\u8BED\u4E49\u5BB9\u5668",
+      articleMetricDensity: "\u6587\u672C\u5BC6\u5EA6",
+      articleMetricLinkPurity: "\u94FE\u63A5\u7EAF\u5EA6",
+      articleMetricFocus: "\u805A\u7126\u5EA6",
+      articleMetricCleanliness: "\u5E72\u51C0\u5EA6",
       currentBodySourceDom: "DOM",
+      currentBodySourceRule: "\u89C4\u5219",
       currentBodySourceManual: "\u624B\u52A8\u9009\u62E9",
       currentBodySourceEdited: "\u5DF2\u7F16\u8F91",
       selectCurrentBody: "\u6846\u9009\u6B63\u6587",
@@ -15420,16 +13369,9 @@
       noArticleExtractionRules: "\u8FD8\u6CA1\u6709\u6B63\u6587\u63D0\u53D6\u89C4\u5219",
       articleExtractionRuleSaved: "\u6B63\u6587\u63D0\u53D6\u89C4\u5219\u5DF2\u4FDD\u5B58",
       articleExtractionRuleInvalid: "\u8BF7\u586B\u5199\u9875\u9762\u5730\u5740\u548C selector",
-      currentBodyVirtualizedWarning: "\u7591\u4F3C\u865A\u62DF\u6EDA\u52A8\u9875\u9762\uFF0C\u9884\u89C8\u53EF\u80FD\u53EA\u5305\u542B\u5F53\u524D\u5DF2\u6E32\u67D3\u5185\u5BB9\u3002",
       selectingBodyRange: "\u6B63\u5728\u9009\u62E9\u6B63\u6587\u8303\u56F4",
       manualBodySelectionHint: "\u6EDA\u8F6E/\u65B9\u5411\u952E\u8C03\u6574\u8303\u56F4\uFF0C\u70B9\u51FB\u786E\u8BA4\uFF0CESC\u53D6\u6D88",
       manualBodySelectionCancelled: "\u5DF2\u53D6\u6D88\u6B63\u6587\u6846\u9009",
-      textDensity: "\u6587\u672C\u5BC6\u5EA6",
-      linkRatio: "\u94FE\u63A5\u6BD4\u4F8B",
-      visibleArea: "\u53EF\u89C1\u9762\u79EF",
-      continuity: "\u8FDE\u7EED\u6027",
-      clutterPenalty: "\u6742\u8BAF",
-      languageConsistency: "\u8BED\u8A00\u4E00\u81F4\u6027",
       noneContext: "\u65E0\u4E0A\u4E0B\u6587",
       webSearch: "\u7F51\u9875\u641C\u7D22",
       addAttachment: "\u6DFB\u52A0\u56FE\u7247\u6216\u6587\u6863",
@@ -15554,6 +13496,10 @@
       hoverDefinitionChinese: "\u4EC5\u4E2D\u6587",
       hoverDefinitionEnglish: "\u4EC5\u82F1\u6587",
       hoverDefinitionBoth: "\u4E2D\u82F1\u6587",
+      hoverDefinitionStyle: "\u60AC\u505C\u547D\u4E2D\u8BCD\u6837\u5F0F",
+      hoverDefinitionStyleNone: "\u65E0",
+      hoverDefinitionStyleHighlight: "\u9AD8\u4EAE",
+      hoverDefinitionStyleUnderline: "\u4E0B\u5212\u7EBF",
       hoverDefinitionShortcut: "\u60AC\u505C\u53D6\u8BCD\u5FEB\u6377\u952E",
       hoverDefinitionShortcutHelp: "\u542F\u7528\u540E\uFF0C\u6309\u4F4F\u6240\u9009\u5FEB\u6377\u952E\u5E76\u60AC\u505C\u5728\u8BCD\u8BED\u4E0A\u65F6\u663E\u793A\u91CA\u4E49\u3002",
       hoverDefinitionBlacklistHelp: "\u547D\u4E2D\u540E\u9875\u9762\u4E2D\u4E0D\u4F1A\u663E\u793A\u60AC\u505C\u91CA\u4E49\u3002",
@@ -15923,11 +13869,19 @@
       currentBodyPreview: "\u76EE\u524D\u6B63\u6587\u9810\u89BD",
       expand: "\u5C55\u958B",
       collapse: "\u6536\u8D77",
-      currentBodyQuality: "\u54C1\u8CEA",
       currentBodyBlocks: "{count} \u6BB5",
       currentBodyChars: "{count} \u5B57",
-      currentBodySourceReadability: "Readability",
+      currentBodyScore: "\u6B63\u6587\u8A55\u5206\uFF1A{score}",
+      articleMetricLength: "\u9577\u5EA6",
+      articleMetricStructure: "\u7D50\u69CB",
+      articleMetricHeading: "\u6A19\u984C",
+      articleMetricSemantics: "\u8A9E\u610F\u5BB9\u5668",
+      articleMetricDensity: "\u6587\u5B57\u5BC6\u5EA6",
+      articleMetricLinkPurity: "\u9023\u7D50\u7D14\u5EA6",
+      articleMetricFocus: "\u805A\u7126\u5EA6",
+      articleMetricCleanliness: "\u4E7E\u6DE8\u5EA6",
       currentBodySourceDom: "DOM",
+      currentBodySourceRule: "\u898F\u5247",
       currentBodySourceManual: "\u624B\u52D5\u9078\u53D6",
       currentBodySourceEdited: "\u5DF2\u7DE8\u8F2F",
       selectCurrentBody: "\u6846\u9078\u6B63\u6587",
@@ -15948,16 +13902,9 @@
       noArticleExtractionRules: "\u9084\u6C92\u6709\u6B63\u6587\u64F7\u53D6\u898F\u5247",
       articleExtractionRuleSaved: "\u6B63\u6587\u64F7\u53D6\u898F\u5247\u5DF2\u5132\u5B58",
       articleExtractionRuleInvalid: "\u8ACB\u586B\u5BEB\u9801\u9762\u5730\u5740\u548C selector",
-      currentBodyVirtualizedWarning: "\u7591\u4F3C\u865B\u64EC\u6372\u52D5\u9801\u9762\uFF0C\u9810\u89BD\u53EF\u80FD\u53EA\u5305\u542B\u76EE\u524D\u5DF2\u6E32\u67D3\u5167\u5BB9\u3002",
       selectingBodyRange: "\u6B63\u5728\u9078\u53D6\u6B63\u6587\u7BC4\u570D",
       manualBodySelectionHint: "\u6EFE\u8F2A/\u65B9\u5411\u9375\u8ABF\u6574\u7BC4\u570D\uFF0C\u9EDE\u64CA\u78BA\u8A8D\uFF0CESC\u53D6\u6D88",
       manualBodySelectionCancelled: "\u5DF2\u53D6\u6D88\u6B63\u6587\u6846\u9078",
-      textDensity: "\u6587\u5B57\u5BC6\u5EA6",
-      linkRatio: "\u9023\u7D50\u6BD4\u4F8B",
-      visibleArea: "\u53EF\u898B\u9762\u7A4D",
-      continuity: "\u9023\u7E8C\u6027",
-      clutterPenalty: "\u96DC\u8A0A",
-      languageConsistency: "\u8A9E\u8A00\u4E00\u81F4\u6027",
       noneContext: "\u7121\u4E0A\u4E0B\u6587",
       webSearch: "\u7DB2\u9801\u641C\u5C0B",
       addAttachment: "\u65B0\u589E\u5716\u7247\u6216\u6587\u4EF6",
@@ -16082,6 +14029,10 @@
       hoverDefinitionChinese: "\u50C5\u4E2D\u6587",
       hoverDefinitionEnglish: "\u50C5\u82F1\u6587",
       hoverDefinitionBoth: "\u4E2D\u82F1\u6587",
+      hoverDefinitionStyle: "\u61F8\u505C\u547D\u4E2D\u8A5E\u6A23\u5F0F",
+      hoverDefinitionStyleNone: "\u7121",
+      hoverDefinitionStyleHighlight: "\u9AD8\u4EAE",
+      hoverDefinitionStyleUnderline: "\u4E0B\u5283\u7DDA",
       hoverDefinitionShortcut: "\u61F8\u505C\u53D6\u8A5E\u5FEB\u6377\u9375",
       hoverDefinitionShortcutHelp: "\u555F\u7528\u5F8C\uFF0C\u6309\u4F4F\u6240\u9078\u5FEB\u6377\u9375\u4E26\u61F8\u505C\u5728\u8A5E\u8A9E\u4E0A\u6642\u986F\u793A\u91CB\u7FA9\u3002",
       hoverDefinitionBlacklistHelp: "\u547D\u4E2D\u5F8C\u9801\u9762\u4E2D\u4E0D\u6703\u986F\u793A\u61F8\u505C\u91CB\u7FA9\u3002",
@@ -16451,11 +14402,19 @@
       currentBodyPreview: "Current Body Preview",
       expand: "Expand",
       collapse: "Collapse",
-      currentBodyQuality: "Quality",
       currentBodyBlocks: "{count} blocks",
       currentBodyChars: "{count} chars",
-      currentBodySourceReadability: "Readability",
+      currentBodyScore: "Body score: {score}",
+      articleMetricLength: "Length",
+      articleMetricStructure: "Structure",
+      articleMetricHeading: "Heading",
+      articleMetricSemantics: "Semantic container",
+      articleMetricDensity: "Text density",
+      articleMetricLinkPurity: "Link purity",
+      articleMetricFocus: "Focus",
+      articleMetricCleanliness: "Cleanliness",
       currentBodySourceDom: "DOM",
+      currentBodySourceRule: "Rule",
       currentBodySourceManual: "Manual",
       currentBodySourceEdited: "Edited",
       selectCurrentBody: "Select Body",
@@ -16476,16 +14435,9 @@
       noArticleExtractionRules: "No body extraction rules yet",
       articleExtractionRuleSaved: "Body extraction rule saved",
       articleExtractionRuleInvalid: "Enter both a page URL pattern and selector",
-      currentBodyVirtualizedWarning: "This looks like a virtualized page, so the preview may include only currently rendered content.",
       selectingBodyRange: "Selecting body range",
       manualBodySelectionHint: "Wheel/arrow keys adjust range, click to confirm, Esc to cancel",
       manualBodySelectionCancelled: "Body range selection cancelled",
-      textDensity: "Text Density",
-      linkRatio: "Link Ratio",
-      visibleArea: "Visible Area",
-      continuity: "Continuity",
-      clutterPenalty: "Clutter",
-      languageConsistency: "Language Consistency",
       noneContext: "No Context",
       webSearch: "Web Search",
       addAttachment: "Add Image or Document",
@@ -16610,6 +14562,10 @@
       hoverDefinitionChinese: "Chinese Only",
       hoverDefinitionEnglish: "English Only",
       hoverDefinitionBoth: "Chinese and English",
+      hoverDefinitionStyle: "Hovered word style",
+      hoverDefinitionStyleNone: "None",
+      hoverDefinitionStyleHighlight: "Highlight",
+      hoverDefinitionStyleUnderline: "Underline",
       hoverDefinitionShortcut: "Hover Lookup Shortcut",
       hoverDefinitionShortcutHelp: "When enabled, hold the selected shortcut while hovering over a word to show its definition.",
       hoverDefinitionBlacklistHelp: "When matched, hover definitions will not appear on the page.",
@@ -16979,11 +14935,19 @@
       currentBodyPreview: "\u672C\u6587\u30D7\u30EC\u30D3\u30E5\u30FC",
       expand: "\u5C55\u958B",
       collapse: "\u6298\u308A\u305F\u305F\u3080",
-      currentBodyQuality: "\u54C1\u8CEA",
       currentBodyBlocks: "{count} \u30D6\u30ED\u30C3\u30AF",
       currentBodyChars: "{count} \u6587\u5B57",
-      currentBodySourceReadability: "Readability",
+      currentBodyScore: "\u672C\u6587\u30B9\u30B3\u30A2\uFF1A{score}",
+      articleMetricLength: "\u9577\u3055",
+      articleMetricStructure: "\u69CB\u9020",
+      articleMetricHeading: "\u898B\u51FA\u3057",
+      articleMetricSemantics: "\u30BB\u30DE\u30F3\u30C6\u30A3\u30C3\u30AF\u8981\u7D20",
+      articleMetricDensity: "\u30C6\u30AD\u30B9\u30C8\u5BC6\u5EA6",
+      articleMetricLinkPurity: "\u30EA\u30F3\u30AF\u7D14\u5EA6",
+      articleMetricFocus: "\u96C6\u4E2D\u5EA6",
+      articleMetricCleanliness: "\u30AF\u30EA\u30FC\u30F3\u5EA6",
       currentBodySourceDom: "DOM",
+      currentBodySourceRule: "\u30EB\u30FC\u30EB",
       currentBodySourceManual: "\u624B\u52D5\u9078\u629E",
       currentBodySourceEdited: "\u7DE8\u96C6\u6E08\u307F",
       selectCurrentBody: "\u672C\u6587\u3092\u9078\u629E",
@@ -17004,16 +14968,9 @@
       noArticleExtractionRules: "\u672C\u6587\u62BD\u51FA\u30EB\u30FC\u30EB\u306F\u307E\u3060\u3042\u308A\u307E\u305B\u3093",
       articleExtractionRuleSaved: "\u672C\u6587\u62BD\u51FA\u30EB\u30FC\u30EB\u3092\u4FDD\u5B58\u3057\u307E\u3057\u305F",
       articleExtractionRuleInvalid: "\u30DA\u30FC\u30B8 URL \u3068 selector \u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044",
-      currentBodyVirtualizedWarning: "\u4EEE\u60F3\u30B9\u30AF\u30ED\u30FC\u30EB\u30DA\u30FC\u30B8\u306E\u53EF\u80FD\u6027\u304C\u3042\u308A\u3001\u30D7\u30EC\u30D3\u30E5\u30FC\u306F\u73FE\u5728\u63CF\u753B\u3055\u308C\u3066\u3044\u308B\u5185\u5BB9\u3060\u3051\u304B\u3082\u3057\u308C\u307E\u305B\u3093\u3002",
       selectingBodyRange: "\u672C\u6587\u7BC4\u56F2\u3092\u9078\u629E\u4E2D",
       manualBodySelectionHint: "\u30DB\u30A4\u30FC\u30EB/\u77E2\u5370\u30AD\u30FC\u3067\u7BC4\u56F2\u8ABF\u6574\u3001\u30AF\u30EA\u30C3\u30AF\u3067\u78BA\u5B9A\u3001Esc \u3067\u30AD\u30E3\u30F3\u30BB\u30EB",
       manualBodySelectionCancelled: "\u672C\u6587\u7BC4\u56F2\u306E\u9078\u629E\u3092\u30AD\u30E3\u30F3\u30BB\u30EB\u3057\u307E\u3057\u305F",
-      textDensity: "\u30C6\u30AD\u30B9\u30C8\u5BC6\u5EA6",
-      linkRatio: "\u30EA\u30F3\u30AF\u6BD4\u7387",
-      visibleArea: "\u8868\u793A\u9762\u7A4D",
-      continuity: "\u9023\u7D9A\u6027",
-      clutterPenalty: "\u30CE\u30A4\u30BA",
-      languageConsistency: "\u8A00\u8A9E\u4E00\u8CAB\u6027",
       noneContext: "\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u306A\u3057",
       webSearch: "\u30A6\u30A7\u30D6\u691C\u7D22",
       addAttachment: "\u753B\u50CF\u307E\u305F\u306F\u6587\u66F8\u3092\u8FFD\u52A0",
@@ -17138,6 +15095,10 @@
       hoverDefinitionChinese: "\u4E2D\u56FD\u8A9E\u306E\u307F",
       hoverDefinitionEnglish: "\u82F1\u8A9E\u306E\u307F",
       hoverDefinitionBoth: "\u4E2D\u56FD\u8A9E\u3068\u82F1\u8A9E",
+      hoverDefinitionStyle: "\u30DB\u30D0\u30FC\u8A9E\u53E5\u306E\u30B9\u30BF\u30A4\u30EB",
+      hoverDefinitionStyleNone: "\u306A\u3057",
+      hoverDefinitionStyleHighlight: "\u30CF\u30A4\u30E9\u30A4\u30C8",
+      hoverDefinitionStyleUnderline: "\u4E0B\u7DDA",
       hoverDefinitionShortcut: "\u30DB\u30D0\u30FC\u5358\u8A9E\u691C\u7D22\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8",
       hoverDefinitionShortcutHelp: "\u6709\u52B9\u306B\u3059\u308B\u3068\u3001\u9078\u629E\u3057\u305F\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8\u3092\u62BC\u3057\u306A\u304C\u3089\u5358\u8A9E\u306B\u30DB\u30D0\u30FC\u3057\u305F\u3068\u304D\u306B\u610F\u5473\u3092\u8868\u793A\u3057\u307E\u3059\u3002",
       hoverDefinitionBlacklistHelp: "\u4E00\u81F4\u3057\u305F\u30DA\u30FC\u30B8\u3067\u306F\u30DB\u30D0\u30FC\u8F9E\u66F8\u3092\u8868\u793A\u3057\u307E\u305B\u3093\u3002",
@@ -17507,11 +15468,19 @@
       currentBodyPreview: "\uD604\uC7AC \uBCF8\uBB38 \uBBF8\uB9AC\uBCF4\uAE30",
       expand: "\uD3BC\uCE58\uAE30",
       collapse: "\uC811\uAE30",
-      currentBodyQuality: "\uD488\uC9C8",
       currentBodyBlocks: "{count}\uAC1C \uBE14\uB85D",
       currentBodyChars: "{count}\uC790",
-      currentBodySourceReadability: "Readability",
+      currentBodyScore: "\uBCF8\uBB38 \uC810\uC218: {score}",
+      articleMetricLength: "\uAE38\uC774",
+      articleMetricStructure: "\uAD6C\uC870",
+      articleMetricHeading: "\uC81C\uBAA9",
+      articleMetricSemantics: "\uC2DC\uB9E8\uD2F1 \uCEE8\uD14C\uC774\uB108",
+      articleMetricDensity: "\uD14D\uC2A4\uD2B8 \uBC00\uB3C4",
+      articleMetricLinkPurity: "\uB9C1\uD06C \uC21C\uB3C4",
+      articleMetricFocus: "\uC9D1\uC911\uB3C4",
+      articleMetricCleanliness: "\uC815\uB3C8\uB3C4",
       currentBodySourceDom: "DOM",
+      currentBodySourceRule: "\uADDC\uCE59",
       currentBodySourceManual: "\uC218\uB3D9 \uC120\uD0DD",
       currentBodySourceEdited: "\uD3B8\uC9D1\uB428",
       selectCurrentBody: "\uBCF8\uBB38 \uC120\uD0DD",
@@ -17532,16 +15501,9 @@
       noArticleExtractionRules: "\uBCF8\uBB38 \uCD94\uCD9C \uADDC\uCE59\uC774 \uC544\uC9C1 \uC5C6\uC2B5\uB2C8\uB2E4",
       articleExtractionRuleSaved: "\uBCF8\uBB38 \uCD94\uCD9C \uADDC\uCE59\uC744 \uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4",
       articleExtractionRuleInvalid: "\uD398\uC774\uC9C0 URL\uACFC selector\uB97C \uC785\uB825\uD558\uC138\uC694",
-      currentBodyVirtualizedWarning: "\uAC00\uC0C1 \uC2A4\uD06C\uB864 \uD398\uC774\uC9C0\uC77C \uC218 \uC788\uC5B4 \uBBF8\uB9AC\uBCF4\uAE30\uC5D0\uB294 \uD604\uC7AC \uB80C\uB354\uB9C1\uB41C \uB0B4\uC6A9\uB9CC \uD3EC\uD568\uB420 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
       selectingBodyRange: "\uBCF8\uBB38 \uBC94\uC704 \uC120\uD0DD \uC911",
       manualBodySelectionHint: "\uD720/\uD654\uC0B4\uD45C \uD0A4\uB85C \uBC94\uC704 \uC870\uC815, \uD074\uB9AD\uC73C\uB85C \uD655\uC815, Esc\uB85C \uCDE8\uC18C",
       manualBodySelectionCancelled: "\uBCF8\uBB38 \uBC94\uC704 \uC120\uD0DD\uC744 \uCDE8\uC18C\uD588\uC2B5\uB2C8\uB2E4",
-      textDensity: "\uD14D\uC2A4\uD2B8 \uBC00\uB3C4",
-      linkRatio: "\uB9C1\uD06C \uBE44\uC728",
-      visibleArea: "\uAC00\uC2DC \uC601\uC5ED",
-      continuity: "\uC5F0\uC18D\uC131",
-      clutterPenalty: "\uC7A1\uC74C",
-      languageConsistency: "\uC5B8\uC5B4 \uC77C\uAD00\uC131",
       noneContext: "\uCEE8\uD14D\uC2A4\uD2B8 \uC5C6\uC74C",
       webSearch: "\uC6F9 \uAC80\uC0C9",
       addAttachment: "\uC774\uBBF8\uC9C0 \uB610\uB294 \uBB38\uC11C \uCD94\uAC00",
@@ -17666,6 +15628,10 @@
       hoverDefinitionChinese: "\uC911\uAD6D\uC5B4\uB9CC",
       hoverDefinitionEnglish: "\uC601\uC5B4\uB9CC",
       hoverDefinitionBoth: "\uC911\uAD6D\uC5B4\uC640 \uC601\uC5B4",
+      hoverDefinitionStyle: "\uD638\uBC84 \uB2E8\uC5B4 \uC2A4\uD0C0\uC77C",
+      hoverDefinitionStyleNone: "\uC5C6\uC74C",
+      hoverDefinitionStyleHighlight: "\uAC15\uC870",
+      hoverDefinitionStyleUnderline: "\uBC11\uC904",
       hoverDefinitionShortcut: "\uD638\uBC84 \uB2E8\uC5B4 \uCC3E\uAE30 \uB2E8\uCD95\uD0A4",
       hoverDefinitionShortcutHelp: "\uCF1C\uBA74 \uC120\uD0DD\uD55C \uB2E8\uCD95\uD0A4\uB97C \uB204\uB978 \uCC44 \uB2E8\uC5B4\uC5D0 \uB9C8\uC6B0\uC2A4\uB97C \uC62C\uB9B4 \uB54C \uB73B\uC744 \uD45C\uC2DC\uD569\uB2C8\uB2E4.",
       hoverDefinitionBlacklistHelp: "\uC77C\uCE58\uD558\uB294 \uD398\uC774\uC9C0\uC5D0\uC11C\uB294 \uB9C8\uC6B0\uC2A4 \uC624\uBC84 \uB73B\uD480\uC774\uAC00 \uD45C\uC2DC\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
@@ -19431,6 +17397,7 @@
     immersiveReadingAutoWhitelist: [],
     hoverDefinitionMode: "off",
     hoverDefinitionShortcut: "off",
+    hoverDefinitionStyle: "none",
     hoverDefinitionUrlBlacklist: [],
     edgeQuickToolsEnabled: false,
     edgeQuickToolBottom: 36,
@@ -19612,6 +17579,7 @@
       hoverDefinitionShortcut: HOVER_DEFINITION_SHORTCUTS.has(
         stored.hoverDefinitionShortcut
       ) ? stored.hoverDefinitionShortcut : DEFAULT_SETTINGS.hoverDefinitionShortcut,
+      hoverDefinitionStyle: stored.hoverDefinitionStyle === "highlight" || stored.hoverDefinitionStyle === "underline" ? stored.hoverDefinitionStyle : DEFAULT_SETTINGS.hoverDefinitionStyle,
       hoverDefinitionUrlBlacklist: stored.hoverDefinitionUrlBlacklist ?? [],
       edgeQuickToolsEnabled: stored.edgeQuickToolsEnabled ?? DEFAULT_SETTINGS.edgeQuickToolsEnabled,
       edgeQuickToolBottom: stored.edgeQuickToolBottom ?? DEFAULT_SETTINGS.edgeQuickToolBottom,
@@ -20300,11 +18268,6 @@ ${JSON.stringify(blocks)}
 
 ${normalized.slice(-tail)}`;
   }
-  function isPointInsideAnyRect(rects, clientX, clientY) {
-    return Array.from(rects).some(
-      (rect) => rect.width !== 0 && rect.height !== 0 && clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom
-    );
-  }
   function extractJsonArray(text2, language) {
     const fenced = text2.match(/```(?:json)?\s*([\s\S]*?)```/i)?.[1];
     const source = fenced ?? text2;
@@ -20811,9 +18774,6 @@ ${normalized.slice(-tail)}`;
     dependencies.clearSources();
   }
 
-  // src/content/pageContext.ts
-  var import_readability = __toESM(require_readability(), 1);
-
   // src/shared/searchEngines.ts
   var SEARCH_RULES = [
     {
@@ -21292,24 +19252,63 @@ ${normalized.slice(-tail)}`;
   var articlePreviewIdCounter = 0;
   var activeArticleExtractionCache = null;
   var articlePreviewTargets = /* @__PURE__ */ new Map();
+  var articlePreviewExclusionTargets = /* @__PURE__ */ new Map();
   var removedArticleBlockTextKeys = /* @__PURE__ */ new Set();
-  var ARTICLE_BLOCK_SELECTOR = "h1, h2, h3, h4, h5, h6, p, li, blockquote, figcaption, td, th, pre, [role='heading'], [role='paragraph']";
-  var ARTICLE_ROOT_SELECTOR = "article, main, [role='main'], [itemprop='articleBody'], [data-testid*='article' i], [data-testid*='content' i], [data-testid*='post' i], [data-testid*='story' i], [data-testid*='readme' i], [class*='article' i], [class*='content' i], [class*='post' i], [class*='story' i], [class*='entry' i], [class*='readme' i], [class*='markdown' i], [id*='article' i], [id*='content' i], [id*='post' i], [id*='story' i], [id*='readme' i], [id*='markdown' i]";
+  var ARTICLE_ROOT_SELECTOR = [
+    "article",
+    "main",
+    "[role='main']",
+    "[itemprop='articleBody']",
+    "[data-testid*='article' i]",
+    "[data-testid*='content' i]",
+    "[data-testid*='post' i]",
+    "[data-testid*='story' i]",
+    "[data-testid*='readme' i]",
+    "[class*='article' i]",
+    "[class*='content' i]",
+    "[class*='post' i]",
+    "[class*='story' i]",
+    "[class*='entry' i]",
+    "[class*='readme' i]",
+    "[class*='markdown' i]",
+    "[id*='article' i]",
+    "[id*='content' i]",
+    "[id*='post' i]",
+    "[id*='story' i]",
+    "[id*='readme' i]",
+    "[id*='markdown' i]"
+  ].join(", ");
+  var ARTICLE_BLOCK_SELECTOR = [
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "p",
+    "blockquote",
+    "pre",
+    "table",
+    "ul",
+    "ol",
+    "dl",
+    "figure",
+    "figcaption",
+    "details",
+    "[role='heading']",
+    "[role='paragraph']"
+  ].join(", ");
+  var ARTICLE_HEADING_SELECTOR = "h1, h2, [role='heading'][aria-level='1'], [role='heading'][aria-level='2']";
+  var ARTICLE_CONTAINER_FALLBACK_SELECTOR = "article, main, section, div, td, th, [role='main'], [role='article']";
+  var ARTICLE_TEXT_IGNORED_SELECTOR = "script, style, noscript, template, svg, canvas, [hidden], [aria-hidden='true'], .webmind-root, .webmind-translation, .webmind-reading, .webmind-immersive-reading-token, .webmind-article-picker-ui";
+  var ARTICLE_NOISE_SELECTOR = "nav, header, footer, aside, form, dialog, menu";
   var ARTICLE_PREVIEW_HIGHLIGHT_STYLE_ID = "webmind-article-preview-highlight-style";
   var ARTICLE_ROOT_CANDIDATE_LIMIT = 80;
-  var ARTICLE_BLOCK_CANDIDATE_LIMIT = 400;
-  var SHADOW_HOST_SCAN_LIMIT = 1200;
-  var STRUCTURED_ARTICLE_TYPES = /* @__PURE__ */ new Set([
-    "article",
-    "blogposting",
-    "discussionforumposting",
-    "newsarticle",
-    "reportagenewsarticle",
-    "scholarlyarticle",
-    "socialmediaposting",
-    "techarticle"
-  ]);
-  function waitForPageIdle(timeout = 120) {
+  var ARTICLE_BLOCK_CANDIDATE_LIMIT = 420;
+  var SHADOW_HOST_SCAN_LIMIT = 800;
+  var MANUAL_ARTICLE_MIN_CHARS = 1;
+  var AUTO_ARTICLE_MIN_CHARS = 40;
+  function waitForPageIdle(timeout = 140) {
     return new Promise((resolve) => {
       const requestIdle = window.requestIdleCallback?.bind(window);
       if (requestIdle) {
@@ -21322,14 +19321,20 @@ ${normalized.slice(-tail)}`;
   function clamp(value, min = 0, max = 1) {
     return Math.max(min, Math.min(max, value));
   }
+  function preserveArticleBlockText(value) {
+    return cleanCitationExplanationText(value).replace(/\u00a0/g, " ").replace(/\r\n?/g, "\n").replace(/[^\S\n]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{2,}/g, "\n").trim();
+  }
   function normalizedText(value) {
-    return cleanCitationExplanationText(value).replace(/\s+/g, " ").trim();
+    return preserveArticleBlockText(value).replace(/\s+/g, " ").trim();
   }
   function articleBlockTextKey(value) {
     return normalizedText(value).toLowerCase();
   }
   function textLength(value) {
     return value.replace(/\s+/g, "").length;
+  }
+  function articleTextFromBlocks(blocks) {
+    return blocks.map((block) => preserveArticleBlockText(block.text)).filter((text2) => textLength(text2) > 0).join("\n\n");
   }
   function withArticleExtractionCache(callback) {
     if (activeArticleExtractionCache) return callback();
@@ -21350,17 +19355,12 @@ ${normalized.slice(-tail)}`;
       activeArticleExtractionCache?.visible.set(element, value);
       return value;
     };
-    if (element.closest(
-      "script, style, noscript, template, svg, [hidden], [aria-hidden='true'], .webmind-root, .webmind-translation, .webmind-reading, .webmind-immersive-reading-token"
-    )) {
-      return setCached(false);
-    }
+    if (element.closest(ARTICLE_TEXT_IGNORED_SELECTOR)) return setCached(false);
     const style = getComputedStyle(element);
     if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) {
       return setCached(false);
     }
-    const rects = element.getClientRects();
-    return setCached(rects.length > 0);
+    return setCached(element.getClientRects().length > 0);
   }
   function visibleTextFromElement(element) {
     const cached = activeArticleExtractionCache?.text.get(element);
@@ -21378,143 +19378,26 @@ ${normalized.slice(-tail)}`;
         parts.push("\n");
         return;
       }
+      if (node.tagName === "PRE") {
+        parts.push(node.innerText || node.textContent || "");
+        parts.push("\n");
+        return;
+      }
       for (const child of Array.from(node.childNodes)) visit(child);
-      if (/^(?:ADDRESS|ARTICLE|ASIDE|BLOCKQUOTE|DIV|FIGCAPTION|H[1-6]|LI|P|PRE|SECTION|TR)$/.test(
-        node.tagName
-      )) {
-        parts.push("\n\n");
+      if (/^(?:ADDRESS|ARTICLE|BLOCKQUOTE|DETAILS|DIV|FIGCAPTION|FIGURE|H[1-6]|LI|MAIN|P|SECTION)$/.test(node.tagName)) {
+        parts.push("\n");
+      } else if (node.tagName === "TR") {
+        parts.push("\n");
+      } else if (/^(?:DD|DT)$/.test(node.tagName)) {
+        parts.push("\n");
       } else if (/^(?:TD|TH)$/.test(node.tagName)) {
         parts.push("	");
       }
     };
     visit(element);
-    const text2 = cleanCitationExplanationText(parts.join("").replace(/\u00a0/g, " ").replace(/\r\n?/g, "\n").replace(/[^\S\n]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim());
+    const text2 = preserveArticleBlockText(parts.join(""));
     activeArticleExtractionCache?.text.set(element, text2);
     return text2;
-  }
-  function sameLanguageProfile(text2) {
-    const profiles = [
-      { family: "han", count: text2.match(/[\u3400-\u4dbf\u4e00-\u9fff]/g)?.length ?? 0 },
-      { family: "kana", count: text2.match(/[\u3040-\u30ff]/g)?.length ?? 0 },
-      { family: "hangul", count: text2.match(/[\uac00-\ud7af]/g)?.length ?? 0 },
-      { family: "latin", count: text2.match(/[A-Za-z]/g)?.length ?? 0 }
-    ];
-    const best = profiles.sort((left, right) => right.count - left.count)[0];
-    return best.count ? best : { family: "other", count: 0 };
-  }
-  function languageConsistency(blocks) {
-    const meaningful = blocks.map((block) => sameLanguageProfile(block)).filter((profile) => profile.count >= 3);
-    if (!meaningful.length) return 0.6;
-    const familyCounts = meaningful.reduce(
-      (accumulator, profile) => {
-        accumulator[profile.family] = (accumulator[profile.family] ?? 0) + 1;
-        return accumulator;
-      },
-      {}
-    );
-    return Math.max(...Object.values(familyCounts)) / Math.max(1, meaningful.length);
-  }
-  function articleBlockElements(root) {
-    const descendants = Array.from(
-      root.querySelectorAll(ARTICLE_BLOCK_SELECTOR)
-    );
-    return root instanceof HTMLElement && root.matches(ARTICLE_BLOCK_SELECTOR) ? [root, ...descendants] : descendants;
-  }
-  function contentBlocksFromElement(element) {
-    return visibleTextFromElement(element).split(/\n{2,}/).map(normalizedText).filter((text2) => textLength(text2) > 0);
-  }
-  function contentBlocksFromText(text2) {
-    return text2.split(/\n{2,}|(?<=[。！？.!?])\s+/).map(normalizedText).filter((block) => textLength(block) >= 12);
-  }
-  function articleTitleSourceFromElement(element) {
-    if (!element) return { text: "" };
-    const localHeading = element.matches("h1, h2, [role='heading']") ? element : element.querySelector(
-      "h1, h2, [role='heading'][aria-level='1'], [role='heading'][aria-level='2']"
-    );
-    if (localHeading) {
-      return {
-        text: normalizedText(visibleTextFromElement(localHeading)),
-        element: localHeading
-      };
-    }
-    const nearbyHeading = precedingArticleHeading(element);
-    if (nearbyHeading) {
-      return {
-        text: normalizedText(visibleTextFromElement(nearbyHeading)),
-        element: nearbyHeading
-      };
-    }
-    const pageHeading = document.querySelector(
-      "main h1, article h1, h1, main h2, article h2"
-    );
-    return {
-      text: pageHeading ? normalizedText(visibleTextFromElement(pageHeading)) : "",
-      element: pageHeading ?? void 0
-    };
-  }
-  function precedingArticleHeading(element) {
-    const selector = "h1, h2, [role='heading'][aria-level='1'], [role='heading'][aria-level='2']";
-    let current = element;
-    while (current && current !== document.body && current !== document.documentElement) {
-      let sibling = current.previousElementSibling;
-      while (sibling) {
-        const heading = sibling.matches(selector) ? sibling : sibling.querySelector(selector);
-        if (heading && textLength(visibleTextFromElement(heading)) >= 4) {
-          return heading;
-        }
-        sibling = sibling.previousElementSibling;
-      }
-      current = current.parentElement;
-    }
-    return null;
-  }
-  function prependArticleTitle(title, text2) {
-    const normalizedTitle = normalizedText(title ?? "");
-    if (!normalizedTitle) return text2;
-    if (text2 === normalizedTitle || text2.startsWith(`${normalizedTitle} `) || text2.slice(0, 500).includes(normalizedTitle)) {
-      return text2;
-    }
-    return `${normalizedTitle}
-
-${text2}`;
-  }
-  function prependArticleTitlePreviewBlock(title, blocks, titleElement) {
-    const normalizedTitle = normalizedText(title);
-    if (!normalizedTitle) return blocks;
-    const first = blocks[0]?.text ?? "";
-    if (first === normalizedTitle || first.startsWith(`${normalizedTitle} `) || blocks.slice(0, 3).some((block) => block.text.includes(normalizedTitle))) {
-      return blocks;
-    }
-    return [{ text: normalizedTitle, element: titleElement }, ...blocks];
-  }
-  function isArticleNoiseElement(element) {
-    if (element.matches(
-      "script, style, noscript, template, svg, canvas, nav, header, footer, aside, form, dialog, menu, [hidden], [aria-hidden='true'], .webmind-root, .webmind-translation, .webmind-reading"
-    )) {
-      return true;
-    }
-    const metadata = [
-      element.id,
-      element.className,
-      element.getAttribute("role"),
-      element.getAttribute("aria-label"),
-      ...Array.from(element.attributes).flatMap(
-        (attribute) => attribute.name.startsWith("data-") ? [`${attribute.name} ${attribute.value}`] : []
-      )
-    ].filter(Boolean).join(" ");
-    return /(^|\b)(ad|ads|advert|banner|cookie|comment|comments|footer|header|login|menu|modal|nav|newsletter|paywall|promo|recommend|related|share|sidebar|sponsor|subscribe|toolbar)(\b|[-_])/i.test(
-      metadata
-    );
-  }
-  function elementVisibleArea(element) {
-    if (!element) return 0.8;
-    const rect = element.getBoundingClientRect();
-    if (rect.width <= 0 || rect.height <= 0) return 0.25;
-    const width = Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0);
-    const height = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
-    const visibleArea = Math.max(0, width) * Math.max(0, height);
-    const viewportArea = Math.max(1, window.innerWidth * window.innerHeight);
-    return clamp(visibleArea / Math.max(1, viewportArea * 0.35));
   }
   function cssEscapeIdentifier(value) {
     return globalThis.CSS?.escape ? globalThis.CSS.escape(value) : value.replace(/(^-?\d)|[^a-zA-Z0-9_-]/g, (match) => `\\${match}`);
@@ -21549,6 +19432,17 @@ ${text2}`;
     }
     return segments.join(" > ");
   }
+  function sameOriginIframeBodies() {
+    const bodies = [];
+    document.querySelectorAll("iframe").forEach((iframe) => {
+      try {
+        const body = iframe.contentDocument?.body;
+        if (body) bodies.push(body);
+      } catch {
+      }
+    });
+    return bodies;
+  }
   function queryOpenShadowSelector(selector) {
     const hosts = Array.from(document.querySelectorAll("*")).slice(
       0,
@@ -21559,6 +19453,19 @@ ${text2}`;
       if (match) return match;
     }
     return null;
+  }
+  function collectOpenShadowElements(root) {
+    const elements = [];
+    Array.from(root.querySelectorAll("*")).slice(0, SHADOW_HOST_SCAN_LIMIT).forEach((element) => {
+      if (!element.shadowRoot) return;
+      elements.push(
+        ...Array.from(
+          element.shadowRoot.querySelectorAll(ARTICLE_ROOT_SELECTOR)
+        )
+      );
+      elements.push(...collectOpenShadowElements(element.shadowRoot));
+    });
+    return elements;
   }
   function elementForArticleRuleSelector(selector) {
     try {
@@ -21571,31 +19478,26 @@ ${text2}`;
         const frameMatch = body.querySelector(selector);
         if (frameMatch) return frameMatch;
       }
-      return null;
     } catch {
       return null;
     }
-  }
-  function configuredArticleCandidate(rules = []) {
-    for (const rule of rules) {
-      if (!rule.urlPattern || !rule.selector || !urlMatchesWhitelist(location.href, [rule.urlPattern])) {
-        continue;
-      }
-      const element = elementForArticleRuleSelector(rule.selector);
-      if (!element || !isElementVisible(element)) continue;
-      const text2 = visibleTextFromElement(element);
-      if (textLength(text2) < 40) continue;
-      const titleSource = articleTitleSourceFromElement(element);
-      return {
-        title: titleSource.text,
-        titleElement: titleSource.element,
-        text: text2,
-        element,
-        source: "dom",
-        selector: rule.selector
-      };
-    }
     return null;
+  }
+  function isArticleNoiseElement(element) {
+    if (element.closest(ARTICLE_TEXT_IGNORED_SELECTOR)) return true;
+    if (element.closest(ARTICLE_NOISE_SELECTOR)) return true;
+    const metadata = [
+      element.id,
+      element.className,
+      element.getAttribute("role"),
+      element.getAttribute("aria-label"),
+      ...Array.from(element.attributes).flatMap(
+        (attribute) => attribute.name.startsWith("data-") ? [`${attribute.name} ${attribute.value}`] : []
+      )
+    ].filter(Boolean).join(" ");
+    return /(^|\b)(ad|ads|advert|banner|cookie|footer|header|login|menu|modal|nav|newsletter|paywall|promo|recommend|related|share|sidebar|sponsor|subscribe|toolbar)(\b|[-_])/i.test(
+      metadata
+    );
   }
   function linkRatio(element, text2) {
     const total = textLength(text2);
@@ -21603,415 +19505,267 @@ ${text2}`;
     const linkText = Array.from(element.querySelectorAll("a")).map((anchor) => anchor.textContent ?? "").join(" ");
     return clamp(textLength(linkText) / total);
   }
-  function clutterPenalty(element) {
-    if (!element) return 0;
-    let penalty = 0;
-    const noise = element.querySelectorAll(
-      "nav, header, footer, aside, form, button, input, select, textarea, [role='navigation'], [role='complementary'], [role='banner'], [role='contentinfo']"
+  function linkRatioFromArticleBlocks(blocks, text2) {
+    const total = textLength(text2);
+    if (!total) return 0;
+    const anchors = /* @__PURE__ */ new Set();
+    blocks.forEach((block) => {
+      if (block.element instanceof HTMLAnchorElement) anchors.add(block.element);
+      block.element.querySelectorAll("a").forEach((anchor) => anchors.add(anchor));
+    });
+    const linkText = Array.from(anchors).map((anchor) => anchor.textContent ?? "").join(" ");
+    return clamp(textLength(linkText) / total);
+  }
+  function elementMetadataText(element) {
+    if (!element) return "";
+    return [
+      element.id,
+      element.className,
+      element.getAttribute("role"),
+      element.getAttribute("aria-label"),
+      element.getAttribute("title"),
+      ...Array.from(element.attributes).flatMap(
+        (attribute) => attribute.name.startsWith("data-") ? [`${attribute.name} ${attribute.value}`] : []
+      )
+    ].filter(Boolean).join(" ");
+  }
+  function isStrongArticleContainer(element) {
+    const metadata = elementMetadataText(element);
+    return Boolean(
+      element.matches("article, [itemprop='articleBody']") || /(^|\b|[-_])(article|article-body|entry-content|markdown|markdown-body|post|post-body|prose|readme|story)(\b|[-_]|$)/i.test(
+        metadata
+      )
+    );
+  }
+  function isGenericArticleContainer(element) {
+    const metadata = elementMetadataText(element);
+    return Boolean(
+      isStrongArticleContainer(element) || element.matches("main, [role='main']") || /(^|\b|[-_])(body|content|doc|document|main|page-content)(\b|[-_]|$)/i.test(
+        metadata
+      )
+    );
+  }
+  function embeddedNonArticleNoiseCount(element) {
+    return element.querySelectorAll(
+      [
+        "aside",
+        "nav",
+        "footer",
+        "header",
+        "[role='complementary']",
+        "[role='navigation']",
+        "[class*='comment' i]",
+        "[id*='comment' i]",
+        "[class*='reply' i]",
+        "[id*='reply' i]",
+        "[class*='related' i]",
+        "[id*='related' i]",
+        "[class*='recommend' i]",
+        "[id*='recommend' i]"
+      ].join(", ")
     ).length;
-    const blocks = Math.max(1, element.querySelectorAll("p, li, blockquote, pre, table").length);
-    penalty += clamp(noise / Math.max(1, blocks * 1.2), 0, 0.5);
-    if (isArticleNoiseElement(element)) penalty += 0.35;
-    return clamp(penalty);
   }
-  function continuityScore(blocks) {
-    if (!blocks.length) return 0;
-    const substantial = blocks.filter((block) => textLength(block) >= 40).length;
-    const adjacentLongRuns = blocks.reduce(
-      (state, block) => {
-        const isLong = textLength(block) >= 40;
-        const currentRun = isLong ? state.currentRun + 1 : 0;
-        return {
-          currentRun,
-          bestRun: Math.max(state.bestRun, currentRun)
-        };
-      },
-      { currentRun: 0, bestRun: 0 }
-    );
-    return clamp(
-      substantial / Math.max(3, blocks.length) * 0.55 + adjacentLongRuns.bestRun / Math.max(3, blocks.length) * 0.45
-    );
+  function articleBlockNoiseCount(blocks) {
+    return Array.from(new Set(blocks.map((block) => block.element))).filter(
+      isArticleNoiseElement
+    ).length;
   }
-  function articlePreviewTargetId(element) {
-    if (!element) return void 0;
-    articlePreviewIdCounter += 1;
-    const id = `article-preview-${articlePreviewIdCounter}`;
-    articlePreviewTargets.set(id, element);
-    return id;
-  }
-  function articlePreviewElementById(targetId) {
-    if (!targetId) return null;
-    const target = articlePreviewTargets.get(targetId);
-    return target?.isConnected ? target : null;
-  }
-  function isEditedArticleBlockExcluded(element) {
-    const text2 = normalizedText(visibleTextFromElement(element));
-    return element.dataset.webmindArticleExcluded === "true" || Boolean(text2 && removedArticleBlockTextKeys.has(articleBlockTextKey(text2)));
-  }
-  function isArticleTextBlockExcluded(block) {
-    const key = articleBlockTextKey(block.text);
-    return Boolean(key && removedArticleBlockTextKeys.has(key)) || block.element?.dataset.webmindArticleExcluded === "true";
-  }
-  function articlePreview(blocks) {
-    return blocks.map((block, index) => {
-      const sourceBlock = typeof block === "string" ? { text: block } : block;
-      return {
-        id: `preview-${index + 1}`,
-        text: sourceBlock.text,
-        sourceText: sourceBlock.text,
-        targetId: articlePreviewTargetId(sourceBlock.element)
-      };
+  function articleBlocksContainHeading(blocks) {
+    return blocks.some((block) => {
+      const heading = block.element.matches(ARTICLE_HEADING_SELECTOR) ? block.element : block.element.querySelector(ARTICLE_HEADING_SELECTOR);
+      return Boolean(
+        heading && isElementVisible(heading) && textLength(block.text) >= 4
+      );
     });
   }
-  function editedArticleRootSource() {
-    if (manualArticleRoot?.isConnected) return "manual";
-    if (editedArticleRoot?.isConnected || removedArticleBlockTextKeys.size > 0) {
-      return "edited";
+  function articleHeadingInElement(element) {
+    const heading = element.matches(ARTICLE_HEADING_SELECTOR) ? element : element.querySelector(ARTICLE_HEADING_SELECTOR);
+    if (heading && !isArticleNoiseElement(heading) && isElementVisible(heading) && textLength(visibleTextFromElement(heading)) >= 4) {
+      return heading;
     }
     return null;
   }
-  function hasArticleBlockEdits() {
-    return Boolean(editedArticleRoot?.isConnected || removedArticleBlockTextKeys.size > 0);
-  }
-  function clearArticleBlockEdits() {
-    document.querySelectorAll("[data-webmind-article-excluded='true']").forEach((element) => {
-      delete element.dataset.webmindArticleExcluded;
-    });
-    sameOriginIframeBodies().forEach((body) => {
-      body.querySelectorAll("[data-webmind-article-excluded='true']").forEach((element) => {
-        delete element.dataset.webmindArticleExcluded;
-      });
-    });
-    editedArticleRoot = null;
-    removedArticleBlockTextKeys.clear();
-  }
-  function articlePreviewMatchCandidates(root = document) {
-    const roots = root === document ? [...document.body ? [document.body] : [], ...sameOriginIframeBodies()] : [root];
-    const elements = roots.flatMap((root2) => {
-      const own = root2 instanceof HTMLElement ? [root2] : [];
-      return [...own, ...articleBlockElements(root2), ...collectOpenShadowElements(root2)];
-    });
-    return Array.from(new Set(elements)).filter(
-      (element) => isElementVisible(element) && textLength(visibleTextFromElement(element)) > 0
-    );
-  }
-  function articlePreviewTextMatchScore(candidate, target) {
-    if (candidate === target) return 1e3;
-    if (candidate.includes(target)) {
-      return 700 - Math.abs(candidate.length - target.length);
-    }
-    if (target.includes(candidate)) {
-      return 500 - Math.abs(candidate.length - target.length);
-    }
-    return -Infinity;
-  }
-  function alignPreviewBlocksToDom(blocks, root = document) {
-    const candidates = articlePreviewMatchCandidates(root).filter(isElementVisible).map((element, order) => ({
-      element,
-      order,
-      text: normalizedText(visibleTextFromElement(element))
-    })).filter((candidate) => textLength(candidate.text) > 0);
-    let minimumOrder = -1;
-    return blocks.map((text2) => {
-      const target = normalizedText(text2);
-      const match = candidates.map((candidate) => ({
-        ...candidate,
-        score: candidate.order > minimumOrder ? articlePreviewTextMatchScore(candidate.text, target) : -Infinity
-      })).filter((candidate) => Number.isFinite(candidate.score)).sort((left, right) => {
-        if (left.score !== right.score) return right.score - left.score;
-        const leftLengthDelta = Math.abs(left.text.length - target.length);
-        const rightLengthDelta = Math.abs(right.text.length - target.length);
-        if (leftLengthDelta !== rightLengthDelta) {
-          return leftLengthDelta - rightLengthDelta;
+  function precedingArticleHeading(element) {
+    let current = element;
+    while (current && current !== document.body && current !== document.documentElement) {
+      let sibling = current.previousElementSibling;
+      let inspectedSiblings = 0;
+      while (sibling && inspectedSiblings < 6) {
+        const heading = sibling.matches(ARTICLE_HEADING_SELECTOR) ? sibling : sibling.querySelector(ARTICLE_HEADING_SELECTOR);
+        if (heading && !isArticleNoiseElement(heading) && isElementVisible(heading) && textLength(visibleTextFromElement(heading)) >= 4) {
+          return heading;
         }
-        if (left.element.childElementCount !== right.element.childElementCount) {
-          return left.element.childElementCount - right.element.childElementCount;
-        }
-        return left.order - right.order;
-      })[0];
-      if (!match) return { text: text2 };
-      minimumOrder = match.order;
-      return { text: text2, element: match.element };
-    });
+        sibling = sibling.previousElementSibling;
+        inspectedSiblings += 1;
+      }
+      current = current.parentElement;
+    }
+    return null;
   }
-  function isJsonObject(value) {
-    return Boolean(value && typeof value === "object" && !Array.isArray(value));
-  }
-  function jsonLdTypeNames(value) {
-    const values = Array.isArray(value) ? value : [value];
-    return values.flatMap((item) => typeof item === "string" ? [item] : []).map((item) => item.replace(/^https?:\/\/schema\.org\//i, "").toLowerCase());
-  }
-  function isStructuredArticleRecord(record) {
-    return jsonLdTypeNames(record["@type"]).some(
-      (type) => STRUCTURED_ARTICLE_TYPES.has(type)
+  function promoteRootToIncludeTitle(root) {
+    if (articleHeadingInElement(root)) return root;
+    const heading = precedingArticleHeading(root);
+    if (!heading) return root;
+    let promoted = root.parentElement;
+    while (promoted && promoted !== document.body && promoted !== document.documentElement && !promoted.contains(heading)) {
+      promoted = promoted.parentElement;
+    }
+    if (!promoted || isArticleNoiseElement(promoted)) return root;
+    const rootLength = textLength(visibleTextFromElement(root));
+    const promotedLength = textLength(visibleTextFromElement(promoted));
+    const headingLength = textLength(visibleTextFromElement(heading));
+    const maxPromotedLength = Math.max(
+      rootLength * 1.65,
+      rootLength + headingLength + 320
     );
+    const rootBlockCount = Math.max(
+      1,
+      articleSourceBlocks(root, SCORING_ARTICLE_BLOCK_OPTIONS).length
+    );
+    if (promotedLength > maxPromotedLength) return root;
+    if (promoted.childElementCount > Math.max(10, rootBlockCount * 3)) return root;
+    return promoted;
   }
-  function structuredString(value) {
-    if (typeof value === "string") return value;
-    if (Array.isArray(value)) {
-      return value.map(structuredString).filter(Boolean).join("\n\n");
-    }
-    return "";
-  }
-  function structuredArticleBody(record) {
-    const articleBody = normalizedText(structuredString(record.articleBody));
-    if (textLength(articleBody) >= 120) {
-      return { text: articleBody, field: "articleBody" };
-    }
-    const text2 = normalizedText(structuredString(record.text));
-    if (textLength(text2) >= 120) {
-      return { text: text2, field: "text" };
-    }
-    return null;
-  }
-  function structuredUrl(value) {
-    if (typeof value === "string") return value;
-    if (isJsonObject(value)) {
-      const id = value["@id"];
-      if (typeof id === "string") return id;
-      const url = value.url;
-      if (typeof url === "string") return url;
-    }
-    return null;
-  }
-  function normalizedUrlForMatch(value) {
-    try {
-      const url = new URL(value, location.href);
-      url.hash = "";
-      return url;
-    } catch {
-      return null;
-    }
-  }
-  function structuredUrlMatchesPage(record) {
-    const values = [
-      structuredUrl(record.url),
-      structuredUrl(record.mainEntityOfPage)
-    ].filter((value) => Boolean(value));
-    if (!values.length) return true;
-    const pageUrl = normalizedUrlForMatch(location.href);
-    if (!pageUrl) return true;
-    return values.some((value) => {
-      const candidate = normalizedUrlForMatch(value);
-      if (!candidate) return false;
-      return candidate.href === pageUrl.href || candidate.origin === pageUrl.origin && candidate.pathname === pageUrl.pathname;
-    });
-  }
-  function flattenJsonLdRecords(value) {
-    if (Array.isArray(value)) {
-      return value.flatMap(flattenJsonLdRecords);
-    }
-    if (!isJsonObject(value)) return [];
-    const records = [value];
-    const graph = value["@graph"];
-    if (Array.isArray(graph)) {
-      records.push(...graph.flatMap(flattenJsonLdRecords));
-    }
-    return records;
-  }
-  function structuredArticleElement(text2) {
-    const target = normalizedText(text2);
-    const candidates = Array.from(
-      /* @__PURE__ */ new Set([
-        ...articleRootElements(document),
-        ...continuousRootCandidates(document),
-        ...articleBlockElements(document)
-      ])
-    ).filter((element) => !isArticleNoiseElement(element) && isElementVisible(element)).map((element, order) => {
-      const candidateText = normalizedText(visibleTextFromElement(element));
+  function configuredArticleRoot(rules = []) {
+    for (const rule of rules) {
+      if (!rule.urlPattern || !rule.selector || !urlMatchesWhitelist(location.href, [rule.urlPattern])) {
+        continue;
+      }
+      const element = elementForArticleRuleSelector(rule.selector);
+      if (!element || !isElementVisible(element)) continue;
+      if (textLength(visibleTextFromElement(element)) < AUTO_ARTICLE_MIN_CHARS) {
+        continue;
+      }
       return {
         element,
-        order,
-        text: candidateText,
-        score: articlePreviewTextMatchScore(candidateText, target)
+        source: "rule",
+        selector: rule.selector
       };
-    }).filter(
-      (candidate) => Number.isFinite(candidate.score) && textLength(candidate.text) >= Math.min(120, textLength(target))
-    ).sort((left, right) => {
-      if (left.score !== right.score) return right.score - left.score;
-      const leftIsBlock = left.element.matches(ARTICLE_BLOCK_SELECTOR) ? 1 : 0;
-      const rightIsBlock = right.element.matches(ARTICLE_BLOCK_SELECTOR) ? 1 : 0;
-      if (leftIsBlock !== rightIsBlock) return leftIsBlock - rightIsBlock;
-      const leftDelta = Math.abs(left.text.length - target.length);
-      const rightDelta = Math.abs(right.text.length - target.length);
-      if (leftDelta !== rightDelta) return leftDelta - rightDelta;
-      return left.order - right.order;
-    });
-    return candidates[0]?.element;
-  }
-  function structuredArticleCandidate() {
-    const scripts = Array.from(
-      document.querySelectorAll(
-        'script[type="application/ld+json"]'
-      )
-    );
-    const candidates = [];
-    scripts.forEach((script) => {
-      try {
-        const parsed = JSON.parse(script.textContent ?? "");
-        flattenJsonLdRecords(parsed).filter(isStructuredArticleRecord).filter(structuredUrlMatchesPage).forEach((record) => {
-          const body = structuredArticleBody(record);
-          if (!body) return;
-          const title = normalizedText(structuredString(record.headline)) || normalizedText(structuredString(record.name));
-          const description = normalizedText(structuredString(record.description));
-          const element = structuredArticleElement(body.text);
-          candidates.push({
-            title,
-            text: body.text,
-            description,
-            element,
-            source: "dom",
-            selector: selectorHint(element) ?? `json-ld:${body.field}`
-          });
-        });
-      } catch {
-      }
-    });
-    return candidates.sort((left, right) => textLength(right.text) - textLength(left.text))[0] ?? null;
-  }
-  function articleQualityWarnings(blockCount, totalTextLength) {
-    const viewportHeight = Math.max(1, window.innerHeight || 1);
-    const scrollHeight = Math.max(
-      document.documentElement.scrollHeight,
-      document.body?.scrollHeight ?? 0
-    );
-    if (scrollHeight > viewportHeight * 6 && (blockCount < 8 || totalTextLength < 1200)) {
-      return ["virtualizedContentMayBeIncomplete"];
     }
-    return void 0;
+    return null;
   }
-  function scoreArticleCandidate(candidate, options = {}) {
-    const includePreview = options.includePreview ?? true;
-    const titleSource = candidate.title ? { text: normalizedText(candidate.title), element: candidate.titleElement } : articleTitleSourceFromElement(candidate.element);
-    const title = normalizedText(titleSource.text);
-    const rawText = candidate.element ? visibleTextFromElement(candidate.element) : normalizedText(candidate.text);
-    const rawTextWithTitle = prependArticleTitle(title, rawText);
-    const rawBlocks = candidate.element ? contentBlocksFromElement(candidate.element) : contentBlocksFromText(rawText);
-    const sourceBlocks = includePreview ? candidate.element ? alignPreviewBlocksToDom(rawBlocks, candidate.element) : alignPreviewBlocksToDom(contentBlocksFromText(rawText)) : rawBlocks.map((text3) => ({ text: text3 }));
-    const filteredBlocks = sourceBlocks.filter(
-      (block) => !isArticleTextBlockExcluded(block)
+  var SELECTED_ARTICLE_BLOCK_OPTIONS = {
+    includeArticleNoise: true
+  };
+  var SCORING_ARTICLE_BLOCK_OPTIONS = {
+    includeArticleNoise: false
+  };
+  function isCompactArticleBlock(element) {
+    return element.matches(ARTICLE_BLOCK_SELECTOR);
+  }
+  function shouldSkipArticleBlockElement(element, options) {
+    if (!isElementVisible(element)) return true;
+    if (isEditedArticleBlockExcluded(element)) return true;
+    return !options.includeArticleNoise && isArticleNoiseElement(element);
+  }
+  function hasReadableCompactDescendant(element, options) {
+    return Array.from(element.querySelectorAll(ARTICLE_BLOCK_SELECTOR)).filter((child) => child !== element).some(
+      (child) => !shouldSkipArticleBlockElement(child, options) && textLength(visibleTextFromElement(child)) > 0
     );
-    const blocksWithTitle = prependArticleTitlePreviewBlock(
-      title,
-      filteredBlocks,
-      includePreview ? titleSource.element : void 0
-    ).filter((block) => !isArticleTextBlockExcluded(block));
-    const blocks = blocksWithTitle.map((block) => block.text);
-    const text2 = hasArticleBlockEdits() ? blocks.join("\n\n") : rawTextWithTitle;
-    const totalTextLength = textLength(text2);
-    const rect = candidate.element?.getBoundingClientRect();
-    const rawArea = rect ? Math.max(1, rect.width * rect.height) : totalTextLength * 8;
-    const density = clamp(totalTextLength / Math.max(1, rawArea / 16), 0, 1);
-    const candidateLinkRatio = linkRatio(candidate.element, text2);
-    const visibleArea = elementVisibleArea(candidate.element);
-    const continuity = continuityScore(blocks);
-    const language = languageConsistency(blocks);
-    const clutter = clutterPenalty(candidate.element);
-    const lengthScore = clamp(totalTextLength / 1800);
-    const score = Math.round(
-      100 * clamp(
-        lengthScore * 0.18 + density * 0.2 + (1 - candidateLinkRatio) * 0.18 + visibleArea * 0.14 + continuity * 0.16 + language * 0.14 - clutter * 0.35
-      )
-    );
-    return {
-      ...candidate,
-      text: text2,
-      selector: candidate.selector ?? selectorHint(candidate.element),
-      score: {
-        score,
-        textDensity: Number(density.toFixed(2)),
-        linkRatio: Number(candidateLinkRatio.toFixed(2)),
-        visibleArea: Number(visibleArea.toFixed(2)),
-        continuity: Number(continuity.toFixed(2)),
-        clutterPenalty: Number(clutter.toFixed(2)),
-        languageConsistency: Number(language.toFixed(2)),
-        source: editedArticleRootSource() ?? candidate.source,
-        selector: candidate.selector ?? selectorHint(candidate.element),
-        blockCount: blocks.length,
-        wordCount: totalTextLength,
-        warnings: articleQualityWarnings(blocks.length, totalTextLength)
-      },
-      preview: includePreview ? articlePreview(blocksWithTitle) : candidate.preview
+  }
+  function shouldUseWholeElementAsBlock(element, root, options) {
+    const text2 = visibleTextFromElement(element);
+    if (!text2 || textLength(text2) === 0) return false;
+    if (shouldSkipArticleBlockElement(element, options)) return false;
+    if (isCompactArticleBlock(element)) return true;
+    const hasCompactDescendant = hasReadableCompactDescendant(element, options);
+    if (element === root && !hasCompactDescendant) return true;
+    return element.matches(ARTICLE_CONTAINER_FALLBACK_SELECTOR) && !hasCompactDescendant;
+  }
+  function sourceBlockFromElement(element) {
+    const text2 = preserveArticleBlockText(visibleTextFromElement(element));
+    if (textLength(text2) === 0) return null;
+    const block = { text: text2, element, exclusionElement: element };
+    return isArticleTextBlockExcluded(block) ? null : block;
+  }
+  function inlineSourceBlock(text2, element) {
+    const normalized = preserveArticleBlockText(text2);
+    if (textLength(normalized) === 0) return null;
+    const block = { text: normalized, element };
+    return isArticleTextBlockExcluded(block) ? null : block;
+  }
+  function articleSourceBlocks(root, options = SELECTED_ARTICLE_BLOCK_OPTIONS) {
+    if (shouldSkipArticleBlockElement(root, options)) return [];
+    if (shouldUseWholeElementAsBlock(root, root, options)) {
+      const rootBlock = sourceBlockFromElement(root);
+      return rootBlock ? [rootBlock] : [];
+    }
+    const blocks = [];
+    const appendBlock = (block) => {
+      if (block) blocks.push(block);
     };
-  }
-  function collectOpenShadowElements(root) {
-    const elements = [];
-    Array.from(root.querySelectorAll("*")).slice(0, SHADOW_HOST_SCAN_LIMIT).forEach((element) => {
-      if (element.shadowRoot) {
-        elements.push(
-          ...Array.from(
-            element.shadowRoot.querySelectorAll(ARTICLE_ROOT_SELECTOR)
-          )
-        );
-        elements.push(...collectOpenShadowElements(element.shadowRoot));
-      }
-    });
-    return elements;
-  }
-  function iframeCandidates() {
-    const candidates = [];
-    document.querySelectorAll("iframe").forEach((iframe, index) => {
-      try {
-        const body = iframe.contentDocument?.body;
-        if (!body) return;
-        const text2 = textFromElement(body);
-        if (textLength(text2) < 120) return;
-        candidates.push({
-          text: text2,
-          element: body,
-          source: "dom",
-          selector: `iframe:nth-of-type(${index + 1})`
-        });
-      } catch {
-      }
-    });
-    return candidates;
-  }
-  function readabilityCandidate() {
-    try {
-      const clone2 = document.cloneNode(true);
-      const article = new import_readability.Readability(clone2, { charThreshold: 300 }).parse();
-      let articleText = "";
-      if (article?.content) {
-        const container = document.createElement("div");
-        container.innerHTML = article.content;
-        articleText = textFromElement(container);
-      }
-      if (!articleText) articleText = article?.textContent ?? "";
-      if (textLength(articleText) < 120) return null;
-      return {
-        title: article?.title ?? "",
-        description: article?.excerpt ?? "",
-        text: articleText,
-        source: "readability",
-        selector: "readability"
+    const visitContainer = (element) => {
+      if (shouldSkipArticleBlockElement(element, options)) return;
+      let inlineParts = [];
+      let inlineElement = element;
+      const flushInline = () => {
+        appendBlock(inlineSourceBlock(inlineParts.join(""), inlineElement));
+        inlineParts = [];
+        inlineElement = element;
       };
-    } catch {
-      return null;
-    }
+      Array.from(element.childNodes).forEach((node) => {
+        if (node instanceof Text) {
+          const parent = node.parentElement;
+          if (!parent || shouldSkipArticleBlockElement(parent, options)) return;
+          if (!inlineParts.length) inlineElement = parent;
+          inlineParts.push(node.textContent ?? "");
+          return;
+        }
+        if (!(node instanceof HTMLElement)) return;
+        if (node.tagName === "BR") {
+          inlineParts.push("\n");
+          return;
+        }
+        if (shouldSkipArticleBlockElement(node, options)) return;
+        if (shouldUseWholeElementAsBlock(node, root, options)) {
+          flushInline();
+          appendBlock(sourceBlockFromElement(node));
+          return;
+        }
+        if (hasReadableCompactDescendant(node, options)) {
+          flushInline();
+          visitContainer(node);
+          return;
+        }
+        const text2 = visibleTextFromElement(node);
+        if (textLength(text2) > 0) {
+          if (!inlineParts.length) inlineElement = node;
+          inlineParts.push(text2);
+        }
+      });
+      flushInline();
+    };
+    visitContainer(root);
+    return blocks;
+  }
+  function articleBlockElements(root) {
+    return Array.from(
+      new Set(articleSourceBlocks(root).map((block) => block.element))
+    );
   }
   function articleRootElements(root = document) {
     const roots = [
       ...Array.from(root.querySelectorAll(ARTICLE_ROOT_SELECTOR)),
       ...collectOpenShadowElements(root)
     ];
-    return Array.from(new Set(roots)).filter(
-      (element) => !isArticleNoiseElement(element) && textLength(element.textContent ?? "") >= 120
-    ).slice(0, ARTICLE_ROOT_CANDIDATE_LIMIT).filter((element) => textLength(visibleTextFromElement(element)) >= 120);
+    return Array.from(new Set(roots)).filter((element) => !isArticleNoiseElement(element)).filter((element) => isElementVisible(element)).filter(
+      (element) => textLength(visibleTextFromElement(element)) >= AUTO_ARTICLE_MIN_CHARS
+    ).slice(0, ARTICLE_ROOT_CANDIDATE_LIMIT);
   }
   function continuousRootCandidates(root = document) {
-    const blockEntries = articleBlockElements(root).filter((element) => !isArticleNoiseElement(element)).filter((element) => textLength(element.textContent ?? "") >= 24).slice(0, ARTICLE_BLOCK_CANDIDATE_LIMIT).map((element, order) => ({
+    const blockEntries = Array.from(
+      root.querySelectorAll(ARTICLE_BLOCK_SELECTOR)
+    ).filter((element) => !isArticleNoiseElement(element)).filter((element) => isElementVisible(element)).map((element, order) => ({
       element,
       order,
       text: normalizedText(visibleTextFromElement(element))
-    })).filter((entry) => textLength(entry.text) >= 24).slice(0, 400);
+    })).filter((entry) => textLength(entry.text) >= 8).slice(0, ARTICLE_BLOCK_CANDIDATE_LIMIT);
     const summaries = /* @__PURE__ */ new Map();
     blockEntries.forEach((entry) => {
       let ancestor = entry.element.parentElement;
       let depth = 0;
-      while (ancestor && ancestor !== document.documentElement && depth < 8) {
-        if (ancestor === document.body) break;
-        if (!isArticleNoiseElement(ancestor)) {
+      while (ancestor && ancestor !== document.body && ancestor !== document.documentElement && depth < 7) {
+        if (!isArticleNoiseElement(ancestor) && isElementVisible(ancestor)) {
           const summary = summaries.get(ancestor) ?? {
             blocks: 0,
             textLength: 0,
@@ -22028,50 +19782,85 @@ ${text2}`;
         depth += 1;
       }
     });
-    return Array.from(summaries.entries()).filter(([, summary]) => summary.blocks >= 2 && summary.textLength >= 120).sort((left, right) => {
-      const leftSummary = left[1];
-      const rightSummary = right[1];
-      const score = (summary) => summary.textLength * 0.55 + summary.blocks * 40 + summary.blocks / Math.max(1, summary.last - summary.first + 1) * 240;
-      return score(rightSummary) - score(leftSummary);
-    }).slice(0, 12).map(([element]) => element);
+    return Array.from(summaries.entries()).filter(([, summary]) => summary.blocks >= 2 && summary.textLength >= 80).sort((left, right) => {
+      const score = (summary) => summary.textLength + summary.blocks * 60 + summary.blocks / Math.max(1, summary.last - summary.first + 1) * 240;
+      return score(right[1]) - score(left[1]);
+    }).slice(0, 16).map(([element]) => element);
   }
-  function articleCandidateFromRoot(element) {
-    const titleSource = articleTitleSourceFromElement(element);
+  function articleMetric(value) {
+    return Math.round(clamp(value) * 100);
+  }
+  function scoreArticleRoot(element, options = SCORING_ARTICLE_BLOCK_OPTIONS, knownBlocks, knownText) {
+    const usesKnownBlocks = knownBlocks !== void 0;
+    const blocks = knownBlocks ?? articleSourceBlocks(element, options);
+    const text2 = knownText ?? (articleTextFromBlocks(blocks) || visibleTextFromElement(element));
+    const length = textLength(text2);
+    if (length === 0 || !usesKnownBlocks && length < AUTO_ARTICLE_MIN_CHARS) {
+      return {
+        score: 0,
+        rawScore: -Infinity,
+        metrics: {
+          length: 0,
+          structure: 0,
+          heading: 0,
+          semantics: 0,
+          density: 0,
+          linkPurity: 0,
+          focus: 0,
+          cleanliness: 0
+        }
+      };
+    }
+    const blockCount = Math.max(1, blocks.length);
+    const effectiveChildCount = usesKnownBlocks ? new Set(blocks.map((block) => block.element)).size : element.childElementCount;
+    const strongContainer = isStrongArticleContainer(element);
+    const genericContainer = isGenericArticleContainer(element);
+    const hasHeading = usesKnownBlocks ? articleBlocksContainHeading(blocks) : Boolean(articleHeadingInElement(element));
+    const hasNearbyHeading = !hasHeading && Boolean(precedingArticleHeading(element));
+    const longFormContainer = strongContainer || genericContainer && hasHeading;
+    const linkScore = 1 - (usesKnownBlocks ? linkRatioFromArticleBlocks(blocks, text2) : linkRatio(element, text2)) * (longFormContainer ? 0.95 : 1.25);
+    const childLimit = longFormContainer ? Math.max(80, blockCount * 5) : Math.max(14, blockCount * 4);
+    const childBulk = Math.max(0, effectiveChildCount - childLimit);
+    const embeddedNoise = usesKnownBlocks ? articleBlockNoiseCount(blocks) : embeddedNonArticleNoiseCount(element);
+    const lengthIdeal = longFormContainer ? 1600 : 900;
+    const lengthOverflow = longFormContainer ? 6e4 : 12e3;
+    const lengthMetric = length <= lengthOverflow ? Math.min(1, length / lengthIdeal) : Math.max(0.45, 1 - (length - lengthOverflow) / lengthOverflow);
+    const structureMetric = Math.min(1, blockCount / (longFormContainer ? 12 : 6));
+    const headingMetric = hasHeading ? 1 : hasNearbyHeading ? 0.72 : 0.34;
+    const semanticsMetric = strongContainer ? 1 : genericContainer ? 0.78 : element.matches("main, [role='main']") ? 0.68 : 0.42;
+    const densityMetric = Math.min(
+      1,
+      length / Math.max(280, effectiveChildCount * (longFormContainer ? 45 : 70))
+    );
+    const focusMetric = Math.max(
+      0,
+      1 - (element === document.body || element === document.documentElement ? 0.24 : 0) - Math.min(0.32, childBulk / Math.max(12, childLimit) * 0.32) - Math.min(0.24, Math.max(0, blockCount - (longFormContainer ? 120 : 32)) / 180) - Math.min(0.68, embeddedNoise / Math.max(2, blockCount) * 0.34)
+    );
+    const cleanlinessMetric = Math.max(
+      0,
+      1 - Math.min(0.82, embeddedNoise / Math.max(3, blockCount) * 0.72) - (isArticleNoiseElement(element) ? 0.26 : 0)
+    );
+    const metrics = {
+      length: articleMetric(lengthMetric),
+      structure: articleMetric(structureMetric),
+      heading: articleMetric(headingMetric),
+      semantics: articleMetric(semanticsMetric),
+      density: articleMetric(densityMetric),
+      linkPurity: articleMetric(linkScore),
+      focus: articleMetric(focusMetric),
+      cleanliness: articleMetric(cleanlinessMetric)
+    };
+    const score = Math.round(
+      metrics.length * 0.14 + metrics.structure * 0.13 + metrics.heading * 0.11 + metrics.semantics * 0.15 + metrics.density * 0.13 + metrics.linkPurity * 0.13 + metrics.focus * 0.11 + metrics.cleanliness * 0.1
+    );
+    const rawScore = score + Math.min(1, length / lengthIdeal) * 0.01 + Math.min(1, blockCount / (longFormContainer ? 12 : 6)) * 1e-3;
     return {
-      title: titleSource.text,
-      titleElement: titleSource.element,
-      text: visibleTextFromElement(element),
-      element,
-      source: "dom",
-      selector: selectorHint(element)
+      score,
+      rawScore,
+      metrics
     };
   }
-  function articleCandidates() {
-    const domRoots = Array.from(
-      /* @__PURE__ */ new Set([...articleRootElements(document), ...continuousRootCandidates(document)])
-    ).map(articleCandidateFromRoot);
-    const manualCandidate = manualArticleRoot?.isConnected && textLength(visibleTextFromElement(manualArticleRoot)) >= 40 ? (() => {
-      const titleSource = articleTitleSourceFromElement(manualArticleRoot);
-      return {
-        title: titleSource.text,
-        titleElement: titleSource.element,
-        text: visibleTextFromElement(manualArticleRoot),
-        element: manualArticleRoot,
-        source: "manual",
-        selector: selectorHint(manualArticleRoot)
-      };
-    })() : null;
-    const editedCandidate = !manualCandidate && editedArticleRoot?.isConnected && textLength(visibleTextFromElement(editedArticleRoot)) >= 40 ? (() => {
-      const titleSource = articleTitleSourceFromElement(editedArticleRoot);
-      return {
-        title: titleSource.text,
-        titleElement: titleSource.element,
-        text: visibleTextFromElement(editedArticleRoot),
-        element: editedArticleRoot,
-        source: "edited",
-        selector: selectorHint(editedArticleRoot)
-      };
-    })() : null;
+  function invalidateDisconnectedArticleState() {
     if (manualArticleRoot && !manualArticleRoot.isConnected) {
       manualArticleRoot = null;
     }
@@ -22079,39 +19868,180 @@ ${text2}`;
       editedArticleRoot = null;
       removedArticleBlockTextKeys.clear();
     }
-    return [
-      manualCandidate,
-      editedCandidate,
-      ...domRoots,
-      ...iframeCandidates()
-    ].filter(
-      (candidate) => Boolean(
-        candidate && textLength(candidate.text) >= (candidate.source === "manual" ? 40 : 120)
-      )
+  }
+  function hasArticleBlockEdits() {
+    return Boolean(
+      editedArticleRoot?.isConnected || removedArticleBlockTextKeys.size > 0 || document.querySelector("[data-webmind-article-excluded='true']")
     );
   }
+  function articleSourceAfterEdits(source) {
+    return hasArticleBlockEdits() ? "edited" : source;
+  }
+  function selectArticleRoot(articleExtractionRules = []) {
+    invalidateDisconnectedArticleState();
+    if (manualArticleRoot?.isConnected) {
+      return {
+        element: manualArticleRoot,
+        source: "manual",
+        selector: selectorHint(manualArticleRoot)
+      };
+    }
+    if (editedArticleRoot?.isConnected) {
+      return {
+        element: editedArticleRoot,
+        source: "edited",
+        selector: selectorHint(editedArticleRoot)
+      };
+    }
+    const configured = configuredArticleRoot(articleExtractionRules);
+    if (configured) return configured;
+    const rootScopes = [document, ...sameOriginIframeBodies()];
+    const candidates = Array.from(
+      new Set(
+        rootScopes.flatMap((root) => [
+          ...root instanceof HTMLElement ? [root] : [],
+          ...articleRootElements(root),
+          ...continuousRootCandidates(root)
+        ])
+      )
+    ).map((element, order) => ({
+      element,
+      order,
+      score: scoreArticleRoot(element).rawScore
+    })).filter((candidate) => Number.isFinite(candidate.score)).sort((left, right) => {
+      if (left.score !== right.score) return right.score - left.score;
+      return left.order - right.order;
+    });
+    const best = candidates[0]?.element;
+    if (best) {
+      const promoted = promoteRootToIncludeTitle(best);
+      return {
+        element: promoted,
+        source: "dom",
+        selector: selectorHint(promoted)
+      };
+    }
+    const fallback = document.querySelector("article") ?? document.querySelector("main") ?? document.querySelector("[role='main']") ?? document.body;
+    return fallback ? {
+      element: fallback,
+      source: "dom",
+      selector: selectorHint(fallback)
+    } : null;
+  }
   function findBestArticleRoot(articleExtractionRules = []) {
+    return withArticleExtractionCache(
+      () => selectArticleRoot(articleExtractionRules)?.element ?? null
+    );
+  }
+  function articlePreviewTargetId(block) {
+    if (!block?.element) return void 0;
+    articlePreviewIdCounter += 1;
+    const id = `article-preview-${articlePreviewIdCounter}`;
+    articlePreviewTargets.set(id, block.element);
+    if (block.exclusionElement) {
+      articlePreviewExclusionTargets.set(id, block.exclusionElement);
+    }
+    return id;
+  }
+  function articlePreviewElementById(targetId) {
+    if (!targetId) return null;
+    const target = articlePreviewTargets.get(targetId);
+    return target?.isConnected ? target : null;
+  }
+  function articlePreviewExclusionElementById(targetId) {
+    if (!targetId) return null;
+    const target = articlePreviewExclusionTargets.get(targetId);
+    return target?.isConnected ? target : null;
+  }
+  function isEditedArticleBlockExcluded(element) {
+    const text2 = normalizedText(visibleTextFromElement(element));
+    return element.dataset.webmindArticleExcluded === "true" || Boolean(text2 && removedArticleBlockTextKeys.has(articleBlockTextKey(text2)));
+  }
+  function isArticleTextBlockExcluded(block) {
+    const key = articleBlockTextKey(block.text);
+    return Boolean(key && removedArticleBlockTextKeys.has(key)) || block.element.dataset.webmindArticleExcluded === "true";
+  }
+  function articlePreview(blocks) {
+    return blocks.map((block, index) => ({
+      id: `preview-${index + 1}`,
+      text: block.text,
+      sourceText: block.text,
+      targetId: articlePreviewTargetId(block)
+    }));
+  }
+  function clearArticleBlockEdits() {
+    document.querySelectorAll("[data-webmind-article-excluded='true']").forEach((element) => {
+      delete element.dataset.webmindArticleExcluded;
+    });
+    sameOriginIframeBodies().forEach((body) => {
+      body.querySelectorAll("[data-webmind-article-excluded='true']").forEach((element) => {
+        delete element.dataset.webmindArticleExcluded;
+      });
+    });
+    editedArticleRoot = null;
+    removedArticleBlockTextKeys.clear();
+  }
+  function readableArticleText(articleExtractionRules = []) {
     return withArticleExtractionCache(() => {
-      if (manualArticleRoot?.isConnected) return manualArticleRoot;
-      if (editedArticleRoot?.isConnected) return editedArticleRoot;
-      const configured = configuredArticleCandidate(articleExtractionRules);
-      if (configured?.element) return configured.element;
-      const structured = structuredArticleCandidate();
-      if (structured?.element) return structured.element;
-      const best = articleCandidates().filter((candidate) => candidate.element).map((candidate) => scoreArticleCandidate(candidate, { includePreview: false })).sort((left, right) => (right.score?.score ?? 0) - (left.score?.score ?? 0))[0];
-      return best?.element ?? null;
+      articlePreviewTargets.clear();
+      articlePreviewExclusionTargets.clear();
+      articlePreviewIdCounter = 0;
+      const selection = selectArticleRoot(articleExtractionRules);
+      if (!selection) {
+        return {
+          title: document.title || location.hostname,
+          text: "",
+          description: "",
+          preview: [],
+          summary: {
+            source: "dom",
+            blockCount: 0,
+            charCount: 0
+          }
+        };
+      }
+      const blocks = articleSourceBlocks(selection.element);
+      const text2 = articleTextFromBlocks(blocks);
+      const source = articleSourceAfterEdits(selection.source);
+      const selector = selection.selector ?? selectorHint(selection.element) ?? void 0;
+      const score = scoreArticleRoot(
+        selection.element,
+        SELECTED_ARTICLE_BLOCK_OPTIONS,
+        blocks,
+        text2
+      );
+      return {
+        title: document.title || location.hostname,
+        text: text2,
+        description: "",
+        preview: articlePreview(blocks),
+        summary: {
+          source,
+          selector,
+          blockCount: blocks.length,
+          charCount: textLength(text2),
+          score: score.score,
+          scoreMetrics: score.metrics
+        }
+      };
     });
   }
-  function sameOriginIframeBodies() {
-    const bodies = [];
-    document.querySelectorAll("iframe").forEach((iframe) => {
-      try {
-        const body = iframe.contentDocument?.body;
-        if (body) bodies.push(body);
-      } catch {
-      }
-    });
-    return bodies;
+  function articlePreviewMatchCandidates(root) {
+    const base = root ?? document.body;
+    if (!base) return [];
+    return Array.from(/* @__PURE__ */ new Set([base, ...articleBlockElements(base)])).filter(
+      (element) => isElementVisible(element) && textLength(visibleTextFromElement(element)) > 0
+    );
+  }
+  function articlePreviewTextMatchScore(candidate, target) {
+    if (candidate === target) return 1e3;
+    if (candidate.includes(target)) {
+      return 700 - Math.abs(candidate.length - target.length);
+    }
+    if (target.includes(candidate)) {
+      return 500 - Math.abs(candidate.length - target.length);
+    }
+    return -Infinity;
   }
   function installArticlePreviewHighlightStyle(root) {
     if (root.getElementById(ARTICLE_PREVIEW_HIGHLIGHT_STYLE_ID)) return;
@@ -22131,9 +20061,6 @@ ${text2}`;
     } else {
       root.append(style);
     }
-  }
-  function articlePreviewHighlightCandidates() {
-    return articlePreviewMatchCandidates();
   }
   function clearArticlePreviewHighlights(root) {
     root.querySelectorAll(".webmind-article-preview-highlight").forEach(
@@ -22167,11 +20094,12 @@ ${text2}`;
       return applyArticlePreviewHighlight(directMatch);
     }
     const target = normalizedText(text2);
-    if (textLength(target) < 12) return { ok: false };
-    const candidates = articlePreviewHighlightCandidates().filter(isElementVisible).map((element) => ({
+    if (textLength(target) < 4) return { ok: false };
+    const root = findBestArticleRoot();
+    const candidates = articlePreviewMatchCandidates(root).map((element) => ({
       element,
       text: normalizedText(visibleTextFromElement(element))
-    })).filter((candidate) => textLength(candidate.text) >= 12).map((candidate) => ({
+    })).map((candidate) => ({
       ...candidate,
       score: articlePreviewTextMatchScore(candidate.text, target)
     })).filter((candidate) => Number.isFinite(candidate.score)).sort((left, right) => {
@@ -22179,8 +20107,7 @@ ${text2}`;
       return left.element.childElementCount - right.element.childElementCount;
     });
     const match = candidates[0];
-    if (!match) return { ok: false };
-    return applyArticlePreviewHighlight(match.element);
+    return match ? applyArticlePreviewHighlight(match.element) : { ok: false };
   }
   function setEditedArticleRootFromCurrent(articleExtractionRules = []) {
     const root = manualArticleRoot?.isConnected ? manualArticleRoot : editedArticleRoot?.isConnected ? editedArticleRoot : findBestArticleRoot(articleExtractionRules);
@@ -22192,37 +20119,27 @@ ${text2}`;
   }
   function removeArticlePreviewBlock(text2, targetId, language, articleExtractionRules = []) {
     setEditedArticleRootFromCurrent(articleExtractionRules);
-    const normalized = normalizedText(text2);
-    const target = articlePreviewElementById(targetId);
+    const target = articlePreviewExclusionElementById(targetId);
     if (target) {
       target.dataset.webmindArticleExcluded = "true";
     }
+    const normalized = normalizedText(text2);
     if (normalized) {
       removedArticleBlockTextKeys.add(articleBlockTextKey(normalized));
     }
     return extractPageContext(true, language, "article", articleExtractionRules);
   }
-  function elementMetadataText(element) {
-    if (!element) return "";
-    return [
-      element.id,
-      element.className,
-      element.getAttribute("role"),
-      element.getAttribute("aria-label"),
-      ...Array.from(element.attributes).flatMap(
-        (attribute) => attribute.name.startsWith("data-") ? [`${attribute.name} ${attribute.value}`] : []
-      )
-    ].filter(Boolean).join(" ");
-  }
   function isLikelyNonArticlePreviewBlock(block) {
     const text2 = normalizedText(block.sourceText ?? block.text);
     const length = textLength(text2);
     if (!text2 || length <= 2) return true;
-    if (length >= 80) return false;
     const target = articlePreviewElementById(block.targetId) ?? void 0;
-    if (target?.matches("h1, h2, h3, [role='heading']")) return false;
+    if (target?.matches("h1, h2, h3, pre, code, table, ul, ol, dl, [role='heading']")) {
+      return false;
+    }
+    if (length >= 90) return false;
     const metadata = elementMetadataText(target);
-    const linkHeavy = target instanceof HTMLElement && linkRatio(target, visibleTextFromElement(target)) > 0.65 && length < 60;
+    const linkHeavy = target instanceof HTMLElement && linkRatio(target, visibleTextFromElement(target)) > 0.72 && length < 70;
     const looksLikeMetaElement = /(^|\b)(author|avatar|breadcrumb|byline|click|comment|count|date|meta|reply|share|stat|tag|time|toolbar|user|view|vote)(\b|[-_])/i.test(
       metadata
     );
@@ -22233,7 +20150,7 @@ ${text2}`;
     const looksLikeStats = length <= 60 && /\d[\d,.\s]*(?:次点击|点击|浏览|阅读|评论|回复|收藏|分享|赞|喜欢|views?|clicks?|comments?|replies|likes?|shares?|stars?|forks?)/i.test(
       text2
     );
-    const looksLikeShortLabel = length <= 18 && !/[。！？.!?，,；;：:]/.test(text2) && !/\s{2,}/.test(text2) && /^[\p{L}\p{N}_@#.\-\s·]+$/u.test(text2);
+    const looksLikeShortLabel = length <= 18 && !/[。！？.!?，,；;：:]/.test(text2) && /^[\p{L}\p{N}_@#.\-\s·]+$/u.test(text2);
     return Boolean(target && isArticleNoiseElement(target)) || linkHeavy || looksLikeMetaElement || looksLikeBreadcrumb || looksLikeTime || looksLikeStats || looksLikeShortLabel;
   }
   function pruneArticlePreviewBlocks(language, articleExtractionRules = []) {
@@ -22250,18 +20167,18 @@ ${text2}`;
     const remainingTextLength = textLength(
       remaining.map((block) => block.sourceText ?? block.text).join("\n\n")
     );
-    if (remaining.length >= 2 && remainingTextLength >= 120) {
+    if (remaining.length >= 1 && remainingTextLength >= MANUAL_ARTICLE_MIN_CHARS) {
       removable.forEach((block) => {
-        const target = articlePreviewElementById(block.targetId);
+        const target = articlePreviewExclusionElementById(block.targetId);
         if (target) target.dataset.webmindArticleExcluded = "true";
-        const text2 = normalizedText(block.sourceText ?? block.text);
-        if (text2) removedArticleBlockTextKeys.add(articleBlockTextKey(text2));
+        const blockText = normalizedText(block.sourceText ?? block.text);
+        if (blockText) removedArticleBlockTextKeys.add(articleBlockTextKey(blockText));
       });
     }
     return extractPageContext(true, language, "article", articleExtractionRules);
   }
   function pickerTextLength(element) {
-    return textLength(element.innerText || element.textContent || "");
+    return textLength(visibleTextFromElement(element));
   }
   function isPickerElement(element) {
     return Boolean(element.closest(".webmind-article-picker-ui"));
@@ -22275,7 +20192,7 @@ ${text2}`;
         candidates.push(item);
         continue;
       }
-      if (isPickerElement(item) || isArticleNoiseElement(item)) continue;
+      if (isPickerElement(item) || !isElementVisible(item)) continue;
       if (pickerTextLength(item) < 20) continue;
       candidates.push(item);
     }
@@ -22438,107 +20355,6 @@ ${text2}`;
     clearArticleBlockEdits();
     return extractPageContext(true, language, "article", articleExtractionRules);
   }
-  function readableArticleText(articleExtractionRules = []) {
-    return withArticleExtractionCache(() => {
-      articlePreviewTargets.clear();
-      if (manualArticleRoot?.isConnected) {
-        const manualText = visibleTextFromElement(manualArticleRoot);
-        if (textLength(manualText) > 0) {
-          const manual = scoreArticleCandidate({
-            text: manualText,
-            element: manualArticleRoot,
-            source: "manual",
-            selector: selectorHint(manualArticleRoot)
-          });
-          return {
-            title: document.title || location.hostname,
-            text: manual.text,
-            description: "",
-            quality: manual.score,
-            preview: manual.preview
-          };
-        }
-      }
-      if (editedArticleRoot?.isConnected) {
-        const editedText = visibleTextFromElement(editedArticleRoot);
-        if (textLength(editedText) >= 40) {
-          const edited = scoreArticleCandidate({
-            text: editedText,
-            element: editedArticleRoot,
-            source: "edited",
-            selector: selectorHint(editedArticleRoot)
-          });
-          return {
-            title: document.title || location.hostname,
-            text: edited.text,
-            description: "",
-            quality: edited.score,
-            preview: edited.preview
-          };
-        }
-      }
-      const configured = configuredArticleCandidate(articleExtractionRules);
-      if (configured) {
-        const scored = scoreArticleCandidate(configured);
-        return {
-          title: scored.title,
-          text: scored.text,
-          description: scored.description,
-          quality: scored.score,
-          preview: scored.preview
-        };
-      }
-      const structured = structuredArticleCandidate();
-      if (structured) {
-        const scored = scoreArticleCandidate(structured);
-        return {
-          title: scored.title,
-          text: scored.text,
-          description: scored.description,
-          quality: scored.score,
-          preview: scored.preview
-        };
-      }
-      const scoredCandidates = articleCandidates().map((candidate) => scoreArticleCandidate(candidate, { includePreview: false })).sort((left, right) => (right.score?.score ?? 0) - (left.score?.score ?? 0));
-      const best = scoredCandidates[0];
-      if (best?.score && textLength(best.text) >= 120) {
-        const detailed = scoreArticleCandidate(best, { includePreview: true });
-        return {
-          title: detailed.title,
-          text: detailed.text,
-          description: detailed.description,
-          quality: detailed.score,
-          preview: detailed.preview
-        };
-      }
-      const readableFallback = readabilityCandidate();
-      if (readableFallback && textLength(readableFallback.text) >= 120) {
-        const readable = scoreArticleCandidate(readableFallback);
-        return {
-          title: readable.title,
-          text: readable.text,
-          description: readable.description,
-          quality: readable.score,
-          preview: readable.preview
-        };
-      }
-      const fallbackElement = document.querySelector("article") || document.querySelector("main") || document.querySelector('[role="main"]');
-      const fallback = fallbackElement ? visibleTextFromElement(fallbackElement) : "";
-      const fallbackCandidate = fallbackElement ? scoreArticleCandidate({
-        text: fallback,
-        element: fallbackElement,
-        source: "dom",
-        selector: selectorHint(fallbackElement)
-      }) : null;
-      return {
-        title: "",
-        text: fallback,
-        description: "",
-        quality: fallbackCandidate?.score,
-        preview: fallbackCandidate?.preview
-      };
-    });
-  }
   function extractPageContext(ignoreSelection = false, language, scope = "page", articleExtractionRules = []) {
     const selection = ignoreSelection ? void 0 : pageSelectionText() || void 0;
     const description = document.querySelector('meta[name="description"]')?.content ?? document.querySelector('meta[property="og:description"]')?.content;
@@ -22559,30 +20375,26 @@ ${text2}`;
       };
     }
     if (scope === "article") {
-      const article2 = readableArticleText(articleExtractionRules);
+      const article = readableArticleText(articleExtractionRules);
       return {
         kind: "article",
-        title: article2.title || document.title || location.hostname,
+        title: article.title || document.title || location.hostname,
         url: location.href,
-        text: truncateText(article2.text, 1e5, language),
-        description: article2.description || description,
+        text: article.text,
+        description: article.description || description,
         language: document.documentElement.lang || navigator.language,
         siteName,
-        articleQuality: article2.quality,
-        articlePreview: article2.preview
+        articleSummary: article.summary,
+        articlePreview: article.preview
       };
     }
-    const article = readableArticleText(articleExtractionRules);
-    let text2 = article.text;
-    if (text2.trim().length < 500) {
-      text2 = textFromElement(document.querySelector("main")) || textFromElement(document.querySelector('[role="main"]')) || textFromElement(document.body) || "";
-    }
     const query = searchQuery();
+    const pageText = textFromElement(document.querySelector("main")) || textFromElement(document.querySelector("[role='main']")) || textFromElement(document.body) || "";
     return {
       kind: query ? "search" : "webpage",
       title: document.title || location.hostname,
       url: location.href,
-      text: truncateText(text2, 1e5, language),
+      text: truncateText(pageText, 1e5, language),
       description,
       language: document.documentElement.lang || navigator.language,
       siteName
@@ -22604,6 +20416,7 @@ ${text2}`;
   // src/content/translationPreparation.ts
   var TRANSLATABLE_BLOCK_SELECTOR = "h1, h2, h3, h4, h5, h6, p, li, blockquote, figcaption, td, dt, dd, [role='heading'], [role='paragraph']";
   var TRANSLATABLE_PAGE_SELECTOR = TRANSLATABLE_BLOCK_SELECTOR;
+  var TRANSLATABLE_ARTICLE_UNIT_SELECTOR = `${TRANSLATABLE_BLOCK_SELECTOR}, pre, table, ul, ol, dl, figure, details`;
   var CITATION_MARKER_PATTERN3 = /^(?:\[\s*\d+(?:\s*[-,–]\s*\d+)*\s*\]|[（(【]?\s*\d+(?:\s*[-,–]\s*\d+)*\s*[)）】]?|[¹²³⁴⁵⁶⁷⁸⁹⁰]+)$/;
   var CITATION_TOKEN_PATTERN2 = /(?:`?\{\{\s*WEBMIND_CITATION_(\d+)\s*\}\}`?|\[\s*WEBMIND_CITATION_(\d+)\s*\]|WEBMIND_CITATION_(\d+))/gi;
   var LINK_TOKEN_PATTERN = /(?:`?\{\{\s*WEBMIND_LINK_(START|END)_(\d+)\s*\}\}`?|\[\s*WEBMIND_LINK_(START|END)_(\d+)\s*\]|WEBMIND_LINK_(START|END)_(\d+))/gi;
@@ -22662,6 +20475,90 @@ ${text2}`;
     });
     return candidates[0]?.element ?? null;
   }
+  function collectTextRuns(root) {
+    const runs = [];
+    let current = [];
+    const flush = () => {
+      if (normalizedBlockText4(current.map((item) => item.char).join(""))) {
+        runs.push(current);
+      }
+      current = [];
+    };
+    const visit = (node) => {
+      if (node instanceof Text) {
+        const parent = node.parentElement;
+        if (!parent || isVisuallyHiddenTranslationElement(parent)) return;
+        const value = node.textContent ?? "";
+        for (let offset = 0; offset < value.length; offset += 1) {
+          current.push({ char: value[offset], node, offset });
+        }
+        return;
+      }
+      if (!(node instanceof HTMLElement)) return;
+      if (isVisuallyHiddenTranslationElement(node)) return;
+      if (node.tagName === "BR") {
+        flush();
+        return;
+      }
+      for (const child of Array.from(node.childNodes)) visit(child);
+      if (/^(?:ADDRESS|ARTICLE|ASIDE|BLOCKQUOTE|DIV|FIGCAPTION|H[1-6]|LI|P|PRE|SECTION|TR)$/.test(
+        node.tagName
+      )) {
+        flush();
+      }
+    };
+    for (const child of Array.from(root.childNodes)) visit(child);
+    flush();
+    return runs;
+  }
+  function normalizedRun(run) {
+    let text2 = "";
+    const positions = [];
+    let pendingSpace = null;
+    for (const item of run) {
+      if (/\s/.test(item.char)) {
+        pendingSpace = pendingSpace ?? item;
+        continue;
+      }
+      if (pendingSpace && text2) {
+        text2 += " ";
+        positions.push(pendingSpace);
+      }
+      pendingSpace = null;
+      text2 += item.char;
+      positions.push(item);
+    }
+    return { text: text2, positions };
+  }
+  function wrapArticlePreviewText(element, text2, id) {
+    const target = normalizedBlockText4(text2);
+    if (!target) return null;
+    if (normalizedBlockText4(translationElementVisibleText(element)) === target) {
+      return element;
+    }
+    for (const run of collectTextRuns(element)) {
+      const normalized = normalizedRun(run);
+      const start = normalized.text.indexOf(target);
+      if (start < 0) continue;
+      const first = normalized.positions[start];
+      const last = normalized.positions[start + target.length - 1];
+      if (!first || !last) continue;
+      const range = document.createRange();
+      range.setStart(first.node, first.offset);
+      range.setEnd(last.node, last.offset + 1);
+      const wrapper = document.createElement("span");
+      wrapper.className = "webmind-immersive-source";
+      wrapper.dataset.webmindBlockId = id;
+      try {
+        wrapper.append(range.extractContents());
+        range.insertNode(wrapper);
+      } catch {
+        return null;
+      }
+      return wrapper.isConnected ? wrapper : null;
+    }
+    return null;
+  }
   function articleContentCandidatesFromRoot(root, options, dependencies) {
     const maxVisibleTextLength = options.maxVisibleTextLength ?? 900;
     const candidates = [];
@@ -22677,7 +20574,7 @@ ${text2}`;
       const textChildren = children.filter(
         (child) => dependencies.isVisible(child) && !isWebMindGeneratedElement(child) && Boolean(translationElementVisibleText(child))
       );
-      const canUseWholeElement = element !== root && text2.length <= maxVisibleTextLength && (hasDirectText(element) || !textChildren.length || element.matches(TRANSLATABLE_BLOCK_SELECTOR));
+      const canUseWholeElement = element !== root && text2.length <= maxVisibleTextLength && (hasDirectText(element) || !textChildren.length || element.matches(TRANSLATABLE_ARTICLE_UNIT_SELECTOR));
       if (canUseWholeElement) {
         candidates.push(element);
         return;
@@ -22943,7 +20840,7 @@ ${text2}`;
     const articleScopeText = scope === "article" ? normalizedBlockText4(textFallback) : "";
     const seen = /* @__PURE__ */ new Set();
     const blocks = [];
-    if (scope === "article" && options.articlePreviewBlocks?.length) {
+    if (scope === "article" && Array.isArray(options.articlePreviewBlocks)) {
       for (const previewBlock of options.articlePreviewBlocks) {
         const rawSourceText = (previewBlock.sourceText ?? previewBlock.text).trim();
         const sourceText = normalizedBlockText4(rawSourceText);
@@ -22959,19 +20856,25 @@ ${text2}`;
         if (!element || !dependencies.isVisible(element)) continue;
         if (isWebMindGeneratedElement(element)) continue;
         if (isEditedArticleBlockExcluded(element)) continue;
-        const id = element.dataset.webmindBlockId ?? dependencies.nextBlockId();
-        element.dataset.webmindBlockId = id;
+        let id = dependencies.nextBlockId();
+        let sourceElement = element;
+        if (normalizedBlockText4(translationElementVisibleText(element)) === sourceText) {
+          id = element.dataset.webmindBlockId ?? id;
+        } else {
+          sourceElement = wrapArticlePreviewText(element, rawSourceText, id);
+        }
+        if (!sourceElement || !dependencies.isVisible(sourceElement)) continue;
+        sourceElement.dataset.webmindBlockId = id;
         const prepared = prepareTranslationBlock(
-          element,
+          sourceElement,
           id,
           false,
           articleOptions,
           dependencies
         );
         if (!prepared) continue;
-        if (seen.has(id) || seen.has(sourceText)) continue;
+        if (seen.has(id)) continue;
         seen.add(id);
-        seen.add(sourceText);
         blocks.push({ id: prepared.id, text: rawSourceText });
       }
       return blocks;
@@ -27194,6 +25097,12 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     background-color: rgba(143, 185, 215, .32);
     color: inherit;
   }
+  ::highlight(webmind-hover-definition-underline) {
+    text-decoration: underline;
+    text-decoration-color: rgba(54, 116, 152, .9);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 2px;
+  }
   .webmind-page-tooltip {
     position: fixed !important;
     z-index: 2147483647 !important;
@@ -27421,9 +25330,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
   }
   function loadHoverDefinitionDictionary() {
     if (!hoverDefinitionDictionaryPromise) {
-      hoverDefinitionDictionaryPromise = fetch(
-        chrome.runtime.getURL("dictionary/cc-cedict.json")
-      ).then(async (response) => {
+      hoverDefinitionDictionaryPromise = Promise.resolve().then(() => fetch(chrome.runtime.getURL("dictionary/cc-cedict.json"))).then(async (response) => {
         if (!response.ok) {
           throw new Error(`Dictionary request failed: ${response.status}`);
         }
@@ -27437,6 +25344,9 @@ Please report this to https://github.com/markedjs/marked.`, e) {
           zh: dictionary.zh,
           en: dictionary.en
         };
+      }).catch((error) => {
+        hoverDefinitionDictionaryPromise = null;
+        throw error;
       });
     }
     return hoverDefinitionDictionaryPromise;
@@ -27524,15 +25434,35 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     );
     return translations;
   }
+  function edgeTextNode(node, fromEnd) {
+    if (!node) return null;
+    if (node instanceof Text) return node.data ? node : null;
+    const children = Array.from(node.childNodes);
+    if (fromEnd) children.reverse();
+    for (const child of children) {
+      const text2 = edgeTextNode(child, fromEnd);
+      if (text2) return text2;
+    }
+    return null;
+  }
+  function caretTextPoint(node, offset) {
+    if (node instanceof Text) return { node, offset };
+    const after = edgeTextNode(node.childNodes[offset], false);
+    if (after) return { node: after, offset: 0 };
+    const before = edgeTextNode(node.childNodes[offset - 1], true);
+    return before ? { node: before, offset: before.data.length } : null;
+  }
   function textNodeAtPoint(clientX, clientY) {
     const documentWithCaret = document;
     const range = documentWithCaret.caretRangeFromPoint?.(clientX, clientY);
-    if (range?.startContainer instanceof Text) {
-      return { node: range.startContainer, offset: range.startOffset };
+    if (range) {
+      const point = caretTextPoint(range.startContainer, range.startOffset);
+      if (point) return point;
     }
     const position = documentWithCaret.caretPositionFromPoint?.(clientX, clientY);
-    if (position?.offsetNode instanceof Text) {
-      return { node: position.offsetNode, offset: position.offset };
+    if (position) {
+      const point = caretTextPoint(position.offsetNode, position.offset);
+      if (point) return point;
     }
     return null;
   }
@@ -27546,30 +25476,37 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     const range = document.createRange();
     range.setStart(node, start);
     range.setEnd(node, end);
-    const rect = range.getBoundingClientRect();
+    const clientRects = Array.from(range.getClientRects());
+    const rect = clientRects.find(
+      (candidate) => clientX >= candidate.left - 2 && clientX <= candidate.right + 2 && clientY >= candidate.top - 2 && clientY <= candidate.bottom + 2
+    ) ?? clientRects.reduce((nearest, candidate) => {
+      if (!nearest) return candidate;
+      const distance = (rect2) => {
+        const dx = Math.max(rect2.left - clientX, 0, clientX - rect2.right);
+        const dy = Math.max(rect2.top - clientY, 0, clientY - rect2.bottom);
+        return dx * dx + dy * dy;
+      };
+      return distance(candidate) < distance(nearest) ? candidate : nearest;
+    }, null) ?? range.getBoundingClientRect();
     return {
       range,
       rect: rect.width || rect.height ? rect : new DOMRect(clientX, clientY, 1, 1)
     };
   }
-  function rangeContainsPoint(range, clientX, clientY) {
-    return isPointInsideAnyRect(range.getClientRects(), clientX, clientY);
-  }
-  function setHoverDefinitionHighlight(range) {
+  function setHoverDefinitionHighlight(range, style = "none") {
     const registry = CSS.highlights;
     registry?.delete(HOVER_DEFINITION_HIGHLIGHT_NAME);
-    if (!range || !registry) return;
+    registry?.delete("webmind-hover-definition-underline");
+    if (!range || !registry || style === "none") return;
     const HighlightConstructor = globalThis.Highlight;
     if (!HighlightConstructor) return;
     installPageStyles();
-    registry.set(
-      HOVER_DEFINITION_HIGHLIGHT_NAME,
-      new HighlightConstructor(range)
-    );
+    const highlightName = style === "underline" ? "webmind-hover-definition-underline" : HOVER_DEFINITION_HIGHLIGHT_NAME;
+    registry.set(highlightName, new HighlightConstructor(range));
   }
   function definitionCandidateAtPoint(clientX, clientY) {
     const point = textNodeAtPoint(clientX, clientY);
-    if (!point || point.node.getRootNode() !== document) return null;
+    if (!point) return null;
     const parent = point.node.parentElement;
     if (!parent || parent.closest(
       "input, textarea, select, button, [contenteditable='true'], [aria-hidden='true']"
@@ -27591,7 +25528,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
       const candidates = [];
       const rects = [];
       const ranges = [];
-      for (let length = Math.min(4, end2 - start2); length >= 1; length -= 1) {
+      for (let length = Math.min(8, end2 - start2); length >= 1; length -= 1) {
         const first = Math.max(start2, index - length + 1);
         const last = Math.min(index, end2 - length);
         for (let candidateStart = first; candidateStart <= last; candidateStart += 1) {
@@ -27605,7 +25542,6 @@ Please report this to https://github.com/markedjs/marked.`, e) {
               clientX,
               clientY
             );
-            if (!rangeContainsPoint(details2.range, clientX, clientY)) continue;
             rects.push(details2.rect);
             ranges.push(details2.range);
           }
@@ -27629,7 +25565,6 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     const word = text2.slice(start, end).replace(/^[-'\u2019]+|[-'\u2019]+$/g, "");
     if (!word || !/[A-Za-z]/u.test(word)) return null;
     const details = textRangeDetails(point.node, start, end, clientX, clientY);
-    if (!rangeContainsPoint(details.range, clientX, clientY)) return null;
     return {
       text: word,
       candidates: [word],
@@ -28196,7 +26131,7 @@ ${text2}`;
         clearTimer();
         hoverDefinitionCandidateRef.current = null;
         setHoverDefinition(null);
-        setHoverDefinitionHighlight(null);
+        setHoverDefinitionHighlight(null, "none");
       };
       if (hoverDefinitionMode === "off" || hoverDefinitionBlocked) {
         hide();
@@ -28258,7 +26193,8 @@ ${text2}`;
               ...tooltipPosition(candidate.rects[matchedIndex] ?? candidate.rect)
             });
             setHoverDefinitionHighlight(
-              candidate.ranges[matchedIndex] ?? candidate.ranges[0] ?? null
+              candidate.ranges[matchedIndex] ?? candidate.ranges[0] ?? null,
+              activeSettings?.hoverDefinitionStyle
             );
           }).catch(() => {
           });
@@ -28311,7 +26247,12 @@ ${text2}`;
         window.removeEventListener("blur", handleBlur);
         hide();
       };
-    }, [hoverDefinitionBlocked, hoverDefinitionMode, hoverDefinitionShortcut]);
+    }, [
+      activeSettings?.hoverDefinitionStyle,
+      hoverDefinitionBlocked,
+      hoverDefinitionMode,
+      hoverDefinitionShortcut
+    ]);
     (0, import_react5.useEffect)(() => {
       if (!inputAutoReplyEnabled || autoReplyBlocked) {
         setAutoReplyTarget(null);

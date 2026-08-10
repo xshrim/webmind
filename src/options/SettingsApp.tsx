@@ -50,6 +50,7 @@ import type {
   CustomTool,
   DefaultContextScope,
   HoverDefinitionMode,
+  HoverDefinitionStyle,
   ImmersiveShortcut,
   ImmersiveReadingBackgroundStyle,
   ImmersiveTranslationDisplayStyle,
@@ -131,6 +132,18 @@ const HOVER_DEFINITION_MODES: Array<{
   { id: "zh", titleKey: "hoverDefinitionChinese" },
   { id: "en", titleKey: "hoverDefinitionEnglish" },
   { id: "both", titleKey: "hoverDefinitionBoth" }
+];
+
+const HOVER_DEFINITION_STYLES: Array<{
+  id: HoverDefinitionStyle;
+  titleKey:
+    | "hoverDefinitionStyleNone"
+    | "hoverDefinitionStyleHighlight"
+    | "hoverDefinitionStyleUnderline";
+}> = [
+  { id: "none", titleKey: "hoverDefinitionStyleNone" },
+  { id: "highlight", titleKey: "hoverDefinitionStyleHighlight" },
+  { id: "underline", titleKey: "hoverDefinitionStyleUnderline" }
 ];
 
 type ShortcutModifier = "ctrl" | "alt" | "shift";
@@ -1593,6 +1606,25 @@ export function SettingsApp() {
                         }
                       >
                         {uiText(settings.interfaceLanguage, mode.titleKey)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="field">
+                  <span className="field-label">{t("hoverDefinitionStyle")}</span>
+                  <div className="segmented segmented-wrap">
+                    {HOVER_DEFINITION_STYLES.map((style) => (
+                      <button
+                        key={style.id}
+                        className={
+                          settings.hoverDefinitionStyle === style.id ? "active" : ""
+                        }
+                        type="button"
+                        onClick={() =>
+                          void updatePreference("hoverDefinitionStyle", style.id)
+                        }
+                      >
+                        {t(style.titleKey)}
                       </button>
                     ))}
                   </div>

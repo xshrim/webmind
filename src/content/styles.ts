@@ -761,6 +761,12 @@ export const PAGE_STYLES = `
     background-color: rgba(143, 185, 215, .32);
     color: inherit;
   }
+  ::highlight(webmind-hover-definition-underline) {
+    text-decoration: underline;
+    text-decoration-color: rgba(54, 116, 152, .9);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 2px;
+  }
   .webmind-page-tooltip {
     position: fixed !important;
     z-index: 2147483647 !important;

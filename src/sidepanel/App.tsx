@@ -57,6 +57,7 @@ import {
   uiText,
   type UiTextKey
 } from "../shared/i18n";
+import { TooltipLayer } from "./TooltipLayer";
 import {
   clearConversations,
   consumePendingAction,
@@ -252,6 +253,9 @@ export function App() {
     icon: ""
   });
   const [bodyCopied, setBodyCopied] = useState(false);
+  const [articleScoreTrend, setArticleScoreTrend] = useState<
+    "up" | "down" | "same"
+  >("same");
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [editingMessageText, setEditingMessageText] = useState("");
@@ -271,6 +275,10 @@ export function App() {
   });
 
   const messagesRef = useRef(messages);
+  const previousArticleScoreRef = useRef<{
+    pageUrl: string;
+    score: number;
+  } | null>(null);
   const settingsRef = useRef(settings);
   const conversationIdRef = useRef<string>(crypto.randomUUID());
   const conversationCreatedAtRef = useRef<number>(Date.now());
@@ -1508,7 +1516,7 @@ export function App() {
     const url = pageContext?.url || activeTab?.url || "";
     setArticleRuleDraft({
       urlPattern: url,
-      selector: articleQuality?.selector ?? ""
+      selector: articleSummary?.selector ?? ""
     });
     setArticleRuleEditorOpen(true);
   };
@@ -1790,7 +1798,7 @@ export function App() {
             ? {
                 kind: "article",
                 title: context.title || activeTab?.title,
-                text: contextSnapshotExcerpt(context.text),
+                text: context.text,
                 url: context.url || activeTab?.url,
                 faviconUrl: activeTab?.favIconUrl
               }
@@ -3280,40 +3288,67 @@ export function App() {
       logLevelWeight(entry.level) >=
       logLevelWeight(settings?.logLevel ?? "info")
   );
-  const articleQuality =
-    pageContext?.kind === "article" ? pageContext.articleQuality : undefined;
+  const articleSummary =
+    pageContext?.kind === "article" ? pageContext.articleSummary : undefined;
   const articlePreview =
     pageContext?.kind === "article" ? pageContext.articlePreview ?? [] : [];
-  const articleQualityMetrics = articleQuality
-    ? [
-        ["textDensity", articleQuality.textDensity],
-        ["linkRatio", articleQuality.linkRatio],
-        ["visibleArea", articleQuality.visibleArea],
-        ["continuity", articleQuality.continuity],
-        ["languageConsistency", articleQuality.languageConsistency],
-        ["clutterPenalty", articleQuality.clutterPenalty]
-      ] as Array<[UiTextKey, number]>
-    : [];
-  const articleQualityWarnings =
-    articleQuality?.warnings
-      ?.map((warning) =>
-        warning === "virtualizedContentMayBeIncomplete"
-          ? t("currentBodyVirtualizedWarning")
-          : ""
-      )
-      .filter(Boolean) ?? [];
   const bodySourceLabel =
-    articleQuality?.source === "edited"
+    articleSummary?.source === "edited"
         ? t("currentBodySourceEdited")
-      : articleQuality?.source === "readability"
-      ? t("currentBodySourceReadability")
-      : articleQuality
+      : articleSummary?.source === "manual"
+      ? t("currentBodySourceManual")
+      : articleSummary?.source === "rule"
+      ? t("currentBodySourceRule")
+      : articleSummary
         ? t("currentBodySourceDom")
         : "";
   const bodyBlockCount =
-    articleQuality?.blockCount ?? articlePreview.length;
+    articleSummary?.blockCount ?? articlePreview.length;
   const bodyCharCount =
-    articleQuality?.wordCount ?? pageContext?.text?.length ?? 0;
+    articleSummary?.charCount ?? pageContext?.text?.length ?? 0;
+  const articleScore = articleSummary?.score;
+  const articleScoreMetrics = articleSummary?.scoreMetrics;
+
+  useEffect(() => {
+    if (pageContext?.kind !== "article" || typeof articleScore !== "number") {
+      previousArticleScoreRef.current = null;
+      setArticleScoreTrend("same");
+      return;
+    }
+
+    const pageUrl = pageContext.url ?? "";
+    const previous = previousArticleScoreRef.current;
+    if (!previous || previous.pageUrl !== pageUrl) {
+      setArticleScoreTrend("same");
+    } else if (articleScore > previous.score) {
+      setArticleScoreTrend("up");
+    } else if (articleScore < previous.score) {
+      setArticleScoreTrend("down");
+    } else {
+      setArticleScoreTrend("same");
+    }
+    previousArticleScoreRef.current = { pageUrl, score: articleScore };
+  }, [
+    articleScore,
+    articleSummary?.blockCount,
+    articleSummary?.charCount,
+    articleSummary?.selector,
+    articleSummary?.source,
+    pageContext?.kind,
+    pageContext?.text,
+    pageContext?.url
+  ]);
+
+  const articleScoreMetricRows: Array<[UiTextKey, number]> = [
+    ["articleMetricLength", articleScoreMetrics?.length ?? 0],
+    ["articleMetricStructure", articleScoreMetrics?.structure ?? 0],
+    ["articleMetricHeading", articleScoreMetrics?.heading ?? 0],
+    ["articleMetricSemantics", articleScoreMetrics?.semantics ?? 0],
+    ["articleMetricDensity", articleScoreMetrics?.density ?? 0],
+    ["articleMetricLinkPurity", articleScoreMetrics?.linkPurity ?? 0],
+    ["articleMetricFocus", articleScoreMetrics?.focus ?? 0],
+    ["articleMetricCleanliness", articleScoreMetrics?.cleanliness ?? 0]
+  ];
 
   if (!settings) {
     return <div className="panel-loading">{t("loading")} WebMind…</div>;
@@ -3321,6 +3356,7 @@ export function App() {
 
   return (
     <div className="panel-shell">
+      <TooltipLayer />
       <header className="panel-header">
         <div className="brand-compact">
           <button
@@ -4067,8 +4103,8 @@ export function App() {
                 <TextAlignStart />
                 <span>{t("currentBody")}</span>
                 <span className="body-preview-summary-actions">
-                  {(articleQuality?.source === "manual" ||
-                    articleQuality?.source === "edited") && (
+                  {(articleSummary?.source === "manual" ||
+                    articleSummary?.source === "edited") && (
                     <button
                       className="body-preview-action icon-only body-restore-button"
                       type="button"
@@ -4120,10 +4156,42 @@ export function App() {
                   >
                     {bodyCopied ? <Check /> : <Copy />}
                   </button>
-                  {articleQuality && (
-                    <strong>
-                      {t("currentBodyQuality")} {articleQuality.score}
-                    </strong>
+                  {typeof articleScore === "number" && (
+                    <span
+                      className={`body-preview-score ${articleScoreTrend}`}
+                      tabIndex={0}
+                      aria-label={t("currentBodyScore").replace(
+                        "{score}",
+                        String(articleScore)
+                      )}
+                      aria-describedby="current-body-score-tooltip"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                      }}
+                    >
+                      {articleScore}
+                      <span
+                        id="current-body-score-tooltip"
+                        className="body-preview-score-tooltip"
+                        role="tooltip"
+                      >
+                        <span className="body-preview-score-tooltip-title">
+                          {t("currentBodyScore").replace(
+                            "{score}",
+                            String(articleScore)
+                          )}
+                        </span>
+                        <span className="body-preview-score-metrics">
+                          {articleScoreMetricRows.map(([key, value]) => (
+                            <span key={key}>
+                              <span>{t(key)}</span>
+                              <b>{value}</b>
+                            </span>
+                          ))}
+                        </span>
+                      </span>
+                    </span>
                   )}
                   <span
                     className="body-preview-toggle-icon"
@@ -4148,7 +4216,7 @@ export function App() {
               </summary>
               <div className="body-preview-meta">
                 <button
-                  className="body-quality-action"
+                  className="body-preview-meta-action"
                   type="button"
                   disabled={articlePicking}
                   onClick={() => void pruneCurrentBodyPreviewBlocks()}
@@ -4156,14 +4224,14 @@ export function App() {
                   <Eraser />
                   {t("smartPruneCurrentBody")}
                 </button>
-                {articleQuality?.selector && (
+                {articleSummary?.selector && (
                   <button
-                    className="body-quality-action body-preview-selector"
+                    className="body-preview-meta-action body-preview-selector"
                     type="button"
-                    title={articleQuality.selector}
+                    title={articleSummary.selector}
                     onClick={() => openArticleRuleEditor()}
                   >
-                    {articleQuality.selector}
+                    {articleSummary.selector}
                   </button>
                 )}
                 {bodySourceLabel && <span>{bodySourceLabel}</span>}
@@ -4180,22 +4248,6 @@ export function App() {
                   )}
                 </span>
               </div>
-              {articleQualityMetrics.length > 0 && (
-                <div className="body-quality-grid">
-                  {articleQualityMetrics.map(([key, value]) => (
-                    <span key={key}>
-                      {t(key)} {Math.round(value * 100)}%
-                    </span>
-                  ))}
-                </div>
-              )}
-              {articleQualityWarnings.length > 0 && (
-                <div className="body-preview-warnings">
-                  {articleQualityWarnings.map((warning) => (
-                    <span key={warning}>{warning}</span>
-                  ))}
-                </div>
-              )}
               {articlePreview.length > 0 && (
                 <div className="body-preview-blocks">
                   {articlePreview.map((block) => (
@@ -4214,7 +4266,7 @@ export function App() {
                         void highlightCurrentBodyPreviewBlock(block);
                       }}
                     >
-                      <span>{block.text}</span>
+                      <span>{block.sourceText ?? block.text}</span>
                       <button
                         className="body-preview-block-remove"
                         type="button"

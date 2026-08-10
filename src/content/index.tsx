@@ -120,7 +120,6 @@ import {
   createMessage,
   errorMessage,
   extractPageTranslationEntries,
-  isPointInsideAnyRect,
   truncateText
 } from "../shared/utils";
 import {
@@ -270,23 +269,27 @@ function isAssistantEvent(event: Event): boolean {
 
 function loadHoverDefinitionDictionary(): Promise<HoverDefinitionDictionary> {
   if (!hoverDefinitionDictionaryPromise) {
-    hoverDefinitionDictionaryPromise = fetch(
-      chrome.runtime.getURL("dictionary/cc-cedict.json")
-    ).then(async (response) => {
-      if (!response.ok) {
-        throw new Error(`Dictionary request failed: ${response.status}`);
-      }
-      const dictionary = (await response.json()) as Partial<HoverDefinitionDictionary>;
-      if (!dictionary.zh || !dictionary.en) {
-        throw new Error("Invalid dictionary");
-      }
-      return {
-        source: dictionary.source ?? "CC-CEDICT",
-        version: Number(dictionary.version ?? 1),
-        zh: dictionary.zh,
-        en: dictionary.en
-      };
-    });
+    hoverDefinitionDictionaryPromise = Promise.resolve()
+      .then(() => fetch(chrome.runtime.getURL("dictionary/cc-cedict.json")))
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Dictionary request failed: ${response.status}`);
+        }
+        const dictionary = (await response.json()) as Partial<HoverDefinitionDictionary>;
+        if (!dictionary.zh || !dictionary.en) {
+          throw new Error("Invalid dictionary");
+        }
+        return {
+          source: dictionary.source ?? "CC-CEDICT",
+          version: Number(dictionary.version ?? 1),
+          zh: dictionary.zh,
+          en: dictionary.en
+        };
+      })
+      .catch((error) => {
+        hoverDefinitionDictionaryPromise = null;
+        throw error;
+      });
   }
   return hoverDefinitionDictionaryPromise;
 }
@@ -389,6 +392,29 @@ async function requestReadingFallbackTranslations(
   return translations;
 }
 
+function edgeTextNode(node: Node | undefined, fromEnd: boolean): Text | null {
+  if (!node) return null;
+  if (node instanceof Text) return node.data ? node : null;
+  const children = Array.from(node.childNodes);
+  if (fromEnd) children.reverse();
+  for (const child of children) {
+    const text = edgeTextNode(child, fromEnd);
+    if (text) return text;
+  }
+  return null;
+}
+
+function caretTextPoint(
+  node: Node,
+  offset: number
+): { node: Text; offset: number } | null {
+  if (node instanceof Text) return { node, offset };
+  const after = edgeTextNode(node.childNodes[offset], false);
+  if (after) return { node: after, offset: 0 };
+  const before = edgeTextNode(node.childNodes[offset - 1], true);
+  return before ? { node: before, offset: before.data.length } : null;
+}
+
 function textNodeAtPoint(
   clientX: number,
   clientY: number
@@ -401,12 +427,14 @@ function textNodeAtPoint(
     ) => { offsetNode: Node; offset: number } | null;
   };
   const range = documentWithCaret.caretRangeFromPoint?.(clientX, clientY);
-  if (range?.startContainer instanceof Text) {
-    return { node: range.startContainer, offset: range.startOffset };
+  if (range) {
+    const point = caretTextPoint(range.startContainer, range.startOffset);
+    if (point) return point;
   }
   const position = documentWithCaret.caretPositionFromPoint?.(clientX, clientY);
-  if (position?.offsetNode instanceof Text) {
-    return { node: position.offsetNode, offset: position.offset };
+  if (position) {
+    const point = caretTextPoint(position.offsetNode, position.offset);
+    if (point) return point;
   }
   return null;
 }
@@ -429,22 +457,35 @@ function textRangeDetails(
   const range = document.createRange();
   range.setStart(node, start);
   range.setEnd(node, end);
-  const rect = range.getBoundingClientRect();
+  const clientRects = Array.from(range.getClientRects());
+  const rect =
+    clientRects.find(
+      (candidate) =>
+        clientX >= candidate.left - 2 &&
+        clientX <= candidate.right + 2 &&
+        clientY >= candidate.top - 2 &&
+        clientY <= candidate.bottom + 2
+    ) ??
+    clientRects.reduce<DOMRect | null>((nearest, candidate) => {
+      if (!nearest) return candidate;
+      const distance = (rect: DOMRect) => {
+        const dx = Math.max(rect.left - clientX, 0, clientX - rect.right);
+        const dy = Math.max(rect.top - clientY, 0, clientY - rect.bottom);
+        return dx * dx + dy * dy;
+      };
+      return distance(candidate) < distance(nearest) ? candidate : nearest;
+    }, null) ??
+    range.getBoundingClientRect();
   return {
     range,
     rect: rect.width || rect.height ? rect : new DOMRect(clientX, clientY, 1, 1)
   };
 }
 
-function rangeContainsPoint(
-  range: Range,
-  clientX: number,
-  clientY: number
-): boolean {
-  return isPointInsideAnyRect(range.getClientRects(), clientX, clientY);
-}
-
-function setHoverDefinitionHighlight(range: Range | null): void {
+function setHoverDefinitionHighlight(
+  range: Range | null,
+  style: AppSettings["hoverDefinitionStyle"] = "none"
+): void {
   const registry = (CSS as unknown as {
     highlights?: {
       set: (name: string, highlight: unknown) => void;
@@ -452,16 +493,18 @@ function setHoverDefinitionHighlight(range: Range | null): void {
     };
   }).highlights;
   registry?.delete(HOVER_DEFINITION_HIGHLIGHT_NAME);
-  if (!range || !registry) return;
+  registry?.delete("webmind-hover-definition-underline");
+  if (!range || !registry || style === "none") return;
   const HighlightConstructor = (globalThis as unknown as {
     Highlight?: new (...ranges: Range[]) => unknown;
   }).Highlight;
   if (!HighlightConstructor) return;
   installPageStyles();
-  registry.set(
-    HOVER_DEFINITION_HIGHLIGHT_NAME,
-    new HighlightConstructor(range)
-  );
+  const highlightName =
+    style === "underline"
+      ? "webmind-hover-definition-underline"
+      : HOVER_DEFINITION_HIGHLIGHT_NAME;
+  registry.set(highlightName, new HighlightConstructor(range));
 }
 
 function definitionCandidateAtPoint(
@@ -469,7 +512,7 @@ function definitionCandidateAtPoint(
   clientY: number
 ): HoverDefinitionCandidate | null {
   const point = textNodeAtPoint(clientX, clientY);
-  if (!point || point.node.getRootNode() !== document) return null;
+  if (!point) return null;
   const parent = point.node.parentElement;
   if (
     !parent ||
@@ -496,7 +539,7 @@ function definitionCandidateAtPoint(
     const candidates: string[] = [];
     const rects: DOMRect[] = [];
     const ranges: Range[] = [];
-    for (let length = Math.min(4, end - start); length >= 1; length -= 1) {
+    for (let length = Math.min(8, end - start); length >= 1; length -= 1) {
       const first = Math.max(start, index - length + 1);
       const last = Math.min(index, end - length);
       for (let candidateStart = first; candidateStart <= last; candidateStart += 1) {
@@ -510,7 +553,6 @@ function definitionCandidateAtPoint(
             clientX,
             clientY
           );
-          if (!rangeContainsPoint(details.range, clientX, clientY)) continue;
           rects.push(details.rect);
           ranges.push(details.range);
         }
@@ -535,7 +577,6 @@ function definitionCandidateAtPoint(
   const word = text.slice(start, end).replace(/^[-'\u2019]+|[-'\u2019]+$/g, "");
   if (!word || !/[A-Za-z]/u.test(word)) return null;
   const details = textRangeDetails(point.node, start, end, clientX, clientY);
-  if (!rangeContainsPoint(details.range, clientX, clientY)) return null;
   return {
     text: word,
     candidates: [word],
@@ -1270,7 +1311,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
       clearTimer();
       hoverDefinitionCandidateRef.current = null;
       setHoverDefinition(null);
-      setHoverDefinitionHighlight(null);
+      setHoverDefinitionHighlight(null, "none");
     };
     if (hoverDefinitionMode === "off" || hoverDefinitionBlocked) {
       hide();
@@ -1357,7 +1398,8 @@ function SelectionAssistant({ query }: { query: string | null }) {
               ...tooltipPosition(candidate.rects[matchedIndex] ?? candidate.rect)
             });
             setHoverDefinitionHighlight(
-              candidate.ranges[matchedIndex] ?? candidate.ranges[0] ?? null
+              candidate.ranges[matchedIndex] ?? candidate.ranges[0] ?? null,
+              activeSettings?.hoverDefinitionStyle
             );
           })
           .catch(() => {
@@ -1415,7 +1457,12 @@ function SelectionAssistant({ query }: { query: string | null }) {
       window.removeEventListener("blur", handleBlur);
       hide();
     };
-  }, [hoverDefinitionBlocked, hoverDefinitionMode, hoverDefinitionShortcut]);
+  }, [
+    activeSettings?.hoverDefinitionStyle,
+    hoverDefinitionBlocked,
+    hoverDefinitionMode,
+    hoverDefinitionShortcut
+  ]);
 
   useEffect(() => {
     if (!inputAutoReplyEnabled || autoReplyBlocked) {
