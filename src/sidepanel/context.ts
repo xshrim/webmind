@@ -14,6 +14,8 @@ import {
 
 export type ContextMode = "none" | "page" | "article" | "selection";
 
+type TabContextIdentity = Pick<chrome.tabs.Tab, "id" | "url">;
+
 export function defaultContextMode(settings: AppSettings | null): Extract<
   ContextMode,
   "page" | "article"
@@ -28,6 +30,27 @@ export function contextModeAfterTabSwitch(
 ): ContextMode {
   if (currentMode !== "selection") return currentMode;
   return nextContext?.kind === "selection" ? "selection" : fallbackMode;
+}
+
+export function sameTabIdentity(
+  currentTab: TabContextIdentity | null | undefined,
+  cachedTab: TabContextIdentity | null | undefined
+): boolean {
+  if (!currentTab?.id || !cachedTab?.id || currentTab.id !== cachedTab.id) {
+    return false;
+  }
+  if (currentTab.url && cachedTab.url && currentTab.url !== cachedTab.url) {
+    return false;
+  }
+  return true;
+}
+
+export function contextMatchesTab(
+  context: PageContext | null | undefined,
+  tab: Pick<chrome.tabs.Tab, "url"> | null | undefined
+): context is PageContext {
+  if (!context) return false;
+  return !tab?.url || !context.url || context.url === tab.url;
 }
 
 function isPdfUrl(url: string): boolean {

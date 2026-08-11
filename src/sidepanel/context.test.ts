@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   buildSystemMessage,
+  contextMatchesTab,
   contextModeAfterTabSwitch,
-  contextTranslationSourceText
+  contextTranslationSourceText,
+  sameTabIdentity
 } from "./context";
 import type { PageContext, ProviderProfile } from "../shared/types";
 
@@ -57,6 +59,45 @@ describe("contextModeAfterTabSwitch", () => {
     expect(contextModeAfterTabSwitch("none", "article", null)).toBe("none");
     expect(contextModeAfterTabSwitch("page", "article", null)).toBe("page");
     expect(contextModeAfterTabSwitch("article", "page", null)).toBe("article");
+  });
+});
+
+describe("tab context identity", () => {
+  const context: PageContext = {
+    kind: "webpage",
+    title: "Current",
+    url: "https://example.com/current",
+    text: "current page"
+  };
+
+  it("accepts the cached context only for the same active tab identity", () => {
+    expect(
+      sameTabIdentity(
+        { id: 2, url: "https://example.com/current" },
+        { id: 2, url: "https://example.com/current" }
+      )
+    ).toBe(true);
+    expect(
+      sameTabIdentity(
+        { id: 3, url: "https://example.com/current" },
+        { id: 2, url: "https://example.com/current" }
+      )
+    ).toBe(false);
+    expect(
+      sameTabIdentity(
+        { id: 2, url: "https://example.com/next" },
+        { id: 2, url: "https://example.com/current" }
+      )
+    ).toBe(false);
+  });
+
+  it("requires cached page context to belong to the active tab URL", () => {
+    expect(
+      contextMatchesTab(context, { url: "https://example.com/current" })
+    ).toBe(true);
+    expect(
+      contextMatchesTab(context, { url: "https://example.com/next" })
+    ).toBe(false);
   });
 });
 

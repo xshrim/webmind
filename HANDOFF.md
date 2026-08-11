@@ -146,6 +146,8 @@ npm run check
 - `dist/` 是最终给 Chrome 加载的目录，但代码源头是 `src/`。
 - 翻译相关逻辑应尽量复用共享提示词和翻译保护工具，不要在 content、sidepanel、background 中重复拼接不同版本。
 - 工具输出语言约束统一由 `src/shared/tools.ts` 的 `toolPromptWithContext` 追加，只接入工具调用路径，不要放入普通对话的 system message。开启配置时，`originalLanguageLabel` 结合实际上下文文本和 `PageContext.language`/页面语言提示生成具体语言名，并将规则放在最终 prompt 末尾；模板的书写语言不算显式要求，只有明确要求“使用某语言回答”时才覆盖。自动翻译、PDF/字幕翻译和代码解释继续使用各自专用提示词。
+- 侧边栏普通对话和非翻译工具把页面/正文/选区当作参考上下文，走 `resolveRichContext`、`buildSystemMessage` 或 `toolPromptWithContext`；自动翻译/文档翻译把当前上下文当作待处理原文，必须走翻译保护和专用 prompt，不要为了“统一路径”把翻译工具模板、标题、URL 或 system 上下文混进译文输入。
+- 发送模型请求前必须以 Chrome 真实当前活动标签页为准校验上下文；`pageContext`、`currentArticleContext`、`selectionContext` 和工具传入的 `contextOverride` 只有在 `tab.id` 与 URL 都匹配时才能复用。不要用旧 `pageContext.url` 作为“当前页”兜底，否则切换标签页后会把上一页上下文带进普通对话或工具。
 - 翻译任务使用翻译角色模型；视觉任务使用视觉角色模型；没有对应角色时回退到默认/当前模型。
 - UI 文案应通过 `uiText` 获取。九种语言都必须拥有与简体中文基准完全相同的 key 集合；西班牙语、法语、德语、意大利语不得再回退或别名到英文对象。新增/删除 key 时必须同步所有资源，并由 TypeScript 与测试共同校验。
 - 日志需要定义级别；大模型请求详情适合作为 debug 日志。
@@ -182,7 +184,8 @@ npm run check
 - 设置页界面语言和译文语言使用一行内并排的两个原生下拉框，候选包含自动、简体中文、繁體中文、English、日本語、한국어、Español、Français、Deutsch、Italiano，默认值仍为自动。所有真实语言选项固定使用该语言的自称，只有“自动”跟随当前界面语言。西、法、德、意已接入完整静态 UI、工具标题与说明、词典字段、浏览器语言解析、存储归一化、工具回答目标、自动翻译方向、拉丁语言检测和沉浸阅读 fallback。
 - Prompt 架构将界面本地化与内部指令语言分开：`resolvePromptLanguage` 让西、法、德、意复用英文核心 Prompt，避免复制翻译保护、格式和正文规则；模型可见的词典字段由 `DICTIONARY_PROMPT_LABELS` 注入，普通快捷操作追加明确的最终输出语言，工具模板继续由统一回答语言约束兜底。不要为四种语言复制整套核心 Prompt。
 - 自动翻译的提示词污染已移除。翻译工具发给模型时，应只发送受保护的翻译 prompt，不要再把工具模板和上下文重复拼进去。
-- 侧边栏直接对话使用 `buildSystemMessage` 发送当前上下文；自动翻译当前正文时必须由 `PageContext.articlePreview` 中仍可见的 block 按顺序重建 Markdown，每个 block 之间使用双换行，不能改用可能滞后的 `PageContext.markdown` 或 `text`；当前页面和其他上下文优先使用 `PageContext.markdown`，没有 Markdown 时回退到 `text`。工具调用会在上下文异步补全后重新构造模型输入：内置工具显式附加当前上下文，自定义工具的 `{{text}}` / `{{context}}` 会注入实际上下文，不再注入“当前上下文”占位文案；划词浮层工具也通过同一规则传递选区 Markdown。
+- 侧边栏直接对话使用 `buildSystemMessage` 把当前上下文作为参考材料发送；非翻译工具在上下文异步补全后重新构造模型输入：内置工具显式附加当前上下文，自定义工具的 `{{text}}` / `{{context}}` 会注入实际上下文，不再注入“当前上下文”占位文案；划词浮层工具也通过同一规则传递选区 Markdown。发送前必须重新校验真实当前活动标签页，缓存上下文和 `contextOverride` 只有在 `tab.id` 与 URL 都匹配时才能复用。
+- 自动翻译当前正文时必须由 `PageContext.articlePreview` 中仍可见的 block 按顺序重建 Markdown，每个 block 之间使用双换行，不能改用可能滞后的 `PageContext.markdown` 或 `text`；当前页面和其他上下文优先使用 `PageContext.markdown`，没有 Markdown 时回退到 `text`。翻译工具把上下文当作待翻译原文，不是参考材料，发给模型时应只发送受保护的翻译输入和专用规则。
 - DOM 转 Markdown 时，链接标签内部的块级换行会压成普通空格，方括号会转义，避免生成 `[多行文字](url)` 后被 Markdown 解析器拆断；链接目标地址仍独立编码。
 - 自动翻译的词典式回答已收窄：`isDictionaryTranslationInput` 只让真正像单词、术语或固定短语的输入进入查词式 prompt；包含“可以/应该/需要”等语气结构，或以“获取/打开/点击”等动作动词开头的短中文句子，会回到普通翻译。
 - 词典式 prompt 强制每个粗体字段使用独立 Markdown 段落。`normalizeDictionaryTranslationMarkdown` 仅在 `isDictionaryTranslationInput` 已确认词典模式时执行，可识别中、英、西、法、德、意的本地化词典字段并将模型偶发挤在同一行的字段切回双换行分段；普通翻译、文档翻译和其他工具结果不得经过该归一化。划词结果窗口的 `.md-result-body .markdown` 有独立的段落、列表、粗体、链接、代码和表格样式，外层 `pre-wrap` 只用于错误纯文本，不能继续影响 Markdown 内部排版。
@@ -277,7 +280,7 @@ git diff --check
 - 在用户与助手对话气泡中分别检查 `**中文加粗**`、`**English bold**` 和混合语言粗体，确认 Markdown 语法不显示为原始星号且视觉字重明显高于相邻正文。
 - 检查上下文预览面板当前正文状态中“智能剔除、selector、DOM、段数、字数”的顺序，selector 是否截断且可点击新增规则，逐段删除图标是否为 `X`，以及编辑后来源、段数和字数是否刷新。
 - 检查未展开上下文预览面板时，自动翻译、沉浸翻译和沉浸阅读仍使用 `PageContext.articlePreview` 的完整可见正文，而不是另走自动识别或抓到不可见 HTML。
-- 逐个检查侧边栏工具、回答下方工具、用户直接提问和自定义工具：切换无上下文、当前页面、当前正文、当前选中后，模型收到的上下文应与上下文预览一致；自定义模板的 `{{text}}` / `{{context}}` 应是实际内容而不是“当前上下文”。
+- 逐个检查侧边栏工具、回答下方工具、用户直接提问和自定义工具：切换无上下文、当前页面、当前正文、当前选中后，模型收到的上下文应与上下文预览一致；切到新 Chrome 标签页后立即提问或运行工具时，不得携带上一标签页上下文；自定义模板的 `{{text}}` / `{{context}}` 应是实际内容而不是“当前上下文”。
 - 开启“工具使用提问上下文原始语言进行回答”，用中文界面分别对英文、中文和带 `lang=fr` 的法文上下文执行总结/解释/自定义工具，确认回答使用识别出的上下文语言；再确认普通输入框对话不受影响，模板仅以中文书写时不会覆盖英文上下文语言。
 - 检查正文原文中 `**4 citations from multiple sources**[1-4]`、`**Citation N from source**[N]` 只保留引用标记；检查翻译结果不会出现“这是一个翻译任务...”和损坏的 `WEBMIND_*` 占位符。
 - 在扩展重载后保留一个不刷新的普通网页标签页，直接打开侧边栏并使用当前正文工具，验证自动补注入不会再出现“不能建立连接”。

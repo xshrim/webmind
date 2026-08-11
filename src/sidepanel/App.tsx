@@ -160,10 +160,12 @@ import {
   buildSystemMessage,
   contextModeAfterTabSwitch,
   contextLabel,
+  contextMatchesTab,
   contextSnapshotExcerpt,
   contextTranslationSourceText,
   defaultContextMode,
   normalizePageContext,
+  sameTabIdentity,
   type ContextMode
 } from "./context";
 import { markdownPreviewSegments } from "./markdownPreview";
@@ -1269,9 +1271,7 @@ export function App() {
   const contextMatchesActivePage = (
     context: PageContext | null | undefined
   ): context is PageContext => {
-    if (!context) return false;
-    const url = activeTab?.url || pageContext?.url || "";
-    return !url || !context.url || context.url === url;
+    return contextMatchesTab(context, activeTab);
   };
 
   const articleContextForActivePage = (): PageContext | null => {
@@ -1357,38 +1357,107 @@ export function App() {
     forceIncludePage = false,
     contextOverride?: PageContext | null
   ): Promise<PageContext | null> => {
-    if (contextOverride !== undefined && contextOverride !== null) {
-      return contextOverride;
-    }
     if (!includePage && !forceIncludePage) return null;
     const requestedMode =
       forceIncludePage && contextModeRef.current === "none"
         ? defaultContextMode(settingsRef.current)
         : effectiveContextMode();
     if (requestedMode === "none") return null;
-    let context = contextForCurrentMode();
-    if (!contextMatchesMode(context, requestedMode) && activeTab?.id) {
-      const refreshed = normalizePageContext(
-        await sendToTab<PageContext>(activeTab.id, {
-          type: "page.context",
-          ignoreSelection: requestedMode !== "selection",
-          scope: requestedMode === "article" ? "article" : "page"
-        })
+    const liveTab = await getActiveTab();
+    const cachedTabIsCurrent = sameTabIdentity(liveTab, activeTab);
+    if (
+      contextOverride !== undefined &&
+      contextOverride !== null &&
+      cachedTabIsCurrent &&
+      contextMatchesTab(contextOverride, liveTab) &&
+      contextMatchesMode(contextOverride, requestedMode)
+    ) {
+      return contextOverride;
+    }
+
+    let resolvedMode: Exclude<ContextMode, "none"> = requestedMode;
+    let context = cachedTabIsCurrent ? contextForCurrentMode() : null;
+    const readActiveContext = async (mode: Exclude<ContextMode, "none">) => {
+      const page = await getActivePageContext(
+        settingsRef.current?.interfaceLanguage,
+        {
+          ignoreSelection: mode !== "selection",
+          scope: mode === "article" ? "article" : "page"
+        }
       );
-      if (contextMatchesMode(refreshed, requestedMode)) {
-        context = refreshed;
-        setPageContext(refreshed);
-        if (requestedMode === "selection") {
-          selectionContextRef.current = refreshed;
-          setSelectionContext(refreshed);
-        } else if (requestedMode === "article") {
-          setCurrentArticleContext(refreshed);
-        } else {
-          setCurrentPageContext(refreshed);
+      return {
+        ...page,
+        context: normalizePageContext(page.context)
+      };
+    };
+
+    if (!cachedTabIsCurrent || !contextMatchesMode(context, requestedMode)) {
+      let page = await readActiveContext(requestedMode);
+      let refreshed = page.context;
+      if (!sameTabIdentity(page.tab, activeTab)) {
+        selectionOverrideRef.current = null;
+        pendingSelectionContextRef.current = null;
+        selectionContextRef.current = null;
+        setSelectionContext(null);
+        const nextMode = contextModeAfterTabSwitch(
+          requestedMode,
+          defaultContextMode(settingsRef.current),
+          refreshed
+        );
+        resolvedMode =
+          nextMode === "none" ? defaultContextMode(settingsRef.current) : nextMode;
+        if (
+          requestedMode === "selection" &&
+          resolvedMode === "article" &&
+          refreshed?.kind !== "article"
+        ) {
+          page = await readActiveContext("article");
+          refreshed = page.context;
         }
       }
+      context =
+        resolvedMode === "selection" && refreshed?.kind !== "selection"
+          ? null
+          : refreshed;
+      contextModeRef.current = resolvedMode;
+      setActiveTab(page.tab);
+      activeTabIdRef.current = page.tab?.id ?? null;
+      setIncludePage(true);
+      setPageContext(context);
+      if (resolvedMode === "selection" && context?.kind === "selection") {
+        selectionContextRef.current = context;
+        setSelectionContext(context);
+        setCurrentPageContext(null);
+        setCurrentArticleContext(null);
+      } else if (resolvedMode === "selection") {
+        selectionContextRef.current = null;
+        setSelectionContext(null);
+        setCurrentPageContext(
+          refreshed && refreshed.kind !== "article" ? refreshed : null
+        );
+        setCurrentArticleContext(null);
+      } else if (resolvedMode === "article") {
+        setSelectionContext(null);
+        selectionContextRef.current = null;
+        setCurrentPageContext(null);
+        setCurrentArticleContext(
+          context?.kind === "article" ? context : null
+        );
+      } else {
+        setSelectionContext(null);
+        selectionContextRef.current = null;
+        setCurrentPageContext(context);
+        setCurrentArticleContext(null);
+      }
+      if (page.tab?.id) {
+        void sendToTab(page.tab.id, {
+          type: "immersive.contextScope.set",
+          scope: resolvedMode
+        }).catch(() => undefined);
+      }
+      setContextError(page.error ?? "");
     }
-    if (!contextMatchesMode(context, requestedMode)) return null;
+    if (!contextMatchesMode(context, resolvedMode)) return null;
     if (context.kind === "youtube" && !context.text) {
       setContextLoading(true);
       try {
@@ -2351,6 +2420,7 @@ export function App() {
       composer,
       includePage,
       activeTab?.favIconUrl,
+      activeTab?.id,
       activeTab?.title,
       activeTab?.url,
       appendOperationLog,
