@@ -23,6 +23,9 @@ export default defineConfig({
           if (id.includes("lucide-react") || id.includes("lucide")) {
             return "vendor-icons";
           }
+          if (id.includes("highlight.js")) {
+            return "vendor-highlight";
+          }
           if (id.includes("react") || id.includes("scheduler")) {
             return "vendor-react";
           }

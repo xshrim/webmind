@@ -125,6 +125,69 @@ export const SHADOW_STYLES = `
     white-space: pre-wrap;
     overflow-wrap: anywhere;
   }
+  .md-result-body .markdown {
+    min-width: 0;
+    white-space: normal;
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+    overflow-wrap: anywhere;
+  }
+  .md-result-body .markdown > :first-child { margin-top: 0; }
+  .md-result-body .markdown > :last-child { margin-bottom: 0; }
+  .md-result-body .markdown p,
+  .md-result-body .markdown ul,
+  .md-result-body .markdown ol,
+  .md-result-body .markdown blockquote,
+  .md-result-body .markdown pre,
+  .md-result-body .markdown table {
+    margin: 0 0 8px;
+  }
+  .md-result-body .markdown ul,
+  .md-result-body .markdown ol { padding-left: 20px; }
+  .md-result-body .markdown li + li { margin-top: 3px; }
+  .md-result-body .markdown strong,
+  .md-result-body .markdown b {
+    font-synthesis: weight;
+    font-weight: 700;
+  }
+  .md-result-body .markdown a { color: var(--md-teal); }
+  .md-result-body .markdown blockquote {
+    padding-left: 9px;
+    border-left: 3px solid var(--md-border);
+    color: var(--md-muted);
+  }
+  .md-result-body .markdown code {
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: var(--md-surface);
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: .92em;
+  }
+  .md-result-body .markdown pre {
+    max-width: 100%;
+    overflow: auto;
+    padding: 8px;
+    border: 1px solid var(--md-border);
+    border-radius: 5px;
+    background: var(--md-surface);
+  }
+  .md-result-body .markdown pre code {
+    padding: 0;
+    background: transparent;
+  }
+  .md-result-body .markdown table {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    border-collapse: collapse;
+  }
+  .md-result-body .markdown th,
+  .md-result-body .markdown td {
+    padding: 5px 7px;
+    border: 1px solid var(--md-border);
+    text-align: left;
+  }
   .md-result-error { color: #b33427; }
   .md-result-actions {
     display: flex;
@@ -758,7 +821,7 @@ export const SHADOW_STYLES = `
 
 export const PAGE_STYLES = `
   ::highlight(webmind-hover-definition) {
-    background-color: rgba(143, 185, 215, .32);
+    background-color: rgba(19, 139, 120, .42);
     color: inherit;
   }
   ::highlight(webmind-hover-definition-underline) {

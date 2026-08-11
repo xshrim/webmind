@@ -16,7 +16,17 @@ export type ProviderKind =
   | "ollama";
 
 export type ThemeMode = "system" | "light" | "dark";
-export type AppLanguage = "auto" | "zh-CN" | "zh-TW" | "en" | "ja" | "ko";
+export type AppLanguage =
+  | "auto"
+  | "zh-CN"
+  | "zh-TW"
+  | "en"
+  | "ja"
+  | "ko"
+  | "es"
+  | "fr"
+  | "de"
+  | "it";
 export type AppLogLevel = "debug" | "info" | "success" | "warning" | "error";
 export type SelectionOverlayMode = "off" | "always" | "hover";
 export type ImmersiveTranslationStyle = "translation-only" | "bilingual";

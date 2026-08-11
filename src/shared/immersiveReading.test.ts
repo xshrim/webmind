@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { DEFAULT_SETTINGS } from "./defaults";
 import {
   buildLocalReadingPlan,
+  buildReadingFallbackPrompt,
   dedupeImmersiveReadingTranslations,
   detectReadingFamily,
   finalizeLocalReadingPlan,
@@ -89,6 +90,35 @@ describe("immersive reading planning", () => {
     expect(translations[0]?.text).toContain("[[WEBMIND_READING|调查|investigation|2]]");
     expect(translations[0]?.text).toContain("[[WEBMIND_READING|动机|motive|3]]");
     expect(translations[0]?.text).not.toContain("[[WEBMIND_READING|学校|");
+  });
+
+  it("routes new reading targets through model fallback translation", () => {
+    const plan = buildLocalReadingPlan(
+      [
+        {
+          id: "block-1",
+          text: "The investigation continued after the student explained the motive to the officials."
+        }
+      ],
+      { ...DEFAULT_SETTINGS, translationLanguage: "es" },
+      dictionary,
+      frequencies
+    );
+
+    expect(plan.blocks[0]?.targetFamily).toBe("es");
+    expect(plan.fallbackTerms.length).toBeGreaterThan(0);
+    expect(plan.fallbackTerms.every((term) => term.targetFamily === "es")).toBe(true);
+    expect(buildReadingFallbackPrompt(plan.fallbackTerms)).toContain("es=Spanish");
+    const translations = finalizeLocalReadingPlan(
+      plan.blocks,
+      plan.fallbackTerms.map((term) => ({
+        key: term.key,
+        translation: term.source === "motive" ? "motivo" : "investigación"
+      }))
+    );
+    expect(translations[0]?.text).toMatch(/motivo|investigación/);
+    expect(translations[0]?.text).not.toContain("|动机|");
+    expect(translations[0]?.text).not.toContain("|调查|");
   });
 
   it("prefers Chinese candidates with single-word English glosses over phrases", () => {

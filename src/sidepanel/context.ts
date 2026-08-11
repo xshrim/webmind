@@ -71,6 +71,17 @@ export function contextSnapshotExcerpt(text: string): string {
   return `${normalized.slice(0, 177)}...`;
 }
 
+export function contextTranslationSourceText(context: PageContext | null): string {
+  if (context?.kind === "article" && context.articlePreview?.length) {
+    return context.articlePreview
+      .map((block) => block.markdown ?? block.sourceText ?? block.text)
+      .map((block) => block.trim())
+      .filter(Boolean)
+      .join("\n\n");
+  }
+  return context?.markdown?.trim() || context?.text?.trim() || "";
+}
+
 export function normalizePageContext(
   context: PageContext | null
 ): PageContext | null {

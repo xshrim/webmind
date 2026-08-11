@@ -4,6 +4,12 @@ import type { AppSettings, PageTextBlock, PageTranslation } from "./types";
 
 export type EnglishWordFrequencyIndex = Map<string, number>;
 export type ReadingFamily = "zh" | "en";
+export type ReadingTargetFamily =
+  | ReadingFamily
+  | "es"
+  | "fr"
+  | "de"
+  | "it";
 
 export interface HoverDefinitionDictionary {
   source: string;
@@ -27,7 +33,7 @@ export interface ReadingPlanBlock {
   id: string;
   text: string;
   family: ReadingFamily;
-  targetFamily: ReadingFamily;
+  targetFamily: ReadingTargetFamily;
   spans: ReadingSpan[];
 }
 
@@ -36,7 +42,7 @@ export interface ReadingFallbackTerm {
   source: string;
   context: string;
   family: ReadingFamily;
-  targetFamily: ReadingFamily;
+  targetFamily: ReadingTargetFamily;
 }
 
 export interface ReadingLocalPlan {
@@ -215,19 +221,27 @@ function settingReadingFamily(
     | string
     | undefined,
   fallback = false
-): ReadingFamily | null {
+): ReadingTargetFamily | null {
   if (!language) return null;
   const resolved =
     language === "auto" ? (fallback ? resolveLanguage("auto") : null) : language;
   if (resolved === "zh-CN" || resolved === "zh-TW") return "zh";
   if (resolved === "en") return "en";
+  if (
+    resolved === "es" ||
+    resolved === "fr" ||
+    resolved === "de" ||
+    resolved === "it"
+  ) {
+    return resolved;
+  }
   return null;
 }
 
 function targetReadingFamily(
   settings: AppSettings,
   sourceFamily: ReadingFamily
-): ReadingFamily | null {
+): ReadingTargetFamily | null {
   const interfaceFamily = settingReadingFamily(
     settings.interfaceLanguage === "auto"
       ? resolveLanguage("auto")
@@ -442,10 +456,12 @@ export function sanitizeReadingMarkerValue(value: string): string {
 
 function isReadingTranslationLanguageValid(
   translation: string,
-  targetFamily: ReadingFamily
+  targetFamily: ReadingTargetFamily
 ): boolean {
-  if (targetFamily === "en") return /[A-Za-z]/.test(translation);
-  return /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/.test(translation);
+  if (targetFamily === "zh") {
+    return /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/.test(translation);
+  }
+  return /[A-Za-zÀ-ÖØ-öø-ÿß]/.test(translation);
 }
 
 function escapeRegExp(value: string): string {
@@ -655,7 +671,7 @@ function buildReadingTextFromSelected(
   text: string,
   selected: ReadingSpan[],
   family: ReadingFamily,
-  targetFamily?: ReadingFamily,
+  targetFamily?: ReadingTargetFamily,
   fallbackTranslations = new Map<string, string>()
 ): string | null {
   if (!selected.length) return null;
@@ -666,9 +682,18 @@ function buildReadingTextFromSelected(
     const key = readingSpanKey(span, family);
     const source = sanitizeReadingMarkerValue(span.source);
     if (!source || containsWebMindPlaceholder(source)) continue;
-    const translation = sanitizeReadingMarkerValue(
-      span.translation ?? fallbackTranslations.get(key) ?? ""
+    const dictionaryTranslation = sanitizeReadingMarkerValue(
+      span.translation ?? ""
     );
+    const fallbackTranslation = sanitizeReadingMarkerValue(
+      fallbackTranslations.get(key) ?? ""
+    );
+    const dictionaryTargetFamily: ReadingTargetFamily =
+      family === "en" ? "zh" : "en";
+    const translation =
+      targetFamily && targetFamily !== dictionaryTargetFamily
+        ? fallbackTranslation
+        : dictionaryTranslation || fallbackTranslation;
     const cleanedTranslation = translation
       ? cleanReadingTranslation(span.source, translation)
       : "";
@@ -757,7 +782,11 @@ export function buildLocalReadingPlan(
       spans: selected
     });
     for (const span of selected) {
-      if (span.translation) continue;
+      const dictionaryTargetFamily: ReadingTargetFamily =
+        family === "en" ? "zh" : "en";
+      if (span.translation && targetFamily === dictionaryTargetFamily) {
+        continue;
+      }
       const key = readingSpanKey(span, family);
       if (fallbackTerms.has(key)) continue;
       fallbackTerms.set(key, {
@@ -827,9 +856,9 @@ export function parseReadingFallbackTranslations(
 export function buildReadingFallbackPrompt(terms: ReadingFallbackTerm[]): string {
   return [
     "Translate only the listed immersive-reading terms. Do not choose new terms and do not rewrite the context.",
-    "targetFamily=en means translate the source term into concise natural English. targetFamily=zh means translate it into concise natural Chinese.",
+    "Target languages: en=English, zh=Chinese, es=Spanish, fr=French, de=German, it=Italian. Translate every source term into the exact language named by targetFamily.",
     "Never translate, modify, copy, or output WEBMIND_* placeholders. If a placeholder appears in context, ignore it.",
-    "For targetFamily=en, every translation must contain English letters. For targetFamily=zh, every translation must contain Chinese characters.",
+    "Translations for targetFamily=zh must contain Chinese characters. Translations for en, es, fr, de, or it must contain letters from the requested language and must not silently switch to another target language.",
     "Use the context only to disambiguate. Return only a JSON array, no code fence, in this format: [{\"key\":\"same key\",\"translation\":\"short translation\"}].",
     "<terms>",
     JSON.stringify(

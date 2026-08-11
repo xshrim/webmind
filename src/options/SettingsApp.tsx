@@ -258,14 +258,8 @@ function applyTheme(settings: AppSettings): void {
 }
 
 function languageLabel(language: AppLanguage, current: AppLanguage): string {
-  return uiText(current, {
-    auto: "languageOptionAuto",
-    "zh-CN": "languageOptionZhCN",
-    "zh-TW": "languageOptionZhTW",
-    en: "languageOptionEn",
-    ja: "languageOptionJa",
-    ko: "languageOptionKo"
-  }[language] as UiTextKey);
+  if (language === "auto") return uiText(current, "languageOptionAuto");
+  return LANGUAGE_OPTIONS.find((option) => option.id === language)?.label ?? language;
 }
 
 const PROVIDER_KIND_LABEL_KEYS: Partial<Record<ProviderKind, UiTextKey>> = {
@@ -2082,69 +2076,59 @@ export function SettingsApp() {
                 <span>{t("generalConfigHelp")}</span>
               </header>
               <div className="card-body">
-                <div className="field">
-                  <span className="field-label">
-                    {uiText(settings.interfaceLanguage, "languageSetting")}
-                  </span>
-                  <div className="segmented segmented-wrap">
-                    {LANGUAGE_OPTIONS.map((language) => (
-                      <button
-                        key={language.id}
-                        className={
-                          settings.interfaceLanguage === language.id
-                            ? "active"
-                            : ""
-                        }
-                        type="button"
-                        onClick={() =>
-                          void updatePreference(
-                            "interfaceLanguage",
-                            language.id as AppLanguage
-                          )
-                        }
-                      >
-                        {languageLabel(language.id, settings.interfaceLanguage)}
-                      </button>
-                    ))}
-                  </div>
-                  <small>
-                    {uiText(settings.interfaceLanguage, "languageSettingHelp")}
-                  </small>
-                </div>
-                <div className="field">
-                  <span className="field-label">
-                    {uiText(
-                      settings.interfaceLanguage,
-                      "translationLanguageSetting"
-                    )}
-                  </span>
-                  <div className="segmented segmented-wrap">
-                    {LANGUAGE_OPTIONS.map((language) => (
-                      <button
-                        key={language.id}
-                        className={
-                          settings.translationLanguage === language.id
-                            ? "active"
-                            : ""
-                        }
-                        type="button"
-                        onClick={() =>
-                          void updatePreference(
-                            "translationLanguage",
-                            language.id as AppLanguage
-                          )
-                        }
-                      >
-                        {languageLabel(language.id, settings.interfaceLanguage)}
-                      </button>
-                    ))}
-                  </div>
-                  <small>
-                    {uiText(
-                      settings.interfaceLanguage,
-                      "translationLanguageSettingHelp"
-                    )}
-                  </small>
+                <div className="language-settings-row">
+                  <label className="field">
+                    <span className="field-label">
+                      {uiText(settings.interfaceLanguage, "languageSetting")}
+                    </span>
+                    <select
+                      value={settings.interfaceLanguage}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "interfaceLanguage",
+                          event.target.value as AppLanguage
+                        )
+                      }
+                    >
+                      {LANGUAGE_OPTIONS.map((language) => (
+                        <option key={language.id} value={language.id}>
+                          {languageLabel(language.id, settings.interfaceLanguage)}
+                        </option>
+                      ))}
+                    </select>
+                    <small>
+                      {uiText(settings.interfaceLanguage, "languageSettingHelp")}
+                    </small>
+                  </label>
+                  <label className="field">
+                    <span className="field-label">
+                      {uiText(
+                        settings.interfaceLanguage,
+                        "translationLanguageSetting"
+                      )}
+                    </span>
+                    <select
+                      value={settings.translationLanguage}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "translationLanguage",
+                          event.target.value as AppLanguage
+                        )
+                      }
+                    >
+                      {LANGUAGE_OPTIONS.map((language) => (
+                        <option key={language.id} value={language.id}>
+                          {languageLabel(language.id, settings.interfaceLanguage)}
+                        </option>
+                      ))}
+                    </select>
+                    <small>
+                      {uiText(
+                        settings.interfaceLanguage,
+                        "translationLanguageSettingHelp"
+                      )}
+                    </small>
+                  </label>
                 </div>
                 <div className="field">
                   <span className="field-label">

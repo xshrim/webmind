@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { UI_TEXT } from "./i18n";
+import {
+  LANGUAGE_OPTIONS,
+  UI_TEXT,
+  resolveLanguage,
+  resolvePromptLanguage
+} from "./i18n";
 import {
   buildProtectedTranslationPrompt,
   protectTranslationText
@@ -7,15 +12,56 @@ import {
 import {
   articlePruneInstruction,
   builtInToolsForLanguage,
+  detectTranslationLanguage,
   isDictionaryTranslationInput,
   quickActionPrompt,
   translationDirectionInstruction
 } from "./prompts";
 
 describe("localized tools and prompts", () => {
+  it("supports the additional European language settings", () => {
+    expect(LANGUAGE_OPTIONS.slice(-4).map(({ id }) => id)).toEqual([
+      "es",
+      "fr",
+      "de",
+      "it"
+    ]);
+    expect(resolveLanguage("auto", "es-MX")).toBe("es");
+    expect(resolveLanguage("auto", "fr-FR")).toBe("fr");
+    expect(resolveLanguage("auto", "de-DE")).toBe("de");
+    expect(resolveLanguage("auto", "it-IT")).toBe("it");
+    expect(resolvePromptLanguage("fr")).toBe("en");
+    expect(UI_TEXT.es.settings).toBe("Configuración");
+    expect(UI_TEXT.fr.settings).toBe("Paramètres");
+    expect(UI_TEXT.de.settings).toBe("Einstellungen");
+    expect(UI_TEXT.it.settings).toBe("Impostazioni");
+    expect(UI_TEXT.fr).not.toBe(UI_TEXT.en);
+    expect(LANGUAGE_OPTIONS.map(({ label }) => label)).toEqual([
+      "自动",
+      "简体中文",
+      "繁體中文",
+      "English",
+      "日本語",
+      "한국어",
+      "Español",
+      "Français",
+      "Deutsch",
+      "Italiano"
+    ]);
+  });
+
   it("keeps UI text keys complete for every supported language", () => {
     const baseKeys = Object.keys(UI_TEXT["zh-CN"]).sort();
-    for (const language of ["zh-TW", "en", "ja", "ko"] as const) {
+    for (const language of [
+      "zh-TW",
+      "en",
+      "ja",
+      "ko",
+      "es",
+      "fr",
+      "de",
+      "it"
+    ] as const) {
       expect(Object.keys(UI_TEXT[language]).sort()).toEqual(baseKeys);
     }
   });
@@ -47,6 +93,21 @@ describe("localized tools and prompts", () => {
     expect(chineseAutoTranslate?.template).toContain("WEBMIND_FORMAT_START_N");
     expect(japaneseTranslate?.title).toBe("自動翻訳");
     expect(japaneseTranslate?.template).toContain("한국어");
+    expect(builtInToolsForLanguage("es").find((tool) => tool.id === "summary")?.title).toBe(
+      "Resumir"
+    );
+    expect(builtInToolsForLanguage("fr").find((tool) => tool.id === "explain-code")?.title).toBe(
+      "Expliquer le code"
+    );
+    expect(builtInToolsForLanguage("de").find((tool) => tool.id === "draft-reply")?.title).toBe(
+      "Antwort entwerfen"
+    );
+    expect(builtInToolsForLanguage("it").find((tool) => tool.id === "study-notes")?.title).toBe(
+      "Appunti di studio"
+    );
+    expect(builtInToolsForLanguage("es").find((tool) => tool.id === "summary")?.template).toContain(
+      "Key conclusions"
+    );
   });
 
   it("localizes quick action prompts", () => {
@@ -58,6 +119,46 @@ describe("localized tools and prompts", () => {
         translationLanguage: "ko"
       })
     ).toContain("한국어");
+    expect(quickActionPrompt("summarize", "fr")).toContain(
+      "Output the entire result in French"
+    );
+  });
+
+  it("uses localized dictionary field labels with one shared western prompt", () => {
+    const expectedFields = {
+      en: "**Definition**",
+      es: "**Definición**",
+      fr: "**Définition**",
+      de: "**Bedeutungen**",
+      it: "**Definizione**"
+    } as const;
+
+    for (const [language, field] of Object.entries(expectedFields) as Array<
+      [keyof typeof expectedFields, string]
+    >) {
+      const prompt = buildProtectedTranslationPrompt(
+        { interfaceLanguage: language, translationLanguage: "auto" },
+        "serendipity",
+        "serendipity",
+        { dictionaryForShortInput: true }
+      );
+      expect(prompt).toContain(field);
+      expect(prompt).toContain(
+        `All field labels and explanations must be in ${
+          language === "en"
+            ? "English"
+            : language === "es"
+              ? "Spanish"
+              : language === "fr"
+                ? "French"
+                : language === "de"
+                  ? "German"
+                  : "Italian"
+        }`
+      );
+      expect(prompt).toContain("The stars represent only estimated usage frequency");
+      expect(prompt).not.toMatch(/CET-6|GRE|IELTS/);
+    }
   });
 
   it("gives model pruning conservative block-classification rules", () => {
@@ -95,6 +196,33 @@ describe("localized tools and prompts", () => {
     expect(singleChinese).toContain("目标语言已固定为English");
   });
 
+  it("detects supported Latin languages from clear sentence evidence", () => {
+    expect(detectTranslationLanguage("Abre el panel y guarda los cambios para continuar.")).toBe("es");
+    expect(detectTranslationLanguage("Ouvrez le panneau et enregistrez les modifications dans la page.")).toBe("fr");
+    expect(detectTranslationLanguage("Öffnen Sie das Menü und speichern Sie die Änderungen für später.")).toBe("de");
+    expect(detectTranslationLanguage("Apri il pannello e salva le modifiche nella pagina.")).toBe("it");
+  });
+
+  it("uses new interface and translation languages as exact model targets", () => {
+    const automaticFrench = translationDirectionInstruction(
+      { interfaceLanguage: "fr", translationLanguage: "auto" },
+      "Open the settings panel and save the changes."
+    );
+    const fixedItalian = translationDirectionInstruction(
+      { interfaceLanguage: "de", translationLanguage: "it" },
+      "Open the settings panel"
+    );
+    const frenchSource = translationDirectionInstruction(
+      { interfaceLanguage: "fr", translationLanguage: "auto" },
+      "Ouvrez le panneau et enregistrez les modifications dans la page."
+    );
+
+    expect(automaticFrench).toContain("target language for this request is fixed as French");
+    expect(fixedItalian).toContain("target language for this request is fixed as Italian");
+    expect(frenchSource).toContain("source is mainly French");
+    expect(frenchSource).toContain("target language for this request is fixed as English");
+  });
+
   it("treats Chinese text with English terms as Chinese-dominant", () => {
     const mixedChinese = translationDirectionInstruction(
       { interfaceLanguage: "zh-CN", translationLanguage: "auto" },
@@ -103,6 +231,52 @@ describe("localized tools and prompts", () => {
 
     expect(mixedChinese).toContain("本地预判原文主要语言为 Chinese");
     expect(mixedChinese).toContain("目标语言已固定为English");
+  });
+
+  it("excludes fenced and HTML code blocks from source-language detection", () => {
+    const fencedSource = [
+      "这是一个配置示例，请按照正文说明操作。",
+      "",
+      "```typescript",
+      "export interface TranslationRequest {",
+      "  sourceLanguage: string;",
+      "  targetLanguage: string;",
+      "  preserveMarkdown: boolean;",
+      "}",
+      "const request = createTranslationRequest(options);",
+      "````",
+      "",
+      "完成后重新打开页面。"
+    ].join("\n");
+    const htmlSource =
+      "这是中文说明。<pre><code>const englishWords = createVeryLargeConfiguration();</code></pre>请继续操作。";
+
+    expect(detectTranslationLanguage(fencedSource)).toBe("zh");
+    expect(detectTranslationLanguage(htmlSource)).toBe("zh");
+    expect(
+      detectTranslationLanguage("```javascript\nconst englishOnly = true;\n```")
+    ).toBeNull();
+  });
+
+  it("requires a high natural-language Latin share before overriding Chinese", () => {
+    expect(
+      detectTranslationLanguage(
+        "这段正文主要使用中文，只包含 React component and API response 这些英文术语。"
+      )
+    ).toBe("zh");
+    expect(
+      detectTranslationLanguage(
+        "说明：This section explains how the translation pipeline preserves paragraph structure and restores protected content correctly."
+      )
+    ).toBe("en");
+  });
+
+  it("does not count inline code as English language evidence", () => {
+    expect(
+      detectTranslationLanguage(
+        "调用 `createTranslationRequest(sourceLanguage, targetLanguage)` 后继续处理正文。"
+      )
+    ).toBe("zh");
   });
 
   it("does not use Markdown link destinations for language detection", () => {
@@ -163,9 +337,16 @@ describe("localized tools and prompts", () => {
     expect(prompt).toContain("固定行格式");
     expect(prompt).toContain("第一行格式为 **原词** /音标或拼音/");
     expect(prompt).toContain("英文词使用音标");
-    expect(prompt).toContain("星级后可列 CET-6 / GRE / IELTS");
-    expect(prompt).toContain("没有音标、拼音、星级或考试标签时，省略对应部分");
+    expect(prompt).toContain("词频星级必须保留");
+    expect(prompt).toContain("星星只表示原词在其源语言现代通用语境中的使用频率");
+    expect(prompt).toContain("★★★★★ 极常见");
+    expect(prompt).toContain("★☆☆☆☆ 罕见");
+    expect(prompt).toContain("不要解释评分过程");
+    expect(prompt).not.toMatch(/CET-6|GRE|IELTS/);
     expect(prompt).toContain("后续行只能使用这些字段");
+    expect(prompt).toContain("\n\n**释义** 核心译义\n\n**义项**");
+    expect(prompt).toContain("每个字段都必须是独立的 Markdown 段落");
+    expect(prompt).toContain("禁止把两个字段名写在同一行");
     expect(prompt).toContain("**释义**");
     expect(prompt).toContain("**义项**");
     expect(prompt).toContain("**语域**");
@@ -189,8 +370,9 @@ describe("localized tools and prompts", () => {
     expect(prompt).toContain("译文与例句翻译使用English");
     expect(prompt).toContain("核心译义必须使用English");
     expect(prompt).toContain("中文词使用拼音");
-    expect(prompt).toContain("不要列 CET-6 / GRE / IELTS");
-    expect(prompt).toContain("不要为了凑格式编造音标");
+    expect(prompt).toContain("词频星级必须保留");
+    expect(prompt).toContain("词频星级按上述五档标准估算");
+    expect(prompt).not.toMatch(/CET-6|GRE|IELTS/);
   });
 
   it("keeps sentence-like short Chinese inputs in normal translation mode", () => {

@@ -62,6 +62,17 @@ describe("settings normalization", () => {
     ).toBe(true);
   });
 
+  it("preserves supported European language preferences", () => {
+    const settings = normalizeSettings({
+      interfaceLanguage: "es",
+      translationLanguage: "de"
+    });
+    expect(settings.interfaceLanguage).toBe("es");
+    expect(settings.translationLanguage).toBe("de");
+    expect(DEFAULT_SETTINGS.interfaceLanguage).toBe("auto");
+    expect(DEFAULT_SETTINGS.translationLanguage).toBe("auto");
+  });
+
   it("marks only the first configured model as default", () => {
     const first = createProviderProfile("openai-compatible", { id: "first" });
     const second = createProviderProfile("ollama", { id: "second" });

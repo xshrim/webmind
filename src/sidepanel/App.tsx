@@ -121,6 +121,7 @@ import {
   extractPageTranslationEntries,
   extractJsonArray,
   protectTranslationText,
+  scopeProtectedTranslationText,
   restoreTranslationText,
   shortTitle,
   toModelMessage,
@@ -147,7 +148,7 @@ import {
   runImmersiveReadingModelPageWorkflow,
   runImmersiveTranslationWorkflow
 } from "../shared/immersiveWorkflow";
-import { Markdown } from "../ui/Markdown";
+import { SyntaxHighlightedMarkdown } from "./SyntaxHighlightedMarkdown";
 import { extractPdfContext } from "./pdf";
 import { searchWeb } from "../shared/webSearch";
 import {
@@ -160,10 +161,12 @@ import {
   contextModeAfterTabSwitch,
   contextLabel,
   contextSnapshotExcerpt,
+  contextTranslationSourceText,
   defaultContextMode,
   normalizePageContext,
   type ContextMode
 } from "./context";
+import { markdownPreviewSegments } from "./markdownPreview";
 import {
   NAV_ITEMS,
   TOOL_TAB_PRIORITY,
@@ -1021,7 +1024,9 @@ export function App() {
               ? {
                   ...item,
                   content: protection
-                    ? restoreTranslationText(rawText, protection)
+                    ? restoreTranslationText(rawText, protection, {
+                        streaming: true
+                      })
                     : item.content + message.delta
                 }
               : item
@@ -2137,8 +2142,7 @@ export function App() {
             )}\n${supplementalText}`
         : ""
       ].join("");
-      const contextSourceText =
-        context?.markdown?.trim() || context?.text?.trim() || "";
+      const contextSourceText = contextTranslationSourceText(context);
       const toolContextText =
         options.toolContextInput && contextSourceText
           ? truncateText(
@@ -2173,8 +2177,6 @@ export function App() {
         options.contextAsInput && contextSourceText
           ? protectTranslationText(contextSourceText)
           : null;
-      const requestTranslationProtection =
-        options.translationProtection ?? contextualTranslationProtection;
       const protectedContextText =
         contextualTranslationProtection?.text ?? context?.text ?? "";
       const truncatedProtectedContextText =
@@ -2185,6 +2187,14 @@ export function App() {
               settingsRef.current?.interfaceLanguage
             )
           : "";
+      const requestTranslationProtection =
+        options.translationProtection ??
+        (contextualTranslationProtection
+          ? scopeProtectedTranslationText(
+              contextualTranslationProtection,
+              truncatedProtectedContextText
+            )
+          : null);
       const contextualTranslationSystemInstruction =
         options.contextAsInput && contextSourceText
           ? buildProtectedTranslationInstruction(
@@ -3737,8 +3747,7 @@ export function App() {
   const contextPreviewBlocks: ArticlePreviewBlock[] = isArticlePreview
     ? articlePreview
     : previewContextMarkdown
-      ? previewContextMarkdown
-          .split(/\n{2,}/)
+      ? markdownPreviewSegments(previewContextMarkdown)
           .map((markdown, index) => ({
             id: `context-preview-${index}`,
             text: markdown.trim(),
@@ -4035,7 +4044,7 @@ export function App() {
                     {message.content ? (
                       message.role === "assistant" ? (
                         <>
-                          <Markdown content={message.content} />
+                          <SyntaxHighlightedMarkdown content={message.content} />
                           {streamingMessageId !== message.id && (
                             <div className="message-actions assistant-actions">
                               <button
@@ -4253,7 +4262,7 @@ export function App() {
                               language={settings?.interfaceLanguage}
                             />
                           ) : (
-                            <Markdown content={message.content} />
+                            <SyntaxHighlightedMarkdown content={message.content} />
                           )}
                         </>
                       )
@@ -4785,8 +4794,9 @@ export function App() {
                         }}
                       >
                         <div className="body-preview-block-content">
-                          <Markdown
+                          <SyntaxHighlightedMarkdown
                             content={block.markdown ?? block.sourceText ?? block.text}
+                            eager={bodyPreviewExpanded}
                           />
                         </div>
                         <button
@@ -4810,8 +4820,9 @@ export function App() {
                         className="body-preview-block passive"
                       >
                         <div className="body-preview-block-content">
-                          <Markdown
+                          <SyntaxHighlightedMarkdown
                             content={block.markdown ?? block.sourceText ?? block.text}
+                            eager={bodyPreviewExpanded}
                           />
                         </div>
                       </div>

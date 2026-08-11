@@ -1,6 +1,11 @@
 import type { AppLanguage } from "./types";
+import { deUiText } from "./locales/de";
+import { esUiText } from "./locales/es";
+import { frUiText } from "./locales/fr";
+import { itUiText } from "./locales/it";
 
 export type ResolvedLanguage = Exclude<AppLanguage, "auto">;
+export type PromptLanguage = Exclude<ResolvedLanguage, "es" | "fr" | "de" | "it">;
 
 export const LANGUAGE_OPTIONS: Array<{ id: AppLanguage; label: string }> = [
   { id: "auto", label: "自动" },
@@ -8,7 +13,11 @@ export const LANGUAGE_OPTIONS: Array<{ id: AppLanguage; label: string }> = [
   { id: "zh-TW", label: "繁體中文" },
   { id: "en", label: "English" },
   { id: "ja", label: "日本語" },
-  { id: "ko", label: "한국어" }
+  { id: "ko", label: "한국어" },
+  { id: "es", label: "Español" },
+  { id: "fr", label: "Français" },
+  { id: "de", label: "Deutsch" },
+  { id: "it", label: "Italiano" }
 ];
 
 export const LANGUAGE_LABELS: Record<ResolvedLanguage, string> = {
@@ -16,7 +25,11 @@ export const LANGUAGE_LABELS: Record<ResolvedLanguage, string> = {
   "zh-TW": "繁體中文",
   en: "English",
   ja: "日本語",
-  ko: "한국어"
+  ko: "한국어",
+  es: "Spanish",
+  fr: "French",
+  de: "German",
+  it: "Italian"
 };
 
 export function resolveLanguage(
@@ -31,10 +44,27 @@ export function resolveLanguage(
   if (normalized.startsWith("en")) return "en";
   if (normalized.startsWith("ja")) return "ja";
   if (normalized.startsWith("ko")) return "ko";
+  if (normalized.startsWith("es")) return "es";
+  if (normalized.startsWith("fr")) return "fr";
+  if (normalized.startsWith("de")) return "de";
+  if (normalized.startsWith("it")) return "it";
   return "zh-CN";
 }
 
-export const UI_TEXT = {
+export function resolvePromptLanguage(
+  language: AppLanguage | undefined,
+  browserLanguage?: string
+): PromptLanguage {
+  const resolved = resolveLanguage(language, browserLanguage);
+  return resolved === "es" ||
+    resolved === "fr" ||
+    resolved === "de" ||
+    resolved === "it"
+    ? "en"
+    : resolved;
+}
+
+const CORE_UI_TEXT = {
   "zh-CN": {
     askSelectionTitle: "在侧边栏提问",
     askSelectionDescription: "把当前内容交给侧边栏继续提问",
@@ -2953,9 +2983,22 @@ export const UI_TEXT = {
     modelThinkingTimeoutMessage:
       "모델의 사고 시간이 초과되어 답변을 중단했습니다."
   }
-} satisfies Record<ResolvedLanguage, Record<string, string>>;
+} satisfies Record<PromptLanguage, Record<string, string>>;
 
-export type UiTextKey = keyof (typeof UI_TEXT)["zh-CN"];
+export type UiTextKey = keyof (typeof CORE_UI_TEXT)["zh-CN"];
+export type UiTextDictionary = Record<UiTextKey, string>;
+
+const WESTERN_UI_TEXT = {
+  es: esUiText,
+  fr: frUiText,
+  de: deUiText,
+  it: itUiText
+} satisfies Record<Exclude<ResolvedLanguage, PromptLanguage>, UiTextDictionary>;
+
+export const UI_TEXT = {
+  ...CORE_UI_TEXT,
+  ...WESTERN_UI_TEXT
+} satisfies Record<ResolvedLanguage, UiTextDictionary>;
 
 export function uiText(
   language: AppLanguage | undefined,

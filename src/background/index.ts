@@ -2,6 +2,7 @@ import { fetchYouTubeTranscript } from "./context";
 import { completeModel, listProviderModels, streamModel } from "./providers";
 import {
   fillPrompt,
+  isDictionaryTranslationInput,
   quickActionPrompt
 } from "../shared/prompts";
 import { requestOriginPermission } from "../shared/browser";
@@ -26,6 +27,7 @@ import {
   buildProtectedTranslationPrompt,
   createMessage,
   errorMessage,
+  normalizeDictionaryTranslationMarkdown,
   protectTranslationText,
   restoreTranslationText
 } from "../shared/utils";
@@ -417,6 +419,8 @@ chrome.runtime.onMessage.addListener(
           );
         }
         const isTranslationAction = action === "translate";
+        const dictionaryMode =
+          isTranslationAction && isDictionaryTranslationInput(text);
         const protectedText = isTranslationAction
           ? protectTranslationText(text)
           : null;
@@ -436,10 +440,13 @@ chrome.runtime.onMessage.addListener(
             createMessage("user", prompt)
           ]
         });
+        const restoredResult = protectedText
+          ? restoreTranslationText(result, protectedText)
+          : result;
         return {
-          text: protectedText
-            ? restoreTranslationText(result, protectedText)
-            : result
+          text: dictionaryMode
+            ? normalizeDictionaryTranslationMarkdown(restoredResult)
+            : restoredResult
         };
       }
       if (message.type === "model.tool") {
@@ -456,6 +463,9 @@ chrome.runtime.onMessage.addListener(
           contextMarkdown || String(message.payload?.text ?? "");
         const isTranslationTool =
           tool.id === "translate-text" || tool.id === "translate-document";
+        const dictionaryMode =
+          tool.id === "translate-text" &&
+          isDictionaryTranslationInput(contextText);
         const protectedText = isTranslationTool
           ? protectTranslationText(contextText)
           : null;
@@ -489,10 +499,13 @@ chrome.runtime.onMessage.addListener(
             )
           ]
         });
+        const restoredResult = protectedText
+          ? restoreTranslationText(result, protectedText)
+          : result;
         return {
-          text: protectedText
-            ? restoreTranslationText(result, protectedText)
-            : result
+          text: dictionaryMode
+            ? normalizeDictionaryTranslationMarkdown(restoredResult)
+            : restoredResult
         };
       }
       if (message.type === "image.fetchDataUrl") {

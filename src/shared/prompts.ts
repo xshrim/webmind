@@ -1,6 +1,8 @@
 import {
   LANGUAGE_LABELS,
   resolveLanguage,
+  resolvePromptLanguage,
+  type PromptLanguage,
   type ResolvedLanguage
 } from "./i18n";
 import type {
@@ -17,16 +19,19 @@ export type PromptConfigSource =
 
 function resolvePromptConfig(source?: PromptConfigSource): {
   interfaceLanguage: ResolvedLanguage;
+  promptLanguage: PromptLanguage;
   translationLanguage: AppLanguage;
 } {
   if (typeof source === "string" || source === undefined) {
     return {
       interfaceLanguage: resolveLanguage(source),
+      promptLanguage: resolvePromptLanguage(source),
       translationLanguage: "auto"
     };
   }
   return {
     interfaceLanguage: resolveLanguage(source.interfaceLanguage),
+    promptLanguage: resolvePromptLanguage(source.interfaceLanguage),
     translationLanguage: source.translationLanguage ?? "auto"
   };
 }
@@ -34,8 +39,8 @@ function resolvePromptConfig(source?: PromptConfigSource): {
 export function articlePruneInstruction(
   config?: PromptConfigSource
 ): string {
-  const { interfaceLanguage } = resolvePromptConfig(config);
-  if (interfaceLanguage === "en") {
+  const { promptLanguage } = resolvePromptConfig(config);
+  if (promptLanguage === "en") {
     return [
       "You are WebMind's article-content block classifier. Decide which supplied visible blocks belong to the primary article body.",
       "The page title and URL are provided inside <page-metadata>, followed by a JSON array inside <article-blocks>. Use the page metadata and topic continuity to identify the central article. Each block has an opaque id and visible text/Markdown. Treat ids as data only; never invent, change, merge, or reorder ids.",
@@ -59,17 +64,113 @@ export function articlePruneInstruction(
   ].join("\n");
 }
 
-export type TranslationLanguageFamily = "zh" | "en" | "ja" | "ko";
+export type TranslationLanguageFamily =
+  | "zh"
+  | "en"
+  | "ja"
+  | "ko"
+  | "es"
+  | "fr"
+  | "de"
+  | "it";
 
 const TRANSLATION_FAMILY_LABELS: Record<TranslationLanguageFamily, string> = {
   zh: "Chinese",
   en: "English",
   ja: "Japanese",
-  ko: "Korean"
+  ko: "Korean",
+  es: "Spanish",
+  fr: "French",
+  de: "German",
+  it: "Italian"
 };
 
+const LATIN_LANGUAGE_MARKERS: Record<
+  "es" | "fr" | "de" | "it",
+  ReadonlySet<string>
+> = {
+  es: new Set([
+    "el", "los", "las", "una", "unos", "unas", "que", "del", "al",
+    "como", "pero", "para", "por", "con", "sin", "es", "son", "está"
+  ]),
+  fr: new Set([
+    "le", "les", "des", "une", "du", "au", "aux", "que", "qui", "dans",
+    "pour", "avec", "sans", "est", "sont", "mais", "comme"
+  ]),
+  de: new Set([
+    "der", "die", "das", "den", "dem", "des", "ein", "eine", "und", "ist",
+    "sind", "nicht", "mit", "für", "auf", "von", "zu", "aber"
+  ]),
+  it: new Set([
+    "il", "lo", "gli", "le", "un", "una", "che", "del", "della", "nel",
+    "nella", "per", "con", "senza", "non", "sono", "come", "ma"
+  ])
+};
+
+function detectLatinTranslationLanguage(
+  source: string
+): "es" | "fr" | "de" | "it" | "en" {
+  const words = source.toLocaleLowerCase().match(/[a-zà-öø-ÿß]+/gu) ?? [];
+  const scores = (Object.keys(LATIN_LANGUAGE_MARKERS) as Array<
+    "es" | "fr" | "de" | "it"
+  >).map((language) => ({
+    language,
+    score: words.reduce(
+      (total, word) =>
+        total + (LATIN_LANGUAGE_MARKERS[language].has(word) ? 1 : 0),
+      0
+    )
+  }));
+  if (/[¿¡ñ]/iu.test(source)) {
+    scores.find(({ language }) => language === "es")!.score += 2;
+  }
+  if (/[œç]/iu.test(source)) {
+    scores.find(({ language }) => language === "fr")!.score += 2;
+  }
+  if (/[äöüß]/iu.test(source)) {
+    scores.find(({ language }) => language === "de")!.score += 2;
+  }
+  scores.sort((left, right) => right.score - left.score);
+  return scores[0].score >= 2 && scores[0].score > scores[1].score
+    ? scores[0].language
+    : "en";
+}
+
+function withoutFencedCodeBlocks(text: string): string {
+  const lines = text.replace(/\r\n?/g, "\n").split("\n");
+  const visibleLines: string[] = [];
+  let fenceMarker = "";
+  let fenceLength = 0;
+  for (const line of lines) {
+    if (!fenceMarker) {
+      const opening = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
+      if (opening && !(opening[1][0] === "`" && opening[2].includes("`"))) {
+        fenceMarker = opening[1][0];
+        fenceLength = opening[1].length;
+        visibleLines.push("");
+        continue;
+      }
+      visibleLines.push(line);
+      continue;
+    }
+    const closing = line.match(/^ {0,3}(`+|~+)[\t ]*$/);
+    if (
+      closing &&
+      closing[1][0] === fenceMarker &&
+      closing[1].length >= fenceLength
+    ) {
+      fenceMarker = "";
+      fenceLength = 0;
+    }
+  }
+  return visibleLines.join("\n");
+}
+
 function visibleTranslationSourceText(text: string): string {
-  return text
+  return withoutFencedCodeBlocks(text)
+    .replace(/<pre\b[^>]*>[\s\S]*?<\/pre>/gi, " ")
+    .replace(/<code\b[^>]*>[\s\S]*?<\/code>/gi, " ")
+    .replace(/(`+)(?!`)([^\n]*?)\1/g, " ")
     .replace(
       /\[([^\]\n]{1,500})\]\(\s*(?:<[^>\n]+>|[^)\n]+)\s*\)/g,
       "$1"
@@ -81,21 +182,26 @@ export function detectTranslationLanguage(
   text: string
 ): TranslationLanguageFamily | null {
   const source = visibleTranslationSourceText(text);
-  const latinWordCount = source.match(/[A-Za-z]+/g)?.length ?? 0;
+  const latinWords = source.match(/[A-Za-zÀ-ÖØ-öø-ÿ]+(?:['’-][A-Za-zÀ-ÖØ-öø-ÿ]+)*/g) ?? [];
+  const latinLetterCount = latinWords.join("").replace(/['’-]/g, "").length;
   const chineseCount = source.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g)?.length ?? 0;
   const japaneseKanaCount = source.match(/[\u3040-\u30ff\u31f0-\u31ff]/g)?.length ?? 0;
   const koreanCount = source.match(/[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af]/g)?.length ?? 0;
+  const nonLatinLetterCount = chineseCount + japaneseKanaCount + koreanCount;
+  const languageLetterCount = latinLetterCount + nonLatinLetterCount;
+  const latinShare = languageLetterCount
+    ? latinLetterCount / languageLetterCount
+    : 0;
+  const latinDominant =
+    latinLetterCount > 0 &&
+    (nonLatinLetterCount === 0 ||
+      (latinWords.length >= 2 && latinShare >= 0.8));
+  if (latinDominant) {
+    return detectLatinTranslationLanguage(source);
+  }
   if (koreanCount) return "ko";
   if (japaneseKanaCount) return "ja";
-  if (chineseCount >= 2 && chineseCount >= latinWordCount) {
-    return "zh";
-  }
-  if (chineseCount >= 1 && latinWordCount === 0) {
-    return "zh";
-  }
-  if (latinWordCount >= 2 && latinWordCount > chineseCount) return "en";
-  if (chineseCount >= 2) return "zh";
-  if (latinWordCount >= 1 && chineseCount === 0) return "en";
+  if (chineseCount) return "zh";
   return null;
 }
 
@@ -113,6 +219,10 @@ export function originalLanguageLabel(
   }
   if (detected === "ja") return LANGUAGE_LABELS.ja;
   if (detected === "ko") return LANGUAGE_LABELS.ko;
+  if (detected === "es") return LANGUAGE_LABELS.es;
+  if (detected === "fr") return LANGUAGE_LABELS.fr;
+  if (detected === "de") return LANGUAGE_LABELS.de;
+  if (detected === "it") return LANGUAGE_LABELS.it;
   if (detected === "en" && (!primaryHint || primaryHint === "en")) {
     return LANGUAGE_LABELS.en;
   }
@@ -143,7 +253,8 @@ export function translationDirectionInstruction(
   config: PromptConfigSource | undefined,
   sourceText: string
 ): string {
-  const { interfaceLanguage, translationLanguage } = resolvePromptConfig(config);
+  const { interfaceLanguage, promptLanguage, translationLanguage } =
+    resolvePromptConfig(config);
   const sourceLanguage = detectTranslationLanguage(sourceText);
   if (!sourceLanguage) return "";
   const targetLanguage =
@@ -154,7 +265,7 @@ export function translationDirectionInstruction(
       : resolveLanguage(translationLanguage);
   const targetLabel = LANGUAGE_LABELS[targetLanguage];
   const sourceLabel = TRANSLATION_FAMILY_LABELS[sourceLanguage];
-  switch (interfaceLanguage) {
+  switch (promptLanguage) {
     case "zh-TW":
       return `只根據 <translation-input> 中實際原文的文字特徵處理。本地預判原文主要語言為 ${sourceLabel}，本次目標語言已固定為${targetLabel}。這是一個強制翻譯任務，不是語言檢測任務。如果原文不是${targetLabel}，最終輸出必須是${targetLabel}，不得複製原文或用原文語言回答。即使原文只有一個單字、短語或一兩句話，只要存在可翻譯內容也必須翻譯，不要因為內容簡短而原樣返回。`;
     case "en":
@@ -172,26 +283,30 @@ export function translationDirectionInstruction(
 export function translationFormatInstruction(
   config?: PromptConfigSource
 ): string {
-  const { interfaceLanguage } = resolvePromptConfig(config);
-  switch (interfaceLanguage) {
+  const { promptLanguage } = resolvePromptConfig(config);
+  switch (promptLanguage) {
     case "zh-TW":
-      return "嚴格保持原文的段落、換行、標題和清單結構，每個原文段落對應一個譯文段落，不要合併段落。{{WEBMIND_PARAGRAPH_BREAK_N}} 是不可翻譯的段落分隔預留位置，{{WEBMIND_CITATION_N}} 是不可翻譯的引用下標預留位置；兩者都必須逐字保留在原位置，不要展開、解釋、改寫或刪除，不要輸出『該資訊來自……引用』之類的說明。{{WEBMIND_LINK_START_N}} 和 {{WEBMIND_LINK_END_N}} 是不可翻譯的連結邊界預留位置，必須原樣保留；只翻譯兩者之間可見的連結文字，不要補充、翻譯或輸出連結地址。{{WEBMIND_FORMAT_START_N}} 和 {{WEBMIND_FORMAT_END_N}} 是不可翻譯的上標/下標格式邊界預留位置，必須原樣保留，只翻譯邊界內可見文字。";
+      return "嚴格保持原文的段落、換行、標題和清單結構，每個原文段落對應一個譯文段落，不要合併段落。{{WEBMIND_PARAGRAPH_BREAK_N}} 是不可翻譯的換行或段落分隔預留位置，{{WEBMIND_CODE_BLOCK_N}} 是不可翻譯的完整 fenced code block 預留位置，{{WEBMIND_CITATION_N}} 是不可翻譯的引用下標預留位置；三者都必須逐字保留在原位置，不要使用反引號包裹預留位置，也不要展開、解釋、改寫或刪除。程式碼不需要翻譯；最終恢復後必須仍是包含語言標記和多行內容的 fenced code block，不得改成單反引號行內程式碼。不要輸出『該資訊來自……引用』之類的說明。{{WEBMIND_LINK_START_N}} 和 {{WEBMIND_LINK_END_N}} 是不可翻譯的連結邊界預留位置，必須原樣保留；只翻譯兩者之間可見的連結文字，不要補充、翻譯或輸出連結地址。{{WEBMIND_FORMAT_START_N}} 和 {{WEBMIND_FORMAT_END_N}} 是不可翻譯的上標/下標格式邊界預留位置，必須原樣保留，只翻譯邊界內可見文字。";
     case "en":
-      return "Strictly preserve the source paragraph, line-break, heading, and list structure, with one translated paragraph for each source paragraph; never merge paragraphs. {{WEBMIND_PARAGRAPH_BREAK_N}} is an immutable paragraph-break placeholder and {{WEBMIND_CITATION_N}} is an immutable citation-marker placeholder. Preserve both verbatim in place without expanding, explaining, rewriting, or removing them, and never spell out a citation explanation. {{WEBMIND_LINK_START_N}} and {{WEBMIND_LINK_END_N}} are immutable link-boundary placeholders; preserve them verbatim, translate only the visible link text between them, and never add, translate, or output link URLs. {{WEBMIND_FORMAT_START_N}} and {{WEBMIND_FORMAT_END_N}} are immutable superscript/subscript-format boundaries; preserve them verbatim and translate only the visible text between them.";
+      return "Strictly preserve the source paragraph, line-break, heading, and list structure, with one translated paragraph for each source paragraph; never merge paragraphs. {{WEBMIND_PARAGRAPH_BREAK_N}} is an immutable line/paragraph-break placeholder, {{WEBMIND_CODE_BLOCK_N}} is an immutable complete fenced-code-block placeholder, and {{WEBMIND_CITATION_N}} is an immutable citation-marker placeholder. Preserve all three verbatim in place without wrapping placeholders in backticks, expanding, explaining, rewriting, or removing them. Code does not need translation; after restoration it must remain a fenced code block with its language marker and multiline content, never single-backtick inline code. Never spell out a citation explanation. {{WEBMIND_LINK_START_N}} and {{WEBMIND_LINK_END_N}} are immutable link-boundary placeholders; preserve them verbatim, translate only the visible link text between them, and never add, translate, or output link URLs. {{WEBMIND_FORMAT_START_N}} and {{WEBMIND_FORMAT_END_N}} are immutable superscript/subscript-format boundaries; preserve them verbatim and translate only the visible text between them.";
     case "ja":
-      return "原文の段落、改行、見出し、リスト構造を厳密に保持し、各原文段落を対応する一つの翻訳段落にしてください。段落を結合しないでください。{{WEBMIND_PARAGRAPH_BREAK_N}} は翻訳不可の段落区切りプレースホルダー、{{WEBMIND_CITATION_N}} は翻訳不可の引用番号プレースホルダーです。どちらも元の位置にそのまま残し、展開、説明、書き換え、削除をしないでください。{{WEBMIND_LINK_START_N}} と {{WEBMIND_LINK_END_N}} は翻訳不可のリンク境界プレースホルダーです。そのまま保持し、間にある表示リンク文字だけを翻訳し、リンク URL を追加・翻訳・出力しないでください。{{WEBMIND_FORMAT_START_N}} と {{WEBMIND_FORMAT_END_N}} は翻訳不可の上付き/下付き書式境界です。そのまま保持し、境界内の表示文字だけを翻訳してください。";
+      return "原文の段落、改行、見出し、リスト構造を厳密に保持し、各原文段落を対応する一つの翻訳段落にしてください。段落を結合しないでください。{{WEBMIND_PARAGRAPH_BREAK_N}} は翻訳不可の改行・段落区切りプレースホルダー、{{WEBMIND_CODE_BLOCK_N}} は翻訳不可の完全な fenced code block プレースホルダー、{{WEBMIND_CITATION_N}} は翻訳不可の引用番号プレースホルダーです。三種類ともバッククォートで囲まず元の位置にそのまま残し、展開、説明、書き換え、削除をしないでください。コードは翻訳せず、復元後も言語指定と複数行を持つ fenced code block のままにし、単一バッククォートのインラインコードにしないでください。{{WEBMIND_LINK_START_N}} と {{WEBMIND_LINK_END_N}} は翻訳不可のリンク境界プレースホルダーです。そのまま保持し、間にある表示リンク文字だけを翻訳し、リンク URL を追加・翻訳・出力しないでください。{{WEBMIND_FORMAT_START_N}} と {{WEBMIND_FORMAT_END_N}} は翻訳不可の上付き/下付き書式境界です。そのまま保持し、境界内の表示文字だけを翻訳してください。";
     case "ko":
-      return "원문의 문단, 줄바꿈, 제목 및 목록 구조를 엄격히 유지하고 각 원문 문단을 하나의 번역 문단에 대응시키며 문단을 합치지 마세요. {{WEBMIND_PARAGRAPH_BREAK_N}}은 번역하면 안 되는 문단 구분 자리표시자이고 {{WEBMIND_CITATION_N}}은 번역하면 안 되는 인용 번호 자리표시자입니다. 둘 다 원래 위치에 그대로 유지하고 확장, 설명, 수정 또는 삭제하지 마세요. {{WEBMIND_LINK_START_N}} 및 {{WEBMIND_LINK_END_N}}은 번역하면 안 되는 링크 경계 자리표시자입니다. 그대로 유지하고 그 사이의 보이는 링크 텍스트만 번역하며 링크 URL을 추가, 번역 또는 출력하지 마세요. {{WEBMIND_FORMAT_START_N}} 및 {{WEBMIND_FORMAT_END_N}}은 번역하면 안 되는 위 첨자/아래 첨자 서식 경계입니다. 그대로 유지하고 경계 안의 보이는 텍스트만 번역하세요.";
+      return "원문의 문단, 줄바꿈, 제목 및 목록 구조를 엄격히 유지하고 각 원문 문단을 하나의 번역 문단에 대응시키며 문단을 합치지 마세요. {{WEBMIND_PARAGRAPH_BREAK_N}}은 번역하면 안 되는 줄바꿈/문단 구분 자리표시자이고, {{WEBMIND_CODE_BLOCK_N}}은 번역하면 안 되는 완전한 fenced code block 자리표시자이며, {{WEBMIND_CITATION_N}}은 번역하면 안 되는 인용 번호 자리표시자입니다. 세 종류 모두 백틱으로 감싸지 말고 원래 위치에 그대로 유지하며 확장, 설명, 수정 또는 삭제하지 마세요. 코드는 번역하지 말고 복원 후에도 언어 표시와 여러 줄 내용을 가진 fenced code block으로 유지하며 단일 백틱 인라인 코드로 바꾸지 마세요. {{WEBMIND_LINK_START_N}} 및 {{WEBMIND_LINK_END_N}}은 번역하면 안 되는 링크 경계 자리표시자입니다. 그대로 유지하고 그 사이의 보이는 링크 텍스트만 번역하며 링크 URL을 추가, 번역 또는 출력하지 마세요. {{WEBMIND_FORMAT_START_N}} 및 {{WEBMIND_FORMAT_END_N}}은 번역하면 안 되는 위 첨자/아래 첨자 서식 경계입니다. 그대로 유지하고 경계 안의 보이는 텍스트만 번역하세요.";
     case "zh-CN":
     default:
-      return "严格保持原文的段落、换行、标题和列表结构，每个原文段落对应一个译文段落，不要合并段落。{{WEBMIND_PARAGRAPH_BREAK_N}} 是不可翻译的段落分隔占位符，{{WEBMIND_CITATION_N}} 是不可翻译的引用下标占位符；两者都必须逐字保留在原位置，不要展开、解释、改写或删除，不要输出‘该信息来自……引用’之类的说明。{{WEBMIND_LINK_START_N}} 和 {{WEBMIND_LINK_END_N}} 是不可翻译的链接边界占位符，必须原样保留；只翻译两者之间可见的链接文字，不要补充、翻译或输出链接地址。{{WEBMIND_FORMAT_START_N}} 和 {{WEBMIND_FORMAT_END_N}} 是不可翻译的上标/下标格式边界，必须原样保留；只翻译边界之间可见的文字。";
+      return "严格保持原文的段落、换行、标题和列表结构，每个原文段落对应一个译文段落，不要合并段落。{{WEBMIND_PARAGRAPH_BREAK_N}} 是不可翻译的换行或段落分隔占位符，{{WEBMIND_CODE_BLOCK_N}} 是不可翻译的完整 fenced code block 占位符，{{WEBMIND_CITATION_N}} 是不可翻译的引用下标占位符；三者都必须逐字保留在原位置，不要用反引号包裹占位符，也不要展开、解释、改写或删除。代码无需翻译；恢复后必须仍是带语言标记和多行内容的 fenced code block，不得改成单反引号内联代码。不要输出‘该信息来自……引用’之类的说明。{{WEBMIND_LINK_START_N}} 和 {{WEBMIND_LINK_END_N}} 是不可翻译的链接边界占位符，必须原样保留；只翻译两者之间可见的链接文字，不要补充、翻译或输出链接地址。{{WEBMIND_FORMAT_START_N}} 和 {{WEBMIND_FORMAT_END_N}} 是不可翻译的上标/下标格式边界，必须原样保留；只翻译边界之间可见的文字。";
   }
+}
+
+export function translationStructureIntegrityInstruction(): string {
+  return "Do not add numbering, bullets, quote markers, headings, labels, or any other prefix that is not present at the corresponding source line. Preserve whether each source line starts with a list marker exactly; a paragraph-break placeholder is only a separator, never a request to create a list. Never omit, move, or rewrite a code-block placeholder. Do not turn ordinary paragraphs into a Markdown ordered or unordered list.";
 }
 
 export function htmlFormattingInstruction(
   config?: PromptConfigSource
 ): string {
-  const language = resolvePromptConfig(config).interfaceLanguage;
+  const language = resolvePromptConfig(config).promptLanguage;
   if (language === "en") {
     return "Preserve every {{WEBMIND_HTML_TAG_N}} placeholder verbatim. These placeholders represent visible formatting tags such as strong, em, underline, del, code, and their matching closing tags; translate only the visible text around them. Do not translate or remove link destinations.";
   }
@@ -201,7 +316,7 @@ export function htmlFormattingInstruction(
 export function immersiveReadingInstruction(
   config?: PromptConfigSource
 ): string {
-  const { interfaceLanguage, translationLanguage } =
+  const { interfaceLanguage, promptLanguage, translationLanguage } =
     resolvePromptConfig(config);
   const interfaceLabel = LANGUAGE_LABELS[interfaceLanguage];
   const translationSetting =
@@ -221,14 +336,14 @@ export function immersiveReadingInstruction(
     en: `If the page's main language matches ${interfaceLabel}, use English as the learning language; otherwise use ${interfaceLabel}.`,
     ja: `ページの主言語が${interfaceLabel}と一致する場合は英語を学習言語にし、一致しない場合は${interfaceLabel}を使用してください。`,
     ko: `페이지의 주 언어가 ${interfaceLabel}와 같으면 영어를 학습 언어로 사용하고, 다르면 ${interfaceLabel}를 사용하세요.`
-  }[interfaceLanguage];
+  }[promptLanguage];
   const fixedTargetRule = {
     "zh-CN": `学习语言固定为${translationSetting}。`,
     "zh-TW": `學習語言固定為${translationSetting}。`,
     en: `Always use ${translationSetting} as the learning language.`,
     ja: `学習言語は常に${translationSetting}に固定してください。`,
     ko: `학습 언어는 항상 ${translationSetting}(으)로 고정하세요.`
-  }[interfaceLanguage];
+  }[promptLanguage];
   const targetRule =
     translationLanguage === "auto" ? autoTargetRule : fixedTargetRule;
   const difficultyGuidance = {
@@ -292,8 +407,8 @@ export function immersiveReadingInstruction(
       "난이도는 주로 영어 학습 단어의 일반성/빈도를 기준으로 판단하세요. 중국어 페이지에서는 중국어 표현 자체의 길이나 희귀성만 보지 말고, 해당 영어 번역어의 난이도로 교체 여부를 판단하세요.",
       "번역은 현재 문장이나 문단의 문맥에 맞는 자연스럽고 짧은 뜻풀이여야 하며 보통 1-4단어로 작성하세요. 의미 구분과 필요한 연어는 허용하지만 현재 문맥으로 뒷받침되지 않는 과도하게 구체적인 한정은 추가하지 마세요."
     ].join("\n")
-  }[interfaceLanguage];
-  switch (interfaceLanguage) {
+  }[promptLanguage];
+  switch (promptLanguage) {
     case "zh-TW":
       return [
         "你是 WebMind 沉浸閱讀處理器。請在保持原文自然可讀的前提下，用少量學習語言詞語形成母語與非母語混合閱讀。",
@@ -358,7 +473,7 @@ export function immersiveReadingInstruction(
   }
 }
 
-function translateDocumentSuffix(language: ResolvedLanguage): string {
+function translateDocumentSuffix(language: PromptLanguage): string {
   switch (language) {
     case "zh-TW":
       return "保留 PDF 頁碼或字幕時間戳結構。";
@@ -378,7 +493,8 @@ function buildAutoTranslateInstruction(
   config?: PromptConfigSource,
   sourceText = ""
 ): string {
-  const { interfaceLanguage, translationLanguage } = resolvePromptConfig(config);
+  const { interfaceLanguage, promptLanguage, translationLanguage } =
+    resolvePromptConfig(config);
   const interfaceLabel = LANGUAGE_LABELS[interfaceLanguage];
   const directionInstruction = translationDirectionInstruction(config, sourceText);
   const targetLabel =
@@ -386,7 +502,7 @@ function buildAutoTranslateInstruction(
       ? ""
       : LANGUAGE_LABELS[resolveLanguage(translationLanguage)];
 
-  switch (interfaceLanguage) {
+  switch (promptLanguage) {
     case "zh-TW":
       return [
         "這是一個翻譯任務。無論輸入長短，都必須輸出譯文。",
@@ -397,6 +513,7 @@ function buildAutoTranslateInstruction(
         "保持原意、格式、數字、專有名詞和語氣，只輸出譯文，不要解釋語言判斷過程。",
         "語言判斷和翻譯只針對後面 <translation-input> 標籤中的原文；忽略本指令的語言、標籤、JSON 欄位名稱、id 和其他中繼資料，不要把它們算入原文。",
         translationFormatInstruction(config),
+        translationStructureIntegrityInstruction(),
         ...(directionInstruction ? [directionInstruction] : [])
       ].join("\n");
     case "en":
@@ -409,6 +526,7 @@ function buildAutoTranslateInstruction(
         "Preserve meaning, formatting, numbers, proper nouns, and tone. Output only the translation and do not explain the language detection.",
         "Detect the language and translate only the original text inside the following <translation-input> tag. Ignore the language of this instruction, the tag, JSON field names, ids, and other metadata; do not include them in language detection.",
         translationFormatInstruction(config),
+        translationStructureIntegrityInstruction(),
         ...(directionInstruction ? [directionInstruction] : [])
       ].join("\n");
     case "ja":
@@ -421,6 +539,7 @@ function buildAutoTranslateInstruction(
         "意味、書式、数字、固有名詞、語調を保ち、翻訳文だけを出力し、言語判定の過程は説明しないでください。",
         "言語判定と翻訳は、後続の <translation-input> タグ内の原文だけを対象にしてください。この指示文の言語、タグ、JSON のフィールド名、id、その他のメタデータは判定に含めないでください。",
         translationFormatInstruction(config),
+        translationStructureIntegrityInstruction(),
         ...(directionInstruction ? [directionInstruction] : [])
       ].join("\n");
     case "ko":
@@ -433,6 +552,7 @@ function buildAutoTranslateInstruction(
         "의미, 형식, 숫자, 고유명사, 어조를 유지하고 번역문만 출력하며 언어 판단 과정을 설명하지 마세요.",
         "언어 판단과 번역은 뒤에 있는 <translation-input> 태그 안의 원문만 대상으로 하세요. 이 지시문의 언어, 태그, JSON 필드명, id 및 기타 메타데이터는 판단에 포함하지 마세요.",
         translationFormatInstruction(config),
+        translationStructureIntegrityInstruction(),
         ...(directionInstruction ? [directionInstruction] : [])
       ].join("\n");
     case "zh-CN":
@@ -446,6 +566,7 @@ function buildAutoTranslateInstruction(
         "保持原意、格式、数字、专有名词和语气，只输出译文，不要解释语言判断过程。",
         "语言检测和翻译只针对后面 <translation-input> 标签中的原文；忽略本指令的语言、标签、JSON 字段名、id 和其他元数据，不要把它们算入原文。",
         translationFormatInstruction(config),
+        translationStructureIntegrityInstruction(),
         ...(directionInstruction ? [directionInstruction] : [])
       ].join("\n");
   }
@@ -492,11 +613,100 @@ export function isDictionaryTranslationInput(sourceText: string): boolean {
   return true;
 }
 
+type DictionaryPromptLanguage = "en" | "es" | "fr" | "de" | "it";
+
+type DictionaryPromptLabels = {
+  sourceWord: string;
+  definition: string;
+  senses: string;
+  register: string;
+  collocations: string;
+  variants: string;
+  mnemonic: string;
+  examples: string;
+};
+
+const DICTIONARY_PROMPT_LABELS: Record<
+  DictionaryPromptLanguage,
+  DictionaryPromptLabels
+> = {
+  en: {
+    sourceWord: "source word",
+    definition: "Definition",
+    senses: "Senses",
+    register: "Register",
+    collocations: "Collocations",
+    variants: "Variants",
+    mnemonic: "Mnemonic",
+    examples: "Examples"
+  },
+  es: {
+    sourceWord: "palabra original",
+    definition: "Definición",
+    senses: "Acepciones",
+    register: "Registro",
+    collocations: "Colocaciones",
+    variants: "Variantes",
+    mnemonic: "Mnemotecnia",
+    examples: "Ejemplos"
+  },
+  fr: {
+    sourceWord: "mot d'origine",
+    definition: "Définition",
+    senses: "Sens",
+    register: "Registre",
+    collocations: "Collocations",
+    variants: "Variantes",
+    mnemonic: "Mnémotechnique",
+    examples: "Exemples"
+  },
+  de: {
+    sourceWord: "Ausgangswort",
+    definition: "Definition",
+    senses: "Bedeutungen",
+    register: "Register",
+    collocations: "Kollokationen",
+    variants: "Varianten",
+    mnemonic: "Merksatz",
+    examples: "Beispiele"
+  },
+  it: {
+    sourceWord: "parola originale",
+    definition: "Definizione",
+    senses: "Accezioni",
+    register: "Registro",
+    collocations: "Collocazioni",
+    variants: "Varianti",
+    mnemonic: "Mnemonico",
+    examples: "Esempi"
+  }
+};
+
+function englishDictionaryTranslationInstruction(
+  interfaceLabel: string,
+  targetLabel: string,
+  labels: DictionaryPromptLabels
+): string {
+  return [
+    "This is a dictionary-style translation task for a short word, term, or fixed phrase, not a sentence translation.",
+    `The interface language is ${interfaceLabel}. All field labels and explanations must be in ${interfaceLabel}; translations and example-sentence translations must be in ${targetLabel}.`,
+    "Analyze only the directly visible word or phrase inside <translation-input>. Do not treat tags, URLs, HTML attributes, link destinations, or other invisible text as source text.",
+    `The core translation must be in ${targetLabel}; unless the source is an untranslatable proper noun or code token, do not use the original text as the only translation.`,
+    `Use this fixed format and do not add other headings. The first line must follow **${labels.sourceWord}** /pronunciation or pinyin/ ★★★★☆. Use pronunciation for English words and pinyin for Chinese words; omit pronunciation or pinyin when unreliable, but always include the frequency stars. The stars represent only estimated usage frequency in modern general contexts of the source language. Assess it from your language knowledge: ★★★★★ extremely common, ★★★★☆ common, ★★★☆☆ medium, ★★☆☆☆ uncommon, ★☆☆☆☆ rare. Do not output exam, proficiency-level, or vocabulary-list labels, and do not explain the rating process.`,
+    `Following lines must use only these localized fields in this order:\n\n**${labels.definition}** core translations\n\n**${labels.senses}** part of speech and numbered senses\n\n**${labels.register}** domain and register\n\n**${labels.collocations}** source phrase (translation)\n\n**${labels.variants}** forms, derivatives, or related forms\n\n**${labels.mnemonic}** memory hint\n\n**${labels.examples}** source sentence (translation).`,
+    "Every field must be its own Markdown paragraph: insert one blank line before each bold field label. Never place two field labels on the same line or join fields with semicolons.",
+    "Omit any field that lacks reliable content; do not invent pronunciation, pinyin, phrases, forms, mnemonics, or examples just to fill the format. Estimate the frequency stars using the five-level scale above.",
+    "If the input is not actually a dictionary-like word, term, or fixed phrase, fall back to ordinary translation and output only the natural translation.",
+    "Do not output JSON or code fences."
+  ].join("\n");
+}
+
 export function dictionaryTranslationInstruction(
   config?: PromptConfigSource,
   sourceText = ""
 ): string {
-  const { interfaceLanguage, translationLanguage } = resolvePromptConfig(config);
+  const { interfaceLanguage, promptLanguage, translationLanguage } =
+    resolvePromptConfig(config);
   const interfaceLabel = LANGUAGE_LABELS[interfaceLanguage];
   const sourceLanguage = detectTranslationLanguage(sourceText);
   const targetLanguage =
@@ -506,40 +716,38 @@ export function dictionaryTranslationInstruction(
         : interfaceLanguage
       : resolveLanguage(translationLanguage);
   const targetLabel = LANGUAGE_LABELS[targetLanguage];
-  switch (interfaceLanguage) {
+  switch (promptLanguage) {
     case "zh-TW":
       return [
         "這是一個短詞/詞組查詞式翻譯任務。請用緊湊、自然的 Markdown 輸出近似詞典卡片，不要只給一個譯文。",
         `目前介面語言是${interfaceLabel}，釋義與說明主要使用${interfaceLabel}；譯文與例句翻譯使用${targetLabel}。`,
         "只分析 <translation-input> 中直接可見的詞或詞組，不要把標籤、URL、HTML 屬性、連結地址或其他不可見文字當作翻譯對象。",
         `核心譯義必須使用${targetLabel}，除非是不可翻譯的專有名詞或程式碼，否則不要把原文原樣當作唯一譯文。`,
-        "請嚴格使用固定行格式，不要加入其他標題。第一行格式為 **原詞** /音標或拼音/ ★★★★☆ CET-6 / GRE / IELTS：英文詞使用音標，星級後可列 CET-6 / GRE / IELTS；中文詞使用拼音，且不要列 CET-6 / GRE / IELTS。只保留有可靠內容的部分；沒有音標、拼音、星級或考試標籤時，省略對應部分，不要填寫佔位符。",
-        "後續行只能使用這些欄位，順序固定：**釋義** 核心譯義；**義項** 詞性 + 編號義項；**語域** 領域、語體；**搭配** phrase: source phrase（譯文）；**變體** 詞形、派生或相關形式；**助記** 聯想或構詞記憶；**例句** source sentence（譯文）。",
-        "沒有可靠內容的欄位不要顯示；不要為了湊格式編造音標、拼音、星級、考試標籤、搭配、變體、助記或例句。",
+        "請嚴格使用固定行格式，不要加入其他標題。第一行格式為 **原詞** /音標或拼音/ ★★★★☆。英文詞使用音標，中文詞使用拼音；沒有可靠的音標或拼音時可以省略，但詞頻星級必須保留。星星只表示原詞在其來源語言現代通用語境中的使用頻率，請根據語言知識自動評估：★★★★★ 極常見，★★★★☆ 常見，★★★☆☆ 中等，★★☆☆☆ 較少見，★☆☆☆☆ 罕見。不要輸出任何考試、等級或詞表標籤，也不要解釋評分過程。",
+        "後續行只能使用這些欄位，順序固定：\n\n**釋義** 核心譯義\n\n**義項** 詞性 + 編號義項\n\n**語域** 領域、語體\n\n**搭配** phrase: source phrase（譯文）\n\n**變體** 詞形、派生或相關形式\n\n**助記** 聯想或構詞記憶\n\n**例句** source sentence（譯文）",
+        "每個欄位都必須是獨立的 Markdown 段落：在每個粗體欄位名前插入一個空行。禁止把兩個欄位名寫在同一行，也禁止用分號串接欄位。",
+        "沒有可靠內容的欄位不要顯示；不要為了湊格式編造音標、拼音、搭配、變體、助記或例句；詞頻星級按上述五檔標準估算。",
         "如果輸入其實不是可查詞的單詞、詞語或固定短語，請退回普通翻譯，只輸出自然譯文。",
         "不要輸出 JSON 或程式碼區塊。"
       ].join("\n");
     case "en":
-      return [
-        "This is a dictionary-style translation task for a single word or short phrase. Do not return only one translation; produce a compact, natural Markdown dictionary card.",
-        `The interface language is ${interfaceLabel}. Use ${interfaceLabel} for headings and explanations; use ${targetLabel} for translations and example-sentence translations.`,
-        "Analyze only the directly visible word or phrase inside <translation-input>. Do not treat tags, URLs, HTML attributes, link destinations, or other invisible text as source text.",
-        `The core translation must be in ${targetLabel}; unless the source is an untranslatable proper noun or code token, do not use the original text as the only translation.`,
-        "Use this fixed line format and do not add other headings. The first line must follow **source word** /pronunciation or pinyin/ ★★★★☆ CET-6 / GRE / IELTS. For English words, use pronunciation and optionally list CET-6 / GRE / IELTS after the stars; for Chinese words, use pinyin and do not list CET-6 / GRE / IELTS. Keep only parts with reliable content; omit pronunciation, pinyin, stars, or exam tags when unavailable instead of writing placeholders.",
-        "Following lines must use only these fields in this order: **释义** core translations; **义项** part of speech + numbered senses; **语域** domain and register; **搭配** phrase: source phrase（translation）; **变体** forms, derivatives, or related forms; **助记** memory hint; **例句** source sentence（translation）.",
-        "Omit any field that lacks reliable content; do not invent pronunciation, pinyin, stars, exam tags, phrases, forms, mnemonics, or examples just to fill the format.",
-        "If the input is not actually a dictionary-like word, term, or fixed phrase, fall back to ordinary translation and output only the natural translation.",
-        "Do not output JSON or code fences."
-      ].join("\n");
+      return englishDictionaryTranslationInstruction(
+        interfaceLabel,
+        targetLabel,
+        DICTIONARY_PROMPT_LABELS[
+          interfaceLanguage as DictionaryPromptLanguage
+        ]
+      );
     case "ja":
       return [
         "これは単語または短いフレーズ向けの辞書風翻訳タスクです。訳語を一つだけ返さず、コンパクトで自然な Markdown の辞書カードとして出力してください。",
         `インターフェース言語は${interfaceLabel}です。見出しと説明は主に${interfaceLabel}を使い、訳語と例文訳には${targetLabel}を使ってください。`,
         "<translation-input> 内に直接表示されている単語またはフレーズだけを分析してください。タグ、URL、HTML 属性、リンク先、その他の非表示文字列を翻訳対象にしないでください。",
         `中核訳は必ず${targetLabel}で書いてください。翻訳できない固有名詞やコードでない限り、原文だけを唯一の訳として返さないでください。`,
-        "次の固定行形式を厳守し、他の見出しは追加しないでください。1 行目は **原語** /発音またはピンイン/ ★★★★☆ CET-6 / GRE / IELTS の形式です。英語語彙は発音を使い、星の後に CET-6 / GRE / IELTS を付けてもよく、中国語語彙はピンインを使い、CET-6 / GRE / IELTS は付けないでください。信頼できる情報がない部分は省略し、プレースホルダーを作らないでください。",
-        "以降の行はこの順序の欄位だけを使ってください：**释义** 中核訳、**义项** 品詞 + 番号付き語義、**语域** 分野・レジスター、**搭配** phrase: source phrase（訳）、**变体** 活用形・派生語・関連語、**助记** 記憶ヒント、**例句** source sentence（訳）。",
-        "信頼できる内容がない欄位は表示しないでください。発音、ピンイン、星、試験タグ、搭配、変体、助記、例句を埋めるために作らないでください。",
+        "次の固定行形式を厳守し、他の見出しは追加しないでください。1 行目は **原語** /発音またはピンイン/ ★★★★☆ の形式です。英語語彙は発音、中国語語彙はピンインを使い、信頼できない場合は発音またはピンインを省略できますが、頻度の星は必ず残してください。星は原語がその言語の現代的な一般文脈で使われる頻度だけを表し、言語知識から自動評価します：★★★★★ 非常に一般的、★★★★☆ 一般的、★★★☆☆ 中程度、★★☆☆☆ あまり一般的でない、★☆☆☆☆ まれ。試験、習熟度、語彙リストのラベルを出力せず、評価過程も説明しないでください。",
+        "以降の行はこの順序の欄位だけを使ってください：\n\n**释义** 中核訳\n\n**义项** 品詞 + 番号付き語義\n\n**语域** 分野・レジスター\n\n**搭配** phrase: source phrase（訳）\n\n**变体** 活用形・派生語・関連語\n\n**助记** 記憶ヒント\n\n**例句** source sentence（訳）。",
+        "各欄位は必ず独立した Markdown 段落にしてください。太字の欄位名の前に空行を 1 行入れ、複数の欄位名を同じ行に置いたり、セミコロンで連結したりしないでください。",
+        "信頼できる内容がない欄位は表示しないでください。発音、ピンイン、搭配、変体、助記、例句を形式のために作らず、頻度の星だけは上記の 5 段階で推定してください。",
         "入力が辞書的に扱える語・用語・固定フレーズでない場合は通常翻訳に戻り、自然な訳文だけを出力してください。",
         "JSON やコードブロックは出力しないでください。"
       ].join("\n");
@@ -549,9 +757,10 @@ export function dictionaryTranslationInstruction(
         `인터페이스 언어는 ${interfaceLabel}입니다. 제목과 설명은 주로 ${interfaceLabel}로 쓰고, 번역어와 예문 번역은 ${targetLabel}를 사용하세요.`,
         "<translation-input> 안에 직접 보이는 단어 또는 구만 분석하세요. 태그, URL, HTML 속성, 링크 주소 또는 보이지 않는 문자열을 번역 대상으로 삼지 마세요.",
         `핵심 번역은 반드시 ${targetLabel}로 작성하세요. 번역할 수 없는 고유명사나 코드 토큰이 아니라면 원문을 유일한 번역으로 그대로 반환하지 마세요.`,
-        "다음 고정 줄 형식을 엄격히 사용하고 다른 제목은 추가하지 마세요. 첫 줄은 **원어** /발음 또는 병음/ ★★★★☆ CET-6 / GRE / IELTS 형식입니다. 영어 단어는 발음을 쓰고 별점 뒤에 CET-6 / GRE / IELTS를 넣을 수 있지만, 중국어 단어는 병음을 쓰고 CET-6 / GRE / IELTS를 넣지 마세요. 신뢰할 수 없는 항목은 생략하고 자리표시자를 만들지 마세요.",
-        "이후 줄은 다음 필드만 이 순서로 사용하세요: **释义** 핵심 번역, **义项** 품사 + 번호가 있는 뜻, **语域** 분야와 문체, **搭配** phrase: source phrase（번역）, **变体** 형태·파생어·관련어, **助记** 기억 힌트, **例句** source sentence（번역）.",
-        "신뢰할 내용이 없는 필드는 표시하지 마세요. 발음, 병음, 별점, 시험 태그, 표현, 변형, 암기 힌트, 예문을 형식 채우기 위해 만들지 마세요.",
+        "다음 고정 줄 형식을 엄격히 사용하고 다른 제목은 추가하지 마세요. 첫 줄은 **원어** /발음 또는 병음/ ★★★★☆ 형식입니다. 영어 단어는 발음, 중국어 단어는 병음을 사용하고 신뢰할 수 없으면 발음이나 병음은 생략할 수 있지만 빈도 별점은 반드시 유지하세요. 별은 원어가 해당 언어의 현대 일반 문맥에서 사용되는 빈도만 나타내며 언어 지식으로 자동 평가합니다: ★★★★★ 매우 흔함, ★★★★☆ 흔함, ★★★☆☆ 보통, ★★☆☆☆ 드묾, ★☆☆☆☆ 매우 드묾. 시험, 숙련도 또는 어휘 목록 라벨을 출력하지 말고 평가 과정도 설명하지 마세요.",
+        "이후 줄은 다음 필드만 이 순서로 사용하세요:\n\n**释义** 핵심 번역\n\n**义项** 품사 + 번호가 있는 뜻\n\n**语域** 분야와 문체\n\n**搭配** phrase: source phrase（번역）\n\n**变体** 형태·파생어·관련어\n\n**助记** 기억 힌트\n\n**例句** source sentence（번역）.",
+        "각 필드는 반드시 독립된 Markdown 문단이어야 합니다. 굵은 필드 이름 앞에 빈 줄 하나를 넣고, 두 필드 이름을 같은 줄에 쓰거나 세미콜론으로 연결하지 마세요.",
+        "신뢰할 내용이 없는 필드는 표시하지 마세요. 발음, 병음, 표현, 변형, 암기 힌트, 예문을 형식 채우기 위해 만들지 말고 빈도 별점만 위의 5단계 기준으로 추정하세요.",
         "입력이 사전식으로 다룰 수 있는 단어, 용어, 고정 표현이 아니라면 일반 번역으로 돌아가 자연스러운 번역문만 출력하세요.",
         "JSON이나 코드 블록은 출력하지 마세요."
       ].join("\n");
@@ -562,9 +771,10 @@ export function dictionaryTranslationInstruction(
         `当前界面语言是${interfaceLabel}，释义与说明主要使用${interfaceLabel}；译文与例句翻译使用${targetLabel}。`,
         "只分析 <translation-input> 中直接可见的单词、词语或词组，不要把标签、URL、HTML 属性、链接地址或其他不可见文字当作翻译对象。",
         `核心译义必须使用${targetLabel}，除非是不可翻译的专有名词或代码，否则不要把原文原样当作唯一译文。`,
-        "请严格使用固定行格式，不要加入其他标题。第一行格式为 **原词** /音标或拼音/ ★★★★☆ CET-6 / GRE / IELTS：英文词使用音标，星级后可列 CET-6 / GRE / IELTS；中文词使用拼音，且不要列 CET-6 / GRE / IELTS。只保留有可靠内容的部分；没有音标、拼音、星级或考试标签时，省略对应部分，不要填写占位符。",
-        "后续行只能使用这些字段，顺序固定：**释义** 核心译义；**义项** 词性 + 编号义项；**语域** 领域、语体；**搭配** phrase: source phrase（译文）；**变体** 词形、派生或相关形式；**助记** 联想或构词记忆；**例句** source sentence（译文）。",
-        "没有可靠内容的字段不要显示；不要为了凑格式编造音标、拼音、星级、考试标签、搭配、变体、助记或例句。",
+        "请严格使用固定行格式，不要加入其他标题。第一行格式为 **原词** /音标或拼音/ ★★★★☆。英文词使用音标，中文词使用拼音；没有可靠音标或拼音时可以省略，但词频星级必须保留。星星只表示原词在其源语言现代通用语境中的使用频率，请根据语言知识自动评估：★★★★★ 极常见，★★★★☆ 常见，★★★☆☆ 中等，★★☆☆☆ 较少见，★☆☆☆☆ 罕见。不要输出任何考试、等级或词表标签，也不要解释评分过程。",
+        "后续行只能使用这些字段，顺序固定：\n\n**释义** 核心译义\n\n**义项** 词性 + 编号义项\n\n**语域** 领域、语体\n\n**搭配** phrase: source phrase（译文）\n\n**变体** 词形、派生或相关形式\n\n**助记** 联想或构词记忆\n\n**例句** source sentence（译文）",
+        "每个字段都必须是独立的 Markdown 段落：在每个粗体字段名前插入一个空行。禁止把两个字段名写在同一行，也禁止用分号串接字段。",
+        "没有可靠内容的字段不要显示；不要为了凑格式编造音标、拼音、搭配、变体、助记或例句；词频星级按上述五档标准估算。",
         "如果输入其实不是可查词的单词、词语或固定短语，请退回普通翻译，只输出自然译文。",
         "不要输出 JSON 或代码块。"
       ].join("\n");
@@ -725,7 +935,7 @@ type ToolPatch = Partial<
   Pick<ToolDefinition, "title" | "description" | "template">
 >;
 
-const TOOL_PATCHES: Record<ResolvedLanguage, Record<string, ToolPatch>> = {
+const TOOL_PATCHES: Record<PromptLanguage, Record<string, ToolPatch>> = {
   "zh-CN": {},
   "zh-TW": {
     "ask-selection": {
@@ -1049,8 +1259,248 @@ const TOOL_PATCHES: Record<ResolvedLanguage, Record<string, ToolPatch>> = {
   }
 };
 
+type WesternLanguage = Exclude<ResolvedLanguage, PromptLanguage>;
+
+const WESTERN_TOOL_METADATA: Record<
+  WesternLanguage,
+  Record<string, ToolPatch>
+> = {
+  es: {
+    "ask-selection": {
+      title: "Preguntar en la barra lateral",
+      description: "Enviar el contenido actual a la barra lateral para continuar"
+    },
+    summary: {
+      title: "Resumir",
+      description: "Extraer conclusiones, pruebas y acciones"
+    },
+    explain: {
+      title: "Explicar de forma sencilla",
+      description: "Hacer comprensible el contenido complejo"
+    },
+    "translate-text": {
+      title: "Traducción automática",
+      description: "Traducir automáticamente según el idioma del contenido"
+    },
+    "translate-document": {
+      title: "Traducir PDF / subtítulos",
+      description: "Traducir documentos o subtítulos de vídeo"
+    },
+    "analyze-image": {
+      title: "Analizar imagen",
+      description: "Comprender capturas, fotos y gráficos"
+    },
+    "extract-actions": {
+      title: "Extraer acciones",
+      description: "Encontrar responsables, fechas y dependencias"
+    },
+    concise: {
+      title: "Hacer más conciso",
+      description: "Eliminar repeticiones y contenido superfluo"
+    },
+    polish: {
+      title: "Pulir con naturalidad",
+      description: "Mejorar la naturalidad, el tono y la coherencia"
+    },
+    "expand-detail": {
+      title: "Ampliar detalles",
+      description: "Añadir detalles, ejemplos y transiciones"
+    },
+    "continue-writing": {
+      title: "Continuar escribiendo",
+      description: "Continuar con el mismo contexto y estilo"
+    },
+    "draft-reply": {
+      title: "Redactar respuesta",
+      description: "Generar un texto listo para enviar"
+    },
+    "study-notes": {
+      title: "Apuntes de estudio",
+      description: "Organizar conceptos, ejemplos y preguntas"
+    },
+    "explain-code": {
+      title: "Explicar código",
+      description: "Analizar el flujo, los riesgos y las mejoras"
+    }
+  },
+  fr: {
+    "ask-selection": {
+      title: "Demander dans la barre latérale",
+      description: "Envoyer le contenu actuel pour poursuivre dans la barre latérale"
+    },
+    summary: {
+      title: "Résumer",
+      description: "Extraire les conclusions, les preuves et les actions"
+    },
+    explain: {
+      title: "Expliquer simplement",
+      description: "Rendre un contenu complexe compréhensible"
+    },
+    "translate-text": {
+      title: "Traduction automatique",
+      description: "Traduire automatiquement selon la langue du contenu"
+    },
+    "translate-document": {
+      title: "Traduire un PDF / des sous-titres",
+      description: "Traduire des documents ou des sous-titres vidéo"
+    },
+    "analyze-image": {
+      title: "Analyser l'image",
+      description: "Comprendre les captures, les photos et les graphiques"
+    },
+    "extract-actions": {
+      title: "Extraire les actions",
+      description: "Identifier les responsables, les dates et les dépendances"
+    },
+    concise: {
+      title: "Rendre plus concis",
+      description: "Supprimer les répétitions et le superflu"
+    },
+    polish: {
+      title: "Reformuler naturellement",
+      description: "Améliorer le naturel, le ton et la cohérence"
+    },
+    "expand-detail": {
+      title: "Développer les détails",
+      description: "Ajouter des détails, des exemples et des transitions"
+    },
+    "continue-writing": {
+      title: "Continuer la rédaction",
+      description: "Continuer avec le même contexte et le même style"
+    },
+    "draft-reply": {
+      title: "Rédiger une réponse",
+      description: "Générer un texte prêt à envoyer"
+    },
+    "study-notes": {
+      title: "Notes d'étude",
+      description: "Organiser les concepts, les exemples et les questions"
+    },
+    "explain-code": {
+      title: "Expliquer le code",
+      description: "Analyser le flux, les risques et les améliorations"
+    }
+  },
+  de: {
+    "ask-selection": {
+      title: "In der Seitenleiste fragen",
+      description: "Aktuellen Inhalt zur weiteren Bearbeitung an die Seitenleiste senden"
+    },
+    summary: {
+      title: "Zusammenfassen",
+      description: "Schlussfolgerungen, Belege und Aufgaben extrahieren"
+    },
+    explain: {
+      title: "Einfach erklären",
+      description: "Komplexe Inhalte verständlich machen"
+    },
+    "translate-text": {
+      title: "Automatisch übersetzen",
+      description: "Automatisch anhand der Inhaltssprache übersetzen"
+    },
+    "translate-document": {
+      title: "PDF / Untertitel übersetzen",
+      description: "Dokumente oder Videountertitel übersetzen"
+    },
+    "analyze-image": {
+      title: "Bild analysieren",
+      description: "Screenshots, Fotos und Diagramme verstehen"
+    },
+    "extract-actions": {
+      title: "Aufgaben extrahieren",
+      description: "Verantwortliche, Termine und Abhängigkeiten finden"
+    },
+    concise: {
+      title: "Kürzer formulieren",
+      description: "Wiederholungen und Fülltext entfernen"
+    },
+    polish: {
+      title: "Natürlich überarbeiten",
+      description: "Ausdruck, Ton und Konsistenz verbessern"
+    },
+    "expand-detail": {
+      title: "Details ausarbeiten",
+      description: "Details, Beispiele und Übergänge ergänzen"
+    },
+    "continue-writing": {
+      title: "Weiterschreiben",
+      description: "Mit demselben Kontext und Stil fortfahren"
+    },
+    "draft-reply": {
+      title: "Antwort entwerfen",
+      description: "Sendefertigen Text erstellen"
+    },
+    "study-notes": {
+      title: "Lernnotizen",
+      description: "Konzepte, Beispiele und Fragen strukturieren"
+    },
+    "explain-code": {
+      title: "Code erklären",
+      description: "Ablauf, Risiken und Verbesserungen analysieren"
+    }
+  },
+  it: {
+    "ask-selection": {
+      title: "Chiedi nella barra laterale",
+      description: "Invia il contenuto attuale alla barra laterale per continuare"
+    },
+    summary: {
+      title: "Riassumi",
+      description: "Estrai conclusioni, prove e azioni"
+    },
+    explain: {
+      title: "Spiega in modo semplice",
+      description: "Rendi comprensibili i contenuti complessi"
+    },
+    "translate-text": {
+      title: "Traduzione automatica",
+      description: "Traduci automaticamente in base alla lingua del contenuto"
+    },
+    "translate-document": {
+      title: "Traduci PDF / sottotitoli",
+      description: "Traduci documenti o sottotitoli video"
+    },
+    "analyze-image": {
+      title: "Analizza immagine",
+      description: "Comprendi schermate, foto e grafici"
+    },
+    "extract-actions": {
+      title: "Estrai azioni",
+      description: "Trova responsabili, date e dipendenze"
+    },
+    concise: {
+      title: "Rendi più conciso",
+      description: "Elimina ripetizioni e contenuti superflui"
+    },
+    polish: {
+      title: "Rifinisci in modo naturale",
+      description: "Migliora naturalezza, tono e coerenza"
+    },
+    "expand-detail": {
+      title: "Amplia i dettagli",
+      description: "Aggiungi dettagli, esempi e transizioni"
+    },
+    "continue-writing": {
+      title: "Continua a scrivere",
+      description: "Continua con lo stesso contesto e stile"
+    },
+    "draft-reply": {
+      title: "Prepara una risposta",
+      description: "Genera un testo pronto da inviare"
+    },
+    "study-notes": {
+      title: "Appunti di studio",
+      description: "Organizza concetti, esempi e domande"
+    },
+    "explain-code": {
+      title: "Spiega il codice",
+      description: "Analizza flusso, rischi e miglioramenti"
+    }
+  }
+};
+
 const QUICK_ACTION_PROMPTS_BY_LANGUAGE: Record<
-  ResolvedLanguage,
+  PromptLanguage,
   Record<Exclude<QuickActionId, "ask" | "translate">, string>
 > = {
   "zh-CN": QUICK_ACTION_PROMPTS,
@@ -1112,7 +1562,12 @@ export function quickActionPrompt(
     return `${buildAutoTranslateInstruction(resolved)}\n\n{{text}}`;
   }
   const localizedAction = action as Exclude<QuickActionId, "ask" | "translate">;
-  return QUICK_ACTION_PROMPTS_BY_LANGUAGE[resolved.interfaceLanguage][localizedAction];
+  const prompt =
+    QUICK_ACTION_PROMPTS_BY_LANGUAGE[resolved.promptLanguage][localizedAction];
+  return resolved.promptLanguage === "en" &&
+    resolved.interfaceLanguage !== "en"
+    ? `${prompt}\n\nOutput the entire result in ${LANGUAGE_LABELS[resolved.interfaceLanguage]}.`
+    : prompt;
 }
 
 export function builtInToolsForLanguage(
@@ -1120,12 +1575,21 @@ export function builtInToolsForLanguage(
 ): ToolDefinition[] {
   const resolved = resolvePromptConfig(config);
   return BUILT_IN_TOOLS.map((tool) => {
-    const patch = TOOL_PATCHES[resolved.interfaceLanguage][tool.id] ?? {};
+    const localizedPatch =
+      TOOL_PATCHES[resolved.promptLanguage][tool.id] ?? {};
+    const westernPatch =
+      resolved.interfaceLanguage === "es" ||
+      resolved.interfaceLanguage === "fr" ||
+      resolved.interfaceLanguage === "de" ||
+      resolved.interfaceLanguage === "it"
+        ? WESTERN_TOOL_METADATA[resolved.interfaceLanguage][tool.id] ?? {}
+        : {};
+    const patch = { ...localizedPatch, ...westernPatch };
     let template = patch.template ?? tool.template;
     if (tool.id === "translate-text") {
       template = buildAutoTranslateInstruction(resolved);
     } else if (tool.id === "translate-document") {
-      template = `${buildAutoTranslateInstruction(resolved)} ${translateDocumentSuffix(resolved.interfaceLanguage)}`;
+      template = `${buildAutoTranslateInstruction(resolved)} ${translateDocumentSuffix(resolved.promptLanguage)}`;
     }
     return {
       ...tool,

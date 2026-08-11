@@ -13184,13 +13184,2205 @@
   var import_react5 = __toESM(require_react(), 1);
   var import_client = __toESM(require_client(), 1);
 
+  // src/shared/locales/de.ts
+  var deUiText = {
+    askSelectionTitle: "In der Seitenleiste anfragen",
+    askSelectionDescription: "Aktuellen Inhalt zur weiteren Bearbeitung an die Seitenleiste senden",
+    copy: "Kopieren",
+    more: "Mehr",
+    webmindAnswer: "WebMind Antwort",
+    showTools: "WebMind-Tools anzeigen",
+    copySelection: "Ausgew\xE4hlten Text kopieren",
+    openSidebar: "Seitenleiste \xF6ffnen",
+    immersiveTranslateApplied: "Auf die Seite wurde die immersive \xDCbersetzung angewendet.",
+    searchAnswerSystem: "Sie sind der Assistent f\xFCr Suchantworten von WebMind. Der Nutzer befindet sich auf einer Suchergebnisseite. Antworten Sie unter Verwendung der bereitgestellten DuckDuckGo-Webergebnisse, zitieren Sie Informationen aus den Ergebnissen, wenn dies sinnvoll ist, weisen Sie darauf hin, wenn die Belege nicht ausreichen, und geben Sie nicht vor, auf Seiten zuzugreifen, die nicht bereitgestellt wurden. Halten Sie die Antwort pr\xE4gnant und gut strukturiert.",
+    searchQuery: "Suchanfrage",
+    duckResults: "DuckDuckGo-Webergebnisse",
+    duckNoResults: "DuckDuckGo-Webergebnisse: Es wurden keine brauchbaren Ergebnisse zur\xFCckgegeben.",
+    searchAnswerRequest: "Beantworten Sie diese Suchfrage direkt und f\xFChren Sie bei Bedarf n\xFCtzliche weiterf\xFChrende Pr\xFCfschritte auf.",
+    sourceCitationInstruction: "Jeder auf Suchergebnissen basierende Absatz muss mit einer Quellenmarkierung der Form [Search N] enden, wobei N der oben genannten Ergebnisnummer entspricht. F\xFCgen Sie am Ende keine Quellenliste hinzu und geben Sie keine Quell-URLs aus.",
+    browserAssistantSystem: "Sie sind ein Schreib- und Leseassistent im Browser. Arbeiten Sie gewissenhaft mit dem vom Nutzer bereitgestellten Text und erfinden Sie keinen Kontext.",
+    modelToolSystem: "Sie sind der WebMind-Tool-Ausf\xFChrer. F\xFChren Sie die Tool-Anweisung direkt aus und geben Sie nur das n\xFCtzliche Ergebnis zur\xFCck.",
+    unsupportedQuickAction: "Nicht unterst\xFCtzte Schnellaktion",
+    currentContext: "Aktueller Kontext",
+    assistantSystem: "Sie sind WebMind, ein Assistent f\xFCr Recherche, Lesen und Schreiben, der in der Browser-Seitenleiste arbeitet. Antworten Sie standardm\xE4\xDFig in derselben Sprache wie der Benutzer.",
+    assistantGuard: "Unterscheiden Sie strikt zwischen Fakten, die explizit im Kontext bereitgestellt wurden, und Ihren eigenen Schlussfolgerungen. Wenn der Kontext nicht ausreicht, sagen Sie dies direkt. Behaupten Sie nicht, Inhalte zu durchsuchen, anzuklicken oder zu lesen, die nicht bereitgestellt wurden.",
+    selectionContextIntro: "Der Benutzer hat den folgenden Text explizit ausgew\xE4hlt. Verwenden Sie in diesem Schritt nur diese Auswahl und keine anderen Teile der Seite, die nicht bereitgestellt wurden:",
+    pageContextIntro: "Der Benutzer hat den folgenden Kontext der gesamten Seite angeh\xE4ngt:",
+    articleContextIntro: "Dies ist der extrahierte Hauptinhalt des Artikels von der aktuellen Seite:",
+    translationInputIntro: "Der folgende Inhalt ist der Eingabetext, der \xFCbersetzt werden muss:",
+    title: "Titel",
+    url: "URL",
+    description: "Beschreibung",
+    body: "Hauptinhalt:",
+    selectionOnly: "Behandeln Sie den ausgew\xE4hlten Text als das einzige Seitenmaterial.",
+    pdfCitation: "Geben Sie bei der Beantwortung von Fragen zu PDF nach M\xF6glichkeit Seitenzahlen an.",
+    youtubeCitation: "Geben Sie bei der Beantwortung von Fragen zu Videos nach M\xF6glichkeit Zeitstempel aus dem Transkript an.",
+    pageCitation: "Wenn Sie sich auf die aktuelle Seite beziehen, nennen Sie sie \u201Eaktuelle Seite\u201C und geben Sie die relevante Passage an.",
+    searchSummaryIntro: "Hier sind Zusammenfassungen von Websuchergebnissen. Verwenden Sie [Suche 1], [Suche 2] als Quellenverweise und listen Sie die tats\xE4chlich verwendeten Quellen am Ende auf:",
+    noContextImage: "Bitte analysieren Sie dieses Bild.",
+    noContextAttachment: "Bitte antworten Sie unter Verwendung des Inhalts des Anhangs.",
+    attachmentIntro: "Hier ist der vom Benutzer hinzugef\xFCgte Inhalt des Anhangs:",
+    languageSetting: "Sprache der Benutzeroberfl\xE4che",
+    languageSettingHelp: "Wirkt sich auf UI-Texte, Namen integrierter Tools und Standard-Aufforderungen aus.",
+    translationLanguageSetting: "\xDCbersetzungssprache",
+    translationLanguageSettingHelp: "Wechselt automatisch zwischen der Sprache der Benutzeroberfl\xE4che und Englisch, abh\xE4ngig von der Inhaltssprache; bei manueller Auswahl erfolgt die \xDCbersetzung stets in die gew\xE4hlte Sprache.",
+    defaultContextScopeSetting: "Standardkontext",
+    defaultContextScopeHelp: "Legt fest, ob Aktionen und Tastenkombinationen im Seitenmen\xFC f\xFCr immersive \xDCbersetzung und immersives Lesen standardm\xE4\xDFig den Hauptinhalt oder die gesamte Seite verarbeiten.",
+    immersiveTranslationParagraphShortcut: "Tastenkombination f\xFCr aktuellen Absatz",
+    immersiveTranslationPageShortcut: "Tastenkombination f\xFCr aktuellen Kontext",
+    immersiveTranslationModeToggleShortcut: "Tastenkombination zum Umschalten der \xDCbersetzungsanzeige",
+    immersiveTranslationShortcutHelp: "Die Absatz-Tastenkombination bezieht sich auf eine Auswahl oder einen Absatz; die Tastenkombination f\xFCr den aktuellen Kontext folgt dem in der Seitenleiste ausgew\xE4hlten Kontext.",
+    shortcutCtrl: "Ctrl",
+    shortcutAlt: "Alt",
+    shortcutShift: "Shift",
+    shortcutHoldPrefix: "Gedr\xFCckt halten:",
+    navChat: "Chat",
+    navTools: "Tools",
+    navHistory: "Verlauf",
+    navLogs: "Protokolle",
+    operationLogs: "Vorgangsprotokolle",
+    operationLogsHelp: "Wichtige Produktvorg\xE4nge werden hier in Echtzeit angezeigt.",
+    clearLogs: "Protokolle l\xF6schen",
+    noOperationLogs: "Noch keine Protokolle",
+    logLevelDebug: "Debug",
+    logLevelInfo: "Info",
+    logLevelSuccess: "Erfolg",
+    logLevelWarning: "Hinweis",
+    logLevelError: "Fehler",
+    logSidepanelReady: "Seitenleiste ist bereit",
+    logSettingsUpdated: "Einstellungen aktualisiert",
+    logToolsUpdated: "Tool-Einstellungen aktualisiert",
+    logPendingAction: "Seitenaktion empfangen",
+    logChatStart: "Chat gestartet",
+    logChatDone: "Antwort abgeschlossen",
+    logChatCancelled: "Antwort abgebrochen",
+    logChatStop: "Benutzer hat Antwort gestoppt",
+    logChatRegenerate: "Antwort wird neu generiert",
+    logToolRun: "Tool wird ausgef\xFChrt",
+    logToolSelected: "Tool ausgew\xE4hlt",
+    logAskSelectionReady: "Bereit f\xFCr Anfrage in der Seitenleiste",
+    logNewChat: "Neuer Chat gestartet",
+    logAttachmentAdded: "Anhang hinzugef\xFCgt",
+    logConversationLoaded: "Gespeicherten Chat geladen",
+    logEnabled: "Aktiviert",
+    logDisabled: "Deaktiviert",
+    logRuntimeRequest: "Laufzeitanfrage",
+    displayLogLevel: "Angezeigte Protokollebene",
+    displayLogLevelHelp: "Das Protokollfenster zeigt nur die ausgew\xE4hlte Ebene und dar\xFCber liegende Ebenen an. Debug umfasst detaillierte Aufzeichnungen f\xFCr jede Modellanfrage.",
+    cancel: "Abbrechen",
+    close: "Schlie\xDFen",
+    save: "Speichern",
+    saving: "Speichern l\xE4uft",
+    add: "Hinzuf\xFCgen",
+    edit: "Bearbeiten",
+    delete: "L\xF6schen",
+    test: "Testen",
+    testing: "Test l\xE4uft",
+    current: "Aktuell",
+    modelRoles: "Rollen",
+    defaultModelRole: "Standard",
+    translationModelRole: "\xDCbersetzen",
+    visionModelRole: "Vision",
+    setDefaultModelRole: "Als Standardmodell festlegen",
+    setTranslationModelRole: "Als \xDCbersetzungsmodell festlegen",
+    clearTranslationModelRole: "\xDCbersetzungsmodell entfernen",
+    setVisionModelRole: "Als Vision-Modell festlegen",
+    clearVisionModelRole: "Vision-Modell entfernen",
+    visionModelRoleUnavailable: "Bilderkennung ist f\xFCr diese Engine deaktiviert",
+    settings: "Einstellungen",
+    loading: "Wird geladen",
+    newChat: "Neuer Chat",
+    send: "Senden",
+    stop: "Stopp",
+    restorePage: "Seite wiederherstellen",
+    chooseModel: "Modell ausw\xE4hlen",
+    currentModelEngine: "Aktuelle Modell-Engine",
+    selectTool: "Tool ausw\xE4hlen",
+    selectMoreTools: "Weitere Tools ausw\xE4hlen",
+    moreTools: "Weitere Tools",
+    copyContent: "Inhalt kopieren",
+    clearComposer: "Eingabe l\xF6schen",
+    copyCurrentBody: "Hauptinhalt kopieren",
+    copyUrl: "Seite URL kopieren",
+    copied: "Kopiert",
+    regenerate: "Antwort erneut versuchen",
+    continueExecution: "Fortfahren",
+    replace: "Ersetzen",
+    closeNotice: "Hinweis schlie\xDFen",
+    removeAttachment: "Anhang entfernen",
+    openTools: "Tools \xF6ffnen",
+    currentPage: "Aktuelle Seite",
+    currentBody: "Hauptinhalt",
+    currentSelection: "Aktuelle Auswahl",
+    currentBodyPreview: "Kontextvorschau",
+    nonePreview: "Vorschau",
+    pagePreview: "Seitenvorschau",
+    bodyPreview: "Vorschau des Hauptinhalts",
+    selectionPreview: "Auswahlvorschau",
+    expand: "Erweitern",
+    collapse: "Reduzieren",
+    currentBodyBlocks: "{count} Bl\xF6cke",
+    currentBodyChars: "{count} Zeichen",
+    currentBodyScore: "Bewertung des Hauptinhalts: {score}",
+    articleMetricLength: "L\xE4nge",
+    articleMetricStructure: "Struktur",
+    articleMetricHeading: "\xDCberschrift",
+    articleMetricSemantics: "Semantischer Container",
+    articleMetricDensity: "Textdichte",
+    articleMetricLinkPurity: "Link-Reinheit",
+    articleMetricFocus: "Fokus",
+    articleMetricCleanliness: "Sauberkeit",
+    currentBodySourceDom: "DOM",
+    currentBodySourceRule: "Regel",
+    currentBodySourceManual: "Manuell",
+    currentBodySourceEdited: "Bearbeitet",
+    selectCurrentBody: "Hauptinhalt ausw\xE4hlen",
+    restoreCurrentBody: "Hauptinhalt wiederherstellen",
+    highlightCurrentBodyBlock: "Diesen Block auf der Seite hervorheben",
+    removeCurrentBodyBlock: "Diesen Block aus dem aktuellen Hauptinhalt entfernen",
+    smartPruneCurrentBody: "Automatische Bereinigung",
+    modelPruneCurrentBody: "KI-gest\xFCtzte Bereinigung",
+    modelPruneCurrentBodyRunning: "Das Modell klassifiziert Artikelbl\xF6cke",
+    modelPruneInvalidResult: "Das Modell lieferte ein nicht lesbares Bereinigungsergebnis",
+    modelPruneNoChanges: "Das Modell fand keine zu entfernenden Bl\xF6cke f\xFCr den Hauptinhalt",
+    modelPruneAllRejected: "Es k\xF6nnen nicht alle Bl\xF6cke des Hauptinhalts entfernt werden (Datenverlust vermeiden)",
+    articleRecognition: "Erkennung des Hauptinhalts",
+    recognitionRules: "Erkennungsregeln",
+    articleExtractionRules: "Regeln zur Extraktion des Hauptinhalts",
+    articleExtractionRulesHelp: "Jede Regel umfasst ein URL-Muster f\xFCr die Seite und einen Selektor f\xFCr den Hauptinhalt; URL-Muster unterst\xFCtzen Domains, Platzhalter und URL-Fragmente.",
+    articleExtractionUrlPattern: "URL-Muster der Seite",
+    articleExtractionSelector: "Selektor f\xFCr den Hauptinhalt",
+    articleExtractionUrlPatternPlaceholder: "Seiten-URL, z. B. example.com, *.example.com, https://example.com/*",
+    articleExtractionSelectorPlaceholder: "CSS-Selektor, z. B. article, main, #content, .post-body",
+    addArticleExtractionRule: "Regel f\xFCr Hauptinhalt hinzuf\xFCgen",
+    deleteArticleExtractionRule: "Regel f\xFCr Hauptinhalt l\xF6schen",
+    noArticleExtractionRules: "Noch keine Regeln f\xFCr die Extraktion des Hauptinhalts vorhanden",
+    articleExtractionRuleSaved: "Regel f\xFCr die Extraktion des Hauptinhalts gespeichert",
+    articleExtractionRuleInvalid: "Geben Sie ein URL-Muster f\xFCr die Seite und einen Selektor ein",
+    selectingBodyRange: "Auswahl des Bereichs f\xFCr den Hauptinhalt",
+    manualBodySelectionHint: "Bereich mit Mausrad/Pfeiltasten anpassen, zum Best\xE4tigen klicken, Esc zum Abbrechen",
+    manualBodySelectionCancelled: "Auswahl des Bereichs f\xFCr den Hauptinhalt abgebrochen",
+    noneContext: "Kein Kontext",
+    webSearch: "Websuche",
+    addAttachment: "Bild oder Dokument hinzuf\xFCgen",
+    addUrl: "URL hinzuf\xFCgen",
+    you: "Sie",
+    ordinaryConversation: "Normaler Chat",
+    usedTool: "Verwendetes Tool",
+    questionContext: "Fragenkontext",
+    imageChat: "Bild-Chat",
+    openAnyPage: "\xD6ffnen Sie eine beliebige Seite und beginnen Sie hier.",
+    noEnabledTools: "Hier sind noch keine Tools aktiviert.",
+    toolsPageShowsAll: "Die Seite \u201ETools\u201C zeigt alle verf\xFCgbaren Tools an.",
+    noSavedConversations: "Noch keine gespeicherten Unterhaltungen.",
+    conversationsAutoSave: "Unterhaltungen werden nach Abschluss des Austauschs lokal gespeichert.",
+    languageOptionAuto: "Automatisch",
+    languageOptionZhCN: "Chinesisch (vereinfacht)",
+    languageOptionZhTW: "Chinesisch (traditionell)",
+    languageOptionEn: "Englisch",
+    languageOptionJa: "Japanisch",
+    languageOptionKo: "Koreanisch",
+    appSubtitle: "Lokaler Arbeitsbereich f\xFCr Browser-Modelle",
+    modelEngines: "Modell-Engines",
+    modelEnginesDescription: "Kein Konto oder Abonnement erforderlich. Jedem Modell kann eine Standard-, \xDCbersetzungs- oder Vision-Rolle zugewiesen werden; ein Modell kann auch mehrere Rollen gleichzeitig \xFCbernehmen. Wenn keine spezifische Zuweisung vorliegt, greifen \xDCbersetzungs- und Vision-Aufgaben auf das Standardmodell zur\xFCck. Engine-Einstellungen und geheime Zugangsdaten verbleiben im Speicher der Erweiterung.",
+    addEngine: "Engine hinzuf\xFCgen",
+    noModelEngines: "Noch keine Modell-Engines vorhanden.",
+    noModelEnginesHelp: "F\xFCgen Sie g\xE4ngige Cloud-Modelle, OpenAI-kompatible APIs oder lokale Ollama hinzu.",
+    pageFeatures: "Seitenfunktionen",
+    pageFeaturesHelp: "Jedes Modul verwaltet seine Einstellungen separat, damit Sie sehen k\xF6nnen, worauf es sich auswirkt.",
+    selectionOverlay: "Auswahl-Overlay",
+    selectionOverlayHelp: "Steuert die schwebende Symbolleiste nach der Textauswahl.",
+    selectionOverlayMode: "Ausl\xF6semodus",
+    selectionOverlayShortcut: "Tastenkombination f\xFCr das Auswahl-Overlay",
+    selectionOverlayShortcutHelp: "Wenn aktiviert, erscheint das Auswahl-Overlay nur, w\xE4hrend die gew\xE4hlte Tastenkombination gedr\xFCckt gehalten wird, w\xE4hrend Sie Text markieren oder eine bestehende Auswahl \xFCberpr\xFCfen.",
+    selectionOverlayMinChars: "Mindestanzahl markierter Zeichen",
+    selectionOverlayMinCharsHelp: "Das Auswahl-Overlay erst anzeigen, wenn diese Anzahl an Zeichen markiert ist. Minimum: 1.",
+    selectionOverlayOff: "Overlay deaktivieren",
+    selectionOverlayOffHelp: "Keine Schnellaktionen nach der Textmarkierung anzeigen.",
+    selectionOverlayAlways: "Symbolleiste direkt anzeigen",
+    selectionOverlayAlwaysHelp: "Verf\xFCgbare Werkzeuge sofort nach der Textmarkierung anzeigen.",
+    selectionOverlayHover: "Zuerst Punkt anzeigen",
+    selectionOverlayHoverHelp: "Nach der Textmarkierung einen kleinen Punkt anzeigen und die Symbolleiste beim Dar\xFCberfahren (Hover) erweitern.",
+    urlBlacklist: "URL-Blacklist",
+    selectionOverlayBlacklistHelp: "Eine Regel pro Zeile; unterst\xFCtzt Domains, Platzhalter und URL-Fragmente.",
+    edgeQuickTools: "Schnellwerkzeuge",
+    edgeQuickToolsHelp: "Steuert gemeinsam das Randmen\xFC, die Textextraktion aus Bildern und die automatische Antwort.",
+    edgeDockMenu: "Randmen\xFC",
+    edgeQuickToolsEnable: "Randmen\xFC aktivieren",
+    edgeQuickToolsEnableHelp: "Deaktivieren Sie diese Option, um das Men\xFC am rechten Rand auf Webseiten auszublenden.",
+    edgeQuickToolsBlacklistHelp: "Bei \xDCbereinstimmung erscheinen die Schnellwerkzeuge am rechten Rand nicht.",
+    quickToolsBlacklistHelp: "Bei \xDCbereinstimmung werden das Randmen\xFC, die Textextraktion aus Bildern und die automatische Antwort auf der Seite deaktiviert.",
+    immersiveTranslation: "Immersive \xDCbersetzung",
+    immersiveTranslationHelp: "Steuert, wie \xFCbersetzter Text in die Seite zur\xFCckgeschrieben wird.",
+    immersiveTranslationAutoWhitelist: "Whitelist f\xFCr automatische \xDCbersetzung",
+    immersiveTranslationAutoWhitelistHelp: "Eine Regel pro Zeile; unterst\xFCtzt Domains, Platzhalter und URL-Fragmente. Bei passenden Seiten wird die immersive \xDCbersetzung beim \xD6ffnen automatisch ausgef\xFChrt.",
+    immersiveReading: "Immersives Lesen",
+    immersiveReadingHelp: "Ersetzt geeignete W\xF6rter durch Begriffe der Zielsprache f\xFCr eine Mischung aus Muttersprache und Fremdsprache beim Lesen.",
+    immersiveReadingStrategy: "Strategie",
+    immersiveReadingStrategyLocalFirst: "Lokal priorisiert",
+    immersiveReadingStrategyLocalFirstHelp: "Bevorzugen Sie lokales Wort-Ranking und Offline-W\xF6rterbuchdefinitionen f\xFCr schnellere, kosteng\xFCnstigere Ergebnisse; nutzen Sie das Modell nur, um verbleibende L\xFCcken zu schlie\xDFen.",
+    immersiveReadingStrategyModelPage: "Modell priorisiert",
+    immersiveReadingStrategyModelPageHelp: "Lassen Sie das Modell den Seitenkontext nutzen, um Ersatzbegriffe auszuw\xE4hlen und zu \xFCbersetzen. Flexibler, aber Geschwindigkeit und Kosten h\xE4ngen vom Modell ab.",
+    immersiveReadingAutoWhitelist: "Whitelist f\xFCr automatisches Lesen",
+    immersiveReadingAutoWhitelistHelp: "Eine Regel pro Zeile; unterst\xFCtzt Domains, Platzhalter und URL-Fragmente. Bei passenden Seiten wird der Immersive-Reading-Modus beim \xD6ffnen automatisch gestartet.",
+    immersiveReadingDifficulty: "Wortschwierigkeit",
+    immersiveReadingDifficultyHelp: "Bei h\xF6heren Stufen ersetzt das Modell weniger, daf\xFCr aber schwierigere W\xF6rter.",
+    immersiveReadingMode: "Ersetzungsmodus",
+    immersiveReadingParagraphShortcut: "Tastenkombination: Aktuellen Absatz vorlesen",
+    immersiveReadingContextShortcut: "Tastenkombination: Aktuellen Kontext vorlesen",
+    immersiveReadingTranslation: "\xDCbersetzung",
+    immersiveReadingOriginalTranslation: "Original (\xDCbersetzung)",
+    immersiveReadingTranslationOriginal: "\xDCbersetzung (Original)",
+    immersiveReadingBackgroundStyle: "Hintergrundstil f\xFCr Ersetzung",
+    immersiveReadingHighlightNone: "Keine Hervorhebung",
+    immersiveReadingHighlightUniform: "Einheitliche Hervorhebung",
+    immersiveReadingHighlightLeveled: "Gestufte Hervorhebung",
+    immersiveReadingOuterEffects: "Effekte au\xDFerhalb von Klammern",
+    immersiveReadingInnerEffects: "Effekte f\xFCr Klammern und eingeschlossenen Text",
+    immersiveReadingApplied: "Immersives Lesen aktiviert",
+    displayMode: "Anzeigemodus",
+    translationOnly: "Nur \xDCbersetzung",
+    bilingual: "Original + \xDCbersetzung",
+    translationStyle: "\xDCbersetzungsstil",
+    translationStyleDefault: "Standard",
+    translationStyleHighlight: "Hervorhebung",
+    translationStyleDivider: "Trennlinie",
+    translationStyleQuote: "Zitat",
+    translationStyleBlur: "Weichzeichnung",
+    translationStyleTransparent: "Transparent",
+    textEffects: "Texteffekte",
+    underline: "Durchgehende Unterstreichung",
+    dashedUnderline: "Gestrichelte Unterstreichung",
+    largeText: "Gro\xDFer Text",
+    smallText: "Kleiner Text",
+    bold: "Fett",
+    italic: "Kursiv",
+    light: "Ged\xE4mpft",
+    emphasis: "Hervorhebung",
+    generalConfig: "Allgemeine Konfiguration",
+    generalConfigHelp: "Steuert Erweiterungen der Suchseite, den Standardkontext und das Erscheinungsbild.",
+    appearanceTheme: "Design-Modus",
+    themeSystem: "Systemeinstellung folgen",
+    themeLight: "Hell",
+    themeDark: "Dunkel",
+    autoScrollDuringStreaming: "Automatisches Scrollen w\xE4hrend der Generierung",
+    autoScrollDuringStreamingHelp: "Die Seitenleiste scrollt w\xE4hrend der Generierung automatisch zur neuesten Modellausgabe.",
+    autoReply: "Automatische Antwort",
+    autoReplyOff: "Deaktiviert",
+    autoReplyMultiline: "Nur mehrzeilige Felder",
+    autoReplyAll: "Alle Textfelder",
+    autoReplyHelp: "Zeigt ein kleines Symbol in bearbeitbaren Feldern an und entwirft eine kurze Antwort unter Verwendung der aktuellen Seite.",
+    autoReplyBlacklistHelp: "Bei \xDCbereinstimmung wird die Option f\xFCr die automatische Antwort in bearbeitbaren Feldern auf der Seite nicht angezeigt.",
+    imageTextExtraction: "Textextraktion aus Bildern",
+    imageTextExtractionHelp: "Zeigt beim Bewegen des Mauszeigers \xFCber Bilder eine Option zur Textextraktion an.",
+    imageTextExtractionOff: "Deaktiviert",
+    imageTextExtractionOn: "Nach Gr\xF6\xDFe aktivieren",
+    imageTextExtractionMinSize: "Minimale Bildgr\xF6\xDFe",
+    imageTextExtractionMinSizeHelp: "Den Eintrag nur anzeigen, wenn die angezeigte Breite und H\xF6he mindestens diesen Pixelwert erreichen.",
+    imageTextExtractionBlacklistHelp: "Bei \xDCbereinstimmung wird der Eintrag zur Textextraktion f\xFCr Bilder auf der Seite nicht angezeigt.",
+    hoverDefinition: "Definitionen beim \xDCberfahren mit der Maus",
+    hoverDefinitionHelp: "Integriertes Offline-W\xF6rterbuch verwenden, um eine kurze einzeilige Definition anzuzeigen, wenn der Mauszeiger auf einem chinesischen Begriff oder englischen Wort ruht.",
+    hoverDefinitionOff: "Deaktiviert",
+    hoverDefinitionChinese: "Nur Chinesisch",
+    hoverDefinitionEnglish: "Nur Englisch",
+    hoverDefinitionBoth: "Chinesisch und Englisch",
+    hoverDefinitionStyle: "Stil f\xFCr das \xFCberfahrene Wort",
+    hoverDefinitionStyleNone: "Keine",
+    hoverDefinitionStyleHighlight: "Hervorhebung",
+    hoverDefinitionStyleUnderline: "Unterstreichung",
+    hoverDefinitionShortcut: "Tastenkombination f\xFCr Nachschlagen beim \xDCberfahren",
+    hoverDefinitionShortcutHelp: "Wenn aktiviert: Halten Sie die gew\xE4hlte Tastenkombination gedr\xFCckt, w\xE4hrend Sie mit der Maus \xFCber ein Wort fahren, um dessen Definition anzuzeigen.",
+    hoverDefinitionBlacklistHelp: "Bei \xDCbereinstimmung werden keine Definitionen beim \xDCberfahren auf der Seite angezeigt.",
+    searchAnswerSetting: "Musterantworten auf Suchseiten anzeigen",
+    searchAnswerSettingHelp: "Wenn aktiviert, zeigen Suchergebnisseiten eine automatische Antwort an, die DuckDuckGo-Ergebnisse als Referenz nutzt.",
+    includePageByDefault: "Aktuelle Seite standardm\xE4\xDFig einbeziehen",
+    includePageByDefaultHelp: "Sie k\xF6nnen den Seitenkontext vor dem Absenden weiterhin deaktivieren.",
+    webSearchByDefault: "Websuche standardm\xE4\xDFig aktivieren",
+    webSearchByDefaultHelp: "Bei normalen Seitenleisten-Chats werden standardm\xE4\xDFig DuckDuckGo-Ergebnisse verwendet, um die Frage zu erg\xE4nzen.",
+    toolResponseUseContextLanguage: "Tools in der Originalsprache des Fragenkontexts antworten lassen",
+    toolResponseUseContextLanguageHelp: "Wenn diese Option deaktiviert ist, verwenden die Tools die aktuelle Sprache der Benutzeroberfl\xE4che. Dies betrifft nur die Tools; eine explizite Sprachvorgabe in der Tool-Aufforderung hat Vorrang.",
+    historyLimit: "Maximale Anzahl gespeicherter Chats",
+    modelThinkingTimeout: "Timeout f\xFCr Modell-Verarbeitung (Sekunden)",
+    modelThinkingTimeoutHelp: "0 bedeutet kein Timeout. Nach Ablauf der Zeit wird die aktuelle Antwort unterbrochen und ein Timeout-Hinweis angezeigt.",
+    toolEnable: "Tool-Aktivierung",
+    toolEnableHelp: "Legen Sie fest, welche Tools an den jeweiligen Einstiegspunkten erscheinen und in welcher Reihenfolge sie angezeigt werden.",
+    toolSurfaceSelection: "Auswahl-Overlay",
+    toolSurfaceSelectionHelp: "Schnell-Tools, die nach der Textauswahl auf Webseiten angezeigt werden.",
+    toolSurfaceHome: "Seitenleisten-Startseite",
+    toolSurfaceHomeHelp: "Schnellzugriffe auf dem leeren Chat-Bildschirm der Seitenleiste.",
+    toolSurfaceEdge: "Schnell-Tools",
+    toolSurfaceEdgeHelp: "Der Launcher am rechten Rand von Webseiten.",
+    noToolsEnabled: "Keine Tools aktiviert",
+    chooseTools: "Tools ausw\xE4hlen",
+    chooseToolsHelp: "Die Reihenfolge der Auswahl entspricht der Anzeigereihenfolge; nutzen Sie die Pfeile zur Feinabstimmung.",
+    builtinTool: "Integriertes Tool",
+    customTool: "Benutzerdefiniertes Tool",
+    moveUp: "Nach oben verschieben",
+    moveDown: "Nach unten verschieben",
+    dataSync: "Datensynchronisierung",
+    dataSyncHelp: "Exportierte Dateien und die Chrome-Kontosynchronisierung enthalten niemals API-Schl\xFCssel.",
+    chromeAccountSync: "Chrome-Konto-Synchronisierung",
+    autoSyncNonSensitive: "Nicht-sensible Einstellungen automatisch synchronisieren",
+    autoSyncNonSensitiveHelp: "Synchronisieren Sie Einstellungen, Modell-Engine-Informationen und benutzerdefinierte Tools mit Ihrem Chrome-Konto; API-Schl\xFCssel und der Chatverlauf werden nicht synchronisiert.",
+    syncToChrome: "Mit Chrome-Konto synchronisieren",
+    syncFromChrome: "Vom Chrome-Konto synchronisieren",
+    syncing: "Synchronisierung l\xE4uft",
+    syncSecretNote: "Falls bei einer synchronisierten Modell-Engine der Schl\xFCssel fehlt, geben Sie ihn auf diesem Ger\xE4t erneut ein.",
+    exportSettings: "Einstellungen exportieren",
+    importSettings: "Einstellungen importieren",
+    clearConversationHistory: "Chatverlauf l\xF6schen",
+    providerEditorAria: "Einstellungen der Modell-Engine",
+    newEngine: "Neue Engine",
+    providerKind: "API Typ",
+    providerKindOpenAICompatible: "OpenAI Kompatibel",
+    providerKindAnthropic: "Anthropic",
+    providerKindGemini: "Gemini",
+    providerKindOllama: "Ollama",
+    providerName: "Anzeigename",
+    providerNamePlaceholder: "Beispiel: Internes Unternehmensmodell",
+    providerBaseUrl: "API URL",
+    providerBaseUrlHelp: "Beim Speichern wird eine Netzwerkberechtigung f\xFCr diese Dom\xE4ne angefordert.",
+    providerModel: "Modell-ID",
+    providerModelPlaceholder: "Vom Dienstanbieter bereitgestellt",
+    providerModelHelp: "Manuell eingeben oder verf\xFCgbare Modelle von diesem API abrufen.",
+    fetchModels: "Modelle abrufen",
+    providerApiKey: "API-Schl\xFCssel",
+    providerApiKeyPlaceholder: "Nur im Erweiterungsspeicher dieses Ger\xE4ts gespeichert",
+    providerSecretStorage: "Schl\xFCsselspeicher",
+    providerSecretLocal: "Dauerhaft speichern",
+    providerSecretSession: "Nur f\xFCr diese Sitzung",
+    providerTemperature: "Temperatur",
+    providerMaxTokens: "Maximale Ausgabe-Token",
+    providerMaxContext: "Maximale Kontextzeichen",
+    providerSupportsVision: "Unterst\xFCtzt Bildeingabe",
+    providerSupportsVisionHelp: "Deaktivieren, wenn das Modell keine Bilderkennung (Vision) unterst\xFCtzt.",
+    providerCustomHeaders: "Benutzerdefinierte Header",
+    providerCustomHeadersHelp: "Optionales JSON-Objekt; \xFCbereinstimmende Felder \xFCberschreiben Standard-Header.",
+    saveEngine: "Engine speichern",
+    providerSaved: "Modell-Engine gespeichert",
+    providerDeleted: "Modell-Engine gel\xF6scht",
+    providerNameRequired: "Engine-Namen eingeben",
+    providerBaseUrlRequired: "API URL eingeben",
+    providerModelRequired: "Modell-ID eingeben",
+    duckPermissionRequired: "Berechtigung f\xFCr die DuckDuckGo-Suchdom\xE4ne erforderlich",
+    settingsSyncedToChrome: "Einstellungen mit Chrome-Konto synchronisiert; Schl\xFCssel wurden nicht synchronisiert",
+    settingsSyncedFromChrome: "Einstellungen vom Chrome-Konto synchronisiert; Modellschl\xFCssel bleiben lokal",
+    chromeSyncEnabled: "Synchronisierung mit Chrome-Konto aktiviert; Schl\xFCssel werden nicht synchronisiert",
+    chromeSyncDisabled: "Synchronisierung mit Chrome-Konto deaktiviert",
+    settingsExported: "Einstellungen exportiert; Schl\xFCssel waren nicht enthalten",
+    invalidSettingsFile: "Keine g\xFCltige WebMind-Einstellungsdatei",
+    settingsImported: "Einstellungen importiert. Bitte geben Sie jeden Engine-Schl\xFCssel erneut ein.",
+    localHistoryCleared: "Lokaler Chatverlauf gel\xF6scht",
+    processCurrentContent: "Aktuellen Inhalt verarbeiten",
+    localRecords: "Lokale Datens\xE4tze",
+    addTool: "Tool hinzuf\xFCgen",
+    saveChanges: "\xC4nderungen speichern",
+    saveTool: "Tool speichern",
+    custom: "Benutzerdefiniert",
+    icon: "Symbol",
+    chooseIcon: "Symbol ausw\xE4hlen",
+    noIcon: "Kein Symbol",
+    searchIcon: "Symbole durchsuchen",
+    noIconMatches: "Keine passenden Symbole",
+    toolPrompt: "Eingabeaufforderung",
+    mainNav: "Hauptnavigation",
+    connectEngineBannerTitle: "Verbinden Sie zuerst eine Modell-Engine",
+    connectEngineBannerDescription: "Unterst\xFCtzt g\xE4ngige Cloud-Modelle, OpenAI-kompatible APIs und lokale Ollama.",
+    pageRecognized: "Erkannt",
+    enterAttachmentUrl: "Geben Sie eine URL ein, um sie als Anhang hinzuzuf\xFCgen",
+    modelEngineRequired: "F\xFCgen Sie zuerst eine Modell-Engine hinzu und w\xE4hlen Sie sie aus",
+    needPdfPermission: "Seitenberechtigung erforderlich, um diese PDF zu lesen",
+    noReadableTab: "Kein lesbarer aktiver Tab",
+    switchingToCurrentPage: "Wechsel zur aktuellen Seite \u2026",
+    readingSelection: "Lesen des ausgew\xE4hlten Inhalts \u2026",
+    readingCurrentBody: "Hauptinhalt wird gelesen\u2026",
+    noSelectionOnPage: "Die aktuelle Seite enth\xE4lt keinen ausw\xE4hlbaren Inhalt, zu dem gewechselt werden k\xF6nnte.",
+    searchPermissionRequired: "F\xFCr die Erg\xE4nzung durch Webergebnisse ist eine Berechtigung f\xFCr die Suchdom\xE4ne erforderlich.",
+    searchingWeb: "Suche im Web \u2026",
+    previewDemoAnswer: "Dies ist eine Vorschau-Antwort. Sobald die Erweiterung geladen und eine Modell-Engine konfiguriert ist, erscheint hier die eigentliche Streaming-Ausgabe.\n\n- Der Seitenkontext kann jederzeit umgeschaltet werden\n- Verwenden Sie Ihr eigenes Modell und Ihren eigenen Schl\xFCssel\n- Der Verlauf bleibt lokal gespeichert",
+    currentAnswer: "Aktuelle Antwort",
+    collectingSelection: "Ausgew\xE4hlte Inhalte werden erfasst\u2026",
+    collectingCurrentBody: "Hauptinhalt wird erfasst\u2026",
+    collectingTranslatableText: "\xDCbersetzbarer Text wird erfasst\u2026",
+    collectingPageBody: "Seiteninhalt wird erfasst\u2026",
+    noTranslatableBlocks: "Die aktuelle Seite enth\xE4lt keine \xFCbersetzbaren Textbl\xF6cke",
+    translatingPageProgress: "Seite wird \xFCbersetzt",
+    translatingShort: "Wird verarbeitet",
+    translationWritten: "Geschrieben",
+    translationComplete: "Fertig",
+    translationApplied: "\xDCbersetzter Text zur Seite hinzugef\xFCgt",
+    translationRemoved: "Seiten\xFCbersetzung entfernt",
+    pageRestored: "Seite wiederhergestellt",
+    addImageBeforeAnalyze: "F\xFCgen Sie ein Bild hinzu, bevor Sie die Bildanalyse starten",
+    toolNeedsPrompt: "Tools ben\xF6tigen einen Titel und eine Eingabeaufforderung (Prompt)",
+    chooseContextFirst: "W\xE4hlen Sie zuerst die aktuelle Seite oder den ausgew\xE4hlten Inhalt im Kontext aus",
+    directQuestionPlaceholder: "Direkt fragen\u2026",
+    askContextPlaceholder: "Aktuelle Seite befragen\u2026",
+    composerShortcutHint: "Eingabetaste zum Senden, Shift+Eingabetaste f\xFCr Zeilenumbruch",
+    addEngineFirst: "F\xFCgen Sie zuerst eine Modell-Engine in den Einstellungen hinzu",
+    copyFailed: "Kopieren fehlgeschlagen",
+    readingPdf: "PDF wird gelesen",
+    needSearchDomainPermission: "Berechtigung f\xFCr die Suchdom\xE4ne erforderlich, um Webergebnisse zu erg\xE4nzen",
+    profileVisionDisabled: "\u201E{name}\u201C unterst\xFCtzt keine Bilder Eingabe",
+    promptImageAnalysis: "Bitte analysieren Sie dieses Bild, beschreiben Sie die wichtigen Details und beantworten Sie meine n\xE4chste Frage.",
+    promptSummarizeSelection: "Fassen Sie den ausgew\xE4hlten Text zusammen und behalten Sie dabei die wichtigsten Fakten, Zahlen und Schlussfolgerungen bei.",
+    promptExplainSelection: "Erkl\xE4ren Sie den ausgew\xE4hlten Text in einfacher Sprache.",
+    promptAutoTranslateSelection: "\xDCbersetzen Sie den ausgew\xE4hlten Text automatisch: Wenn Chinesisch \xFCberwiegt, \xFCbersetzen Sie ins nat\xFCrliche Englisch; andernfalls \xFCbersetzen Sie ins vereinfachte Chinesisch.",
+    promptRewriteSelection: "Formulieren Sie den ausgew\xE4hlten Text um, damit er klarer, nat\xFCrlicher und professioneller klingt.",
+    promptReplySelection: "Entwerfen Sie auf der Grundlage des ausgew\xE4hlten Textes eine versandfertige Antwort.",
+    modelRequestFailed: "Modellanfrage fehlgeschlagen",
+    savedConversations: "Gespeicherte Unterhaltungen",
+    runtimeUnavailable: "Der Hintergrundprozess der Erweiterung ist im Vorschaumodus nicht verf\xFCgbar",
+    backgroundNoResponse: "Der Hintergrundprozess der Erweiterung hat nicht reagiert",
+    currentPageUnavailable: "Die aktuelle Seite ist nicht verf\xFCgbar",
+    noActiveTab: "Kein aktiver Tab",
+    previewPageTitle: "WebMind Beispiel f\xFCr Produktrecherche",
+    previewPageDescription: "Beispielartikel f\xFCr die UI-Vorschau",
+    previewPageBody: "Ein Browser-Assistent kann die aktuelle Seite als Kontext nutzen, um Benutzer beim Zusammenfassen, \xDCbersetzen, Erkl\xE4ren und Entwerfen von Antworten zu unterst\xFCtzen. WebMind erm\xF6glicht es Benutzern, eigene Modelldienste zu konfigurieren, anstatt an ein bestimmtes Kontosystem gebunden zu sein.",
+    contentTruncated: "Inhalt gek\xFCrzt",
+    customHeadersJsonObject: "Benutzerdefinierte Header m\xFCssen ein JSON-Objekt sein",
+    jsonArrayMissing: "Das Modell hat kein analysierbares JSON-Array zur\xFCckgegeben",
+    jsonArrayInvalid: "Die Antwort des Modells ist kein Array",
+    invalidImageData: "Ung\xFCltiges Bilddatenformat",
+    customToolFallback: "Benutzerdefiniertes Tool",
+    chromeSyncInvalidData: "Ung\xFCltige WebMind-Synchronisierungsdaten im Chrome-Konto",
+    chromeSyncNoData: "Es sind noch keine WebMind-Synchronisierungsdaten im Chrome-Konto vorhanden",
+    webSearchFailed: "Websuche fehlgeschlagen",
+    webSearchNoResults: "Es konnten keine Websuchergebnisse analysiert werden",
+    searchResultSnippet: "Snippet",
+    searchSourceMarker: "Suche",
+    selectionDescription: "{count} Zeichen ausgew\xE4hlt",
+    readFileFailed: "Datei kann nicht gelesen werden",
+    readDocumentFailed: "Dokument kann nicht gelesen werden",
+    readImageUrlFailed: "Bild kann nicht gelesen werden",
+    readUrlFailed: "URL kann nicht gelesen werden",
+    unknownFileType: "unbekannt",
+    sizeLabel: "Gr\xF6\xDFe",
+    bytes: "Bytes",
+    unsupportedDocumentText: "Dieses Dateiformat kann noch nicht direkt im Browser extrahiert werden.",
+    documentName: "Dokumentname",
+    pdfDocument: "PDF Dokument",
+    attachmentLabel: "Anhang",
+    documentAttachment: "Dokument",
+    addressLabel: "Adresse",
+    typeLabel: "Typ",
+    contentLabel: "Inhalt",
+    noExtractedText: "Es konnte kein Text extrahiert werden.",
+    jsonArrayTranslationInstruction: "Die Eingabe ist ein JSON-Array. Jedes Element besitzt eine ID und einen Text. \xDCbersetzen Sie den Text jedes Elements.",
+    citationPlaceholderInstruction: "Inhalte wie {{WEBMIND_CITATION_1}} sind unver\xE4nderliche Platzhalter f\xFCr Zitate. Die \xDCbersetzung muss jeden Platzhalter wortgetreu an der entsprechenden semantischen Position beibehalten; erweitern, erkl\xE4ren, umschreiben, an das Ende verschieben oder entfernen Sie ihn nicht.",
+    translationOutputOnlyInstruction: "Geben Sie nur die \xDCbersetzung des Originaltexts innerhalb von <translation-input> aus. Geben Sie weder diese Anweisung, noch Regeln, Tag-Namen oder die <translation-input>-Tags aus.",
+    jsonArrayReturnInstruction: 'Geben Sie nur ein JSON-Array ohne Code-Block-Begrenzung (Code Fence) zur\xFCck. Jedes Element muss {"id":"original id","text":"translation"} sein.',
+    translationWriteFailed: "Die \xDCbersetzung wurde generiert, konnte jedoch nicht auf der Seite gespeichert werden. Bitte versuchen Sie es erneut.",
+    originalSelectedContent: "Urspr\xFCnglich ausgew\xE4hlter Inhalt",
+    previousResult: "Vorheriges Ergebnis",
+    continueToolInstruction: "F\xFChren Sie das ausgew\xE4hlte Tool auf der Grundlage des vorherigen Ergebnisses weiter aus.",
+    selectionAssistantSystem: "Sie sind ein Assistent f\xFCr die Browser-Auswahl. Antworten Sie ausschlie\xDFlich auf der Grundlage des vom Benutzer bereitgestellten ausgew\xE4hlten Inhalts und des vorhandenen Ergebnisses. Erfinden Sie keine Seiteninformationen, die nicht bereitgestellt wurden.",
+    userQuestionLabel: "Benutzerfrage",
+    currentResultLabel: "Aktuelles Ergebnis",
+    researchSearchPrefix: "Diese Suchanfrage recherchieren",
+    openSidebarOpening: "Seitenleiste wird ge\xF6ffnet\u2026",
+    openSidebarOpened: "Seitenleiste ge\xF6ffnet.",
+    readCurrentPage: "Aktuelle Seite wird gelesen\u2026",
+    noProcessablePageBody: "Die aktuelle Seite enth\xE4lt keinen zu verarbeitenden Haupttext",
+    executingTool: "Tool wird ausgef\xFChrt\u2026",
+    closeQuickTools: "Schnelltools schlie\xDFen",
+    generateShortAutoReply: "Kurze automatische Antwort generieren",
+    extractImageText: "Text aus Bild extrahieren",
+    extractingImageText: "Text aus Bild wird extrahiert\u2026",
+    imageTextExtractionResult: "Textextraktion aus Bild",
+    imageTextExtractionPrompt: "Extrahieren Sie den gesamten sichtbaren Text aus diesem Bild. Behalten Sie die Originalsprache bei und \xFCbersetzen Sie nicht; bewahren Sie Zeilenumbr\xFCche, Leserichtung, Listen und Tabellenstruktur so weit wie m\xF6glich. Geben Sie nur den extrahierten Text aus und f\xFCgen Sie keine Erkl\xE4rungen hinzu.",
+    noImageTextFound: "Kein verwertbarer Text erkannt",
+    retryAnswer: "Antwort erneut versuchen",
+    chooseTool: "Tool ausw\xE4hlen",
+    rerunExecution: "Erneut ausf\xFChren",
+    reextractImageText: "Erneut extrahieren",
+    runSelectedTool: "Tool ausf\xFChren",
+    continueQuestionPlaceholder: "Nachfrage stellen \u2026",
+    modelNoUsableReply: "Das Modell hat keine verwertbare Antwort geliefert",
+    autoReplySystem: "Sie sind der Web-Assistent f\xFCr automatische Antworten von WebMind.\nNutzen Sie die aktuelle Seite, den Gespr\xE4chskontext und einen eventuell bereits im Eingabefeld vorhandenen Entwurf, um eine kurze Antwort zu generieren, die direkt eingef\xFCgt werden kann.\nBevorzugen Sie vorhandene Antworten, Kommentare, E-Mails oder Chat-Nachrichten auf der Seite.\nGeben Sie nur den Antworttext aus. F\xFCgen Sie keine Erkl\xE4rungen oder Titel hinzu und verwenden Sie nicht Markdown.",
+    autoReplyPageTitle: "Seitentitel",
+    autoReplyPageUrl: "Seite URL",
+    autoReplyPageDescription: "Seitenbeschreibung",
+    autoReplyPageContent: "Inhalt der aktuellen Seite",
+    autoReplyDraft: "Vorhandene Eingabe oder Entwurf",
+    autoReplyEmpty: "Das Eingabefeld ist leer.",
+    autoReplyRequest: "Generieren Sie 1\u20133 nat\xFCrliche, h\xF6fliche, spezifische und kurze S\xE4tze. Passen Sie sich der Sprache des Gespr\xE4chs auf der Seite oder des Eingabeentwurfs an.",
+    contextMenuAsk: "Fragen zu WebMind",
+    contextMenuSummarize: "Auswahl zusammenfassen",
+    contextMenuExplain: "Auswahl erkl\xE4ren",
+    contextMenuTranslate: "Auswahl \xFCbersetzen",
+    contextMenuRewrite: "Auswahl umschreiben",
+    contextMenuReply: "Antwortentwurf erstellen",
+    contextMenuAnalyzeImage: "Dieses Bild analysieren",
+    cannotDetermineTab: "Aktueller Tab konnte nicht ermittelt werden",
+    provideSearchQuery: "Bitte geben Sie einen Suchbegriff ein",
+    toolNotFound: "Tool nicht gefunden",
+    youtubeVideoNotFound: "Auf der Seite wurde kein Videoplayer gefunden",
+    videoInfoNotFound: "Auf der Seite wurden keine Videoinformationen gefunden",
+    noCaptionsAvailable: "F\xFCr dieses Video sind keine Untertitel verf\xFCgbar",
+    captionsReadFailed: "Untertitel konnten nicht gelesen werden",
+    captionsLabel: "Untertitel",
+    youtubeVideoTitle: "YouTube-Video",
+    apiKeyMissing: "Bei \u201E{name}\u201C fehlt ein API-Schl\xFCssel",
+    responseStreamMissing: "Das Modell API hat keinen Antwort-Stream zur\xFCckgegeben",
+    providerErrorStatus: "Modell API gab {status} zur\xFCck: {detail}",
+    requestCancelled: "Anfrage abgebrochen",
+    modelThinkingTimeoutMessage: "Das Modell hat beim \u201ENachdenken\u201C das Zeitlimit \xFCberschritten, daher wurde die Antwort unterbrochen."
+  };
+
+  // src/shared/locales/es.ts
+  var esUiText = {
+    askSelectionTitle: "Preguntar en la barra lateral",
+    askSelectionDescription: "Enviar el contenido actual a la barra lateral para su seguimiento",
+    copy: "Copiar",
+    more: "M\xE1s",
+    webmindAnswer: "WebMind Responder",
+    showTools: "Mostrar herramientas de WebMind",
+    copySelection: "Copiar texto seleccionado",
+    openSidebar: "Abrir barra lateral",
+    immersiveTranslateApplied: "Se ha aplicado la traducci\xF3n inmersiva a la p\xE1gina.",
+    searchAnswerSystem: "Eres el asistente de respuestas de b\xFAsqueda de WebMind. El usuario se encuentra en una p\xE1gina de resultados de b\xFAsqueda. Responde utilizando los resultados web de DuckDuckGo proporcionados, cita informaci\xF3n de los resultados cuando sea \xFAtil, indica cu\xE1ndo la evidencia es insuficiente y no pretendas acceder a p\xE1ginas que no se hayan proporcionado. Mant\xE9n la respuesta concisa y bien estructurada.",
+    searchQuery: "Consulta de b\xFAsqueda",
+    duckResults: "Resultados web de DuckDuckGo",
+    duckNoResults: "Resultados web de DuckDuckGo: no se obtuvieron resultados utilizables.",
+    searchAnswerRequest: "Responde directamente a esta pregunta de b\xFAsqueda y enumera comprobaciones adicionales \xFAtiles cuando sea necesario.",
+    sourceCitationInstruction: "Cada p\xE1rrafo basado en los resultados de b\xFAsqueda debe terminar con un marcador de fuente [B\xFAsqueda N], donde N corresponde al n\xFAmero de resultado anterior. No a\xF1adas una lista de fuentes al final ni muestres las URL de las fuentes.",
+    browserAssistantSystem: "Eres un asistente de escritura y lectura en el navegador. Trabaja fielmente con el texto proporcionado por el usuario y no inventes contexto.",
+    modelToolSystem: "Eres el ejecutor de herramientas de WebMind. Completa directamente la instrucci\xF3n de la herramienta y devuelve solo el resultado \xFAtil.",
+    unsupportedQuickAction: "Acci\xF3n r\xE1pida no admitida",
+    currentContext: "Contexto actual",
+    assistantSystem: "Eres WebMind, un asistente de investigaci\xF3n, lectura y escritura que trabaja en la barra lateral del navegador. Por defecto, responde en el mismo idioma que el usuario.",
+    assistantGuard: "Distingue estrictamente entre los hechos proporcionados expl\xEDcitamente en el contexto y tus propias inferencias. Si el contexto es insuficiente, ind\xEDquelo directamente. No afirme navegar, hacer clic ni leer contenido que no se haya proporcionado.",
+    selectionContextIntro: "El usuario seleccion\xF3 expl\xEDcitamente el siguiente texto. Esta respuesta debe basarse \xFAnicamente en dicha selecci\xF3n, no en partes de la p\xE1gina que no se hayan proporcionado:",
+    pageContextIntro: "El usuario adjunt\xF3 el siguiente contexto de la p\xE1gina completa:",
+    articleContextIntro: "A continuaci\xF3n, se presenta el contenido principal extra\xEDdo de la p\xE1gina actual:",
+    translationInputIntro: "El siguiente contenido es el texto de entrada que debe traducirse:",
+    title: "T\xEDtulo",
+    url: "URL",
+    description: "Descripci\xF3n",
+    body: "Contenido principal:",
+    selectionOnly: "Considere el texto seleccionado como el \xFAnico material de la p\xE1gina.",
+    pdfCitation: "Al responder a las preguntas PDF, cite los n\xFAmeros de p\xE1gina siempre que sea posible.",
+    youtubeCitation: "Al responder preguntas sobre v\xEDdeos, cite las marcas de tiempo de la transcripci\xF3n siempre que sea posible.",
+    pageCitation: 'Al citar la p\xE1gina actual, refi\xE9rase a ella como "la p\xE1gina actual" y mencione el fragmento pertinente.',
+    searchSummaryIntro: "A continuaci\xF3n, se presentan res\xFAmenes de resultados de b\xFAsqueda web. Utilice [B\xFAsqueda 1] y [B\xFAsqueda 2] como marcadores de referencia y enumere al final las fuentes utilizadas realmente:",
+    noContextImage: "Por favor, analice esta imagen.",
+    noContextAttachment: "Por favor, responda utilizando el contenido del archivo adjunto.",
+    attachmentIntro: "Aqu\xED tiene el contenido del archivo adjunto a\xF1adido por el usuario:",
+    languageSetting: "Idioma de la interfaz",
+    languageSettingHelp: "Afecta al texto de la interfaz de usuario, a los nombres de las herramientas integradas y a las instrucciones predeterminadas.",
+    translationLanguageSetting: "Idioma de traducci\xF3n",
+    translationLanguageSettingHelp: "Cambia autom\xE1ticamente entre el idioma de la interfaz y el ingl\xE9s seg\xFAn el idioma del contenido; una selecci\xF3n manual implica traducir siempre al idioma elegido.",
+    defaultContextScopeSetting: "Contexto predeterminado",
+    defaultContextScopeHelp: "Determina si las acciones y los atajos del men\xFA lateral para la traducci\xF3n y la lectura inmersivas procesan de forma predeterminada el contenido principal o la p\xE1gina completa.",
+    immersiveTranslationParagraphShortcut: "Atajo para el p\xE1rrafo actual",
+    immersiveTranslationPageShortcut: "Atajo para el contexto actual",
+    immersiveTranslationModeToggleShortcut: "Atajo para alternar la visualizaci\xF3n de la traducci\xF3n",
+    immersiveTranslationShortcutHelp: "El atajo de p\xE1rrafo se aplica a una selecci\xF3n o a un p\xE1rrafo; el atajo de contexto actual sigue el contexto seleccionado en la barra lateral.",
+    shortcutCtrl: "Ctrl",
+    shortcutAlt: "Alt",
+    shortcutShift: "Shift",
+    shortcutHoldPrefix: "Mantener pulsado:",
+    navChat: "Chat",
+    navTools: "Herramientas",
+    navHistory: "Historial",
+    navLogs: "Registros",
+    operationLogs: "Registros de operaciones",
+    operationLogsHelp: "Aqu\xED aparecen en tiempo real las operaciones clave del producto.",
+    clearLogs: "Borrar registros",
+    noOperationLogs: "A\xFAn no hay registros",
+    logLevelDebug: "Depuraci\xF3n",
+    logLevelInfo: "Informaci\xF3n",
+    logLevelSuccess: "\xC9xito",
+    logLevelWarning: "Aviso",
+    logLevelError: "Error",
+    logSidepanelReady: "El panel lateral est\xE1 listo",
+    logSettingsUpdated: "Configuraci\xF3n actualizada",
+    logToolsUpdated: "Configuraci\xF3n de la herramienta actualizada",
+    logPendingAction: "Acci\xF3n de p\xE1gina recibida",
+    logChatStart: "Chat iniciado",
+    logChatDone: "Respuesta completada",
+    logChatCancelled: "Respuesta cancelada",
+    logChatStop: "El usuario detuvo la respuesta",
+    logChatRegenerate: "Regenerando respuesta",
+    logToolRun: "Ejecutando herramienta",
+    logToolSelected: "Herramienta seleccionada",
+    logAskSelectionReady: "Listo para consultar en el panel lateral",
+    logNewChat: "Nuevo chat iniciado",
+    logAttachmentAdded: "Adjunto a\xF1adido",
+    logConversationLoaded: "Chat guardado cargado",
+    logEnabled: "Habilitado",
+    logDisabled: "Deshabilitado",
+    logRuntimeRequest: "Solicitud en tiempo de ejecuci\xF3n",
+    displayLogLevel: "Nivel de registro mostrado",
+    displayLogLevelHelp: "El panel de registro muestra solo el nivel seleccionado y los superiores. La depuraci\xF3n incluye registros detallados de cada solicitud al modelo.",
+    cancel: "Cancelar",
+    close: "Cerrar",
+    save: "Guardar",
+    saving: "Guardando",
+    add: "A\xF1adir",
+    edit: "Editar",
+    delete: "Eliminar",
+    test: "Probar",
+    testing: "Probando",
+    current: "Actual",
+    modelRoles: "Roles",
+    defaultModelRole: "Predeterminado",
+    translationModelRole: "Traducir",
+    visionModelRole: "Visi\xF3n",
+    setDefaultModelRole: "Establecer como modelo predeterminado",
+    setTranslationModelRole: "Establecer como modelo de traducci\xF3n",
+    clearTranslationModelRole: "Borrar modelo de traducci\xF3n",
+    setVisionModelRole: "Establecer como modelo de visi\xF3n",
+    clearVisionModelRole: "Borrar modelo de visi\xF3n",
+    visionModelRoleUnavailable: "El reconocimiento de im\xE1genes est\xE1 desactivado para este motor",
+    settings: "Configuraci\xF3n",
+    loading: "Cargando",
+    newChat: "Nuevo chat",
+    send: "Enviar",
+    stop: "Detener",
+    restorePage: "Restaurar p\xE1gina",
+    chooseModel: "Elegir modelo",
+    currentModelEngine: "Motor del modelo actual",
+    selectTool: "Seleccionar herramienta",
+    selectMoreTools: "Seleccionar m\xE1s herramientas",
+    moreTools: "M\xE1s herramientas",
+    copyContent: "Copiar contenido",
+    clearComposer: "Borrar entrada",
+    copyCurrentBody: "Copiar contenido principal",
+    copyUrl: "Copiar p\xE1gina URL",
+    copied: "Copiado",
+    regenerate: "Reintentar respuesta",
+    continueExecution: "Continuar",
+    replace: "Reemplazar",
+    closeNotice: "Cerrar aviso",
+    removeAttachment: "Eliminar archivo adjunto",
+    openTools: "Abrir herramientas",
+    currentPage: "P\xE1gina actual",
+    currentBody: "Contenido principal",
+    currentSelection: "Selecci\xF3n actual",
+    currentBodyPreview: "Vista previa del contexto",
+    nonePreview: "Vista previa",
+    pagePreview: "Vista previa de la p\xE1gina",
+    bodyPreview: "Vista previa del contenido principal",
+    selectionPreview: "Vista previa de la selecci\xF3n",
+    expand: "Expandir",
+    collapse: "Contraer",
+    currentBodyBlocks: "{count} bloques",
+    currentBodyChars: "{count} caracteres",
+    currentBodyScore: "Puntuaci\xF3n del contenido: {score}",
+    articleMetricLength: "Longitud",
+    articleMetricStructure: "Estructura",
+    articleMetricHeading: "Encabezado",
+    articleMetricSemantics: "Contenedor sem\xE1ntico",
+    articleMetricDensity: "Densidad de texto",
+    articleMetricLinkPurity: "Pureza de enlaces",
+    articleMetricFocus: "Enfoque",
+    articleMetricCleanliness: "Limpieza",
+    currentBodySourceDom: "DOM",
+    currentBodySourceRule: "Regla",
+    currentBodySourceManual: "Manual",
+    currentBodySourceEdited: "Editado",
+    selectCurrentBody: "Seleccionar contenido principal",
+    restoreCurrentBody: "Restaurar contenido principal",
+    highlightCurrentBodyBlock: "Resaltar este bloque en la p\xE1gina",
+    removeCurrentBodyBlock: "Eliminar este bloque del contenido principal",
+    smartPruneCurrentBody: "Depuraci\xF3n autom\xE1tica",
+    modelPruneCurrentBody: "Depuraci\xF3n con IA",
+    modelPruneCurrentBodyRunning: "Solicitando al modelo que clasifique los bloques del art\xEDculo",
+    modelPruneInvalidResult: "El modelo devolvi\xF3 un resultado de poda ilegible",
+    modelPruneNoChanges: "El modelo no encontr\xF3 bloques del contenido principal para eliminar",
+    modelPruneAllRejected: "No se pueden eliminar todos los bloques del contenido principal para evitar la p\xE9rdida de datos",
+    articleRecognition: "Detecci\xF3n del contenido principal",
+    recognitionRules: "Reglas de reconocimiento",
+    articleExtractionRules: "Reglas de extracci\xF3n del contenido principal",
+    articleExtractionRulesHelp: "Cada regla incluye un patr\xF3n de URL de p\xE1gina y un selector del contenido principal; los patrones de URL admiten dominios, comodines y fragmentos.",
+    articleExtractionUrlPattern: "Patr\xF3n de URL de p\xE1gina",
+    articleExtractionSelector: "Selector del contenido principal",
+    articleExtractionUrlPatternPlaceholder: "URL de p\xE1gina, p. ej., example.com, *.example.com, https://example.com/*",
+    articleExtractionSelectorPlaceholder: "Selector CSS, p. ej., article, main, #content, .post-body",
+    addArticleExtractionRule: "A\xF1adir regla de contenido principal",
+    deleteArticleExtractionRule: "Eliminar regla de contenido principal",
+    noArticleExtractionRules: "A\xFAn no hay reglas de extracci\xF3n del contenido principal",
+    articleExtractionRuleSaved: "Regla de extracci\xF3n del contenido guardada",
+    articleExtractionRuleInvalid: "Introduce un patr\xF3n de URL de p\xE1gina y un selector",
+    selectingBodyRange: "Selecci\xF3n del contenido principal",
+    manualBodySelectionHint: "La rueda o las teclas de flecha ajustan el rango; haga clic para confirmar o pulse Esc para cancelar",
+    manualBodySelectionCancelled: "Selecci\xF3n del contenido principal cancelada",
+    noneContext: "Sin contexto",
+    webSearch: "B\xFAsqueda web",
+    addAttachment: "A\xF1adir imagen o documento",
+    addUrl: "A\xF1adir URL",
+    you: "Usted",
+    ordinaryConversation: "Chat normal",
+    usedTool: "Herramienta utilizada",
+    questionContext: "Contexto de la pregunta",
+    imageChat: "Chat con im\xE1genes",
+    openAnyPage: "Abre cualquier p\xE1gina y empieza aqu\xED.",
+    noEnabledTools: "A\xFAn no hay herramientas habilitadas aqu\xED.",
+    toolsPageShowsAll: "La p\xE1gina de herramientas muestra todas las herramientas disponibles.",
+    noSavedConversations: "A\xFAn no hay conversaciones guardadas.",
+    conversationsAutoSave: "Las conversaciones se guardan localmente tras finalizar el intercambio.",
+    languageOptionAuto: "Autom\xE1tico",
+    languageOptionZhCN: "Chino simplificado",
+    languageOptionZhTW: "Chino tradicional",
+    languageOptionEn: "Ingl\xE9s",
+    languageOptionJa: "Japon\xE9s",
+    languageOptionKo: "Coreano",
+    appSubtitle: "Espacio de trabajo de modelos en el navegador con enfoque local",
+    modelEngines: "Motores de modelos",
+    modelEnginesDescription: "No se requiere cuenta ni suscripci\xF3n. Cada rol (predeterminado, traducci\xF3n y visi\xF3n) puede asignarse a un modelo; un mismo modelo puede tener asignados varios roles. Las tareas de traducci\xF3n y visi\xF3n recurren al modelo predeterminado si no tienen uno asignado. La configuraci\xF3n y las credenciales secretas de los motores se almacenan en el almacenamiento de la extensi\xF3n.",
+    addEngine: "A\xF1adir motor",
+    noModelEngines: "A\xFAn no hay motores de modelos.",
+    noModelEnginesHelp: "A\xF1ade modelos comunes en la nube, API compatibles con OpenAI o modelos locales Ollama.",
+    pageFeatures: "Funciones de la p\xE1gina",
+    pageFeaturesHelp: "Cada m\xF3dulo mantiene su configuraci\xF3n por separado para que puedas ver qu\xE9 elementos afecta.",
+    selectionOverlay: "Superposici\xF3n de selecci\xF3n",
+    selectionOverlayHelp: "Controla la barra de herramientas flotante tras seleccionar texto.",
+    selectionOverlayMode: "Modo de activaci\xF3n",
+    selectionOverlayShortcut: "Atajo para la superposici\xF3n de selecci\xF3n",
+    selectionOverlayShortcutHelp: "Si est\xE1 activado, la superposici\xF3n de selecci\xF3n aparece solo mientras se mantiene pulsado el atajo elegido al seleccionar texto o inspeccionar una selecci\xF3n existente.",
+    selectionOverlayMinChars: "M\xEDnimo de caracteres seleccionados",
+    selectionOverlayMinCharsHelp: "Mostrar la superposici\xF3n de selecci\xF3n solo despu\xE9s de seleccionar esta cantidad de caracteres. M\xEDnimo: 1.",
+    selectionOverlayOff: "Desactivar superposici\xF3n",
+    selectionOverlayOffHelp: "No mostrar acciones r\xE1pidas tras seleccionar texto.",
+    selectionOverlayAlways: "Mostrar barra de herramientas directamente",
+    selectionOverlayAlwaysHelp: "Mostrar las herramientas disponibles inmediatamente despu\xE9s de seleccionar texto.",
+    selectionOverlayHover: "Mostrar punto primero",
+    selectionOverlayHoverHelp: "Mostrar un peque\xF1o punto tras seleccionar texto y expandir la barra de herramientas al pasar el cursor por encima.",
+    urlBlacklist: "URL Lista negra",
+    selectionOverlayBlacklistHelp: "Una regla por l\xEDnea; admite dominios, comodines y fragmentos URL.",
+    edgeQuickTools: "Herramientas r\xE1pidas",
+    edgeQuickToolsHelp: "Controla conjuntamente el men\xFA lateral, la extracci\xF3n de texto de im\xE1genes y la respuesta autom\xE1tica.",
+    edgeDockMenu: "Men\xFA lateral",
+    edgeQuickToolsEnable: "Activar men\xFA lateral",
+    edgeQuickToolsEnableHelp: "Desactiva esta opci\xF3n para ocultar el men\xFA del borde derecho en las p\xE1ginas web.",
+    edgeQuickToolsBlacklistHelp: "Si se cumple la regla, no aparecer\xE1n las herramientas r\xE1pidas del borde derecho.",
+    quickToolsBlacklistHelp: "Si se cumple la regla, el men\xFA lateral, la extracci\xF3n de texto de im\xE1genes y la respuesta autom\xE1tica se desactivar\xE1n en la p\xE1gina.",
+    immersiveTranslation: "Traducci\xF3n inmersiva",
+    immersiveTranslationHelp: "Controla c\xF3mo se escribe el texto traducido en la p\xE1gina.",
+    immersiveTranslationAutoWhitelist: "Lista blanca de traducci\xF3n autom\xE1tica",
+    immersiveTranslationAutoWhitelistHelp: "Una regla por l\xEDnea; admite dominios, comodines y fragmentos URL. Las p\xE1ginas que coinciden con las reglas ejecutan la traducci\xF3n inmersiva autom\xE1ticamente al abrirse.",
+    immersiveReading: "Lectura inmersiva",
+    immersiveReadingHelp: "Sustituye palabras adecuadas por t\xE9rminos en el idioma de aprendizaje para una lectura mixta (nativo y no nativo).",
+    immersiveReadingStrategy: "Estrategia",
+    immersiveReadingStrategyLocalFirst: "Prioridad local",
+    immersiveReadingStrategyLocalFirstHelp: "Prioriza la clasificaci\xF3n local de palabras y las definiciones de diccionario sin conexi\xF3n para obtener resultados m\xE1s r\xE1pidos y econ\xF3micos; recurre al modelo solo para cubrir las carencias restantes.",
+    immersiveReadingStrategyModelPage: "Prioridad del modelo",
+    immersiveReadingStrategyModelPageHelp: "Permite que el modelo utilice el contexto de la p\xE1gina para seleccionar y traducir las sustituciones. Es una opci\xF3n m\xE1s flexible, pero la velocidad y el coste dependen del modelo.",
+    immersiveReadingAutoWhitelist: "Lista blanca de lectura autom\xE1tica",
+    immersiveReadingAutoWhitelistHelp: "Una regla por l\xEDnea; admite dominios, comodines y fragmentos URL. Las p\xE1ginas que coinciden con estos criterios activan autom\xE1ticamente la lectura inmersiva al abrirse.",
+    immersiveReadingDifficulty: "Dificultad de las palabras",
+    immersiveReadingDifficultyHelp: "Los niveles m\xE1s altos hacen que el modelo sustituya menos palabras, pero de mayor dificultad.",
+    immersiveReadingMode: "Modo de sustituci\xF3n",
+    immersiveReadingParagraphShortcut: "Atajo de lectura del p\xE1rrafo actual",
+    immersiveReadingContextShortcut: "Atajo de lectura del contexto actual",
+    immersiveReadingTranslation: "Traducci\xF3n",
+    immersiveReadingOriginalTranslation: "Original (Traducci\xF3n)",
+    immersiveReadingTranslationOriginal: "Traducci\xF3n (Original)",
+    immersiveReadingBackgroundStyle: "Estilo de fondo de sustituci\xF3n",
+    immersiveReadingHighlightNone: "Sin resaltado",
+    immersiveReadingHighlightUniform: "Resaltado uniforme",
+    immersiveReadingHighlightLeveled: "Resaltado por niveles",
+    immersiveReadingOuterEffects: "Efectos fuera de los par\xE9ntesis",
+    immersiveReadingInnerEffects: "Efectos en par\xE9ntesis y texto interior",
+    immersiveReadingApplied: "Lectura inmersiva aplicada",
+    displayMode: "Modo de visualizaci\xF3n",
+    translationOnly: "Solo traducci\xF3n",
+    bilingual: "Original + Traducci\xF3n",
+    translationStyle: "Estilo de traducci\xF3n",
+    translationStyleDefault: "Predeterminado",
+    translationStyleHighlight: "Resaltado",
+    translationStyleDivider: "Separador",
+    translationStyleQuote: "Cita",
+    translationStyleBlur: "Desenfoque",
+    translationStyleTransparent: "Transparente",
+    textEffects: "Efectos de texto",
+    underline: "Subrayado continuo",
+    dashedUnderline: "Subrayado discontinuo",
+    largeText: "Texto grande",
+    smallText: "Texto peque\xF1o",
+    bold: "Negrita",
+    italic: "Cursiva",
+    light: "Atenuado",
+    emphasis: "\xC9nfasis",
+    generalConfig: "Configuraci\xF3n general",
+    generalConfigHelp: "Controla las mejoras de la p\xE1gina de b\xFAsqueda, el contexto predeterminado y la apariencia.",
+    appearanceTheme: "Tema de apariencia",
+    themeSystem: "Seguir configuraci\xF3n del sistema",
+    themeLight: "Claro",
+    themeDark: "Oscuro",
+    autoScrollDuringStreaming: "Desplazamiento autom\xE1tico durante la generaci\xF3n",
+    autoScrollDuringStreamingHelp: "Mantiene la barra lateral desplazada hacia la \xFAltima respuesta del modelo mientras este genera contenido.",
+    autoReply: "Respuesta autom\xE1tica",
+    autoReplyOff: "Desactivado",
+    autoReplyMultiline: "Solo campos multil\xEDnea",
+    autoReplyAll: "Todos los campos de texto",
+    autoReplyHelp: "Muestra un icono peque\xF1o en los campos editables y redacta una respuesta breve utilizando la p\xE1gina actual.",
+    autoReplyBlacklistHelp: "Si hay coincidencia, los campos editables de la p\xE1gina no mostrar\xE1n la opci\xF3n de respuesta autom\xE1tica.",
+    imageTextExtraction: "Extracci\xF3n de texto de im\xE1genes",
+    imageTextExtractionHelp: "Muestra una opci\xF3n de extracci\xF3n de texto al pasar el cursor sobre las im\xE1genes.",
+    imageTextExtractionOff: "Desactivado",
+    imageTextExtractionOn: "Habilitar seg\xFAn el tama\xF1o",
+    imageTextExtractionMinSize: "Tama\xF1o m\xEDnimo de imagen",
+    imageTextExtractionMinSizeHelp: "Mostrar la opci\xF3n solo cuando tanto el ancho como el alto mostrados tengan al menos esta cantidad de p\xEDxeles.",
+    imageTextExtractionBlacklistHelp: "Si se cumple la condici\xF3n, las im\xE1genes de la p\xE1gina no mostrar\xE1n la opci\xF3n de extracci\xF3n de texto.",
+    hoverDefinition: "Definiciones al pasar el cursor",
+    hoverDefinitionHelp: "Usar el diccionario integrado sin conexi\xF3n para mostrar una definici\xF3n concisa de una l\xEDnea al colocar el puntero sobre un t\xE9rmino en chino o una palabra en ingl\xE9s.",
+    hoverDefinitionOff: "Desactivado",
+    hoverDefinitionChinese: "Solo chino",
+    hoverDefinitionEnglish: "Solo ingl\xE9s",
+    hoverDefinitionBoth: "Chino e ingl\xE9s",
+    hoverDefinitionStyle: "Estilo de la palabra bajo el cursor",
+    hoverDefinitionStyleNone: "Ninguno",
+    hoverDefinitionStyleHighlight: "Resaltado",
+    hoverDefinitionStyleUnderline: "Subrayado",
+    hoverDefinitionShortcut: "Atajo para consultar al pasar el cursor",
+    hoverDefinitionShortcutHelp: "Si est\xE1 activado, mantenga pulsado el atajo seleccionado mientras pasa el cursor sobre una palabra para ver su definici\xF3n.",
+    hoverDefinitionBlacklistHelp: "Si se cumple la condici\xF3n, no aparecer\xE1n definiciones al pasar el cursor por la p\xE1gina.",
+    searchAnswerSetting: "Mostrar respuestas modelo en p\xE1ginas de b\xFAsqueda",
+    searchAnswerSettingHelp: "Si est\xE1 activado, las p\xE1ginas de resultados de b\xFAsqueda muestran una respuesta autom\xE1tica utilizando los resultados de DuckDuckGo como referencia.",
+    includePageByDefault: "Incluir la p\xE1gina actual por defecto",
+    includePageByDefaultHelp: "A\xFAn puede desactivar el contexto de la p\xE1gina antes de enviar.",
+    webSearchByDefault: "Activar b\xFAsqueda web por defecto",
+    webSearchByDefaultHelp: "Los chats habituales de la barra lateral utilizan los resultados de DuckDuckGo para complementar la pregunta por defecto.",
+    toolResponseUseContextLanguage: "Responder con herramientas en el idioma original del contexto de la pregunta",
+    toolResponseUseContextLanguageHelp: "Si se deshabilita esta opci\xF3n, las herramientas utilizan el idioma actual de la interfaz. Esto afecta \xFAnicamente a las herramientas; cualquier requisito de idioma expl\xEDcito en la instrucci\xF3n de la herramienta tendr\xE1 prioridad.",
+    historyLimit: "M\xE1ximo de chats guardados",
+    modelThinkingTimeout: "Tiempo l\xEDmite de procesamiento del modelo (segundos)",
+    modelThinkingTimeoutHelp: "0 significa sin l\xEDmite de tiempo. Al agotarse el plazo, la respuesta actual se interrumpe y se muestra un aviso de tiempo l\xEDmite.",
+    toolEnable: "Activaci\xF3n de herramientas",
+    toolEnableHelp: "Elija qu\xE9 herramientas aparecen en cada punto de acceso y su orden de visualizaci\xF3n.",
+    toolSurfaceSelection: "Superposici\xF3n de selecci\xF3n",
+    toolSurfaceSelectionHelp: "Herramientas r\xE1pidas que aparecen tras seleccionar texto en p\xE1ginas web.",
+    toolSurfaceHome: "Inicio de la barra lateral",
+    toolSurfaceHomeHelp: "Accesos r\xE1pidos en la pantalla vac\xEDa del chat de la barra lateral.",
+    toolSurfaceEdge: "Herramientas r\xE1pidas",
+    toolSurfaceEdgeHelp: "Iniciador situado en el borde derecho de las p\xE1ginas web.",
+    noToolsEnabled: "No hay herramientas habilitadas",
+    chooseTools: "Elegir herramientas",
+    chooseToolsHelp: "El orden de selecci\xF3n determina el orden de visualizaci\xF3n; utilice las flechas para ajustarlo.",
+    builtinTool: "Herramienta integrada",
+    customTool: "Herramienta personalizada",
+    moveUp: "Mover hacia arriba",
+    moveDown: "Mover hacia abajo",
+    dataSync: "Sincronizaci\xF3n de datos",
+    dataSyncHelp: "La exportaci\xF3n de archivos y la sincronizaci\xF3n de la cuenta Chrome nunca incluyen las claves API.",
+    chromeAccountSync: "Chrome Sincronizaci\xF3n de cuenta",
+    autoSyncNonSensitive: "Sincronizaci\xF3n autom\xE1tica de ajustes no confidenciales",
+    autoSyncNonSensitiveHelp: "Sincroniza los ajustes, la informaci\xF3n del motor del modelo y las herramientas personalizadas con tu cuenta Chrome; las claves API y el historial de chat nunca se sincronizan.",
+    syncToChrome: "Sincronizar con la cuenta Chrome",
+    syncFromChrome: "Sincronizar desde la cuenta Chrome",
+    syncing: "Sincronizando",
+    syncSecretNote: "Si a un motor de modelo sincronizado le falta su clave, introd\xFAcela de nuevo en este dispositivo.",
+    exportSettings: "Exportar configuraci\xF3n",
+    importSettings: "Importar configuraci\xF3n",
+    clearConversationHistory: "Borrar historial de chat",
+    providerEditorAria: "Configuraci\xF3n del motor de modelo",
+    newEngine: "Nuevo motor",
+    providerKind: "API Tipo",
+    providerKindOpenAICompatible: "OpenAI Compatible",
+    providerKindAnthropic: "Anthropic",
+    providerKindGemini: "Gemini",
+    providerKindOllama: "Ollama",
+    providerName: "Nombre para mostrar",
+    providerNamePlaceholder: "Ejemplo: Modelo interno de la empresa",
+    providerBaseUrl: "API URL",
+    providerBaseUrlHelp: "Al guardar, se solicitar\xE1 permiso de red para este dominio.",
+    providerModel: "ID del modelo",
+    providerModelPlaceholder: "Proporcionado por tu proveedor de servicios",
+    providerModelHelp: "Escr\xEDbelo manualmente u obt\xE9n los modelos disponibles desde este API.",
+    fetchModels: "Obtener modelos",
+    providerApiKey: "API Clave",
+    providerApiKeyPlaceholder: "Solo se almacena en el almacenamiento de la extensi\xF3n de este dispositivo",
+    providerSecretStorage: "Almacenamiento de claves",
+    providerSecretLocal: "Persistir",
+    providerSecretSession: "Solo esta sesi\xF3n",
+    providerTemperature: "Temperatura",
+    providerMaxTokens: "M\xE1ximo de tokens de salida",
+    providerMaxContext: "M\xE1ximo de caracteres de contexto",
+    providerSupportsVision: "Admite entrada de im\xE1genes",
+    providerSupportsVisionHelp: "Desactivar si el modelo no admite visi\xF3n.",
+    providerCustomHeaders: "Encabezados personalizados",
+    providerCustomHeadersHelp: "Objeto JSON opcional; los campos coincidentes sobrescriben los encabezados predeterminados.",
+    saveEngine: "Guardar motor",
+    providerSaved: "Motor de modelo guardado",
+    providerDeleted: "Motor de modelo eliminado",
+    providerNameRequired: "Introduzca un nombre de motor",
+    providerBaseUrlRequired: "Introduzca un API URL",
+    providerModelRequired: "Introduzca un ID de modelo",
+    duckPermissionRequired: "Se requiere permiso de dominio de b\xFAsqueda DuckDuckGo",
+    settingsSyncedToChrome: "Configuraci\xF3n sincronizada con la cuenta Chrome; las claves no se sincronizaron",
+    settingsSyncedFromChrome: "Configuraci\xF3n sincronizada desde la cuenta Chrome; las claves del modelo permanecen locales",
+    chromeSyncEnabled: "Sincronizaci\xF3n de cuenta Chrome habilitada; las claves no se sincronizar\xE1n",
+    chromeSyncDisabled: "Sincronizaci\xF3n de cuenta Chrome deshabilitada",
+    settingsExported: "Configuraci\xF3n exportada; las claves no se incluyeron",
+    invalidSettingsFile: "Archivo de configuraci\xF3n de WebMind no v\xE1lido",
+    settingsImported: "Configuraci\xF3n importada. Vuelva a introducir la clave de cada motor.",
+    localHistoryCleared: "Historial de chat local borrado",
+    processCurrentContent: "Procesar contenido actual",
+    localRecords: "Registros locales",
+    addTool: "A\xF1adir herramienta",
+    saveChanges: "Guardar cambios",
+    saveTool: "Guardar herramienta",
+    custom: "Personalizado",
+    icon: "Icono",
+    chooseIcon: "Elegir icono",
+    noIcon: "Sin icono",
+    searchIcon: "Buscar iconos",
+    noIconMatches: "No hay iconos coincidentes",
+    toolPrompt: "Indicaci\xF3n",
+    mainNav: "Navegaci\xF3n principal",
+    connectEngineBannerTitle: "Conecte primero un motor de modelo",
+    connectEngineBannerDescription: "Compatible con modelos comunes en la nube, API compatibles con OpenAI y Ollama locales.",
+    pageRecognized: "Reconocido",
+    enterAttachmentUrl: "Introduzca un URL para a\xF1adirlo como archivo adjunto",
+    modelEngineRequired: "A\xF1ada y seleccione primero un motor de modelo",
+    needPdfPermission: "Se requiere permiso de p\xE1gina para leer este PDF",
+    noReadableTab: "No hay ninguna pesta\xF1a activa legible",
+    switchingToCurrentPage: "Cambiando a la p\xE1gina actual\u2026",
+    readingSelection: "Leyendo el contenido seleccionado\u2026",
+    readingCurrentBody: "Leyendo el contenido principal\u2026",
+    noSelectionOnPage: "La p\xE1gina actual no tiene contenido seleccionable al que cambiar",
+    searchPermissionRequired: "Se requiere permiso de dominio de b\xFAsqueda para complementar los resultados web",
+    searchingWeb: "Buscando en la web\u2026",
+    previewDemoAnswer: "Esta es una respuesta de vista previa. Una vez cargada la extensi\xF3n y configurado el motor del modelo, aqu\xED aparecer\xE1 la salida real en tiempo real (streaming).\n\n- El contexto de la p\xE1gina se puede alternar en cualquier momento\n- Trae tu propio modelo y clave\n- El historial permanece solo localmente",
+    currentAnswer: "Respuesta actual",
+    collectingSelection: "Recopilando contenido seleccionado\u2026",
+    collectingCurrentBody: "Recopilando el contenido principal\u2026",
+    collectingTranslatableText: "Recopilando texto traducible\u2026",
+    collectingPageBody: "Recopilando el contenido de la p\xE1gina\u2026",
+    noTranslatableBlocks: "La p\xE1gina actual no tiene bloques de texto traducible",
+    translatingPageProgress: "Traduciendo p\xE1gina",
+    translatingShort: "Trabajando",
+    translationWritten: "Escrito",
+    translationComplete: "Listo",
+    translationApplied: "Texto traducido a\xF1adido a la p\xE1gina",
+    translationRemoved: "Traducci\xF3n de la p\xE1gina eliminada",
+    pageRestored: "P\xE1gina restaurada",
+    addImageBeforeAnalyze: "A\xF1ade una imagen antes de ejecutar el an\xE1lisis de imagen",
+    toolNeedsPrompt: "Las herramientas necesitan un t\xEDtulo y una instrucci\xF3n (prompt)",
+    chooseContextFirst: "Elige primero la p\xE1gina actual o el contenido seleccionado en el contexto",
+    directQuestionPlaceholder: "Pregunta directamente\u2026",
+    askContextPlaceholder: "Pregunta a la p\xE1gina actual\u2026",
+    composerShortcutHint: "Intro para enviar, Shift+Intro para nueva l\xEDnea",
+    addEngineFirst: "A\xF1ade primero un motor de modelo en Configuraci\xF3n",
+    copyFailed: "Error al copiar",
+    readingPdf: "Leyendo PDF",
+    needSearchDomainPermission: "Se requiere permiso de dominio de b\xFAsqueda para complementar los resultados web",
+    profileVisionDisabled: "\u201C{name}\u201D no admite im\xE1genes entrada",
+    promptImageAnalysis: "Por favor, analiza esta imagen, describe los detalles importantes y responde a mi siguiente pregunta.",
+    promptSummarizeSelection: "Resume el texto seleccionado conservando los datos, cifras y conclusiones clave.",
+    promptExplainSelection: "Explica el texto seleccionado en un lenguaje sencillo.",
+    promptAutoTranslateSelection: "Traduce autom\xE1ticamente el texto seleccionado: si predomina el chino, trad\xFAcelo a un ingl\xE9s natural; de lo contrario, trad\xFAcelo a chino simplificado.",
+    promptRewriteSelection: "Reescribe el texto seleccionado para que sea m\xE1s claro, natural y profesional.",
+    promptReplySelection: "Redacta una respuesta lista para enviar basada en el texto seleccionado.",
+    modelRequestFailed: "Error en la solicitud al modelo",
+    savedConversations: "Conversaciones guardadas",
+    runtimeUnavailable: "El proceso en segundo plano de la extensi\xF3n no est\xE1 disponible en el modo de vista previa",
+    backgroundNoResponse: "El proceso en segundo plano de la extensi\xF3n no respondi\xF3",
+    currentPageUnavailable: "La p\xE1gina actual no est\xE1 disponible",
+    noActiveTab: "No hay ninguna pesta\xF1a activa",
+    previewPageTitle: "WebMind Ejemplo de investigaci\xF3n de productos",
+    previewPageDescription: "Art\xEDculo de muestra para la vista previa de la interfaz de usuario",
+    previewPageBody: "Un asistente de navegador puede utilizar la p\xE1gina actual como contexto para ayudar a los usuarios a resumir, traducir, explicar y redactar respuestas. WebMind permite a los usuarios configurar sus propios servicios de modelos en lugar de vincularlos a un sistema de cuentas espec\xEDfico.",
+    contentTruncated: "contenido truncado",
+    customHeadersJsonObject: "Los encabezados personalizados deben ser un objeto JSON",
+    jsonArrayMissing: "El modelo no devolvi\xF3 una matriz JSON analizable",
+    jsonArrayInvalid: "La respuesta del modelo no es una matriz",
+    invalidImageData: "Formato de datos de imagen no v\xE1lido",
+    customToolFallback: "Herramienta personalizada",
+    chromeSyncInvalidData: "Datos de sincronizaci\xF3n WebMind no v\xE1lidos en la cuenta Chrome",
+    chromeSyncNoData: "A\xFAn no existen datos de sincronizaci\xF3n WebMind en la cuenta Chrome",
+    webSearchFailed: "La b\xFAsqueda web fall\xF3",
+    webSearchNoResults: "No se pudieron analizar resultados de b\xFAsqueda web",
+    searchResultSnippet: "Fragmento",
+    searchSourceMarker: "B\xFAsqueda",
+    selectionDescription: "{count} caracteres seleccionados",
+    readFileFailed: "No se puede leer el archivo",
+    readDocumentFailed: "No se puede leer el documento",
+    readImageUrlFailed: "No se puede leer la imagen",
+    readUrlFailed: "No se puede leer URL",
+    unknownFileType: "desconocido",
+    sizeLabel: "Tama\xF1o",
+    bytes: "bytes",
+    unsupportedDocumentText: "Este formato de archivo a\xFAn no se puede extraer directamente en el navegador.",
+    documentName: "Nombre del documento",
+    pdfDocument: "PDF documento",
+    attachmentLabel: "Adjunto",
+    documentAttachment: "Documento",
+    addressLabel: "Direcci\xF3n",
+    typeLabel: "Tipo",
+    contentLabel: "Contenido",
+    noExtractedText: "No se pudo extraer texto",
+    jsonArrayTranslationInstruction: "La entrada es una matriz JSON. Cada elemento tiene un ID y un texto. Traduzca el texto de cada elemento.",
+    citationPlaceholderInstruction: "El contenido como {{WEBMIND_CITATION_1}} es un marcador de posici\xF3n de cita inmutable. La traducci\xF3n debe conservar cada marcador de posici\xF3n literalmente en la posici\xF3n sem\xE1ntica correspondiente; no lo ampl\xEDe, explique, reescriba, mueva al final ni elimine.",
+    translationOutputOnlyInstruction: "Genere \xFAnicamente la traducci\xF3n del texto original dentro de <translation-input>. No incluya esta instrucci\xF3n, las reglas, los nombres de las etiquetas ni las etiquetas <translation-input>.",
+    jsonArrayReturnInstruction: 'Devuelva solo una matriz JSON sin bloques de c\xF3digo. Cada elemento debe ser {"id":"original id","text":"translation"}.',
+    translationWriteFailed: "La traducci\xF3n se gener\xF3 pero no se pudo escribir en la p\xE1gina. Por favor, int\xE9ntelo de nuevo.",
+    originalSelectedContent: "Contenido original seleccionado",
+    previousResult: "Resultado anterior",
+    continueToolInstruction: "Contin\xFAe ejecutando la herramienta seleccionada bas\xE1ndose en el resultado anterior.",
+    selectionAssistantSystem: "Usted es un asistente de selecci\xF3n del navegador. Responda \xFAnicamente a partir del contenido seleccionado y del resultado existente proporcionado por el usuario. No invente informaci\xF3n de la p\xE1gina que no se haya proporcionado.",
+    userQuestionLabel: "Pregunta del usuario",
+    currentResultLabel: "Resultado actual",
+    researchSearchPrefix: "Investigar esta consulta de b\xFAsqueda",
+    openSidebarOpening: "Abriendo barra lateral\u2026",
+    openSidebarOpened: "Barra lateral abierta.",
+    readCurrentPage: "Leyendo la p\xE1gina actual\u2026",
+    noProcessablePageBody: "La p\xE1gina actual no contiene texto procesable",
+    executingTool: "Ejecutando herramienta\u2026",
+    closeQuickTools: "Cerrar herramientas r\xE1pidas",
+    generateShortAutoReply: "Generar una respuesta autom\xE1tica breve",
+    extractImageText: "Extraer texto de la imagen",
+    extractingImageText: "Extrayendo texto de la imagen\u2026",
+    imageTextExtractionResult: "Extracci\xF3n de texto de imagen",
+    imageTextExtractionPrompt: "Extraer todo el texto visible de esta imagen. Mantener el idioma original y no traducir; conservar los saltos de l\xEDnea, el orden de lectura, las listas y la estructura de la tabla en la medida de lo posible. Mostrar \xFAnicamente el texto extra\xEDdo y no a\xF1adir explicaciones.",
+    noImageTextFound: "No se reconoci\xF3 texto utilizable",
+    retryAnswer: "Reintentar respuesta",
+    chooseTool: "Elegir herramienta",
+    rerunExecution: "Ejecutar de nuevo",
+    reextractImageText: "Extraer de nuevo",
+    runSelectedTool: "Ejecutar herramienta",
+    continueQuestionPlaceholder: "Hacer una pregunta de seguimiento...",
+    modelNoUsableReply: "El modelo no devolvi\xF3 una respuesta utilizable",
+    autoReplySystem: "Eres el asistente de respuesta autom\xE1tica web de WebMind.\nUtiliza la p\xE1gina actual, el contexto de la conversaci\xF3n y cualquier borrador que ya est\xE9 en el campo de entrada para generar una respuesta breve que se pueda insertar directamente.\nPrioriza las respuestas, comentarios, correos electr\xF3nicos o mensajes de chat existentes en la p\xE1gina.\nGenera \xFAnicamente el cuerpo de la respuesta. No des explicaciones, no a\xF1adas t\xEDtulos ni utilices Markdown.",
+    autoReplyPageTitle: "T\xEDtulo de la p\xE1gina",
+    autoReplyPageUrl: "P\xE1gina URL",
+    autoReplyPageDescription: "Descripci\xF3n de la p\xE1gina",
+    autoReplyPageContent: "Contenido de la p\xE1gina actual",
+    autoReplyDraft: "Entrada o borrador existente",
+    autoReplyEmpty: "El campo de entrada est\xE1 vac\xEDo.",
+    autoReplyRequest: "Genera entre 1 y 3 oraciones naturales, corteses, espec\xEDficas y breves. Utiliza el mismo idioma que la conversaci\xF3n de la p\xE1gina o el borrador de entrada.",
+    contextMenuAsk: "Preguntar en WebMind",
+    contextMenuSummarize: "Resumir la selecci\xF3n",
+    contextMenuExplain: "Explicar la selecci\xF3n",
+    contextMenuTranslate: "Traducir la selecci\xF3n",
+    contextMenuRewrite: "Reescribir la selecci\xF3n",
+    contextMenuReply: "Redactar una respuesta",
+    contextMenuAnalyzeImage: "Analizar esta imagen",
+    cannotDetermineTab: "No se puede determinar la pesta\xF1a actual",
+    provideSearchQuery: "Por favor, introduce una consulta de b\xFAsqueda",
+    toolNotFound: "Herramienta no encontrada",
+    youtubeVideoNotFound: "No se encontr\xF3 ning\xFAn reproductor de v\xEDdeo en la p\xE1gina",
+    videoInfoNotFound: "No se encontr\xF3 informaci\xF3n de v\xEDdeo en la p\xE1gina",
+    noCaptionsAvailable: "Este v\xEDdeo no tiene subt\xEDtulos disponibles",
+    captionsReadFailed: "No se pueden leer los subt\xEDtulos",
+    captionsLabel: "Subt\xEDtulos",
+    youtubeVideoTitle: "V\xEDdeo de YouTube",
+    apiKeyMissing: "A \xAB{name}\xBB le falta una clave API",
+    responseStreamMissing: "El modelo API no devolvi\xF3 un flujo de respuesta",
+    providerErrorStatus: "El modelo API devolvi\xF3 {status}: {detail}",
+    requestCancelled: "Solicitud cancelada",
+    modelThinkingTimeoutMessage: "El modelo agot\xF3 el tiempo de espera mientras procesaba la informaci\xF3n, por lo que la respuesta se interrumpi\xF3."
+  };
+
+  // src/shared/locales/fr.ts
+  var frUiText = {
+    askSelectionTitle: "Demander dans la barre lat\xE9rale",
+    askSelectionDescription: "Envoyer le contenu actuel vers la barre lat\xE9rale pour un suivi",
+    copy: "Copier",
+    more: "Plus",
+    webmindAnswer: "WebMind R\xE9pondre",
+    showTools: "Afficher les outils WebMind",
+    copySelection: "Copier le texte s\xE9lectionn\xE9",
+    openSidebar: "Ouvrir la barre lat\xE9rale",
+    immersiveTranslateApplied: "La traduction immersive a \xE9t\xE9 appliqu\xE9e \xE0 la page.",
+    searchAnswerSystem: "Vous \xEAtes l'assistant de r\xE9ponse aux recherches de WebMind. L'utilisateur se trouve sur une page de r\xE9sultats de recherche. R\xE9pondez en utilisant les r\xE9sultats Web DuckDuckGo fournis, citez les informations issues de ces r\xE9sultats lorsque cela est utile, signalez si les \xE9l\xE9ments sont insuffisants et ne pr\xE9tendez pas acc\xE9der \xE0 des pages qui n'ont pas \xE9t\xE9 fournies. Veillez \xE0 ce que la r\xE9ponse soit concise et bien structur\xE9e.",
+    searchQuery: "Requ\xEAte de recherche",
+    duckResults: "R\xE9sultats Web DuckDuckGo",
+    duckNoResults: "R\xE9sultats Web DuckDuckGo : aucun r\xE9sultat exploitable n'a \xE9t\xE9 renvoy\xE9.",
+    searchAnswerRequest: "R\xE9pondez directement \xE0 cette question de recherche et \xE9num\xE9rez les v\xE9rifications ult\xE9rieures utiles si n\xE9cessaire.",
+    sourceCitationInstruction: "Chaque paragraphe bas\xE9 sur les r\xE9sultats de recherche doit se terminer par une mention de source [Recherche N], o\xF9 N correspond au num\xE9ro du r\xE9sultat ci-dessus. N'ajoutez pas de liste de sources \xE0 la fin et n'affichez pas les URL des sources.",
+    browserAssistantSystem: "Vous \xEAtes un assistant de r\xE9daction et de lecture int\xE9gr\xE9 au navigateur. Travaillez fid\xE8lement \xE0 partir du texte fourni par l'utilisateur et n'inventez pas de contexte.",
+    modelToolSystem: "Vous \xEAtes l'ex\xE9cuteur d'outils WebMind. Ex\xE9cutez directement l'instruction de l'outil et ne renvoyez que le r\xE9sultat utile.",
+    unsupportedQuickAction: "Action rapide non prise en charge",
+    currentContext: "Contexte actuel",
+    assistantSystem: "Vous \xEAtes WebMind, un assistant de recherche, de lecture et d'\xE9criture op\xE9rant dans la barre lat\xE9rale du navigateur. Par d\xE9faut, r\xE9pondez dans la m\xEAme langue que l'utilisateur.",
+    assistantGuard: "Distinguez strictement les faits explicitement fournis dans le contexte de vos propres d\xE9ductions. Si le contexte est insuffisant, indiquez-le clairement. Ne pr\xE9tendez pas parcourir, cliquer sur ou lire du contenu qui n'a pas \xE9t\xE9 fourni.",
+    selectionContextIntro: "L'utilisateur a explicitement s\xE9lectionn\xE9 le texte suivant. Cette r\xE9ponse doit se baser uniquement sur cette s\xE9lection, et non sur des parties de la page non fournies :",
+    pageContextIntro: "L'utilisateur a joint le contexte de la page enti\xE8re suivante :",
+    articleContextIntro: "Voici le contenu principal extrait de la page actuelle :",
+    translationInputIntro: "Le contenu suivant correspond au texte \xE0 traduire :",
+    title: "Titre",
+    url: "URL",
+    description: "Description",
+    body: "Contenu principal :",
+    selectionOnly: "Consid\xE9rez le texte s\xE9lectionn\xE9 comme l'unique contenu de la page.",
+    pdfCitation: "Lorsque vous r\xE9pondez aux questions concernant PDF, indiquez les num\xE9ros de page si possible.",
+    youtubeCitation: "Lorsque vous r\xE9pondez aux questions sur une vid\xE9o, indiquez les horodatages de la transcription si possible.",
+    pageCitation: "Lorsque vous citez la page actuelle, d\xE9signez-la comme telle et mentionnez le passage pertinent.",
+    searchSummaryIntro: "Voici des r\xE9sum\xE9s de r\xE9sultats de recherche Web. Utilisez [Recherche 1], [Recherche 2] comme marqueurs de r\xE9f\xE9rence et listez les sources r\xE9ellement utilis\xE9es \xE0 la fin :",
+    noContextImage: "Veuillez analyser cette image.",
+    noContextAttachment: "Veuillez r\xE9pondre en utilisant le contenu de la pi\xE8ce jointe.",
+    attachmentIntro: "Voici le contenu de la pi\xE8ce jointe ajout\xE9 par l'utilisateur :",
+    languageSetting: "Langue de l'interface",
+    languageSettingHelp: "Concerne le texte de l'interface, les noms des outils int\xE9gr\xE9s et les invites par d\xE9faut.",
+    translationLanguageSetting: "Langue de traduction",
+    translationLanguageSettingHelp: "Bascule automatiquement entre la langue de l'interface et l'anglais selon la langue du contenu ; un choix manuel entra\xEEne syst\xE9matiquement une traduction dans la langue s\xE9lectionn\xE9e.",
+    defaultContextScopeSetting: "Contexte par d\xE9faut",
+    defaultContextScopeHelp: "D\xE9termine si les actions et raccourcis du menu lat\xE9ral pour la traduction et la lecture immersives traitent par d\xE9faut le contenu principal ou la page enti\xE8re.",
+    immersiveTranslationParagraphShortcut: "Raccourci pour le paragraphe actuel",
+    immersiveTranslationPageShortcut: "Raccourci pour le contexte actuel",
+    immersiveTranslationModeToggleShortcut: "Raccourci pour basculer l'affichage de la traduction",
+    immersiveTranslationShortcutHelp: "Le raccourci \xAB paragraphe \xBB s'applique \xE0 une s\xE9lection ou \xE0 un paragraphe ; le raccourci \xAB contexte actuel \xBB suit le contexte s\xE9lectionn\xE9 dans la barre lat\xE9rale.",
+    shortcutCtrl: "Ctrl",
+    shortcutAlt: "Alt",
+    shortcutShift: "Shift",
+    shortcutHoldPrefix: "Maintenir :",
+    navChat: "Chat",
+    navTools: "Outils",
+    navHistory: "Historique",
+    navLogs: "Journaux",
+    operationLogs: "Journaux d'op\xE9rations",
+    operationLogsHelp: "Les op\xE9rations cl\xE9s du produit s'affichent ici en temps r\xE9el.",
+    clearLogs: "Effacer les journaux",
+    noOperationLogs: "Aucun journal pour le moment",
+    logLevelDebug: "D\xE9bogage",
+    logLevelInfo: "Info",
+    logLevelSuccess: "Succ\xE8s",
+    logLevelWarning: "Avis",
+    logLevelError: "Erreur",
+    logSidepanelReady: "Le panneau lat\xE9ral est pr\xEAt",
+    logSettingsUpdated: "Param\xE8tres mis \xE0 jour",
+    logToolsUpdated: "Param\xE8tres de l'outil mis \xE0 jour",
+    logPendingAction: "Action de page re\xE7ue",
+    logChatStart: "Discussion d\xE9marr\xE9e",
+    logChatDone: "R\xE9ponse termin\xE9e",
+    logChatCancelled: "R\xE9ponse annul\xE9e",
+    logChatStop: "L'utilisateur a arr\xEAt\xE9 la r\xE9ponse",
+    logChatRegenerate: "R\xE9g\xE9n\xE9ration de la r\xE9ponse",
+    logToolRun: "Ex\xE9cution de l'outil",
+    logToolSelected: "Outil s\xE9lectionn\xE9",
+    logAskSelectionReady: "Pr\xEAt \xE0 poser une question dans le panneau lat\xE9ral",
+    logNewChat: "Nouvelle discussion d\xE9marr\xE9e",
+    logAttachmentAdded: "Pi\xE8ce jointe ajout\xE9e",
+    logConversationLoaded: "Discussion enregistr\xE9e charg\xE9e",
+    logEnabled: "Activ\xE9",
+    logDisabled: "D\xE9sactiv\xE9",
+    logRuntimeRequest: "Requ\xEAte d'ex\xE9cution",
+    displayLogLevel: "Niveau de journal affich\xE9",
+    displayLogLevelHelp: "Le panneau des journaux affiche uniquement le niveau s\xE9lectionn\xE9 et les niveaux sup\xE9rieurs. Le mode D\xE9bogage inclut des enregistrements d\xE9taill\xE9s pour chaque requ\xEAte au mod\xE8le.",
+    cancel: "Annuler",
+    close: "Fermer",
+    save: "Enregistrer",
+    saving: "Enregistrement en cours",
+    add: "Ajouter",
+    edit: "Modifier",
+    delete: "Supprimer",
+    test: "Tester",
+    testing: "Test en cours",
+    current: "Actuel",
+    modelRoles: "R\xF4les",
+    defaultModelRole: "Par d\xE9faut",
+    translationModelRole: "Traduire",
+    visionModelRole: "Vision",
+    setDefaultModelRole: "D\xE9finir comme mod\xE8le par d\xE9faut",
+    setTranslationModelRole: "D\xE9finir comme mod\xE8le de traduction",
+    clearTranslationModelRole: "Effacer le mod\xE8le de traduction",
+    setVisionModelRole: "D\xE9finir comme mod\xE8le de vision",
+    clearVisionModelRole: "Effacer le mod\xE8le de vision",
+    visionModelRoleUnavailable: "La reconnaissance d'image est d\xE9sactiv\xE9e pour ce moteur",
+    settings: "Param\xE8tres",
+    loading: "Chargement en cours",
+    newChat: "Nouvelle conversation",
+    send: "Envoyer",
+    stop: "Arr\xEAter",
+    restorePage: "Restaurer la page",
+    chooseModel: "Choisir un mod\xE8le",
+    currentModelEngine: "Moteur du mod\xE8le actuel",
+    selectTool: "S\xE9lectionner un outil",
+    selectMoreTools: "S\xE9lectionner d'autres outils",
+    moreTools: "Autres outils",
+    copyContent: "Copier le contenu",
+    clearComposer: "Effacer la saisie",
+    copyCurrentBody: "Copier le contenu principal",
+    copyUrl: "Copier la page URL",
+    copied: "Copi\xE9",
+    regenerate: "R\xE9essayer la r\xE9ponse",
+    continueExecution: "Continuer",
+    replace: "Remplacer",
+    closeNotice: "Fermer la notification",
+    removeAttachment: "Supprimer la pi\xE8ce jointe",
+    openTools: "Ouvrir les outils",
+    currentPage: "Page actuelle",
+    currentBody: "Contenu principal",
+    currentSelection: "S\xE9lection actuelle",
+    currentBodyPreview: "Aper\xE7u du contexte",
+    nonePreview: "Aper\xE7u",
+    pagePreview: "Aper\xE7u de la page",
+    bodyPreview: "Aper\xE7u du contenu principal",
+    selectionPreview: "Aper\xE7u de la s\xE9lection",
+    expand: "D\xE9velopper",
+    collapse: "R\xE9duire",
+    currentBodyBlocks: "{count} blocs",
+    currentBodyChars: "{count} caract\xE8res",
+    currentBodyScore: "Score du contenu : {score}",
+    articleMetricLength: "Longueur",
+    articleMetricStructure: "Structure",
+    articleMetricHeading: "Titre",
+    articleMetricSemantics: "Conteneur s\xE9mantique",
+    articleMetricDensity: "Densit\xE9 du texte",
+    articleMetricLinkPurity: "Puret\xE9 des liens",
+    articleMetricFocus: "Focalisation",
+    articleMetricCleanliness: "Propret\xE9",
+    currentBodySourceDom: "DOM",
+    currentBodySourceRule: "R\xE8gle",
+    currentBodySourceManual: "Manuel",
+    currentBodySourceEdited: "Modifi\xE9",
+    selectCurrentBody: "S\xE9lectionner le contenu principal",
+    restoreCurrentBody: "Restaurer le contenu principal",
+    highlightCurrentBodyBlock: "Mettre ce bloc en surbrillance sur la page",
+    removeCurrentBodyBlock: "Supprimer ce bloc du contenu principal",
+    smartPruneCurrentBody: "Nettoyage automatique",
+    modelPruneCurrentBody: "Nettoyage par IA",
+    modelPruneCurrentBodyRunning: "Demande au mod\xE8le de classer les blocs de l'article",
+    modelPruneInvalidResult: "Le mod\xE8le a renvoy\xE9 un r\xE9sultat d'\xE9lagage illisible",
+    modelPruneNoChanges: "Le mod\xE8le n'a trouv\xE9 aucun bloc du contenu principal \xE0 supprimer",
+    modelPruneAllRejected: "Impossible de supprimer tous les blocs du contenu principal sans risquer une perte de donn\xE9es",
+    articleRecognition: "D\xE9tection du contenu principal",
+    recognitionRules: "R\xE8gles de reconnaissance",
+    articleExtractionRules: "R\xE8gles d'extraction du contenu principal",
+    articleExtractionRulesHelp: "Chaque r\xE8gle comprend un mod\xE8le d'URL de page et un s\xE9lecteur du contenu principal ; les mod\xE8les d'URL acceptent les domaines, les caract\xE8res g\xE9n\xE9riques et les fragments.",
+    articleExtractionUrlPattern: "Mod\xE8le d'URL de page",
+    articleExtractionSelector: "S\xE9lecteur du contenu principal",
+    articleExtractionUrlPatternPlaceholder: "URL de page, par ex. example.com, *.example.com, https://example.com/*",
+    articleExtractionSelectorPlaceholder: "S\xE9lecteur CSS, par ex. article, main, #content, .post-body",
+    addArticleExtractionRule: "Ajouter une r\xE8gle de contenu principal",
+    deleteArticleExtractionRule: "Supprimer la r\xE8gle de contenu principal",
+    noArticleExtractionRules: "Aucune r\xE8gle d'extraction du contenu principal pour le moment",
+    articleExtractionRuleSaved: "R\xE8gle d'extraction du contenu enregistr\xE9e",
+    articleExtractionRuleInvalid: "Saisissez un mod\xE8le d'URL de page et un s\xE9lecteur",
+    selectingBodyRange: "S\xE9lection du contenu principal",
+    manualBodySelectionHint: "Molette/touches fl\xE9ch\xE9es pour ajuster la plage, clic pour confirmer, \xC9chap pour annuler",
+    manualBodySelectionCancelled: "S\xE9lection du contenu principal annul\xE9e",
+    noneContext: "Aucun contexte",
+    webSearch: "Recherche Web",
+    addAttachment: "Ajouter une image ou un document",
+    addUrl: "Ajouter URL",
+    you: "Vous",
+    ordinaryConversation: "Discussion classique",
+    usedTool: "Outil utilis\xE9",
+    questionContext: "Contexte de la question",
+    imageChat: "Discussion sur image",
+    openAnyPage: "Ouvrez une page, puis commencez ici.",
+    noEnabledTools: "Aucun outil n'est encore activ\xE9 ici.",
+    toolsPageShowsAll: "La page Outils affiche tous les outils disponibles.",
+    noSavedConversations: "Aucune conversation enregistr\xE9e pour le moment.",
+    conversationsAutoSave: "Les conversations sont enregistr\xE9es localement une fois l'\xE9change termin\xE9.",
+    languageOptionAuto: "Auto",
+    languageOptionZhCN: "Chinois simplifi\xE9",
+    languageOptionZhTW: "Chinois traditionnel",
+    languageOptionEn: "Anglais",
+    languageOptionJa: "Japonais",
+    languageOptionKo: "Cor\xE9en",
+    appSubtitle: "Espace de travail bas\xE9 sur un mod\xE8le de navigateur privil\xE9giant le stockage local",
+    modelEngines: "Moteurs de mod\xE8les",
+    modelEnginesDescription: "Aucun compte ni abonnement requis. Chaque r\xF4le (par d\xE9faut, traduction, vision) peut \xEAtre attribu\xE9 \xE0 un mod\xE8le ; un m\xEAme mod\xE8le peut assumer plusieurs r\xF4les. En l'absence d'attribution sp\xE9cifique, les t\xE2ches de traduction et de vision sont prises en charge par le mod\xE8le par d\xE9faut. Les param\xE8tres des moteurs et les informations sensibles restent dans le stockage de l'extension.",
+    addEngine: "Ajouter un moteur",
+    noModelEngines: "Aucun moteur de mod\xE8le pour le moment.",
+    noModelEnginesHelp: "Ajoutez des mod\xE8les cloud courants, des API compatibles OpenAI ou des mod\xE8les locaux Ollama.",
+    pageFeatures: "Fonctionnalit\xE9s de la page",
+    pageFeaturesHelp: "Chaque module conserve ses propres param\xE8tres afin que vous puissiez voir ce qu'il affecte.",
+    selectionOverlay: "Superposition de s\xE9lection",
+    selectionOverlayHelp: "Contr\xF4le la barre d'outils flottante apr\xE8s la s\xE9lection de texte.",
+    selectionOverlayMode: "Mode de d\xE9clenchement",
+    selectionOverlayShortcut: "Raccourci pour la superposition de s\xE9lection",
+    selectionOverlayShortcutHelp: "Si cette option est activ\xE9e, la superposition de s\xE9lection n'appara\xEEt que lorsque vous maintenez le raccourci choisi tout en s\xE9lectionnant du texte ou en examinant une s\xE9lection existante.",
+    selectionOverlayMinChars: "Nombre minimal de caract\xE8res s\xE9lectionn\xE9s",
+    selectionOverlayMinCharsHelp: "Afficher la superposition de s\xE9lection uniquement apr\xE8s avoir s\xE9lectionn\xE9 ce nombre de caract\xE8res. Minimum : 1.",
+    selectionOverlayOff: "D\xE9sactiver la superposition",
+    selectionOverlayOffHelp: "Ne pas afficher les actions rapides apr\xE8s la s\xE9lection de texte.",
+    selectionOverlayAlways: "Afficher directement la barre d'outils",
+    selectionOverlayAlwaysHelp: "Afficher les outils disponibles imm\xE9diatement apr\xE8s la s\xE9lection de texte.",
+    selectionOverlayHover: "Afficher d'abord un point",
+    selectionOverlayHoverHelp: "Afficher un petit point apr\xE8s la s\xE9lection de texte, puis d\xE9velopper la barre d'outils au survol.",
+    urlBlacklist: "URL Liste noire",
+    selectionOverlayBlacklistHelp: "Une r\xE8gle par ligne ; prend en charge les domaines, les caract\xE8res g\xE9n\xE9riques et les fragments URL.",
+    edgeQuickTools: "Outils rapides",
+    edgeQuickToolsHelp: "Contr\xF4le simultan\xE9ment le menu lat\xE9ral, l'extraction de texte des images et la r\xE9ponse automatique.",
+    edgeDockMenu: "Menu lat\xE9ral",
+    edgeQuickToolsEnable: "Activer le menu lat\xE9ral",
+    edgeQuickToolsEnableHelp: "D\xE9sactivez cette option pour masquer le menu du bord droit sur les pages web.",
+    edgeQuickToolsBlacklistHelp: "En cas de correspondance, les outils rapides du bord droit ne s'afficheront pas.",
+    quickToolsBlacklistHelp: "En cas de correspondance, le menu lat\xE9ral, l'extraction de texte des images et la r\xE9ponse automatique seront tous d\xE9sactiv\xE9s sur la page.",
+    immersiveTranslation: "Traduction immersive",
+    immersiveTranslationHelp: "Contr\xF4le la mani\xE8re dont le texte traduit est r\xE9ins\xE9r\xE9 dans la page.",
+    immersiveTranslationAutoWhitelist: "Liste blanche de traduction automatique",
+    immersiveTranslationAutoWhitelistHelp: "Une r\xE8gle par ligne ; prend en charge les domaines, les caract\xE8res g\xE9n\xE9riques et les fragments URL. La traduction immersive s'ex\xE9cute automatiquement \xE0 l'ouverture des pages correspondantes.",
+    immersiveReading: "Lecture immersive",
+    immersiveReadingHelp: "Remplace certains mots par leur \xE9quivalent dans la langue apprise pour une lecture m\xEAlant langue maternelle et langue \xE9trang\xE8re.",
+    immersiveReadingStrategy: "Strat\xE9gie",
+    immersiveReadingStrategyLocalFirst: "Priorit\xE9 au local",
+    immersiveReadingStrategyLocalFirstHelp: "Privil\xE9gier le classement local des mots et les d\xE9finitions hors ligne pour des r\xE9sultats plus rapides et moins co\xFBteux ; ne faire appel au mod\xE8le que pour combler les lacunes restantes.",
+    immersiveReadingStrategyModelPage: "Priorit\xE9 au mod\xE8le",
+    immersiveReadingStrategyModelPageHelp: "Laisser le mod\xE8le utiliser le contexte de la page pour choisir et traduire les termes de remplacement. Approche plus flexible, mais la vitesse et le co\xFBt d\xE9pendent du mod\xE8le.",
+    immersiveReadingAutoWhitelist: "Liste blanche de lecture automatique",
+    immersiveReadingAutoWhitelistHelp: "Une r\xE8gle par ligne ; prise en charge des domaines, des caract\xE8res g\xE9n\xE9riques et des fragments URL. La lecture immersive se lance automatiquement \xE0 l'ouverture des pages correspondantes.",
+    immersiveReadingDifficulty: "Difficult\xE9 des mots",
+    immersiveReadingDifficultyHelp: "Des niveaux plus \xE9lev\xE9s am\xE8nent le mod\xE8le \xE0 remplacer moins de mots, mais des mots plus difficiles.",
+    immersiveReadingMode: "Mode de remplacement",
+    immersiveReadingParagraphShortcut: "Raccourci de lecture du paragraphe actuel",
+    immersiveReadingContextShortcut: "Raccourci de lecture du contexte actuel",
+    immersiveReadingTranslation: "Traduction",
+    immersiveReadingOriginalTranslation: "Original (Traduction)",
+    immersiveReadingTranslationOriginal: "Traduction (Original)",
+    immersiveReadingBackgroundStyle: "Style d'arri\xE8re-plan de remplacement",
+    immersiveReadingHighlightNone: "Sans surbrillance",
+    immersiveReadingHighlightUniform: "Surbrillance uniforme",
+    immersiveReadingHighlightLeveled: "Surbrillance par niveaux",
+    immersiveReadingOuterEffects: "Effets hors parenth\xE8ses",
+    immersiveReadingInnerEffects: "Effets sur les parenth\xE8ses et le texte int\xE9rieur",
+    immersiveReadingApplied: "Lecture immersive activ\xE9e",
+    displayMode: "Mode d'affichage",
+    translationOnly: "Traduction uniquement",
+    bilingual: "Original + Traduction",
+    translationStyle: "Style de traduction",
+    translationStyleDefault: "Par d\xE9faut",
+    translationStyleHighlight: "Surbrillance",
+    translationStyleDivider: "S\xE9parateur",
+    translationStyleQuote: "Citation",
+    translationStyleBlur: "Flou",
+    translationStyleTransparent: "Transparent",
+    textEffects: "Effets de texte",
+    underline: "Soulignement continu",
+    dashedUnderline: "Soulignement en pointill\xE9s",
+    largeText: "Texte agrandi",
+    smallText: "Texte r\xE9duit",
+    bold: "Gras",
+    italic: "Italique",
+    light: "Att\xE9nu\xE9",
+    emphasis: "Accentuation",
+    generalConfig: "Configuration g\xE9n\xE9rale",
+    generalConfigHelp: "G\xE8re les am\xE9liorations de la page de recherche, le contexte par d\xE9faut et l'apparence.",
+    appearanceTheme: "Th\xE8me d'apparence",
+    themeSystem: "Suivre le syst\xE8me",
+    themeLight: "Clair",
+    themeDark: "Sombre",
+    autoScrollDuringStreaming: "D\xE9filement automatique pendant la g\xE9n\xE9ration",
+    autoScrollDuringStreamingHelp: "Maintient la barre lat\xE9rale d\xE9fil\xE9e jusqu'\xE0 la derni\xE8re r\xE9ponse du mod\xE8le pendant sa g\xE9n\xE9ration.",
+    autoReply: "R\xE9ponse automatique",
+    autoReplyOff: "D\xE9sactiv\xE9",
+    autoReplyMultiline: "Champs multilignes uniquement",
+    autoReplyAll: "Tous les champs de texte",
+    autoReplyHelp: "Affiche une petite ic\xF4ne dans les champs modifiables et r\xE9dige une r\xE9ponse succincte \xE0 partir de la page actuelle.",
+    autoReplyBlacklistHelp: "En cas de correspondance, l'option de r\xE9ponse automatique ne s'affichera pas pour les champs modifiables de la page.",
+    imageTextExtraction: "Extraction de texte depuis une image",
+    imageTextExtractionHelp: "Affiche une option d'extraction de texte au survol des images.",
+    imageTextExtractionOff: "D\xE9sactiv\xE9",
+    imageTextExtractionOn: "Activer selon la taille",
+    imageTextExtractionMinSize: "Taille minimale de l'image",
+    imageTextExtractionMinSizeHelp: "N'afficher l'option que si la largeur et la hauteur affich\xE9es atteignent au moins ce nombre de pixels.",
+    imageTextExtractionBlacklistHelp: "Si cette condition est remplie, l'option d'extraction de texte ne s'affichera pas pour les images de la page.",
+    hoverDefinition: "D\xE9finitions au survol",
+    hoverDefinitionHelp: "Utiliser le dictionnaire hors ligne int\xE9gr\xE9 pour afficher une d\xE9finition concise sur une ligne au survol d'un terme chinois ou d'un mot anglais.",
+    hoverDefinitionOff: "D\xE9sactiv\xE9",
+    hoverDefinitionChinese: "Chinois uniquement",
+    hoverDefinitionEnglish: "Anglais uniquement",
+    hoverDefinitionBoth: "Chinois et anglais",
+    hoverDefinitionStyle: "Style du mot survol\xE9",
+    hoverDefinitionStyleNone: "Aucun",
+    hoverDefinitionStyleHighlight: "Surlignage",
+    hoverDefinitionStyleUnderline: "Soulignement",
+    hoverDefinitionShortcut: "Raccourci pour la recherche au survol",
+    hoverDefinitionShortcutHelp: "Si cette option est activ\xE9e, maintenez le raccourci s\xE9lectionn\xE9 tout en survolant un mot pour afficher sa d\xE9finition.",
+    hoverDefinitionBlacklistHelp: "Si cette condition est remplie, les d\xE9finitions au survol ne s'afficheront pas sur la page.",
+    searchAnswerSetting: "Afficher des r\xE9ponses mod\xE8les sur les pages de recherche",
+    searchAnswerSettingHelp: "Si cette option est activ\xE9e, les pages de r\xE9sultats de recherche affichent une r\xE9ponse automatique bas\xE9e sur les r\xE9sultats DuckDuckGo.",
+    includePageByDefault: "Inclure la page actuelle par d\xE9faut",
+    includePageByDefaultHelp: "Vous pouvez toujours d\xE9sactiver le contexte de la page avant l'envoi.",
+    webSearchByDefault: "Activer la recherche sur le Web par d\xE9faut",
+    webSearchByDefaultHelp: "Les discussions classiques dans la barre lat\xE9rale utilisent par d\xE9faut les r\xE9sultats DuckDuckGo pour compl\xE9ter la question.",
+    toolResponseUseContextLanguage: "R\xE9pondre avec les outils dans la langue d'origine du contexte de la question",
+    toolResponseUseContextLanguageHelp: "Lorsqu'ils sont d\xE9sactiv\xE9s, les outils utilisent la langue actuelle de l'interface. Cela ne concerne que les outils ; une exigence linguistique explicite dans l'invite de l'outil reste prioritaire.",
+    historyLimit: "Nombre maximal de conversations enregistr\xE9es",
+    modelThinkingTimeout: "D\xE9lai d'expiration de r\xE9flexion du mod\xE8le (secondes)",
+    modelThinkingTimeoutHelp: "0 signifie aucune limite de temps. \xC0 l'expiration du d\xE9lai, la r\xE9ponse en cours est interrompue par un message d'expiration.",
+    toolEnable: "Activation des outils",
+    toolEnableHelp: "Choisissez les outils qui apparaissent \xE0 chaque point d'entr\xE9e ainsi que leur ordre d'affichage.",
+    toolSurfaceSelection: "Superposition de s\xE9lection",
+    toolSurfaceSelectionHelp: "Outils rapides affich\xE9s apr\xE8s la s\xE9lection de texte sur des pages web.",
+    toolSurfaceHome: "Accueil de la barre lat\xE9rale",
+    toolSurfaceHomeHelp: "Entr\xE9es rapides sur l'\xE9cran de conversation vide de la barre lat\xE9rale.",
+    toolSurfaceEdge: "Outils rapides",
+    toolSurfaceEdgeHelp: "Lanceur situ\xE9 sur le bord droit des pages web.",
+    noToolsEnabled: "Aucun outil activ\xE9",
+    chooseTools: "Choisir les outils",
+    chooseToolsHelp: "L'ordre des \xE9l\xE9ments coch\xE9s correspond \xE0 l'ordre d'affichage ; utilisez les fl\xE8ches pour l'ajuster.",
+    builtinTool: "Outil int\xE9gr\xE9",
+    customTool: "Outil personnalis\xE9",
+    moveUp: "D\xE9placer vers le haut",
+    moveDown: "D\xE9placer vers le bas",
+    dataSync: "Synchronisation des donn\xE9es",
+    dataSyncHelp: "L'exportation de fichiers et la synchronisation de compte Chrome n'incluent jamais les cl\xE9s API.",
+    chromeAccountSync: "Chrome Synchronisation du compte",
+    autoSyncNonSensitive: "Synchronisation automatique des param\xE8tres non sensibles",
+    autoSyncNonSensitiveHelp: "Synchronisez les param\xE8tres, les informations sur le moteur du mod\xE8le et les outils personnalis\xE9s avec votre compte Chrome ; les cl\xE9s API et l'historique des discussions ne sont jamais synchronis\xE9s.",
+    syncToChrome: "Synchroniser avec le compte Chrome",
+    syncFromChrome: "Synchroniser depuis le compte Chrome",
+    syncing: "Synchronisation en cours",
+    syncSecretNote: "Si la cl\xE9 d'un moteur de mod\xE8le synchronis\xE9 est manquante, saisissez-la \xE0 nouveau sur cet appareil.",
+    exportSettings: "Exporter les param\xE8tres",
+    importSettings: "Importer les param\xE8tres",
+    clearConversationHistory: "Effacer l'historique des discussions",
+    providerEditorAria: "Param\xE8tres du moteur de mod\xE8le",
+    newEngine: "Nouveau moteur",
+    providerKind: "API Type",
+    providerKindOpenAICompatible: "OpenAI Compatible",
+    providerKindAnthropic: "Anthropic",
+    providerKindGemini: "Gemini",
+    providerKindOllama: "Ollama",
+    providerName: "Nom d'affichage",
+    providerNamePlaceholder: "Exemple : mod\xE8le interne \xE0 l'entreprise",
+    providerBaseUrl: "API URL",
+    providerBaseUrlHelp: "L'enregistrement n\xE9cessitera une autorisation r\xE9seau pour ce domaine.",
+    providerModel: "ID du mod\xE8le",
+    providerModelPlaceholder: "Fourni par votre prestataire de services",
+    providerModelHelp: "Saisissez manuellement ou r\xE9cup\xE9rez les mod\xE8les disponibles depuis ce API.",
+    fetchModels: "R\xE9cup\xE9rer les mod\xE8les",
+    providerApiKey: "API Cl\xE9",
+    providerApiKeyPlaceholder: "Stock\xE9e uniquement dans le stockage de l'extension de cet appareil",
+    providerSecretStorage: "Stockage des cl\xE9s",
+    providerSecretLocal: "Persister",
+    providerSecretSession: "Cette session uniquement",
+    providerTemperature: "Temp\xE9rature",
+    providerMaxTokens: "Nombre maximal de jetons de sortie",
+    providerMaxContext: "Nombre maximal de caract\xE8res de contexte",
+    providerSupportsVision: "Prend en charge les entr\xE9es d'image",
+    providerSupportsVisionHelp: "D\xE9sactiver si le mod\xE8le ne prend pas en charge la vision.",
+    providerCustomHeaders: "En-t\xEAtes personnalis\xE9s",
+    providerCustomHeadersHelp: "Objet JSON facultatif ; les champs correspondants remplacent les en-t\xEAtes par d\xE9faut.",
+    saveEngine: "Enregistrer le moteur",
+    providerSaved: "Moteur de mod\xE8le enregistr\xE9",
+    providerDeleted: "Moteur de mod\xE8le supprim\xE9",
+    providerNameRequired: "Saisir un nom de moteur",
+    providerBaseUrlRequired: "Saisir un API URL",
+    providerModelRequired: "Saisir un ID de mod\xE8le",
+    duckPermissionRequired: "L'autorisation de domaine de recherche DuckDuckGo est requise",
+    settingsSyncedToChrome: "Param\xE8tres synchronis\xE9s avec le compte Chrome ; les cl\xE9s n'ont pas \xE9t\xE9 synchronis\xE9es",
+    settingsSyncedFromChrome: "Param\xE8tres synchronis\xE9s depuis le compte Chrome ; les cl\xE9s de mod\xE8le restent locales",
+    chromeSyncEnabled: "Synchronisation du compte Chrome activ\xE9e ; les cl\xE9s ne seront pas synchronis\xE9es",
+    chromeSyncDisabled: "Synchronisation du compte Chrome d\xE9sactiv\xE9e",
+    settingsExported: "Param\xE8tres export\xE9s ; les cl\xE9s n'\xE9taient pas incluses",
+    invalidSettingsFile: "Fichier de param\xE8tres WebMind non valide",
+    settingsImported: "Param\xE8tres import\xE9s. Saisissez \xE0 nouveau chaque cl\xE9 de moteur.",
+    localHistoryCleared: "Historique du chat local effac\xE9",
+    processCurrentContent: "Traiter le contenu actuel",
+    localRecords: "Enregistrements locaux",
+    addTool: "Ajouter un outil",
+    saveChanges: "Enregistrer les modifications",
+    saveTool: "Enregistrer l'outil",
+    custom: "Personnalis\xE9",
+    icon: "Ic\xF4ne",
+    chooseIcon: "Choisir une ic\xF4ne",
+    noIcon: "Aucune ic\xF4ne",
+    searchIcon: "Rechercher des ic\xF4nes",
+    noIconMatches: "Aucune ic\xF4ne correspondante",
+    toolPrompt: "Invite",
+    mainNav: "Navigation principale",
+    connectEngineBannerTitle: "Connectez d'abord un moteur de mod\xE8le",
+    connectEngineBannerDescription: "Prend en charge les mod\xE8les cloud courants, les API compatibles OpenAI et les Ollama locaux.",
+    pageRecognized: "Reconnu",
+    enterAttachmentUrl: "Saisissez un URL \xE0 ajouter en tant que pi\xE8ce jointe",
+    modelEngineRequired: "Ajoutez et s\xE9lectionnez d'abord un moteur de mod\xE8le",
+    needPdfPermission: "Une autorisation de page est requise pour lire ce PDF",
+    noReadableTab: "Aucun onglet actif lisible",
+    switchingToCurrentPage: "Passage \xE0 la page actuelle\u2026",
+    readingSelection: "Lecture du contenu s\xE9lectionn\xE9\u2026",
+    readingCurrentBody: "Lecture du contenu principal\u2026",
+    noSelectionOnPage: "La page actuelle ne contient aucun \xE9l\xE9ment s\xE9lectionnable vers lequel basculer",
+    searchPermissionRequired: "L'autorisation d'acc\xE8s au domaine de recherche est requise pour compl\xE9ter les r\xE9sultats du Web",
+    searchingWeb: "Recherche sur le Web\u2026",
+    previewDemoAnswer: "Il s'agit d'un aper\xE7u de la r\xE9ponse. Une fois l'extension charg\xE9e et le moteur de mod\xE8le configur\xE9, le r\xE9sultat r\xE9el en flux continu s'affichera ici.\n\n- Le contexte de la page peut \xEAtre modifi\xE9 \xE0 tout moment\n- Utilisez votre propre mod\xE8le et votre propre cl\xE9\n- L'historique reste uniquement en local",
+    currentAnswer: "R\xE9ponse actuelle",
+    collectingSelection: "Collecte du contenu s\xE9lectionn\xE9\u2026",
+    collectingCurrentBody: "Collecte du contenu principal\u2026",
+    collectingTranslatableText: "Collecte du texte traduisible\u2026",
+    collectingPageBody: "Collecte du contenu de la page\u2026",
+    noTranslatableBlocks: "La page actuelle ne contient aucun bloc de texte traduisible",
+    translatingPageProgress: "Traduction de la page",
+    translatingShort: "En cours de traitement",
+    translationWritten: "R\xE9daction termin\xE9e",
+    translationComplete: "Termin\xE9",
+    translationApplied: "Texte traduit ajout\xE9 \xE0 la page",
+    translationRemoved: "Traduction de la page supprim\xE9e",
+    pageRestored: "Page restaur\xE9e",
+    addImageBeforeAnalyze: "Ajoutez une image avant de lancer l'analyse d'image",
+    toolNeedsPrompt: "Les outils n\xE9cessitent un titre et une instruction (prompt)",
+    chooseContextFirst: "Choisissez d'abord la page actuelle ou le contenu s\xE9lectionn\xE9 dans le contexte",
+    directQuestionPlaceholder: "Poser une question directement\u2026",
+    askContextPlaceholder: "Interroger la page actuelle\u2026",
+    composerShortcutHint: "Entr\xE9e pour envoyer, Shift+Entr\xE9e pour un saut de ligne",
+    addEngineFirst: "Ajoutez d'abord un moteur de mod\xE8le dans les param\xE8tres",
+    copyFailed: "\xC9chec de la copie",
+    readingPdf: "Lecture de PDF",
+    needSearchDomainPermission: "L'autorisation de recherche par domaine est requise pour compl\xE9ter les r\xE9sultats Web",
+    profileVisionDisabled: "\xAB {name} \xBB ne prend pas en charge les images",
+    promptImageAnalysis: "Veuillez analyser cette image, en d\xE9crire les d\xE9tails importants et r\xE9pondre \xE0 ma prochaine question.",
+    promptSummarizeSelection: "R\xE9sumez le texte s\xE9lectionn\xE9 en conservant les faits, chiffres et conclusions cl\xE9s.",
+    promptExplainSelection: "Expliquez le texte s\xE9lectionn\xE9 en termes simples.",
+    promptAutoTranslateSelection: "Traduisez automatiquement le texte s\xE9lectionn\xE9 : si le chinois pr\xE9domine, traduisez en anglais naturel ; sinon, traduisez en chinois simplifi\xE9.",
+    promptRewriteSelection: "Reformulez le texte s\xE9lectionn\xE9 pour le rendre plus clair, plus naturel et plus professionnel.",
+    promptReplySelection: "R\xE9digez une r\xE9ponse pr\xEAte \xE0 l'envoi bas\xE9e sur le texte s\xE9lectionn\xE9.",
+    modelRequestFailed: "\xC9chec de la requ\xEAte au mod\xE8le",
+    savedConversations: "Conversations enregistr\xE9es",
+    runtimeUnavailable: "L'arri\xE8re-plan de l'extension est indisponible en mode aper\xE7u",
+    backgroundNoResponse: "L'arri\xE8re-plan de l'extension n'a pas r\xE9pondu",
+    currentPageUnavailable: "La page actuelle est indisponible",
+    noActiveTab: "Aucun onglet actif",
+    previewPageTitle: "WebMind Exemple de recherche de produit",
+    previewPageDescription: "Exemple d'article pour l'aper\xE7u de l'interface utilisateur",
+    previewPageBody: "Un assistant de navigation peut utiliser la page actuelle comme contexte pour aider les utilisateurs \xE0 r\xE9sumer, traduire, expliquer et r\xE9diger des r\xE9ponses. WebMind permet aux utilisateurs de configurer leurs propres services de mod\xE8le plut\xF4t que d'\xEAtre li\xE9s \xE0 un syst\xE8me de compte unique.",
+    contentTruncated: "contenu tronqu\xE9",
+    customHeadersJsonObject: "Les en-t\xEAtes personnalis\xE9s doivent \xEAtre un objet JSON",
+    jsonArrayMissing: "Le mod\xE8le n'a pas renvoy\xE9 de tableau JSON analysable",
+    jsonArrayInvalid: "La r\xE9ponse du mod\xE8le n'est pas un tableau",
+    invalidImageData: "Format de donn\xE9es d'image invalide",
+    customToolFallback: "Outil personnalis\xE9",
+    chromeSyncInvalidData: "Donn\xE9es de synchronisation WebMind invalides dans le compte Chrome",
+    chromeSyncNoData: "Aucune donn\xE9e de synchronisation WebMind n'existe encore dans le compte Chrome",
+    webSearchFailed: "La recherche sur le Web a \xE9chou\xE9",
+    webSearchNoResults: "Aucun r\xE9sultat de recherche sur le Web n'a pu \xEAtre analys\xE9",
+    searchResultSnippet: "Extrait",
+    searchSourceMarker: "Recherche",
+    selectionDescription: "{count} caract\xE8res s\xE9lectionn\xE9s",
+    readFileFailed: "Impossible de lire le fichier",
+    readDocumentFailed: "Impossible de lire le document",
+    readImageUrlFailed: "Impossible de lire l'image",
+    readUrlFailed: "Impossible de lire URL",
+    unknownFileType: "inconnu",
+    sizeLabel: "Taille",
+    bytes: "octets",
+    unsupportedDocumentText: "Ce format de fichier ne peut pas encore \xEAtre extrait directement dans le navigateur.",
+    documentName: "Nom du document",
+    pdfDocument: "PDF document",
+    attachmentLabel: "Pi\xE8ce jointe",
+    documentAttachment: "Document",
+    addressLabel: "Adresse",
+    typeLabel: "Type",
+    contentLabel: "Contenu",
+    noExtractedText: "Aucun texte n'a pu \xEAtre extrait",
+    jsonArrayTranslationInstruction: "L'entr\xE9e est un tableau JSON. Chaque \xE9l\xE9ment poss\xE8de un identifiant et un texte. Traduisez le texte de chaque \xE9l\xE9ment.",
+    citationPlaceholderInstruction: "Un contenu tel que {{WEBMIND_CITATION_1}} est un espace r\xE9serv\xE9 immuable pour une citation. La traduction doit conserver chaque espace r\xE9serv\xE9 tel quel \xE0 sa position s\xE9mantique correspondante ; ne le d\xE9veloppez pas, ne l'expliquez pas, ne le reformulez pas, ne le d\xE9placez pas \xE0 la fin et ne le supprimez pas.",
+    translationOutputOnlyInstruction: "Affichez uniquement la traduction du texte original contenu dans <translation-input>. N'affichez pas cette instruction, les r\xE8gles, les noms de balises ou les balises <translation-input>.",
+    jsonArrayReturnInstruction: 'Renvoyez uniquement un tableau JSON sans balises de bloc de code. Chaque \xE9l\xE9ment doit \xEAtre {"id":"original id","text":"translation"}.',
+    translationWriteFailed: "La traduction a \xE9t\xE9 g\xE9n\xE9r\xE9e mais n'a pas pu \xEAtre inscrite sur la page. Veuillez r\xE9essayer.",
+    originalSelectedContent: "Contenu original s\xE9lectionn\xE9",
+    previousResult: "R\xE9sultat pr\xE9c\xE9dent",
+    continueToolInstruction: "Poursuivez l'ex\xE9cution de l'outil s\xE9lectionn\xE9 en vous basant sur le r\xE9sultat pr\xE9c\xE9dent.",
+    selectionAssistantSystem: "Vous \xEAtes un assistant de s\xE9lection pour navigateur. R\xE9pondez uniquement \xE0 partir du contenu s\xE9lectionn\xE9 et du r\xE9sultat existant fournis par l'utilisateur. N'inventez pas d'informations sur la page qui n'ont pas \xE9t\xE9 fournies.",
+    userQuestionLabel: "Question de l'utilisateur",
+    currentResultLabel: "R\xE9sultat actuel",
+    researchSearchPrefix: "Effectuer une recherche sur cette requ\xEAte",
+    openSidebarOpening: "Ouverture de la barre lat\xE9rale\u2026",
+    openSidebarOpened: "Barre lat\xE9rale ouverte.",
+    readCurrentPage: "Lecture de la page actuelle\u2026",
+    noProcessablePageBody: "La page actuelle ne contient aucun texte exploitable",
+    executingTool: "Ex\xE9cution de l'outil\u2026",
+    closeQuickTools: "Fermer les outils rapides",
+    generateShortAutoReply: "G\xE9n\xE9rer une r\xE9ponse automatique courte",
+    extractImageText: "Extraire le texte de l'image",
+    extractingImageText: "Extraction du texte de l'image\u2026",
+    imageTextExtractionResult: "Extraction de texte d'image",
+    imageTextExtractionPrompt: "Extraire tout le texte visible de cette image. Conserver la langue d'origine sans traduire ; pr\xE9server autant que possible les sauts de ligne, l'ordre de lecture, les listes et la structure des tableaux. Afficher uniquement le texte extrait, sans explications.",
+    noImageTextFound: "Aucun texte exploitable n'a \xE9t\xE9 reconnu",
+    retryAnswer: "R\xE9essayer",
+    chooseTool: "Choisir un outil",
+    rerunExecution: "Relancer",
+    reextractImageText: "Extraire \xE0 nouveau",
+    runSelectedTool: "Ex\xE9cuter l'outil",
+    continueQuestionPlaceholder: "Poser une question de suivi\u2026",
+    modelNoUsableReply: "Le mod\xE8le n'a pas renvoy\xE9 de r\xE9ponse exploitable",
+    autoReplySystem: "Vous \xEAtes l'assistant de r\xE9ponse automatique sur le Web pour WebMind.\nUtilisez la page actuelle, le contexte de la conversation et tout brouillon d\xE9j\xE0 pr\xE9sent dans le champ de saisie pour g\xE9n\xE9rer une r\xE9ponse courte pouvant \xEAtre ins\xE9r\xE9e directement.\nPrivil\xE9giez les r\xE9ponses, commentaires, e-mails ou messages de chat existants sur la page.\nAffichez uniquement le corps de la r\xE9ponse. N'ajoutez ni explication ni titre, et n'utilisez pas Markdown.",
+    autoReplyPageTitle: "Titre de la page",
+    autoReplyPageUrl: "Page URL",
+    autoReplyPageDescription: "Description de la page",
+    autoReplyPageContent: "Contenu de la page actuelle",
+    autoReplyDraft: "Saisie ou brouillon existant",
+    autoReplyEmpty: "Le champ de saisie est vide.",
+    autoReplyRequest: "G\xE9n\xE9rez 1 \xE0 3 phrases naturelles, polies, pr\xE9cises et concises. Adoptez la langue utilis\xE9e dans la conversation sur la page ou dans le brouillon de saisie.",
+    contextMenuAsk: "Poser une question sur WebMind",
+    contextMenuSummarize: "R\xE9sumer la s\xE9lection",
+    contextMenuExplain: "Expliquer la s\xE9lection",
+    contextMenuTranslate: "Traduire la s\xE9lection",
+    contextMenuRewrite: "R\xE9\xE9crire la s\xE9lection",
+    contextMenuReply: "R\xE9diger une r\xE9ponse",
+    contextMenuAnalyzeImage: "Analyser cette image",
+    cannotDetermineTab: "Impossible de d\xE9terminer l'onglet actuel",
+    provideSearchQuery: "Veuillez saisir une requ\xEAte de recherche",
+    toolNotFound: "Outil introuvable",
+    youtubeVideoNotFound: "Aucun lecteur vid\xE9o n'a \xE9t\xE9 trouv\xE9 sur la page",
+    videoInfoNotFound: "Aucune information vid\xE9o n'a \xE9t\xE9 trouv\xE9e sur la page",
+    noCaptionsAvailable: "Cette vid\xE9o ne dispose pas de sous-titres",
+    captionsReadFailed: "Impossible de lire les sous-titres",
+    captionsLabel: "Sous-titres",
+    youtubeVideoTitle: "Vid\xE9o YouTube",
+    apiKeyMissing: "Il manque une cl\xE9 API \xE0 \xAB {name} \xBB",
+    responseStreamMissing: "Le mod\xE8le API n'a pas renvoy\xE9 de flux de r\xE9ponse",
+    providerErrorStatus: "Le mod\xE8le API a renvoy\xE9 {status} : {detail}",
+    requestCancelled: "Requ\xEAte annul\xE9e",
+    modelThinkingTimeoutMessage: "Le mod\xE8le a d\xE9pass\xE9 le d\xE9lai imparti pendant la r\xE9flexion ; la r\xE9ponse a donc \xE9t\xE9 interrompue."
+  };
+
+  // src/shared/locales/it.ts
+  var itUiText = {
+    askSelectionTitle: "Chiedi nella barra laterale",
+    askSelectionDescription: "Invia il contenuto corrente alla barra laterale per un approfondimento",
+    copy: "Copia",
+    more: "Altro",
+    webmindAnswer: "WebMind Rispondi",
+    showTools: "Mostra strumenti WebMind",
+    copySelection: "Copia il testo selezionato",
+    openSidebar: "Apri la barra laterale",
+    immersiveTranslateApplied: "Alla pagina \xE8 stata applicata la traduzione immersiva.",
+    searchAnswerSystem: "Sei l'assistente per le risposte alle ricerche di WebMind. L'utente si trova su una pagina di risultati di ricerca. Rispondi utilizzando i risultati web DuckDuckGo forniti, cita le informazioni tratte dai risultati quando utile, segnala se le prove sono insufficienti e non fingere di accedere a pagine non fornite. Mantieni la risposta concisa e ben strutturata.",
+    searchQuery: "Query di ricerca",
+    duckResults: "Risultati web DuckDuckGo",
+    duckNoResults: "Risultati web DuckDuckGo: non sono stati restituiti risultati utilizzabili.",
+    searchAnswerRequest: "Rispondi direttamente alla domanda di ricerca ed elenca eventuali verifiche successive utili.",
+    sourceCitationInstruction: "Ogni paragrafo basato sui risultati di ricerca deve terminare con un indicatore di fonte [Search N], dove N corrisponde al numero del risultato indicato sopra. Non aggiungere un elenco delle fonti alla fine e non riportare gli URL delle fonti.",
+    browserAssistantSystem: "Sei un assistente alla scrittura e alla lettura nel browser. Lavora fedelmente sul testo fornito dall'utente e non inventare contesti.",
+    modelToolSystem: "Sei l'esecutore dello strumento WebMind. Esegui direttamente l'istruzione dello strumento e restituisci solo il risultato utile.",
+    unsupportedQuickAction: "Azione rapida non supportata",
+    currentContext: "Contesto attuale",
+    assistantSystem: "Sei WebMind, un assistente alla ricerca, lettura e scrittura che opera nella barra laterale del browser. Per impostazione predefinita, rispondi nella stessa lingua dell'utente.",
+    assistantGuard: "Distingui nettamente i fatti forniti esplicitamente nel contesto dalle tue deduzioni. Se il contesto \xE8 insufficiente, dichiaralo esplicitamente. Non affermare di navigare, cliccare o leggere contenuti non forniti.",
+    selectionContextIntro: "L'utente ha selezionato esplicitamente il seguente testo. In questo passaggio utilizza solo tale selezione, non parti della pagina non fornite:",
+    pageContextIntro: "L'utente ha allegato il seguente contesto dell'intera pagina:",
+    articleContextIntro: "Di seguito \xE8 riportato il contenuto principale estratto dalla pagina corrente:",
+    translationInputIntro: "Il seguente contenuto \xE8 il testo di input da tradurre:",
+    title: "Titolo",
+    url: "URL",
+    description: "Descrizione",
+    body: "Contenuto principale:",
+    selectionOnly: "Considera il testo selezionato come l'unico materiale della pagina.",
+    pdfCitation: "Quando rispondi a domande su PDF, cita i numeri di pagina ove possibile.",
+    youtubeCitation: "Quando rispondi a domande su video, cita i timestamp della trascrizione ove possibile.",
+    pageCitation: 'Quando citi la pagina corrente, fai riferimento ad essa come "pagina corrente" e indica il passaggio pertinente.',
+    searchSummaryIntro: "Ecco i riepiloghi dei risultati di ricerca web. Usa [Ricerca 1], [Ricerca 2] come indicatori di riferimento ed elenca alla fine le fonti effettivamente utilizzate:",
+    noContextImage: "Analizza questa immagine.",
+    noContextAttachment: "Si prega di rispondere utilizzando il contenuto dell'allegato.",
+    attachmentIntro: "Ecco il contenuto dell'allegato aggiunto dall'utente:",
+    languageSetting: "Lingua dell'interfaccia",
+    languageSettingHelp: "Influisce sul testo dell'interfaccia utente, sui nomi degli strumenti integrati e sui prompt predefiniti.",
+    translationLanguageSetting: "Lingua di traduzione",
+    translationLanguageSettingHelp: "Passa automaticamente dalla lingua dell'interfaccia all'inglese (e viceversa) in base alla lingua del contenuto; una scelta manuale comporta sempre la traduzione nella lingua selezionata.",
+    defaultContextScopeSetting: "Contesto predefinito",
+    defaultContextScopeHelp: "Determina se le azioni e le scorciatoie del menu laterale per la traduzione e la lettura immersive elaborano per impostazione predefinita il contenuto principale o l'intera pagina.",
+    immersiveTranslationParagraphShortcut: "Scorciatoia per il paragrafo corrente",
+    immersiveTranslationPageShortcut: "Scorciatoia per il contesto corrente",
+    immersiveTranslationModeToggleShortcut: "Scorciatoia per attivare/disattivare la visualizzazione della traduzione",
+    immersiveTranslationShortcutHelp: "La scorciatoia per il paragrafo si riferisce a una selezione o a un paragrafo; la scorciatoia per il contesto corrente segue il contesto selezionato nella barra laterale.",
+    shortcutCtrl: "Ctrl",
+    shortcutAlt: "Alt",
+    shortcutShift: "Shift",
+    shortcutHoldPrefix: "Tieni premuto:",
+    navChat: "Chat",
+    navTools: "Strumenti",
+    navHistory: "Cronologia",
+    navLogs: "Log",
+    operationLogs: "Log delle operazioni",
+    operationLogsHelp: "Le operazioni principali del prodotto vengono visualizzate qui in tempo reale.",
+    clearLogs: "Cancella log",
+    noOperationLogs: "Nessun log presente",
+    logLevelDebug: "Debug",
+    logLevelInfo: "Info",
+    logLevelSuccess: "Successo",
+    logLevelWarning: "Avviso",
+    logLevelError: "Errore",
+    logSidepanelReady: "Pannello laterale pronto",
+    logSettingsUpdated: "Impostazioni aggiornate",
+    logToolsUpdated: "Impostazioni dello strumento aggiornate",
+    logPendingAction: "Azione di pagina ricevuta",
+    logChatStart: "Chat avviata",
+    logChatDone: "Risposta completata",
+    logChatCancelled: "Risposta annullata",
+    logChatStop: "L'utente ha interrotto la risposta",
+    logChatRegenerate: "Rigenerazione risposta in corso",
+    logToolRun: "Esecuzione strumento in corso",
+    logToolSelected: "Strumento selezionato",
+    logAskSelectionReady: "Pronto per inviare una richiesta nel pannello laterale",
+    logNewChat: "Nuova chat avviata",
+    logAttachmentAdded: "Allegato aggiunto",
+    logConversationLoaded: "Chat salvata caricata",
+    logEnabled: "Abilitato",
+    logDisabled: "Disabilitato",
+    logRuntimeRequest: "Richiesta in fase di esecuzione",
+    displayLogLevel: "Livello di log visualizzato",
+    displayLogLevelHelp: "Il pannello dei log mostra solo il livello selezionato e quelli superiori. Il livello Debug include record dettagliati per ogni richiesta al modello.",
+    cancel: "Annulla",
+    close: "Chiudi",
+    save: "Salva",
+    saving: "Salvataggio in corso",
+    add: "Aggiungi",
+    edit: "Modifica",
+    delete: "Elimina",
+    test: "Test",
+    testing: "Test in corso",
+    current: "Attuale",
+    modelRoles: "Ruoli",
+    defaultModelRole: "Predefinito",
+    translationModelRole: "Traduci",
+    visionModelRole: "Visione",
+    setDefaultModelRole: "Imposta come modello predefinito",
+    setTranslationModelRole: "Imposta come modello di traduzione",
+    clearTranslationModelRole: "Rimuovi modello di traduzione",
+    setVisionModelRole: "Imposta come modello di visione",
+    clearVisionModelRole: "Rimuovi modello di visione",
+    visionModelRoleUnavailable: "Il riconoscimento immagini \xE8 disabilitato per questo motore",
+    settings: "Impostazioni",
+    loading: "Caricamento in corso",
+    newChat: "Nuova chat",
+    send: "Invia",
+    stop: "Interrompi",
+    restorePage: "Ripristina pagina",
+    chooseModel: "Scegli modello",
+    currentModelEngine: "Motore del modello attuale",
+    selectTool: "Seleziona strumento",
+    selectMoreTools: "Seleziona altri strumenti",
+    moreTools: "Altri strumenti",
+    copyContent: "Copia contenuto",
+    clearComposer: "Cancella input",
+    copyCurrentBody: "Copia contenuto principale",
+    copyUrl: "Copia pagina URL",
+    copied: "Copiato",
+    regenerate: "Riprova risposta",
+    continueExecution: "Continua",
+    replace: "Sostituisci",
+    closeNotice: "Chiudi avviso",
+    removeAttachment: "Rimuovi allegato",
+    openTools: "Apri strumenti",
+    currentPage: "Pagina corrente",
+    currentBody: "Contenuto principale",
+    currentSelection: "Selezione corrente",
+    currentBodyPreview: "Anteprima contesto",
+    nonePreview: "Anteprima",
+    pagePreview: "Anteprima pagina",
+    bodyPreview: "Anteprima del contenuto principale",
+    selectionPreview: "Anteprima selezione",
+    expand: "Espandi",
+    collapse: "Comprimi",
+    currentBodyBlocks: "{count} blocchi",
+    currentBodyChars: "{count} caratteri",
+    currentBodyScore: "Punteggio del contenuto: {score}",
+    articleMetricLength: "Lunghezza",
+    articleMetricStructure: "Struttura",
+    articleMetricHeading: "Intestazione",
+    articleMetricSemantics: "Contenitore semantico",
+    articleMetricDensity: "Densit\xE0 del testo",
+    articleMetricLinkPurity: "Purezza dei link",
+    articleMetricFocus: "Focus",
+    articleMetricCleanliness: "Pulizia",
+    currentBodySourceDom: "DOM",
+    currentBodySourceRule: "Regola",
+    currentBodySourceManual: "Manuale",
+    currentBodySourceEdited: "Modificato",
+    selectCurrentBody: "Seleziona contenuto principale",
+    restoreCurrentBody: "Ripristina contenuto principale",
+    highlightCurrentBodyBlock: "Evidenzia questo blocco nella pagina",
+    removeCurrentBodyBlock: "Rimuovi questo blocco dal contenuto principale",
+    smartPruneCurrentBody: "Pulizia automatica",
+    modelPruneCurrentBody: "Pulizia con IA",
+    modelPruneCurrentBodyRunning: "Richiesta al modello di classificare i blocchi dell'articolo",
+    modelPruneInvalidResult: "Il modello ha restituito un risultato di potatura illeggibile",
+    modelPruneNoChanges: "Il modello non ha trovato blocchi del contenuto principale da rimuovere",
+    modelPruneAllRejected: "Non \xE8 possibile rimuovere tutti i blocchi del contenuto principale senza rischiare la perdita di dati",
+    articleRecognition: "Rilevamento del contenuto principale",
+    recognitionRules: "Regole di riconoscimento",
+    articleExtractionRules: "Regole di estrazione del contenuto principale",
+    articleExtractionRulesHelp: "Ogni regola include un pattern URL della pagina e un selettore del contenuto principale; i pattern URL supportano domini, caratteri jolly e frammenti.",
+    articleExtractionUrlPattern: "Pattern URL della pagina",
+    articleExtractionSelector: "Selettore del contenuto principale",
+    articleExtractionUrlPatternPlaceholder: "URL della pagina, ad es. example.com, *.example.com, https://example.com/*",
+    articleExtractionSelectorPlaceholder: "Selettore CSS, ad es. article, main, #content, .post-body",
+    addArticleExtractionRule: "Aggiungi regola per il contenuto principale",
+    deleteArticleExtractionRule: "Elimina regola per il contenuto principale",
+    noArticleExtractionRules: "Nessuna regola di estrazione del contenuto principale definita",
+    articleExtractionRuleSaved: "Regola di estrazione del contenuto salvata",
+    articleExtractionRuleInvalid: "Inserisci un pattern URL della pagina e un selettore",
+    selectingBodyRange: "Selezione del contenuto principale",
+    manualBodySelectionHint: "Rotellina/tasti freccia per regolare l'intervallo, clic per confermare, Esc per annullare",
+    manualBodySelectionCancelled: "Selezione del contenuto principale annullata",
+    noneContext: "Nessun contesto",
+    webSearch: "Ricerca web",
+    addAttachment: "Aggiungi immagine o documento",
+    addUrl: "Aggiungi URL",
+    you: "Tu",
+    ordinaryConversation: "Chat standard",
+    usedTool: "Strumento utilizzato",
+    questionContext: "Contesto della domanda",
+    imageChat: "Chat con immagini",
+    openAnyPage: "Apri una pagina qualsiasi, poi inizia da qui.",
+    noEnabledTools: "Nessuno strumento ancora abilitato qui",
+    toolsPageShowsAll: "La pagina Strumenti mostra tutti gli strumenti disponibili.",
+    noSavedConversations: "Nessuna conversazione salvata",
+    conversationsAutoSave: "Le conversazioni vengono salvate localmente al termine dello scambio.",
+    languageOptionAuto: "Automatico",
+    languageOptionZhCN: "Cinese semplificato",
+    languageOptionZhTW: "Cinese tradizionale",
+    languageOptionEn: "Inglese",
+    languageOptionJa: "Giapponese",
+    languageOptionKo: "Coreano",
+    appSubtitle: 'Area di lavoro per modelli nel browser (approccio "local-first")',
+    modelEngines: "Motori dei modelli",
+    modelEnginesDescription: "Non sono richiesti account o abbonamenti. A ogni ruolo (predefinito, traduzione, visione) pu\xF2 essere assegnato un modello; lo stesso modello pu\xF2 ricoprire pi\xF9 ruoli. Se non assegnati, i compiti di traduzione e visione vengono affidati al modello predefinito. Le impostazioni del motore e le credenziali riservate rimangono nello spazio di archiviazione dell'estensione.",
+    addEngine: "Aggiungi motore",
+    noModelEngines: "Nessun motore di modello ancora aggiunto",
+    noModelEnginesHelp: "Aggiungi modelli cloud comuni, API compatibili con OpenAI o Ollama locali.",
+    pageFeatures: "Funzionalit\xE0 della pagina",
+    pageFeaturesHelp: "Ogni modulo mantiene separate le proprie impostazioni, cos\xEC puoi vedere su cosa agisce.",
+    selectionOverlay: "Sovrapposizione selezione",
+    selectionOverlayHelp: "Controlla la barra degli strumenti mobile che appare dopo aver selezionato del testo.",
+    selectionOverlayMode: "Modalit\xE0 di attivazione",
+    selectionOverlayShortcut: "Scorciatoia per l'overlay di selezione",
+    selectionOverlayShortcutHelp: "Se abilitato, l'overlay di selezione appare solo tenendo premuta la scorciatoia scelta mentre si seleziona del testo o si esamina una selezione esistente.",
+    selectionOverlayMinChars: "Numero minimo di caratteri selezionati",
+    selectionOverlayMinCharsHelp: "Mostra l'overlay di selezione solo dopo aver selezionato questo numero di caratteri. Minimo: 1.",
+    selectionOverlayOff: "Disabilita overlay",
+    selectionOverlayOffHelp: "Non mostrare le azioni rapide dopo aver selezionato del testo.",
+    selectionOverlayAlways: "Mostra subito la barra degli strumenti",
+    selectionOverlayAlwaysHelp: "Mostra gli strumenti disponibili immediatamente dopo aver selezionato del testo.",
+    selectionOverlayHover: "Mostra prima un punto",
+    selectionOverlayHoverHelp: "Mostra un piccolo punto dopo aver selezionato del testo, quindi espandi la barra degli strumenti al passaggio del mouse.",
+    urlBlacklist: "URL Lista nera",
+    selectionOverlayBlacklistHelp: "Una regola per riga; supporta domini, caratteri jolly e frammenti URL.",
+    edgeQuickTools: "Strumenti rapidi",
+    edgeQuickToolsHelp: "Controlla congiuntamente il menu laterale, l'estrazione di testo dalle immagini e la risposta automatica.",
+    edgeDockMenu: "Menu laterale",
+    edgeQuickToolsEnable: "Abilita menu laterale",
+    edgeQuickToolsEnableHelp: "Disattiva questa opzione per nascondere il menu sul bordo destro delle pagine web.",
+    edgeQuickToolsBlacklistHelp: "In caso di corrispondenza, gli strumenti rapidi sul bordo destro non verranno visualizzati.",
+    quickToolsBlacklistHelp: "In caso di corrispondenza, il menu laterale, l'estrazione di testo dalle immagini e la risposta automatica verranno disabilitati nella pagina.",
+    immersiveTranslation: "Traduzione immersiva",
+    immersiveTranslationHelp: "Controlla la modalit\xE0 di inserimento del testo tradotto nella pagina.",
+    immersiveTranslationAutoWhitelist: "Lista consentiti per la traduzione automatica",
+    immersiveTranslationAutoWhitelistHelp: "Una regola per riga; supporta domini, caratteri jolly e frammenti URL. Le pagine corrispondenti attivano automaticamente la traduzione immersiva all'apertura.",
+    immersiveReading: "Lettura immersiva",
+    immersiveReadingHelp: "Sostituisce alcune parole con termini nella lingua in fase di apprendimento, per una lettura mista in lingua madre e straniera.",
+    immersiveReadingStrategy: "Strategia",
+    immersiveReadingStrategyLocalFirst: "Priorit\xE0 al locale",
+    immersiveReadingStrategyLocalFirstHelp: "Privilegia la classificazione locale delle parole e le definizioni del dizionario offline per risultati pi\xF9 rapidi ed economici; utilizza il modello solo per colmare eventuali lacune residue.",
+    immersiveReadingStrategyModelPage: "Priorit\xE0 al modello",
+    immersiveReadingStrategyModelPageHelp: "Consenti al modello di utilizzare il contesto della pagina per scegliere e tradurre le sostituzioni. Soluzione pi\xF9 flessibile, ma velocit\xE0 e costi dipendono dal modello.",
+    immersiveReadingAutoWhitelist: "Whitelist per lettura automatica",
+    immersiveReadingAutoWhitelistHelp: "Una regola per riga; supporta domini, caratteri jolly e frammenti URL. Le pagine corrispondenti attivano automaticamente la lettura immersiva all'apertura.",
+    immersiveReadingDifficulty: "Difficolt\xE0 delle parole",
+    immersiveReadingDifficultyHelp: "Livelli pi\xF9 alti portano il modello a sostituire un numero inferiore di parole, selezionando quelle pi\xF9 complesse.",
+    immersiveReadingMode: "Modalit\xE0 di sostituzione",
+    immersiveReadingParagraphShortcut: "Scorciatoia per la lettura del paragrafo corrente",
+    immersiveReadingContextShortcut: "Scorciatoia per la lettura del contesto corrente",
+    immersiveReadingTranslation: "Traduzione",
+    immersiveReadingOriginalTranslation: "Originale (Traduzione)",
+    immersiveReadingTranslationOriginal: "Traduzione (Originale)",
+    immersiveReadingBackgroundStyle: "Stile di sfondo per la sostituzione",
+    immersiveReadingHighlightNone: "Nessuna evidenziazione",
+    immersiveReadingHighlightUniform: "Evidenziazione uniforme",
+    immersiveReadingHighlightLeveled: "Evidenziazione a livelli",
+    immersiveReadingOuterEffects: "Effetti esterni alle parentesi",
+    immersiveReadingInnerEffects: "Effetti su parentesi e testo interno",
+    immersiveReadingApplied: "Lettura immersiva applicata",
+    displayMode: "Modalit\xE0 di visualizzazione",
+    translationOnly: "Solo traduzione",
+    bilingual: "Originale + Traduzione",
+    translationStyle: "Stile della traduzione",
+    translationStyleDefault: "Predefinito",
+    translationStyleHighlight: "Evidenziazione",
+    translationStyleDivider: "Separatore",
+    translationStyleQuote: "Citazione",
+    translationStyleBlur: "Sfocatura",
+    translationStyleTransparent: "Trasparente",
+    textEffects: "Effetti testo",
+    underline: "Sottolineatura continua",
+    dashedUnderline: "Sottolineatura tratteggiata",
+    largeText: "Testo grande",
+    smallText: "Testo piccolo",
+    bold: "Grassetto",
+    italic: "Corsivo",
+    light: "Attenuato",
+    emphasis: "Evidenziazione",
+    generalConfig: "Configurazione generale",
+    generalConfigHelp: "Gestisce i miglioramenti della pagina di ricerca, il contesto predefinito e l'aspetto.",
+    appearanceTheme: "Tema grafico",
+    themeSystem: "Segui impostazioni di sistema",
+    themeLight: "Chiaro",
+    themeDark: "Scuro",
+    autoScrollDuringStreaming: "Scorrimento automatico durante la generazione",
+    autoScrollDuringStreamingHelp: "Mantiene la barra laterale scorrevole sull'output pi\xF9 recente del modello durante la generazione.",
+    autoReply: "Risposta automatica",
+    autoReplyOff: "Disabilitata",
+    autoReplyMultiline: "Solo campi multilinea",
+    autoReplyAll: "Tutti i campi di testo",
+    autoReplyHelp: "Mostra una piccola icona nei campi modificabili e redige una breve risposta utilizzando la pagina corrente.",
+    autoReplyBlacklistHelp: "Se la condizione \xE8 soddisfatta, i campi modificabili nella pagina non mostreranno l'opzione di risposta automatica.",
+    imageTextExtraction: "Estrazione testo da immagini",
+    imageTextExtractionHelp: "Mostra un'opzione per l'estrazione del testo al passaggio del mouse sulle immagini.",
+    imageTextExtractionOff: "Disabilitata",
+    imageTextExtractionOn: "Abilita in base alle dimensioni",
+    imageTextExtractionMinSize: "Dimensione minima dell'immagine",
+    imageTextExtractionMinSizeHelp: "Mostra la voce solo quando sia la larghezza che l'altezza visualizzate raggiungono almeno questo numero di pixel.",
+    imageTextExtractionBlacklistHelp: "In caso di corrispondenza, le immagini sulla pagina non mostreranno la voce per l'estrazione del testo.",
+    hoverDefinition: "Definizioni al passaggio del mouse",
+    hoverDefinitionHelp: "Usa il dizionario offline integrato per mostrare una definizione concisa su una riga quando il puntatore si sofferma su un termine cinese o una parola inglese.",
+    hoverDefinitionOff: "Disabilitato",
+    hoverDefinitionChinese: "Solo cinese",
+    hoverDefinitionEnglish: "Solo inglese",
+    hoverDefinitionBoth: "Cinese e inglese",
+    hoverDefinitionStyle: "Stile della parola al passaggio del mouse",
+    hoverDefinitionStyleNone: "Nessuno",
+    hoverDefinitionStyleHighlight: "Evidenziazione",
+    hoverDefinitionStyleUnderline: "Sottolineatura",
+    hoverDefinitionShortcut: "Scorciatoia per la ricerca al passaggio del mouse",
+    hoverDefinitionShortcutHelp: "Se abilitato, tieni premuta la scorciatoia selezionata mentre passi il mouse su una parola per visualizzarne la definizione.",
+    hoverDefinitionBlacklistHelp: "In caso di corrispondenza, le definizioni al passaggio del mouse non appariranno sulla pagina.",
+    searchAnswerSetting: "Mostra risposte modello nelle pagine di ricerca",
+    searchAnswerSettingHelp: "Se abilitato, le pagine dei risultati di ricerca mostrano una risposta automatica basata sui risultati di DuckDuckGo.",
+    includePageByDefault: "Includi la pagina corrente per impostazione predefinita",
+    includePageByDefaultHelp: "\xC8 comunque possibile disabilitare il contesto della pagina prima dell'invio.",
+    webSearchByDefault: "Abilita ricerca web per impostazione predefinita",
+    webSearchByDefaultHelp: "Le normali chat nella barra laterale utilizzano i risultati di DuckDuckGo per integrare la domanda per impostazione predefinita.",
+    toolResponseUseContextLanguage: "Rispondi usando gli strumenti nella lingua originale del contesto della domanda",
+    toolResponseUseContextLanguageHelp: "Se disabilitati, gli strumenti utilizzano la lingua corrente dell'interfaccia. Ci\xF2 riguarda solo gli strumenti; un'esplicita richiesta di lingua nel prompt dello strumento ha la priorit\xE0.",
+    historyLimit: "Numero massimo di chat salvate",
+    modelThinkingTimeout: "Timeout di elaborazione del modello (secondi)",
+    modelThinkingTimeoutHelp: "0 indica assenza di timeout. Allo scadere del tempo, la risposta corrente viene interrotta e viene visualizzato un avviso di timeout.",
+    toolEnable: "Abilitazione strumenti",
+    toolEnableHelp: "Scegli quali strumenti visualizzare in ogni punto di accesso e il relativo ordine di visualizzazione.",
+    toolSurfaceSelection: "Overlay di selezione",
+    toolSurfaceSelectionHelp: "Strumenti rapidi visualizzati dopo aver selezionato del testo sulle pagine web.",
+    toolSurfaceHome: "Pagina iniziale della barra laterale",
+    toolSurfaceHomeHelp: "Voci rapide nella schermata vuota della chat nella barra laterale.",
+    toolSurfaceEdge: "Strumenti rapidi",
+    toolSurfaceEdgeHelp: "Launcher sul bordo destro delle pagine web.",
+    noToolsEnabled: "Nessuno strumento abilitato",
+    chooseTools: "Scegli strumenti",
+    chooseToolsHelp: "L'ordine di selezione corrisponde all'ordine di visualizzazione; usa le frecce per regolarlo con precisione.",
+    builtinTool: "Strumento integrato",
+    customTool: "Strumento personalizzato",
+    moveUp: "Sposta su",
+    moveDown: "Sposta gi\xF9",
+    dataSync: "Sincronizzazione dati",
+    dataSyncHelp: "L'esportazione dei file e la sincronizzazione dell'account Chrome non includono mai le chiavi API.",
+    chromeAccountSync: "Chrome Sincronizzazione account",
+    autoSyncNonSensitive: "Sincronizzazione automatica impostazioni non sensibili",
+    autoSyncNonSensitiveHelp: "Sincronizza impostazioni, informazioni sul motore del modello e strumenti personalizzati con il tuo account Chrome; le chiavi API e la cronologia chat non vengono mai sincronizzate.",
+    syncToChrome: "Sincronizza con l'account Chrome",
+    syncFromChrome: "Sincronizza dall'account Chrome",
+    syncing: "Sincronizzazione in corso",
+    syncSecretNote: "Se a un motore di modello sincronizzato manca la chiave, inseriscila nuovamente su questo dispositivo.",
+    exportSettings: "Esporta impostazioni",
+    importSettings: "Importa impostazioni",
+    clearConversationHistory: "Cancella cronologia chat",
+    providerEditorAria: "Impostazioni motore del modello",
+    newEngine: "Nuovo motore",
+    providerKind: "API Tipo",
+    providerKindOpenAICompatible: "OpenAI Compatibile",
+    providerKindAnthropic: "Anthropic",
+    providerKindGemini: "Gemini",
+    providerKindOllama: "Ollama",
+    providerName: "Nome visualizzato",
+    providerNamePlaceholder: "Esempio: modello interno aziendale",
+    providerBaseUrl: "API URL",
+    providerBaseUrlHelp: "Il salvataggio richieder\xE0 l'autorizzazione di rete per questo dominio.",
+    providerModel: "ID modello",
+    providerModelPlaceholder: "Fornito dal tuo provider di servizi",
+    providerModelHelp: "Inserisci manualmente o recupera i modelli disponibili da questo API.",
+    fetchModels: "Recupera modelli",
+    providerApiKey: "API Chiave",
+    providerApiKeyPlaceholder: "Memorizzata solo nell'archivio dell'estensione di questo dispositivo",
+    providerSecretStorage: "Archiviazione chiavi",
+    providerSecretLocal: "Mantieni",
+    providerSecretSession: "Solo per questa sessione",
+    providerTemperature: "Temperatura",
+    providerMaxTokens: "Token di output massimi",
+    providerMaxContext: "Caratteri di contesto massimi",
+    providerSupportsVision: "Supporta input di immagini",
+    providerSupportsVisionHelp: "Disattiva se il modello non supporta la visione artificiale.",
+    providerCustomHeaders: "Intestazioni personalizzate",
+    providerCustomHeadersHelp: "Oggetto JSON facoltativo; i campi corrispondenti sovrascrivono le intestazioni predefinite.",
+    saveEngine: "Salva motore",
+    providerSaved: "Motore del modello salvato",
+    providerDeleted: "Motore del modello eliminato",
+    providerNameRequired: "Inserisci un nome per il motore",
+    providerBaseUrlRequired: "Inserisci un API URL",
+    providerModelRequired: "Inserisci un ID modello",
+    duckPermissionRequired: "\xC8 richiesta l'autorizzazione per il dominio di ricerca DuckDuckGo",
+    settingsSyncedToChrome: "Impostazioni sincronizzate con l'account Chrome; le chiavi non sono state sincronizzate",
+    settingsSyncedFromChrome: "Impostazioni sincronizzate dall'account Chrome; le chiavi del modello rimangono locali",
+    chromeSyncEnabled: "Sincronizzazione account Chrome abilitata; le chiavi non verranno sincronizzate",
+    chromeSyncDisabled: "Sincronizzazione account Chrome disabilitata",
+    settingsExported: "Impostazioni esportate; le chiavi non erano incluse",
+    invalidSettingsFile: "File di impostazioni WebMind non valido",
+    settingsImported: "Impostazioni importate. Reinserire la chiave di ogni motore.",
+    localHistoryCleared: "Cronologia chat locale cancellata",
+    processCurrentContent: "Elabora contenuto corrente",
+    localRecords: "Record locali",
+    addTool: "Aggiungi strumento",
+    saveChanges: "Salva modifiche",
+    saveTool: "Salva strumento",
+    custom: "Personalizzato",
+    icon: "Icona",
+    chooseIcon: "Scegli icona",
+    noIcon: "Nessuna icona",
+    searchIcon: "Cerca icone",
+    noIconMatches: "Nessuna icona corrispondente",
+    toolPrompt: "Prompt",
+    mainNav: "Navigazione principale",
+    connectEngineBannerTitle: "Collegare prima un motore modello",
+    connectEngineBannerDescription: "Supporta modelli cloud comuni, API compatibili con OpenAI e Ollama locali.",
+    pageRecognized: "Riconosciuto",
+    enterAttachmentUrl: "Inserire un URL da aggiungere come allegato",
+    modelEngineRequired: "Aggiungere e selezionare prima un motore modello",
+    needPdfPermission: "\xC8 richiesta l'autorizzazione della pagina per leggere questo PDF",
+    noReadableTab: "Nessuna scheda attiva leggibile",
+    switchingToCurrentPage: "Passaggio alla pagina corrente\u2026",
+    readingSelection: "Lettura del contenuto selezionato\u2026",
+    readingCurrentBody: "Lettura del contenuto principale\u2026",
+    noSelectionOnPage: "La pagina corrente non contiene elementi selezionabili a cui passare",
+    searchPermissionRequired: "\xC8 necessaria l'autorizzazione per la ricerca nel dominio per integrare i risultati web",
+    searchingWeb: "Ricerca sul web in corso\u2026",
+    previewDemoAnswer: "Questa \xE8 un'anteprima della risposta. Una volta caricata l'estensione e configurato il motore del modello, qui verr\xE0 visualizzato l'output in streaming reale.\n\n- Il contesto della pagina pu\xF2 essere modificato in qualsiasi momento\n- Usa il tuo modello e la tua chiave\n- La cronologia rimane solo in locale",
+    currentAnswer: "Risposta corrente",
+    collectingSelection: "Raccolta del contenuto selezionato\u2026",
+    collectingCurrentBody: "Raccolta del contenuto principale\u2026",
+    collectingTranslatableText: "Raccolta del testo traducibile\u2026",
+    collectingPageBody: "Raccolta del contenuto della pagina\u2026",
+    noTranslatableBlocks: "La pagina corrente non contiene blocchi di testo traducibili",
+    translatingPageProgress: "Traduzione della pagina in corso",
+    translatingShort: "Elaborazione in corso",
+    translationWritten: "Scritto",
+    translationComplete: "Completato",
+    translationApplied: "Testo tradotto aggiunto alla pagina",
+    translationRemoved: "Traduzione della pagina rimossa",
+    pageRestored: "Pagina ripristinata",
+    addImageBeforeAnalyze: "Aggiungi un'immagine prima di avviare l'analisi dell'immagine",
+    toolNeedsPrompt: "Gli strumenti richiedono un titolo e un prompt",
+    chooseContextFirst: "Seleziona prima la pagina corrente o il contenuto nel contesto",
+    directQuestionPlaceholder: "Chiedi direttamente\u2026",
+    askContextPlaceholder: "Interroga la pagina corrente\u2026",
+    composerShortcutHint: "Invio per inviare, Shift+Invio per andare a capo",
+    addEngineFirst: "Aggiungi prima un motore del modello nelle Impostazioni",
+    copyFailed: "Copia non riuscita",
+    readingPdf: "Lettura di PDF",
+    needSearchDomainPermission: "\xC8 necessaria l'autorizzazione per il dominio di ricerca per integrare i risultati web",
+    profileVisionDisabled: "\u201C{name}\u201D non supporta le immagini input",
+    promptImageAnalysis: "Analizza questa immagine, descrivi i dettagli importanti e rispondi alla mia prossima domanda.",
+    promptSummarizeSelection: "Riassumi il testo selezionato mantenendo i fatti, i dati numerici e le conclusioni principali.",
+    promptExplainSelection: "Spiega il testo selezionato con un linguaggio semplice e chiaro.",
+    promptAutoTranslateSelection: "Traduci automaticamente il testo selezionato: se prevale il cinese, traduci in un inglese naturale; altrimenti, traduci in cinese semplificato.",
+    promptRewriteSelection: "Riscrivi il testo selezionato per renderlo pi\xF9 chiaro, naturale e professionale.",
+    promptReplySelection: "Redigi una risposta pronta per l'invio basata sul testo selezionato.",
+    modelRequestFailed: "Richiesta al modello non riuscita",
+    savedConversations: "Conversazioni salvate",
+    runtimeUnavailable: "Il processo in background dell'estensione non \xE8 disponibile in modalit\xE0 anteprima",
+    backgroundNoResponse: "Il processo in background dell'estensione non ha risposto",
+    currentPageUnavailable: "La pagina corrente non \xE8 disponibile",
+    noActiveTab: "Nessuna scheda attiva",
+    previewPageTitle: "WebMind Esempio di ricerca prodotto",
+    previewPageDescription: "Articolo di esempio per l'anteprima dell'interfaccia utente",
+    previewPageBody: "Un assistente del browser pu\xF2 utilizzare la pagina corrente come contesto per aiutare gli utenti a riassumere, tradurre, spiegare e redigere risposte. WebMind consente agli utenti di configurare i propri servizi di modello invece di vincolarli a un unico sistema di account.",
+    contentTruncated: "contenuto troncato",
+    customHeadersJsonObject: "Le intestazioni personalizzate devono essere un oggetto JSON",
+    jsonArrayMissing: "Il modello non ha restituito un array JSON analizzabile",
+    jsonArrayInvalid: "La risposta del modello non \xE8 un array",
+    invalidImageData: "Formato dei dati dell'immagine non valido",
+    customToolFallback: "Strumento personalizzato",
+    chromeSyncInvalidData: "Dati di sincronizzazione WebMind non validi nell'account Chrome",
+    chromeSyncNoData: "Non sono ancora presenti dati di sincronizzazione WebMind nell'account Chrome",
+    webSearchFailed: "Ricerca web non riuscita",
+    webSearchNoResults: "Impossibile analizzare i risultati della ricerca web",
+    searchResultSnippet: "Snippet",
+    searchSourceMarker: "Ricerca",
+    selectionDescription: "{count} caratteri selezionati",
+    readFileFailed: "Impossibile leggere il file",
+    readDocumentFailed: "Impossibile leggere il documento",
+    readImageUrlFailed: "Impossibile leggere l'immagine",
+    readUrlFailed: "Impossibile leggere URL",
+    unknownFileType: "sconosciuto",
+    sizeLabel: "Dimensione",
+    bytes: "byte",
+    unsupportedDocumentText: "Questo formato di file non pu\xF2 ancora essere estratto direttamente nel browser.",
+    documentName: "Nome del documento",
+    pdfDocument: "PDF documento",
+    attachmentLabel: "Allegato",
+    documentAttachment: "Documento",
+    addressLabel: "Indirizzo",
+    typeLabel: "Tipo",
+    contentLabel: "Contenuto",
+    noExtractedText: "Non \xE8 stato possibile estrarre alcun testo",
+    jsonArrayTranslationInstruction: "L'input \xE8 un array JSON. Ogni elemento \xE8 composto da un ID e un testo. Traduci il testo di ciascun elemento.",
+    citationPlaceholderInstruction: "Un contenuto come {{WEBMIND_CITATION_1}} \xE8 un segnaposto di citazione immutabile. La traduzione deve mantenere ogni segnaposto inalterato nella corrispondente posizione semantica; non espanderlo, spiegarlo, riscriverlo, spostarlo alla fine n\xE9 rimuoverlo.",
+    translationOutputOnlyInstruction: "Fornisci in output solo la traduzione del testo originale contenuto in <translation-input>. Non includere questo prompt, le regole, i nomi dei tag o i tag <translation-input>.",
+    jsonArrayReturnInstruction: 'Restituisci solo un array JSON senza blocchi di codice (code fence). Ogni elemento deve essere {"id":"original id","text":"translation"}.',
+    translationWriteFailed: "La traduzione \xE8 stata generata ma non \xE8 stato possibile scriverla nella pagina. Riprova.",
+    originalSelectedContent: "Contenuto originale selezionato",
+    previousResult: "Risultato precedente",
+    continueToolInstruction: "Continua l'esecuzione dello strumento selezionato basandoti sul risultato precedente.",
+    selectionAssistantSystem: "Sei un assistente per la selezione nel browser. Rispondi basandoti esclusivamente sul contenuto selezionato e sul risultato esistente forniti dall'utente. Non inventare informazioni sulla pagina non fornite.",
+    userQuestionLabel: "Domanda dell'utente",
+    currentResultLabel: "Risultato attuale",
+    researchSearchPrefix: "Esegui ricerca per questa query",
+    openSidebarOpening: "Apertura barra laterale\u2026",
+    openSidebarOpened: "Barra laterale aperta.",
+    readCurrentPage: "Lettura della pagina corrente\u2026",
+    noProcessablePageBody: "La pagina corrente non contiene testo da elaborare",
+    executingTool: "Esecuzione strumento\u2026",
+    closeQuickTools: "Chiudi strumenti rapidi",
+    generateShortAutoReply: "Genera una breve risposta automatica",
+    extractImageText: "Estrai testo dall'immagine",
+    extractingImageText: "Estrazione testo dall'immagine\u2026",
+    imageTextExtractionResult: "Estrazione testo dall'immagine",
+    imageTextExtractionPrompt: "Estrai tutto il testo visibile da questa immagine. Mantieni la lingua originale senza tradurre; preserva il pi\xF9 possibile le interruzioni di riga, l'ordine di lettura, gli elenchi e la struttura delle tabelle. Fornisci in output solo il testo estratto senza aggiungere spiegazioni.",
+    noImageTextFound: "Nessun testo utilizzabile riconosciuto",
+    retryAnswer: "Riprova a generare la risposta",
+    chooseTool: "Scegli strumento",
+    rerunExecution: "Esegui di nuovo",
+    reextractImageText: "Estrai di nuovo",
+    runSelectedTool: "Esegui strumento",
+    continueQuestionPlaceholder: "Fai una domanda di approfondimento...",
+    modelNoUsableReply: "Il modello non ha fornito una risposta utilizzabile",
+    autoReplySystem: "Sei l'assistente per le risposte automatiche sul web di WebMind.\nUtilizza la pagina corrente, il contesto della conversazione ed eventuali bozze gi\xE0 presenti nel campo di input per generare una risposta breve da inserire direttamente.\nDai la preferenza a risposte, commenti, email o messaggi di chat gi\xE0 presenti nella pagina.\nFornisci in output solo il corpo della risposta. Non aggiungere spiegazioni o titoli e non utilizzare Markdown.",
+    autoReplyPageTitle: "Titolo della pagina",
+    autoReplyPageUrl: "Pagina URL",
+    autoReplyPageDescription: "Descrizione della pagina",
+    autoReplyPageContent: "Contenuto della pagina corrente",
+    autoReplyDraft: "Input o bozza esistente",
+    autoReplyEmpty: "Il campo di input \xE8 vuoto.",
+    autoReplyRequest: "Genera 1-3 frasi naturali, educate, specifiche e brevi. Usa la stessa lingua della conversazione nella pagina o della bozza di input.",
+    contextMenuAsk: "Chiedi a WebMind",
+    contextMenuSummarize: "Riassumi la selezione",
+    contextMenuExplain: "Riscrivi la selezione",
+    contextMenuTranslate: "Spiega la selezione",
+    contextMenuRewrite: "Traduci la selezione",
+    contextMenuReply: "Bozza di risposta",
+    contextMenuAnalyzeImage: "Analizza questa immagine",
+    cannotDetermineTab: "Impossibile determinare la scheda corrente",
+    provideSearchQuery: "Inserisci una query di ricerca",
+    toolNotFound: "Strumento non trovato",
+    youtubeVideoNotFound: "Nessun lettore video trovato nella pagina",
+    videoInfoNotFound: "Nessuna informazione video trovata nella pagina",
+    noCaptionsAvailable: "Questo video non dispone di sottotitoli",
+    captionsReadFailed: "Impossibile leggere i sottotitoli",
+    captionsLabel: "Sottotitoli",
+    youtubeVideoTitle: "Video YouTube",
+    apiKeyMissing: "A \u201C{name}\u201D manca la chiave API",
+    responseStreamMissing: "Il modello API non ha restituito un flusso di risposta",
+    providerErrorStatus: "Il modello API ha restituito {status}: {detail}",
+    requestCancelled: "Richiesta annullata",
+    modelThinkingTimeoutMessage: "Il modello \xE8 andato in timeout durante l'elaborazione; la risposta \xE8 stata interrotta."
+  };
+
   // src/shared/i18n.ts
   var LANGUAGE_LABELS = {
     "zh-CN": "\u7B80\u4F53\u4E2D\u6587",
     "zh-TW": "\u7E41\u9AD4\u4E2D\u6587",
     en: "English",
     ja: "\u65E5\u672C\u8A9E",
-    ko: "\uD55C\uAD6D\uC5B4"
+    ko: "\uD55C\uAD6D\uC5B4",
+    es: "Spanish",
+    fr: "French",
+    de: "German",
+    it: "Italian"
   };
   function resolveLanguage(language, browserLanguage = typeof navigator !== "undefined" ? navigator.language : "zh-CN") {
     if (language && language !== "auto") return language;
@@ -13201,9 +15393,17 @@
     if (normalized.startsWith("en")) return "en";
     if (normalized.startsWith("ja")) return "ja";
     if (normalized.startsWith("ko")) return "ko";
+    if (normalized.startsWith("es")) return "es";
+    if (normalized.startsWith("fr")) return "fr";
+    if (normalized.startsWith("de")) return "de";
+    if (normalized.startsWith("it")) return "it";
     return "zh-CN";
   }
-  var UI_TEXT = {
+  function resolvePromptLanguage(language, browserLanguage) {
+    const resolved = resolveLanguage(language, browserLanguage);
+    return resolved === "es" || resolved === "fr" || resolved === "de" || resolved === "it" ? "en" : resolved;
+  }
+  var CORE_UI_TEXT = {
     "zh-CN": {
       askSelectionTitle: "\u5728\u4FA7\u8FB9\u680F\u63D0\u95EE",
       askSelectionDescription: "\u628A\u5F53\u524D\u5185\u5BB9\u4EA4\u7ED9\u4FA7\u8FB9\u680F\u7EE7\u7EED\u63D0\u95EE",
@@ -15930,6 +18130,16 @@
       modelThinkingTimeoutMessage: "\uBAA8\uB378\uC758 \uC0AC\uACE0 \uC2DC\uAC04\uC774 \uCD08\uACFC\uB418\uC5B4 \uB2F5\uBCC0\uC744 \uC911\uB2E8\uD588\uC2B5\uB2C8\uB2E4."
     }
   };
+  var WESTERN_UI_TEXT = {
+    es: esUiText,
+    fr: frUiText,
+    de: deUiText,
+    it: itUiText
+  };
+  var UI_TEXT = {
+    ...CORE_UI_TEXT,
+    ...WESTERN_UI_TEXT
+  };
   function uiText(language, key) {
     return UI_TEXT[resolveLanguage(language)][key] ?? UI_TEXT["zh-CN"][key];
   }
@@ -16260,6 +18470,9 @@
     const resolved = language === "auto" ? fallback ? resolveLanguage("auto") : null : language;
     if (resolved === "zh-CN" || resolved === "zh-TW") return "zh";
     if (resolved === "en") return "en";
+    if (resolved === "es" || resolved === "fr" || resolved === "de" || resolved === "it") {
+      return resolved;
+    }
     return null;
   }
   function targetReadingFamily(settings2, sourceFamily) {
@@ -16382,8 +18595,10 @@
     return value.replace(/`?\{\{\s*WEBMIND_[A-Z_]+(?:_\d+)?\s*\}\}`?/gi, " ").replace(/\[\s*WEBMIND_[A-Z_]+(?:_\d+)?\s*\]/gi, " ").replace(/WEBMIND_[A-Z_]+(?:_\d+)?/gi, " ").replace(/\[\[|\]\]|\|/g, " ").replace(/\s+/g, " ").trim();
   }
   function isReadingTranslationLanguageValid(translation, targetFamily) {
-    if (targetFamily === "en") return /[A-Za-z]/.test(translation);
-    return /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/.test(translation);
+    if (targetFamily === "zh") {
+      return /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/.test(translation);
+    }
+    return /[A-Za-zÀ-ÖØ-öø-ÿß]/.test(translation);
   }
   function escapeRegExp(value) {
     return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -16535,9 +18750,14 @@
       const key = readingSpanKey(span, family);
       const source = sanitizeReadingMarkerValue(span.source);
       if (!source || containsWebMindPlaceholder(source)) continue;
-      const translation = sanitizeReadingMarkerValue(
-        span.translation ?? fallbackTranslations.get(key) ?? ""
+      const dictionaryTranslation = sanitizeReadingMarkerValue(
+        span.translation ?? ""
       );
+      const fallbackTranslation = sanitizeReadingMarkerValue(
+        fallbackTranslations.get(key) ?? ""
+      );
+      const dictionaryTargetFamily = family === "en" ? "zh" : "en";
+      const translation = targetFamily && targetFamily !== dictionaryTargetFamily ? fallbackTranslation : dictionaryTranslation || fallbackTranslation;
       const cleanedTranslation = translation ? cleanReadingTranslation(span.source, translation) : "";
       if (!cleanedTranslation) continue;
       if (targetFamily && !isReadingTranslationLanguageValid(cleanedTranslation, targetFamily)) {
@@ -16607,7 +18827,10 @@
         spans: selected
       });
       for (const span of selected) {
-        if (span.translation) continue;
+        const dictionaryTargetFamily = family === "en" ? "zh" : "en";
+        if (span.translation && targetFamily === dictionaryTargetFamily) {
+          continue;
+        }
         const key = readingSpanKey(span, family);
         if (fallbackTerms.has(key)) continue;
         fallbackTerms.set(key, {
@@ -16668,9 +18891,9 @@
   function buildReadingFallbackPrompt(terms) {
     return [
       "Translate only the listed immersive-reading terms. Do not choose new terms and do not rewrite the context.",
-      "targetFamily=en means translate the source term into concise natural English. targetFamily=zh means translate it into concise natural Chinese.",
+      "Target languages: en=English, zh=Chinese, es=Spanish, fr=French, de=German, it=Italian. Translate every source term into the exact language named by targetFamily.",
       "Never translate, modify, copy, or output WEBMIND_* placeholders. If a placeholder appears in context, ignore it.",
-      "For targetFamily=en, every translation must contain English letters. For targetFamily=zh, every translation must contain Chinese characters.",
+      "Translations for targetFamily=zh must contain Chinese characters. Translations for en, es, fr, de, or it must contain letters from the requested language and must not silently switch to another target language.",
       'Use the context only to disambiguate. Return only a JSON array, no code fence, in this format: [{"key":"same key","translation":"short translation"}].',
       "<terms>",
       JSON.stringify(
@@ -16691,11 +18914,13 @@
     if (typeof source === "string" || source === void 0) {
       return {
         interfaceLanguage: resolveLanguage(source),
+        promptLanguage: resolvePromptLanguage(source),
         translationLanguage: "auto"
       };
     }
     return {
       interfaceLanguage: resolveLanguage(source.interfaceLanguage),
+      promptLanguage: resolvePromptLanguage(source.interfaceLanguage),
       translationLanguage: source.translationLanguage ?? "auto"
     };
   }
@@ -16703,31 +18928,162 @@
     zh: "Chinese",
     en: "English",
     ja: "Japanese",
-    ko: "Korean"
+    ko: "Korean",
+    es: "Spanish",
+    fr: "French",
+    de: "German",
+    it: "Italian"
   };
+  var LATIN_LANGUAGE_MARKERS = {
+    es: /* @__PURE__ */ new Set([
+      "el",
+      "los",
+      "las",
+      "una",
+      "unos",
+      "unas",
+      "que",
+      "del",
+      "al",
+      "como",
+      "pero",
+      "para",
+      "por",
+      "con",
+      "sin",
+      "es",
+      "son",
+      "est\xE1"
+    ]),
+    fr: /* @__PURE__ */ new Set([
+      "le",
+      "les",
+      "des",
+      "une",
+      "du",
+      "au",
+      "aux",
+      "que",
+      "qui",
+      "dans",
+      "pour",
+      "avec",
+      "sans",
+      "est",
+      "sont",
+      "mais",
+      "comme"
+    ]),
+    de: /* @__PURE__ */ new Set([
+      "der",
+      "die",
+      "das",
+      "den",
+      "dem",
+      "des",
+      "ein",
+      "eine",
+      "und",
+      "ist",
+      "sind",
+      "nicht",
+      "mit",
+      "f\xFCr",
+      "auf",
+      "von",
+      "zu",
+      "aber"
+    ]),
+    it: /* @__PURE__ */ new Set([
+      "il",
+      "lo",
+      "gli",
+      "le",
+      "un",
+      "una",
+      "che",
+      "del",
+      "della",
+      "nel",
+      "nella",
+      "per",
+      "con",
+      "senza",
+      "non",
+      "sono",
+      "come",
+      "ma"
+    ])
+  };
+  function detectLatinTranslationLanguage(source) {
+    const words = source.toLocaleLowerCase().match(/[a-zà-öø-ÿß]+/gu) ?? [];
+    const scores = Object.keys(LATIN_LANGUAGE_MARKERS).map((language) => ({
+      language,
+      score: words.reduce(
+        (total, word) => total + (LATIN_LANGUAGE_MARKERS[language].has(word) ? 1 : 0),
+        0
+      )
+    }));
+    if (/[¿¡ñ]/iu.test(source)) {
+      scores.find(({ language }) => language === "es").score += 2;
+    }
+    if (/[œç]/iu.test(source)) {
+      scores.find(({ language }) => language === "fr").score += 2;
+    }
+    if (/[äöüß]/iu.test(source)) {
+      scores.find(({ language }) => language === "de").score += 2;
+    }
+    scores.sort((left, right) => right.score - left.score);
+    return scores[0].score >= 2 && scores[0].score > scores[1].score ? scores[0].language : "en";
+  }
+  function withoutFencedCodeBlocks(text2) {
+    const lines = text2.replace(/\r\n?/g, "\n").split("\n");
+    const visibleLines = [];
+    let fenceMarker = "";
+    let fenceLength = 0;
+    for (const line of lines) {
+      if (!fenceMarker) {
+        const opening = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
+        if (opening && !(opening[1][0] === "`" && opening[2].includes("`"))) {
+          fenceMarker = opening[1][0];
+          fenceLength = opening[1].length;
+          visibleLines.push("");
+          continue;
+        }
+        visibleLines.push(line);
+        continue;
+      }
+      const closing = line.match(/^ {0,3}(`+|~+)[\t ]*$/);
+      if (closing && closing[1][0] === fenceMarker && closing[1].length >= fenceLength) {
+        fenceMarker = "";
+        fenceLength = 0;
+      }
+    }
+    return visibleLines.join("\n");
+  }
   function visibleTranslationSourceText(text2) {
-    return text2.replace(
+    return withoutFencedCodeBlocks(text2).replace(/<pre\b[^>]*>[\s\S]*?<\/pre>/gi, " ").replace(/<code\b[^>]*>[\s\S]*?<\/code>/gi, " ").replace(/(`+)(?!`)([^\n]*?)\1/g, " ").replace(
       /\[([^\]\n]{1,500})\]\(\s*(?:<[^>\n]+>|[^)\n]+)\s*\)/g,
       "$1"
     ).replace(/<[^>]*>/g, " ");
   }
   function detectTranslationLanguage(text2) {
     const source = visibleTranslationSourceText(text2);
-    const latinWordCount = source.match(/[A-Za-z]+/g)?.length ?? 0;
+    const latinWords = source.match(/[A-Za-zÀ-ÖØ-öø-ÿ]+(?:['’-][A-Za-zÀ-ÖØ-öø-ÿ]+)*/g) ?? [];
+    const latinLetterCount = latinWords.join("").replace(/['’-]/g, "").length;
     const chineseCount = source.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g)?.length ?? 0;
     const japaneseKanaCount = source.match(/[\u3040-\u30ff\u31f0-\u31ff]/g)?.length ?? 0;
     const koreanCount = source.match(/[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af]/g)?.length ?? 0;
+    const nonLatinLetterCount = chineseCount + japaneseKanaCount + koreanCount;
+    const languageLetterCount = latinLetterCount + nonLatinLetterCount;
+    const latinShare = languageLetterCount ? latinLetterCount / languageLetterCount : 0;
+    const latinDominant = latinLetterCount > 0 && (nonLatinLetterCount === 0 || latinWords.length >= 2 && latinShare >= 0.8);
+    if (latinDominant) {
+      return detectLatinTranslationLanguage(source);
+    }
     if (koreanCount) return "ko";
     if (japaneseKanaCount) return "ja";
-    if (chineseCount >= 2 && chineseCount >= latinWordCount) {
-      return "zh";
-    }
-    if (chineseCount >= 1 && latinWordCount === 0) {
-      return "zh";
-    }
-    if (latinWordCount >= 2 && latinWordCount > chineseCount) return "en";
-    if (chineseCount >= 2) return "zh";
-    if (latinWordCount >= 1 && chineseCount === 0) return "en";
+    if (chineseCount) return "zh";
     return null;
   }
   function translationLanguageMatchesInterface(sourceLanguage, interfaceLanguage) {
@@ -16737,13 +19093,13 @@
     return sourceLanguage === interfaceLanguage;
   }
   function translationDirectionInstruction(config, sourceText) {
-    const { interfaceLanguage, translationLanguage } = resolvePromptConfig(config);
+    const { interfaceLanguage, promptLanguage, translationLanguage } = resolvePromptConfig(config);
     const sourceLanguage = detectTranslationLanguage(sourceText);
     if (!sourceLanguage) return "";
     const targetLanguage = translationLanguage === "auto" ? translationLanguageMatchesInterface(sourceLanguage, interfaceLanguage) ? "en" : interfaceLanguage : resolveLanguage(translationLanguage);
     const targetLabel = LANGUAGE_LABELS[targetLanguage];
     const sourceLabel = TRANSLATION_FAMILY_LABELS[sourceLanguage];
-    switch (interfaceLanguage) {
+    switch (promptLanguage) {
       case "zh-TW":
         return `\u53EA\u6839\u64DA <translation-input> \u4E2D\u5BE6\u969B\u539F\u6587\u7684\u6587\u5B57\u7279\u5FB5\u8655\u7406\u3002\u672C\u5730\u9810\u5224\u539F\u6587\u4E3B\u8981\u8A9E\u8A00\u70BA ${sourceLabel}\uFF0C\u672C\u6B21\u76EE\u6A19\u8A9E\u8A00\u5DF2\u56FA\u5B9A\u70BA${targetLabel}\u3002\u9019\u662F\u4E00\u500B\u5F37\u5236\u7FFB\u8B6F\u4EFB\u52D9\uFF0C\u4E0D\u662F\u8A9E\u8A00\u6AA2\u6E2C\u4EFB\u52D9\u3002\u5982\u679C\u539F\u6587\u4E0D\u662F${targetLabel}\uFF0C\u6700\u7D42\u8F38\u51FA\u5FC5\u9808\u662F${targetLabel}\uFF0C\u4E0D\u5F97\u8907\u88FD\u539F\u6587\u6216\u7528\u539F\u6587\u8A9E\u8A00\u56DE\u7B54\u3002\u5373\u4F7F\u539F\u6587\u53EA\u6709\u4E00\u500B\u55AE\u5B57\u3001\u77ED\u8A9E\u6216\u4E00\u5169\u53E5\u8A71\uFF0C\u53EA\u8981\u5B58\u5728\u53EF\u7FFB\u8B6F\u5167\u5BB9\u4E5F\u5FC5\u9808\u7FFB\u8B6F\uFF0C\u4E0D\u8981\u56E0\u70BA\u5167\u5BB9\u7C21\u77ED\u800C\u539F\u6A23\u8FD4\u56DE\u3002`;
       case "en":
@@ -16758,30 +19114,33 @@
     }
   }
   function translationFormatInstruction(config) {
-    const { interfaceLanguage } = resolvePromptConfig(config);
-    switch (interfaceLanguage) {
+    const { promptLanguage } = resolvePromptConfig(config);
+    switch (promptLanguage) {
       case "zh-TW":
-        return "\u56B4\u683C\u4FDD\u6301\u539F\u6587\u7684\u6BB5\u843D\u3001\u63DB\u884C\u3001\u6A19\u984C\u548C\u6E05\u55AE\u7D50\u69CB\uFF0C\u6BCF\u500B\u539F\u6587\u6BB5\u843D\u5C0D\u61C9\u4E00\u500B\u8B6F\u6587\u6BB5\u843D\uFF0C\u4E0D\u8981\u5408\u4F75\u6BB5\u843D\u3002{{WEBMIND_PARAGRAPH_BREAK_N}} \u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u6BB5\u843D\u5206\u9694\u9810\u7559\u4F4D\u7F6E\uFF0C{{WEBMIND_CITATION_N}} \u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u5F15\u7528\u4E0B\u6A19\u9810\u7559\u4F4D\u7F6E\uFF1B\u5169\u8005\u90FD\u5FC5\u9808\u9010\u5B57\u4FDD\u7559\u5728\u539F\u4F4D\u7F6E\uFF0C\u4E0D\u8981\u5C55\u958B\u3001\u89E3\u91CB\u3001\u6539\u5BEB\u6216\u522A\u9664\uFF0C\u4E0D\u8981\u8F38\u51FA\u300E\u8A72\u8CC7\u8A0A\u4F86\u81EA\u2026\u2026\u5F15\u7528\u300F\u4E4B\u985E\u7684\u8AAA\u660E\u3002{{WEBMIND_LINK_START_N}} \u548C {{WEBMIND_LINK_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u9023\u7D50\u908A\u754C\u9810\u7559\u4F4D\u7F6E\uFF0C\u5FC5\u9808\u539F\u6A23\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8B6F\u5169\u8005\u4E4B\u9593\u53EF\u898B\u7684\u9023\u7D50\u6587\u5B57\uFF0C\u4E0D\u8981\u88DC\u5145\u3001\u7FFB\u8B6F\u6216\u8F38\u51FA\u9023\u7D50\u5730\u5740\u3002{{WEBMIND_FORMAT_START_N}} \u548C {{WEBMIND_FORMAT_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u4E0A\u6A19/\u4E0B\u6A19\u683C\u5F0F\u908A\u754C\u9810\u7559\u4F4D\u7F6E\uFF0C\u5FC5\u9808\u539F\u6A23\u4FDD\u7559\uFF0C\u53EA\u7FFB\u8B6F\u908A\u754C\u5167\u53EF\u898B\u6587\u5B57\u3002";
+        return "\u56B4\u683C\u4FDD\u6301\u539F\u6587\u7684\u6BB5\u843D\u3001\u63DB\u884C\u3001\u6A19\u984C\u548C\u6E05\u55AE\u7D50\u69CB\uFF0C\u6BCF\u500B\u539F\u6587\u6BB5\u843D\u5C0D\u61C9\u4E00\u500B\u8B6F\u6587\u6BB5\u843D\uFF0C\u4E0D\u8981\u5408\u4F75\u6BB5\u843D\u3002{{WEBMIND_PARAGRAPH_BREAK_N}} \u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u63DB\u884C\u6216\u6BB5\u843D\u5206\u9694\u9810\u7559\u4F4D\u7F6E\uFF0C{{WEBMIND_CODE_BLOCK_N}} \u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u5B8C\u6574 fenced code block \u9810\u7559\u4F4D\u7F6E\uFF0C{{WEBMIND_CITATION_N}} \u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u5F15\u7528\u4E0B\u6A19\u9810\u7559\u4F4D\u7F6E\uFF1B\u4E09\u8005\u90FD\u5FC5\u9808\u9010\u5B57\u4FDD\u7559\u5728\u539F\u4F4D\u7F6E\uFF0C\u4E0D\u8981\u4F7F\u7528\u53CD\u5F15\u865F\u5305\u88F9\u9810\u7559\u4F4D\u7F6E\uFF0C\u4E5F\u4E0D\u8981\u5C55\u958B\u3001\u89E3\u91CB\u3001\u6539\u5BEB\u6216\u522A\u9664\u3002\u7A0B\u5F0F\u78BC\u4E0D\u9700\u8981\u7FFB\u8B6F\uFF1B\u6700\u7D42\u6062\u5FA9\u5F8C\u5FC5\u9808\u4ECD\u662F\u5305\u542B\u8A9E\u8A00\u6A19\u8A18\u548C\u591A\u884C\u5167\u5BB9\u7684 fenced code block\uFF0C\u4E0D\u5F97\u6539\u6210\u55AE\u53CD\u5F15\u865F\u884C\u5167\u7A0B\u5F0F\u78BC\u3002\u4E0D\u8981\u8F38\u51FA\u300E\u8A72\u8CC7\u8A0A\u4F86\u81EA\u2026\u2026\u5F15\u7528\u300F\u4E4B\u985E\u7684\u8AAA\u660E\u3002{{WEBMIND_LINK_START_N}} \u548C {{WEBMIND_LINK_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u9023\u7D50\u908A\u754C\u9810\u7559\u4F4D\u7F6E\uFF0C\u5FC5\u9808\u539F\u6A23\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8B6F\u5169\u8005\u4E4B\u9593\u53EF\u898B\u7684\u9023\u7D50\u6587\u5B57\uFF0C\u4E0D\u8981\u88DC\u5145\u3001\u7FFB\u8B6F\u6216\u8F38\u51FA\u9023\u7D50\u5730\u5740\u3002{{WEBMIND_FORMAT_START_N}} \u548C {{WEBMIND_FORMAT_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u4E0A\u6A19/\u4E0B\u6A19\u683C\u5F0F\u908A\u754C\u9810\u7559\u4F4D\u7F6E\uFF0C\u5FC5\u9808\u539F\u6A23\u4FDD\u7559\uFF0C\u53EA\u7FFB\u8B6F\u908A\u754C\u5167\u53EF\u898B\u6587\u5B57\u3002";
       case "en":
-        return "Strictly preserve the source paragraph, line-break, heading, and list structure, with one translated paragraph for each source paragraph; never merge paragraphs. {{WEBMIND_PARAGRAPH_BREAK_N}} is an immutable paragraph-break placeholder and {{WEBMIND_CITATION_N}} is an immutable citation-marker placeholder. Preserve both verbatim in place without expanding, explaining, rewriting, or removing them, and never spell out a citation explanation. {{WEBMIND_LINK_START_N}} and {{WEBMIND_LINK_END_N}} are immutable link-boundary placeholders; preserve them verbatim, translate only the visible link text between them, and never add, translate, or output link URLs. {{WEBMIND_FORMAT_START_N}} and {{WEBMIND_FORMAT_END_N}} are immutable superscript/subscript-format boundaries; preserve them verbatim and translate only the visible text between them.";
+        return "Strictly preserve the source paragraph, line-break, heading, and list structure, with one translated paragraph for each source paragraph; never merge paragraphs. {{WEBMIND_PARAGRAPH_BREAK_N}} is an immutable line/paragraph-break placeholder, {{WEBMIND_CODE_BLOCK_N}} is an immutable complete fenced-code-block placeholder, and {{WEBMIND_CITATION_N}} is an immutable citation-marker placeholder. Preserve all three verbatim in place without wrapping placeholders in backticks, expanding, explaining, rewriting, or removing them. Code does not need translation; after restoration it must remain a fenced code block with its language marker and multiline content, never single-backtick inline code. Never spell out a citation explanation. {{WEBMIND_LINK_START_N}} and {{WEBMIND_LINK_END_N}} are immutable link-boundary placeholders; preserve them verbatim, translate only the visible link text between them, and never add, translate, or output link URLs. {{WEBMIND_FORMAT_START_N}} and {{WEBMIND_FORMAT_END_N}} are immutable superscript/subscript-format boundaries; preserve them verbatim and translate only the visible text between them.";
       case "ja":
-        return "\u539F\u6587\u306E\u6BB5\u843D\u3001\u6539\u884C\u3001\u898B\u51FA\u3057\u3001\u30EA\u30B9\u30C8\u69CB\u9020\u3092\u53B3\u5BC6\u306B\u4FDD\u6301\u3057\u3001\u5404\u539F\u6587\u6BB5\u843D\u3092\u5BFE\u5FDC\u3059\u308B\u4E00\u3064\u306E\u7FFB\u8A33\u6BB5\u843D\u306B\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u6BB5\u843D\u3092\u7D50\u5408\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002{{WEBMIND_PARAGRAPH_BREAK_N}} \u306F\u7FFB\u8A33\u4E0D\u53EF\u306E\u6BB5\u843D\u533A\u5207\u308A\u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3001{{WEBMIND_CITATION_N}} \u306F\u7FFB\u8A33\u4E0D\u53EF\u306E\u5F15\u7528\u756A\u53F7\u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3067\u3059\u3002\u3069\u3061\u3089\u3082\u5143\u306E\u4F4D\u7F6E\u306B\u305D\u306E\u307E\u307E\u6B8B\u3057\u3001\u5C55\u958B\u3001\u8AAC\u660E\u3001\u66F8\u304D\u63DB\u3048\u3001\u524A\u9664\u3092\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002{{WEBMIND_LINK_START_N}} \u3068 {{WEBMIND_LINK_END_N}} \u306F\u7FFB\u8A33\u4E0D\u53EF\u306E\u30EA\u30F3\u30AF\u5883\u754C\u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3067\u3059\u3002\u305D\u306E\u307E\u307E\u4FDD\u6301\u3057\u3001\u9593\u306B\u3042\u308B\u8868\u793A\u30EA\u30F3\u30AF\u6587\u5B57\u3060\u3051\u3092\u7FFB\u8A33\u3057\u3001\u30EA\u30F3\u30AF URL \u3092\u8FFD\u52A0\u30FB\u7FFB\u8A33\u30FB\u51FA\u529B\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002{{WEBMIND_FORMAT_START_N}} \u3068 {{WEBMIND_FORMAT_END_N}} \u306F\u7FFB\u8A33\u4E0D\u53EF\u306E\u4E0A\u4ED8\u304D/\u4E0B\u4ED8\u304D\u66F8\u5F0F\u5883\u754C\u3067\u3059\u3002\u305D\u306E\u307E\u307E\u4FDD\u6301\u3057\u3001\u5883\u754C\u5185\u306E\u8868\u793A\u6587\u5B57\u3060\u3051\u3092\u7FFB\u8A33\u3057\u3066\u304F\u3060\u3055\u3044\u3002";
+        return "\u539F\u6587\u306E\u6BB5\u843D\u3001\u6539\u884C\u3001\u898B\u51FA\u3057\u3001\u30EA\u30B9\u30C8\u69CB\u9020\u3092\u53B3\u5BC6\u306B\u4FDD\u6301\u3057\u3001\u5404\u539F\u6587\u6BB5\u843D\u3092\u5BFE\u5FDC\u3059\u308B\u4E00\u3064\u306E\u7FFB\u8A33\u6BB5\u843D\u306B\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u6BB5\u843D\u3092\u7D50\u5408\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002{{WEBMIND_PARAGRAPH_BREAK_N}} \u306F\u7FFB\u8A33\u4E0D\u53EF\u306E\u6539\u884C\u30FB\u6BB5\u843D\u533A\u5207\u308A\u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3001{{WEBMIND_CODE_BLOCK_N}} \u306F\u7FFB\u8A33\u4E0D\u53EF\u306E\u5B8C\u5168\u306A fenced code block \u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3001{{WEBMIND_CITATION_N}} \u306F\u7FFB\u8A33\u4E0D\u53EF\u306E\u5F15\u7528\u756A\u53F7\u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3067\u3059\u3002\u4E09\u7A2E\u985E\u3068\u3082\u30D0\u30C3\u30AF\u30AF\u30A9\u30FC\u30C8\u3067\u56F2\u307E\u305A\u5143\u306E\u4F4D\u7F6E\u306B\u305D\u306E\u307E\u307E\u6B8B\u3057\u3001\u5C55\u958B\u3001\u8AAC\u660E\u3001\u66F8\u304D\u63DB\u3048\u3001\u524A\u9664\u3092\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002\u30B3\u30FC\u30C9\u306F\u7FFB\u8A33\u305B\u305A\u3001\u5FA9\u5143\u5F8C\u3082\u8A00\u8A9E\u6307\u5B9A\u3068\u8907\u6570\u884C\u3092\u6301\u3064 fenced code block \u306E\u307E\u307E\u306B\u3057\u3001\u5358\u4E00\u30D0\u30C3\u30AF\u30AF\u30A9\u30FC\u30C8\u306E\u30A4\u30F3\u30E9\u30A4\u30F3\u30B3\u30FC\u30C9\u306B\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002{{WEBMIND_LINK_START_N}} \u3068 {{WEBMIND_LINK_END_N}} \u306F\u7FFB\u8A33\u4E0D\u53EF\u306E\u30EA\u30F3\u30AF\u5883\u754C\u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3067\u3059\u3002\u305D\u306E\u307E\u307E\u4FDD\u6301\u3057\u3001\u9593\u306B\u3042\u308B\u8868\u793A\u30EA\u30F3\u30AF\u6587\u5B57\u3060\u3051\u3092\u7FFB\u8A33\u3057\u3001\u30EA\u30F3\u30AF URL \u3092\u8FFD\u52A0\u30FB\u7FFB\u8A33\u30FB\u51FA\u529B\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002{{WEBMIND_FORMAT_START_N}} \u3068 {{WEBMIND_FORMAT_END_N}} \u306F\u7FFB\u8A33\u4E0D\u53EF\u306E\u4E0A\u4ED8\u304D/\u4E0B\u4ED8\u304D\u66F8\u5F0F\u5883\u754C\u3067\u3059\u3002\u305D\u306E\u307E\u307E\u4FDD\u6301\u3057\u3001\u5883\u754C\u5185\u306E\u8868\u793A\u6587\u5B57\u3060\u3051\u3092\u7FFB\u8A33\u3057\u3066\u304F\u3060\u3055\u3044\u3002";
       case "ko":
-        return "\uC6D0\uBB38\uC758 \uBB38\uB2E8, \uC904\uBC14\uAFC8, \uC81C\uBAA9 \uBC0F \uBAA9\uB85D \uAD6C\uC870\uB97C \uC5C4\uACA9\uD788 \uC720\uC9C0\uD558\uACE0 \uAC01 \uC6D0\uBB38 \uBB38\uB2E8\uC744 \uD558\uB098\uC758 \uBC88\uC5ED \uBB38\uB2E8\uC5D0 \uB300\uC751\uC2DC\uD0A4\uBA70 \uBB38\uB2E8\uC744 \uD569\uCE58\uC9C0 \uB9C8\uC138\uC694. {{WEBMIND_PARAGRAPH_BREAK_N}}\uC740 \uBC88\uC5ED\uD558\uBA74 \uC548 \uB418\uB294 \uBB38\uB2E8 \uAD6C\uBD84 \uC790\uB9AC\uD45C\uC2DC\uC790\uC774\uACE0 {{WEBMIND_CITATION_N}}\uC740 \uBC88\uC5ED\uD558\uBA74 \uC548 \uB418\uB294 \uC778\uC6A9 \uBC88\uD638 \uC790\uB9AC\uD45C\uC2DC\uC790\uC785\uB2C8\uB2E4. \uB458 \uB2E4 \uC6D0\uB798 \uC704\uCE58\uC5D0 \uADF8\uB300\uB85C \uC720\uC9C0\uD558\uACE0 \uD655\uC7A5, \uC124\uBA85, \uC218\uC815 \uB610\uB294 \uC0AD\uC81C\uD558\uC9C0 \uB9C8\uC138\uC694. {{WEBMIND_LINK_START_N}} \uBC0F {{WEBMIND_LINK_END_N}}\uC740 \uBC88\uC5ED\uD558\uBA74 \uC548 \uB418\uB294 \uB9C1\uD06C \uACBD\uACC4 \uC790\uB9AC\uD45C\uC2DC\uC790\uC785\uB2C8\uB2E4. \uADF8\uB300\uB85C \uC720\uC9C0\uD558\uACE0 \uADF8 \uC0AC\uC774\uC758 \uBCF4\uC774\uB294 \uB9C1\uD06C \uD14D\uC2A4\uD2B8\uB9CC \uBC88\uC5ED\uD558\uBA70 \uB9C1\uD06C URL\uC744 \uCD94\uAC00, \uBC88\uC5ED \uB610\uB294 \uCD9C\uB825\uD558\uC9C0 \uB9C8\uC138\uC694. {{WEBMIND_FORMAT_START_N}} \uBC0F {{WEBMIND_FORMAT_END_N}}\uC740 \uBC88\uC5ED\uD558\uBA74 \uC548 \uB418\uB294 \uC704 \uCCA8\uC790/\uC544\uB798 \uCCA8\uC790 \uC11C\uC2DD \uACBD\uACC4\uC785\uB2C8\uB2E4. \uADF8\uB300\uB85C \uC720\uC9C0\uD558\uACE0 \uACBD\uACC4 \uC548\uC758 \uBCF4\uC774\uB294 \uD14D\uC2A4\uD2B8\uB9CC \uBC88\uC5ED\uD558\uC138\uC694.";
+        return "\uC6D0\uBB38\uC758 \uBB38\uB2E8, \uC904\uBC14\uAFC8, \uC81C\uBAA9 \uBC0F \uBAA9\uB85D \uAD6C\uC870\uB97C \uC5C4\uACA9\uD788 \uC720\uC9C0\uD558\uACE0 \uAC01 \uC6D0\uBB38 \uBB38\uB2E8\uC744 \uD558\uB098\uC758 \uBC88\uC5ED \uBB38\uB2E8\uC5D0 \uB300\uC751\uC2DC\uD0A4\uBA70 \uBB38\uB2E8\uC744 \uD569\uCE58\uC9C0 \uB9C8\uC138\uC694. {{WEBMIND_PARAGRAPH_BREAK_N}}\uC740 \uBC88\uC5ED\uD558\uBA74 \uC548 \uB418\uB294 \uC904\uBC14\uAFC8/\uBB38\uB2E8 \uAD6C\uBD84 \uC790\uB9AC\uD45C\uC2DC\uC790\uC774\uACE0, {{WEBMIND_CODE_BLOCK_N}}\uC740 \uBC88\uC5ED\uD558\uBA74 \uC548 \uB418\uB294 \uC644\uC804\uD55C fenced code block \uC790\uB9AC\uD45C\uC2DC\uC790\uC774\uBA70, {{WEBMIND_CITATION_N}}\uC740 \uBC88\uC5ED\uD558\uBA74 \uC548 \uB418\uB294 \uC778\uC6A9 \uBC88\uD638 \uC790\uB9AC\uD45C\uC2DC\uC790\uC785\uB2C8\uB2E4. \uC138 \uC885\uB958 \uBAA8\uB450 \uBC31\uD2F1\uC73C\uB85C \uAC10\uC2F8\uC9C0 \uB9D0\uACE0 \uC6D0\uB798 \uC704\uCE58\uC5D0 \uADF8\uB300\uB85C \uC720\uC9C0\uD558\uBA70 \uD655\uC7A5, \uC124\uBA85, \uC218\uC815 \uB610\uB294 \uC0AD\uC81C\uD558\uC9C0 \uB9C8\uC138\uC694. \uCF54\uB4DC\uB294 \uBC88\uC5ED\uD558\uC9C0 \uB9D0\uACE0 \uBCF5\uC6D0 \uD6C4\uC5D0\uB3C4 \uC5B8\uC5B4 \uD45C\uC2DC\uC640 \uC5EC\uB7EC \uC904 \uB0B4\uC6A9\uC744 \uAC00\uC9C4 fenced code block\uC73C\uB85C \uC720\uC9C0\uD558\uBA70 \uB2E8\uC77C \uBC31\uD2F1 \uC778\uB77C\uC778 \uCF54\uB4DC\uB85C \uBC14\uAFB8\uC9C0 \uB9C8\uC138\uC694. {{WEBMIND_LINK_START_N}} \uBC0F {{WEBMIND_LINK_END_N}}\uC740 \uBC88\uC5ED\uD558\uBA74 \uC548 \uB418\uB294 \uB9C1\uD06C \uACBD\uACC4 \uC790\uB9AC\uD45C\uC2DC\uC790\uC785\uB2C8\uB2E4. \uADF8\uB300\uB85C \uC720\uC9C0\uD558\uACE0 \uADF8 \uC0AC\uC774\uC758 \uBCF4\uC774\uB294 \uB9C1\uD06C \uD14D\uC2A4\uD2B8\uB9CC \uBC88\uC5ED\uD558\uBA70 \uB9C1\uD06C URL\uC744 \uCD94\uAC00, \uBC88\uC5ED \uB610\uB294 \uCD9C\uB825\uD558\uC9C0 \uB9C8\uC138\uC694. {{WEBMIND_FORMAT_START_N}} \uBC0F {{WEBMIND_FORMAT_END_N}}\uC740 \uBC88\uC5ED\uD558\uBA74 \uC548 \uB418\uB294 \uC704 \uCCA8\uC790/\uC544\uB798 \uCCA8\uC790 \uC11C\uC2DD \uACBD\uACC4\uC785\uB2C8\uB2E4. \uADF8\uB300\uB85C \uC720\uC9C0\uD558\uACE0 \uACBD\uACC4 \uC548\uC758 \uBCF4\uC774\uB294 \uD14D\uC2A4\uD2B8\uB9CC \uBC88\uC5ED\uD558\uC138\uC694.";
       case "zh-CN":
       default:
-        return "\u4E25\u683C\u4FDD\u6301\u539F\u6587\u7684\u6BB5\u843D\u3001\u6362\u884C\u3001\u6807\u9898\u548C\u5217\u8868\u7ED3\u6784\uFF0C\u6BCF\u4E2A\u539F\u6587\u6BB5\u843D\u5BF9\u5E94\u4E00\u4E2A\u8BD1\u6587\u6BB5\u843D\uFF0C\u4E0D\u8981\u5408\u5E76\u6BB5\u843D\u3002{{WEBMIND_PARAGRAPH_BREAK_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u6BB5\u843D\u5206\u9694\u5360\u4F4D\u7B26\uFF0C{{WEBMIND_CITATION_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u5F15\u7528\u4E0B\u6807\u5360\u4F4D\u7B26\uFF1B\u4E24\u8005\u90FD\u5FC5\u987B\u9010\u5B57\u4FDD\u7559\u5728\u539F\u4F4D\u7F6E\uFF0C\u4E0D\u8981\u5C55\u5F00\u3001\u89E3\u91CA\u3001\u6539\u5199\u6216\u5220\u9664\uFF0C\u4E0D\u8981\u8F93\u51FA\u2018\u8BE5\u4FE1\u606F\u6765\u81EA\u2026\u2026\u5F15\u7528\u2019\u4E4B\u7C7B\u7684\u8BF4\u660E\u3002{{WEBMIND_LINK_START_N}} \u548C {{WEBMIND_LINK_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u94FE\u63A5\u8FB9\u754C\u5360\u4F4D\u7B26\uFF0C\u5FC5\u987B\u539F\u6837\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8BD1\u4E24\u8005\u4E4B\u95F4\u53EF\u89C1\u7684\u94FE\u63A5\u6587\u5B57\uFF0C\u4E0D\u8981\u8865\u5145\u3001\u7FFB\u8BD1\u6216\u8F93\u51FA\u94FE\u63A5\u5730\u5740\u3002{{WEBMIND_FORMAT_START_N}} \u548C {{WEBMIND_FORMAT_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u4E0A\u6807/\u4E0B\u6807\u683C\u5F0F\u8FB9\u754C\uFF0C\u5FC5\u987B\u539F\u6837\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8BD1\u8FB9\u754C\u4E4B\u95F4\u53EF\u89C1\u7684\u6587\u5B57\u3002";
+        return "\u4E25\u683C\u4FDD\u6301\u539F\u6587\u7684\u6BB5\u843D\u3001\u6362\u884C\u3001\u6807\u9898\u548C\u5217\u8868\u7ED3\u6784\uFF0C\u6BCF\u4E2A\u539F\u6587\u6BB5\u843D\u5BF9\u5E94\u4E00\u4E2A\u8BD1\u6587\u6BB5\u843D\uFF0C\u4E0D\u8981\u5408\u5E76\u6BB5\u843D\u3002{{WEBMIND_PARAGRAPH_BREAK_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u6362\u884C\u6216\u6BB5\u843D\u5206\u9694\u5360\u4F4D\u7B26\uFF0C{{WEBMIND_CODE_BLOCK_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u5B8C\u6574 fenced code block \u5360\u4F4D\u7B26\uFF0C{{WEBMIND_CITATION_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u5F15\u7528\u4E0B\u6807\u5360\u4F4D\u7B26\uFF1B\u4E09\u8005\u90FD\u5FC5\u987B\u9010\u5B57\u4FDD\u7559\u5728\u539F\u4F4D\u7F6E\uFF0C\u4E0D\u8981\u7528\u53CD\u5F15\u53F7\u5305\u88F9\u5360\u4F4D\u7B26\uFF0C\u4E5F\u4E0D\u8981\u5C55\u5F00\u3001\u89E3\u91CA\u3001\u6539\u5199\u6216\u5220\u9664\u3002\u4EE3\u7801\u65E0\u9700\u7FFB\u8BD1\uFF1B\u6062\u590D\u540E\u5FC5\u987B\u4ECD\u662F\u5E26\u8BED\u8A00\u6807\u8BB0\u548C\u591A\u884C\u5185\u5BB9\u7684 fenced code block\uFF0C\u4E0D\u5F97\u6539\u6210\u5355\u53CD\u5F15\u53F7\u5185\u8054\u4EE3\u7801\u3002\u4E0D\u8981\u8F93\u51FA\u2018\u8BE5\u4FE1\u606F\u6765\u81EA\u2026\u2026\u5F15\u7528\u2019\u4E4B\u7C7B\u7684\u8BF4\u660E\u3002{{WEBMIND_LINK_START_N}} \u548C {{WEBMIND_LINK_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u94FE\u63A5\u8FB9\u754C\u5360\u4F4D\u7B26\uFF0C\u5FC5\u987B\u539F\u6837\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8BD1\u4E24\u8005\u4E4B\u95F4\u53EF\u89C1\u7684\u94FE\u63A5\u6587\u5B57\uFF0C\u4E0D\u8981\u8865\u5145\u3001\u7FFB\u8BD1\u6216\u8F93\u51FA\u94FE\u63A5\u5730\u5740\u3002{{WEBMIND_FORMAT_START_N}} \u548C {{WEBMIND_FORMAT_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u4E0A\u6807/\u4E0B\u6807\u683C\u5F0F\u8FB9\u754C\uFF0C\u5FC5\u987B\u539F\u6837\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8BD1\u8FB9\u754C\u4E4B\u95F4\u53EF\u89C1\u7684\u6587\u5B57\u3002";
     }
   }
+  function translationStructureIntegrityInstruction() {
+    return "Do not add numbering, bullets, quote markers, headings, labels, or any other prefix that is not present at the corresponding source line. Preserve whether each source line starts with a list marker exactly; a paragraph-break placeholder is only a separator, never a request to create a list. Never omit, move, or rewrite a code-block placeholder. Do not turn ordinary paragraphs into a Markdown ordered or unordered list.";
+  }
   function htmlFormattingInstruction(config) {
-    const language = resolvePromptConfig(config).interfaceLanguage;
+    const language = resolvePromptConfig(config).promptLanguage;
     if (language === "en") {
       return "Preserve every {{WEBMIND_HTML_TAG_N}} placeholder verbatim. These placeholders represent visible formatting tags such as strong, em, underline, del, code, and their matching closing tags; translate only the visible text around them. Do not translate or remove link destinations.";
     }
     return "{{WEBMIND_HTML_TAG_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u53EF\u89C1\u6837\u5F0F\u6807\u7B7E\u5360\u4F4D\u7B26\uFF08\u5305\u62EC\u7C97\u4F53\u3001\u659C\u4F53\u3001\u4E0B\u5212\u7EBF\u3001\u5220\u9664\u7EBF\u3001\u4EE3\u7801\u53CA\u5176\u95ED\u5408\u6807\u7B7E\uFF09\uFF0C\u5FC5\u987B\u9010\u5B57\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8BD1\u6807\u7B7E\u5305\u56F4\u6216\u76F8\u90BB\u7684\u53EF\u89C1\u6587\u5B57\uFF0C\u4E0D\u8981\u7FFB\u8BD1\u3001\u6539\u5199\u6216\u5220\u9664\u94FE\u63A5\u5730\u5740\u3002";
   }
   function immersiveReadingInstruction(config) {
-    const { interfaceLanguage, translationLanguage } = resolvePromptConfig(config);
+    const { interfaceLanguage, promptLanguage, translationLanguage } = resolvePromptConfig(config);
     const interfaceLabel = LANGUAGE_LABELS[interfaceLanguage];
     const translationSetting = translationLanguage === "auto" ? "auto" : LANGUAGE_LABELS[resolveLanguage(translationLanguage)];
     const difficulty = typeof config === "object" && config ? Math.max(
@@ -16794,14 +19153,14 @@
       en: `If the page's main language matches ${interfaceLabel}, use English as the learning language; otherwise use ${interfaceLabel}.`,
       ja: `\u30DA\u30FC\u30B8\u306E\u4E3B\u8A00\u8A9E\u304C${interfaceLabel}\u3068\u4E00\u81F4\u3059\u308B\u5834\u5408\u306F\u82F1\u8A9E\u3092\u5B66\u7FD2\u8A00\u8A9E\u306B\u3057\u3001\u4E00\u81F4\u3057\u306A\u3044\u5834\u5408\u306F${interfaceLabel}\u3092\u4F7F\u7528\u3057\u3066\u304F\u3060\u3055\u3044\u3002`,
       ko: `\uD398\uC774\uC9C0\uC758 \uC8FC \uC5B8\uC5B4\uAC00 ${interfaceLabel}\uC640 \uAC19\uC73C\uBA74 \uC601\uC5B4\uB97C \uD559\uC2B5 \uC5B8\uC5B4\uB85C \uC0AC\uC6A9\uD558\uACE0, \uB2E4\uB974\uBA74 ${interfaceLabel}\uB97C \uC0AC\uC6A9\uD558\uC138\uC694.`
-    }[interfaceLanguage];
+    }[promptLanguage];
     const fixedTargetRule = {
       "zh-CN": `\u5B66\u4E60\u8BED\u8A00\u56FA\u5B9A\u4E3A${translationSetting}\u3002`,
       "zh-TW": `\u5B78\u7FD2\u8A9E\u8A00\u56FA\u5B9A\u70BA${translationSetting}\u3002`,
       en: `Always use ${translationSetting} as the learning language.`,
       ja: `\u5B66\u7FD2\u8A00\u8A9E\u306F\u5E38\u306B${translationSetting}\u306B\u56FA\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002`,
       ko: `\uD559\uC2B5 \uC5B8\uC5B4\uB294 \uD56D\uC0C1 ${translationSetting}(\uC73C)\uB85C \uACE0\uC815\uD558\uC138\uC694.`
-    }[interfaceLanguage];
+    }[promptLanguage];
     const targetRule = translationLanguage === "auto" ? autoTargetRule : fixedTargetRule;
     const difficultyGuidance = {
       "zh-CN": [
@@ -16864,8 +19223,8 @@
         "\uB09C\uC774\uB3C4\uB294 \uC8FC\uB85C \uC601\uC5B4 \uD559\uC2B5 \uB2E8\uC5B4\uC758 \uC77C\uBC18\uC131/\uBE48\uB3C4\uB97C \uAE30\uC900\uC73C\uB85C \uD310\uB2E8\uD558\uC138\uC694. \uC911\uAD6D\uC5B4 \uD398\uC774\uC9C0\uC5D0\uC11C\uB294 \uC911\uAD6D\uC5B4 \uD45C\uD604 \uC790\uCCB4\uC758 \uAE38\uC774\uB098 \uD76C\uADC0\uC131\uB9CC \uBCF4\uC9C0 \uB9D0\uACE0, \uD574\uB2F9 \uC601\uC5B4 \uBC88\uC5ED\uC5B4\uC758 \uB09C\uC774\uB3C4\uB85C \uAD50\uCCB4 \uC5EC\uBD80\uB97C \uD310\uB2E8\uD558\uC138\uC694.",
         "\uBC88\uC5ED\uC740 \uD604\uC7AC \uBB38\uC7A5\uC774\uB098 \uBB38\uB2E8\uC758 \uBB38\uB9E5\uC5D0 \uB9DE\uB294 \uC790\uC5F0\uC2A4\uB7FD\uACE0 \uC9E7\uC740 \uB73B\uD480\uC774\uC5EC\uC57C \uD558\uBA70 \uBCF4\uD1B5 1-4\uB2E8\uC5B4\uB85C \uC791\uC131\uD558\uC138\uC694. \uC758\uBBF8 \uAD6C\uBD84\uACFC \uD544\uC694\uD55C \uC5F0\uC5B4\uB294 \uD5C8\uC6A9\uD558\uC9C0\uB9CC \uD604\uC7AC \uBB38\uB9E5\uC73C\uB85C \uB4B7\uBC1B\uCE68\uB418\uC9C0 \uC54A\uB294 \uACFC\uB3C4\uD558\uAC8C \uAD6C\uCCB4\uC801\uC778 \uD55C\uC815\uC740 \uCD94\uAC00\uD558\uC9C0 \uB9C8\uC138\uC694."
       ].join("\n")
-    }[interfaceLanguage];
-    switch (interfaceLanguage) {
+    }[promptLanguage];
+    switch (promptLanguage) {
       case "zh-TW":
         return [
           "\u4F60\u662F WebMind \u6C89\u6D78\u95B1\u8B80\u8655\u7406\u5668\u3002\u8ACB\u5728\u4FDD\u6301\u539F\u6587\u81EA\u7136\u53EF\u8B80\u7684\u524D\u63D0\u4E0B\uFF0C\u7528\u5C11\u91CF\u5B78\u7FD2\u8A9E\u8A00\u8A5E\u8A9E\u5F62\u6210\u6BCD\u8A9E\u8207\u975E\u6BCD\u8A9E\u6DF7\u5408\u95B1\u8B80\u3002",
@@ -16945,11 +19304,11 @@
     }
   }
   function buildAutoTranslateInstruction(config, sourceText = "") {
-    const { interfaceLanguage, translationLanguage } = resolvePromptConfig(config);
+    const { interfaceLanguage, promptLanguage, translationLanguage } = resolvePromptConfig(config);
     const interfaceLabel = LANGUAGE_LABELS[interfaceLanguage];
     const directionInstruction = translationDirectionInstruction(config, sourceText);
     const targetLabel = translationLanguage === "auto" ? "" : LANGUAGE_LABELS[resolveLanguage(translationLanguage)];
-    switch (interfaceLanguage) {
+    switch (promptLanguage) {
       case "zh-TW":
         return [
           "\u9019\u662F\u4E00\u500B\u7FFB\u8B6F\u4EFB\u52D9\u3002\u7121\u8AD6\u8F38\u5165\u9577\u77ED\uFF0C\u90FD\u5FC5\u9808\u8F38\u51FA\u8B6F\u6587\u3002",
@@ -16958,6 +19317,7 @@
           "\u4FDD\u6301\u539F\u610F\u3001\u683C\u5F0F\u3001\u6578\u5B57\u3001\u5C08\u6709\u540D\u8A5E\u548C\u8A9E\u6C23\uFF0C\u53EA\u8F38\u51FA\u8B6F\u6587\uFF0C\u4E0D\u8981\u89E3\u91CB\u8A9E\u8A00\u5224\u65B7\u904E\u7A0B\u3002",
           "\u8A9E\u8A00\u5224\u65B7\u548C\u7FFB\u8B6F\u53EA\u91DD\u5C0D\u5F8C\u9762 <translation-input> \u6A19\u7C64\u4E2D\u7684\u539F\u6587\uFF1B\u5FFD\u7565\u672C\u6307\u4EE4\u7684\u8A9E\u8A00\u3001\u6A19\u7C64\u3001JSON \u6B04\u4F4D\u540D\u7A31\u3001id \u548C\u5176\u4ED6\u4E2D\u7E7C\u8CC7\u6599\uFF0C\u4E0D\u8981\u628A\u5B83\u5011\u7B97\u5165\u539F\u6587\u3002",
           translationFormatInstruction(config),
+          translationStructureIntegrityInstruction(),
           ...directionInstruction ? [directionInstruction] : []
         ].join("\n");
       case "en":
@@ -16968,6 +19328,7 @@
           "Preserve meaning, formatting, numbers, proper nouns, and tone. Output only the translation and do not explain the language detection.",
           "Detect the language and translate only the original text inside the following <translation-input> tag. Ignore the language of this instruction, the tag, JSON field names, ids, and other metadata; do not include them in language detection.",
           translationFormatInstruction(config),
+          translationStructureIntegrityInstruction(),
           ...directionInstruction ? [directionInstruction] : []
         ].join("\n");
       case "ja":
@@ -16978,6 +19339,7 @@
           "\u610F\u5473\u3001\u66F8\u5F0F\u3001\u6570\u5B57\u3001\u56FA\u6709\u540D\u8A5E\u3001\u8A9E\u8ABF\u3092\u4FDD\u3061\u3001\u7FFB\u8A33\u6587\u3060\u3051\u3092\u51FA\u529B\u3057\u3001\u8A00\u8A9E\u5224\u5B9A\u306E\u904E\u7A0B\u306F\u8AAC\u660E\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002",
           "\u8A00\u8A9E\u5224\u5B9A\u3068\u7FFB\u8A33\u306F\u3001\u5F8C\u7D9A\u306E <translation-input> \u30BF\u30B0\u5185\u306E\u539F\u6587\u3060\u3051\u3092\u5BFE\u8C61\u306B\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u3053\u306E\u6307\u793A\u6587\u306E\u8A00\u8A9E\u3001\u30BF\u30B0\u3001JSON \u306E\u30D5\u30A3\u30FC\u30EB\u30C9\u540D\u3001id\u3001\u305D\u306E\u4ED6\u306E\u30E1\u30BF\u30C7\u30FC\u30BF\u306F\u5224\u5B9A\u306B\u542B\u3081\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002",
           translationFormatInstruction(config),
+          translationStructureIntegrityInstruction(),
           ...directionInstruction ? [directionInstruction] : []
         ].join("\n");
       case "ko":
@@ -16988,6 +19350,7 @@
           "\uC758\uBBF8, \uD615\uC2DD, \uC22B\uC790, \uACE0\uC720\uBA85\uC0AC, \uC5B4\uC870\uB97C \uC720\uC9C0\uD558\uACE0 \uBC88\uC5ED\uBB38\uB9CC \uCD9C\uB825\uD558\uBA70 \uC5B8\uC5B4 \uD310\uB2E8 \uACFC\uC815\uC744 \uC124\uBA85\uD558\uC9C0 \uB9C8\uC138\uC694.",
           "\uC5B8\uC5B4 \uD310\uB2E8\uACFC \uBC88\uC5ED\uC740 \uB4A4\uC5D0 \uC788\uB294 <translation-input> \uD0DC\uADF8 \uC548\uC758 \uC6D0\uBB38\uB9CC \uB300\uC0C1\uC73C\uB85C \uD558\uC138\uC694. \uC774 \uC9C0\uC2DC\uBB38\uC758 \uC5B8\uC5B4, \uD0DC\uADF8, JSON \uD544\uB4DC\uBA85, id \uBC0F \uAE30\uD0C0 \uBA54\uD0C0\uB370\uC774\uD130\uB294 \uD310\uB2E8\uC5D0 \uD3EC\uD568\uD558\uC9C0 \uB9C8\uC138\uC694.",
           translationFormatInstruction(config),
+          translationStructureIntegrityInstruction(),
           ...directionInstruction ? [directionInstruction] : []
         ].join("\n");
       case "zh-CN":
@@ -16999,6 +19362,7 @@
           "\u4FDD\u6301\u539F\u610F\u3001\u683C\u5F0F\u3001\u6570\u5B57\u3001\u4E13\u6709\u540D\u8BCD\u548C\u8BED\u6C14\uFF0C\u53EA\u8F93\u51FA\u8BD1\u6587\uFF0C\u4E0D\u8981\u89E3\u91CA\u8BED\u8A00\u5224\u65AD\u8FC7\u7A0B\u3002",
           "\u8BED\u8A00\u68C0\u6D4B\u548C\u7FFB\u8BD1\u53EA\u9488\u5BF9\u540E\u9762 <translation-input> \u6807\u7B7E\u4E2D\u7684\u539F\u6587\uFF1B\u5FFD\u7565\u672C\u6307\u4EE4\u7684\u8BED\u8A00\u3001\u6807\u7B7E\u3001JSON \u5B57\u6BB5\u540D\u3001id \u548C\u5176\u4ED6\u5143\u6570\u636E\uFF0C\u4E0D\u8981\u628A\u5B83\u4EEC\u7B97\u5165\u539F\u6587\u3002",
           translationFormatInstruction(config),
+          translationStructureIntegrityInstruction(),
           ...directionInstruction ? [directionInstruction] : []
         ].join("\n");
     }
@@ -17396,18 +19760,254 @@
       }
     }
   };
+  var WESTERN_TOOL_METADATA = {
+    es: {
+      "ask-selection": {
+        title: "Preguntar en la barra lateral",
+        description: "Enviar el contenido actual a la barra lateral para continuar"
+      },
+      summary: {
+        title: "Resumir",
+        description: "Extraer conclusiones, pruebas y acciones"
+      },
+      explain: {
+        title: "Explicar de forma sencilla",
+        description: "Hacer comprensible el contenido complejo"
+      },
+      "translate-text": {
+        title: "Traducci\xF3n autom\xE1tica",
+        description: "Traducir autom\xE1ticamente seg\xFAn el idioma del contenido"
+      },
+      "translate-document": {
+        title: "Traducir PDF / subt\xEDtulos",
+        description: "Traducir documentos o subt\xEDtulos de v\xEDdeo"
+      },
+      "analyze-image": {
+        title: "Analizar imagen",
+        description: "Comprender capturas, fotos y gr\xE1ficos"
+      },
+      "extract-actions": {
+        title: "Extraer acciones",
+        description: "Encontrar responsables, fechas y dependencias"
+      },
+      concise: {
+        title: "Hacer m\xE1s conciso",
+        description: "Eliminar repeticiones y contenido superfluo"
+      },
+      polish: {
+        title: "Pulir con naturalidad",
+        description: "Mejorar la naturalidad, el tono y la coherencia"
+      },
+      "expand-detail": {
+        title: "Ampliar detalles",
+        description: "A\xF1adir detalles, ejemplos y transiciones"
+      },
+      "continue-writing": {
+        title: "Continuar escribiendo",
+        description: "Continuar con el mismo contexto y estilo"
+      },
+      "draft-reply": {
+        title: "Redactar respuesta",
+        description: "Generar un texto listo para enviar"
+      },
+      "study-notes": {
+        title: "Apuntes de estudio",
+        description: "Organizar conceptos, ejemplos y preguntas"
+      },
+      "explain-code": {
+        title: "Explicar c\xF3digo",
+        description: "Analizar el flujo, los riesgos y las mejoras"
+      }
+    },
+    fr: {
+      "ask-selection": {
+        title: "Demander dans la barre lat\xE9rale",
+        description: "Envoyer le contenu actuel pour poursuivre dans la barre lat\xE9rale"
+      },
+      summary: {
+        title: "R\xE9sumer",
+        description: "Extraire les conclusions, les preuves et les actions"
+      },
+      explain: {
+        title: "Expliquer simplement",
+        description: "Rendre un contenu complexe compr\xE9hensible"
+      },
+      "translate-text": {
+        title: "Traduction automatique",
+        description: "Traduire automatiquement selon la langue du contenu"
+      },
+      "translate-document": {
+        title: "Traduire un PDF / des sous-titres",
+        description: "Traduire des documents ou des sous-titres vid\xE9o"
+      },
+      "analyze-image": {
+        title: "Analyser l'image",
+        description: "Comprendre les captures, les photos et les graphiques"
+      },
+      "extract-actions": {
+        title: "Extraire les actions",
+        description: "Identifier les responsables, les dates et les d\xE9pendances"
+      },
+      concise: {
+        title: "Rendre plus concis",
+        description: "Supprimer les r\xE9p\xE9titions et le superflu"
+      },
+      polish: {
+        title: "Reformuler naturellement",
+        description: "Am\xE9liorer le naturel, le ton et la coh\xE9rence"
+      },
+      "expand-detail": {
+        title: "D\xE9velopper les d\xE9tails",
+        description: "Ajouter des d\xE9tails, des exemples et des transitions"
+      },
+      "continue-writing": {
+        title: "Continuer la r\xE9daction",
+        description: "Continuer avec le m\xEAme contexte et le m\xEAme style"
+      },
+      "draft-reply": {
+        title: "R\xE9diger une r\xE9ponse",
+        description: "G\xE9n\xE9rer un texte pr\xEAt \xE0 envoyer"
+      },
+      "study-notes": {
+        title: "Notes d'\xE9tude",
+        description: "Organiser les concepts, les exemples et les questions"
+      },
+      "explain-code": {
+        title: "Expliquer le code",
+        description: "Analyser le flux, les risques et les am\xE9liorations"
+      }
+    },
+    de: {
+      "ask-selection": {
+        title: "In der Seitenleiste fragen",
+        description: "Aktuellen Inhalt zur weiteren Bearbeitung an die Seitenleiste senden"
+      },
+      summary: {
+        title: "Zusammenfassen",
+        description: "Schlussfolgerungen, Belege und Aufgaben extrahieren"
+      },
+      explain: {
+        title: "Einfach erkl\xE4ren",
+        description: "Komplexe Inhalte verst\xE4ndlich machen"
+      },
+      "translate-text": {
+        title: "Automatisch \xFCbersetzen",
+        description: "Automatisch anhand der Inhaltssprache \xFCbersetzen"
+      },
+      "translate-document": {
+        title: "PDF / Untertitel \xFCbersetzen",
+        description: "Dokumente oder Videountertitel \xFCbersetzen"
+      },
+      "analyze-image": {
+        title: "Bild analysieren",
+        description: "Screenshots, Fotos und Diagramme verstehen"
+      },
+      "extract-actions": {
+        title: "Aufgaben extrahieren",
+        description: "Verantwortliche, Termine und Abh\xE4ngigkeiten finden"
+      },
+      concise: {
+        title: "K\xFCrzer formulieren",
+        description: "Wiederholungen und F\xFClltext entfernen"
+      },
+      polish: {
+        title: "Nat\xFCrlich \xFCberarbeiten",
+        description: "Ausdruck, Ton und Konsistenz verbessern"
+      },
+      "expand-detail": {
+        title: "Details ausarbeiten",
+        description: "Details, Beispiele und \xDCberg\xE4nge erg\xE4nzen"
+      },
+      "continue-writing": {
+        title: "Weiterschreiben",
+        description: "Mit demselben Kontext und Stil fortfahren"
+      },
+      "draft-reply": {
+        title: "Antwort entwerfen",
+        description: "Sendefertigen Text erstellen"
+      },
+      "study-notes": {
+        title: "Lernnotizen",
+        description: "Konzepte, Beispiele und Fragen strukturieren"
+      },
+      "explain-code": {
+        title: "Code erkl\xE4ren",
+        description: "Ablauf, Risiken und Verbesserungen analysieren"
+      }
+    },
+    it: {
+      "ask-selection": {
+        title: "Chiedi nella barra laterale",
+        description: "Invia il contenuto attuale alla barra laterale per continuare"
+      },
+      summary: {
+        title: "Riassumi",
+        description: "Estrai conclusioni, prove e azioni"
+      },
+      explain: {
+        title: "Spiega in modo semplice",
+        description: "Rendi comprensibili i contenuti complessi"
+      },
+      "translate-text": {
+        title: "Traduzione automatica",
+        description: "Traduci automaticamente in base alla lingua del contenuto"
+      },
+      "translate-document": {
+        title: "Traduci PDF / sottotitoli",
+        description: "Traduci documenti o sottotitoli video"
+      },
+      "analyze-image": {
+        title: "Analizza immagine",
+        description: "Comprendi schermate, foto e grafici"
+      },
+      "extract-actions": {
+        title: "Estrai azioni",
+        description: "Trova responsabili, date e dipendenze"
+      },
+      concise: {
+        title: "Rendi pi\xF9 conciso",
+        description: "Elimina ripetizioni e contenuti superflui"
+      },
+      polish: {
+        title: "Rifinisci in modo naturale",
+        description: "Migliora naturalezza, tono e coerenza"
+      },
+      "expand-detail": {
+        title: "Amplia i dettagli",
+        description: "Aggiungi dettagli, esempi e transizioni"
+      },
+      "continue-writing": {
+        title: "Continua a scrivere",
+        description: "Continua con lo stesso contesto e stile"
+      },
+      "draft-reply": {
+        title: "Prepara una risposta",
+        description: "Genera un testo pronto da inviare"
+      },
+      "study-notes": {
+        title: "Appunti di studio",
+        description: "Organizza concetti, esempi e domande"
+      },
+      "explain-code": {
+        title: "Spiega il codice",
+        description: "Analizza flusso, rischi e miglioramenti"
+      }
+    }
+  };
   function autoTranslateInstruction(config, sourceText = "") {
     return buildAutoTranslateInstruction(config, sourceText);
   }
   function builtInToolsForLanguage(config) {
     const resolved = resolvePromptConfig(config);
     return BUILT_IN_TOOLS.map((tool) => {
-      const patch = TOOL_PATCHES[resolved.interfaceLanguage][tool.id] ?? {};
+      const localizedPatch = TOOL_PATCHES[resolved.promptLanguage][tool.id] ?? {};
+      const westernPatch = resolved.interfaceLanguage === "es" || resolved.interfaceLanguage === "fr" || resolved.interfaceLanguage === "de" || resolved.interfaceLanguage === "it" ? WESTERN_TOOL_METADATA[resolved.interfaceLanguage][tool.id] ?? {} : {};
+      const patch = { ...localizedPatch, ...westernPatch };
       let template = patch.template ?? tool.template;
       if (tool.id === "translate-text") {
         template = buildAutoTranslateInstruction(resolved);
       } else if (tool.id === "translate-document") {
-        template = `${buildAutoTranslateInstruction(resolved)} ${translateDocumentSuffix(resolved.interfaceLanguage)}`;
+        template = `${buildAutoTranslateInstruction(resolved)} ${translateDocumentSuffix(resolved.promptLanguage)}`;
       }
       return {
         ...tool,
@@ -17499,6 +20099,18 @@
   };
 
   // src/shared/storage.ts
+  var APP_LANGUAGES = /* @__PURE__ */ new Set([
+    "auto",
+    "zh-CN",
+    "zh-TW",
+    "en",
+    "ja",
+    "ko",
+    "es",
+    "fr",
+    "de",
+    "it"
+  ]);
   var SETTINGS_KEY = "webmind.settings";
   var CUSTOM_TOOLS_KEY = "webmind.customTools";
   var CHROME_SYNC_META_KEY = "webmind.chromeSync.meta";
@@ -17608,8 +20220,8 @@
       logLevel: APP_LOG_LEVELS.has(stored.logLevel) ? stored.logLevel : DEFAULT_SETTINGS.logLevel,
       autoScrollDuringStreaming: stored.autoScrollDuringStreaming ?? true,
       modelThinkingTimeoutSeconds: storedTimeoutSeconds,
-      interfaceLanguage: stored.interfaceLanguage ?? DEFAULT_SETTINGS.interfaceLanguage,
-      translationLanguage: stored.translationLanguage ?? DEFAULT_SETTINGS.translationLanguage,
+      interfaceLanguage: stored.interfaceLanguage && APP_LANGUAGES.has(stored.interfaceLanguage) ? stored.interfaceLanguage : DEFAULT_SETTINGS.interfaceLanguage,
+      translationLanguage: stored.translationLanguage && APP_LANGUAGES.has(stored.translationLanguage) ? stored.translationLanguage : DEFAULT_SETTINGS.translationLanguage,
       defaultContextScope: stored.defaultContextScope === "page" ? "page" : "article",
       selectionOverlayMode: stored.selectionOverlayMode ?? DEFAULT_SETTINGS.selectionOverlayMode,
       selectionOverlayShortcut: HOVER_DEFINITION_SHORTCUTS.has(
@@ -18071,7 +20683,43 @@
   }
   function protectedTokenSource(kind, index) {
     const token = `WEBMIND_${kind}_${index}(?!\\d)`;
-    return `\`?(?:\\{\\{\\s*${token}\\s*\\}\\}|\\[\\s*${token}\\s*\\]|${token})\`?`;
+    const backtickWrapper = "`{0,3}";
+    return `${backtickWrapper}(?:\\{\\{\\s*${token}\\s*\\}\\}|\\[\\s*${token}\\s*\\]|${token})${backtickWrapper}`;
+  }
+  function protectFencedCodeBlocks(text2, codeBlocks, codeBlockSlots) {
+    const lines = text2.split("\n");
+    const protectedLines = [];
+    for (let index = 0; index < lines.length; ) {
+      const opening = lines[index].match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
+      if (!opening || opening[1][0] === "`" && opening[2].includes("`")) {
+        protectedLines.push(lines[index]);
+        index += 1;
+        continue;
+      }
+      const marker = opening[1][0];
+      const minimumLength = opening[1].length;
+      let closingIndex = index + 1;
+      for (; closingIndex < lines.length; closingIndex += 1) {
+        const closing = lines[closingIndex].match(/^ {0,3}(`+|~+)[\t ]*$/);
+        if (closing && closing[1][0] === marker && closing[1].length >= minimumLength) {
+          break;
+        }
+      }
+      if (closingIndex >= lines.length) {
+        protectedLines.push(lines[index]);
+        index += 1;
+        continue;
+      }
+      codeBlocks.push(lines.slice(index, closingIndex + 1).join("\n"));
+      codeBlockSlots.push({
+        lineIndex: protectedLines.length,
+        beforeParagraphBreaks: 0,
+        afterParagraphBreaks: 0
+      });
+      protectedLines.push(`{{WEBMIND_CODE_BLOCK_${codeBlocks.length}}}`);
+      index = closingIndex + 1;
+    }
+    return protectedLines.join("\n");
   }
   function visibleTextFromHtmlFragment(value) {
     return value.replace(/<script\b[\s\S]*?<\/script>/gi, " ").replace(/<style\b[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
@@ -18189,12 +20837,51 @@
   function stripBrokenTranslationPlaceholderFragments(text2) {
     return text2.replace(/\{+\s*WEBMIND_[A-Z0-9_]+\s*\}+/gi, "").replace(/\[\s*WEBMIND_[A-Z0-9_]+\s*\]/gi, "").replace(/WEBMIND_[A-Z0-9_]+/gi, "").replace(/\{+\s*\d+\s*\}+/g, "").replace(/\{+[ \t]*(?=$|[\r\n])/g, "").replace(/(^|[\r\n])[ \t]*\}+/g, "$1").replace(/\[\s*\d+\s*\]/g, (match) => match.trim()).replace(/[ \t]{2,}/g, " ");
   }
+  function isIncompleteProtectedTokenBody(value) {
+    const compact = value.replace(/[\t ]/g, "").toUpperCase();
+    if (!compact) return true;
+    return "WEBMIND_".startsWith(compact) || compact.startsWith("WEBMIND_") && /^[A-Z0-9_]+$/.test(compact);
+  }
+  function stripIncompleteProtectedTokenSuffix(text2) {
+    const scanStart = Math.max(0, text2.length - 96);
+    for (let index = scanStart; index < text2.length; index += 1) {
+      let remainder = text2.slice(index);
+      const backticks = remainder.match(/^`{1,3}[\t ]*/)?.[0] ?? "";
+      if (backticks) remainder = remainder.slice(backticks.length);
+      let hasWrapper = Boolean(backticks);
+      if (remainder.startsWith("{{")) {
+        remainder = remainder.slice(2);
+        hasWrapper = true;
+      } else if (remainder.startsWith("{") || remainder.startsWith("[")) {
+        remainder = remainder.slice(1);
+        hasWrapper = true;
+      }
+      if (hasWrapper && isIncompleteProtectedTokenBody(remainder.trimEnd())) {
+        return text2.slice(0, index).trimEnd();
+      }
+    }
+    for (let index = text2.length - 1; index >= scanStart; index -= 1) {
+      if (text2[index] !== "W") continue;
+      const candidate = text2.slice(index).trimEnd();
+      if (candidate === candidate.toUpperCase() && isIncompleteProtectedTokenBody(candidate)) {
+        return text2.slice(0, index).trimEnd();
+      }
+    }
+    return text2;
+  }
   function protectTranslationText(text2) {
     const citations = [];
     const links = [];
     const formats = [];
     const htmlTags = [];
+    const codeBlocks = [];
+    const codeBlockSlots = [];
     const paragraphBreaks = [];
+    const withoutCodeBlocks = protectFencedCodeBlocks(
+      text2.replace(/\r\n?/g, "\n"),
+      codeBlocks,
+      codeBlockSlots
+    );
     const protectFormat = (tag, value) => {
       const visibleText = visibleTextFromHtmlFragment(value);
       if (!visibleText) return "";
@@ -18202,7 +20889,7 @@
       const index = formats.length;
       return `{{WEBMIND_FORMAT_START_${index}}}${visibleText}{{WEBMIND_FORMAT_END_${index}}}`;
     };
-    const withFormats = text2.replace(
+    const withFormats = withoutCodeBlocks.replace(
       /<(sup|sub)\b[^>]*>([\s\S]*?)<\/\1>/gi,
       (_match, tag, value) => protectFormat(tag.toLowerCase(), value)
     );
@@ -18232,27 +20919,146 @@
         return `{{WEBMIND_HTML_TAG_${htmlTags.length}}}`;
       }
     );
-    const protectedText = withHtmlTags.replace(/\r\n?/g, "\n").replace(/\n[\t ]*\n+/g, (separator) => {
-      paragraphBreaks.push(separator);
+    const protectedText = withHtmlTags.replace(/\n+/g, (separator) => {
+      paragraphBreaks.push(separator.length > 1 ? "\n\n" : "\n");
       return `{{WEBMIND_PARAGRAPH_BREAK_${paragraphBreaks.length}}}`;
     });
-    return { text: protectedText, citations, links, formats, htmlTags, paragraphBreaks };
+    codeBlockSlots.forEach((slot, index) => {
+      const token = `{{WEBMIND_CODE_BLOCK_${index + 1}}}`;
+      const tokenStart = protectedText.indexOf(token);
+      if (tokenStart < 0) return;
+      const before = protectedText.slice(0, tokenStart);
+      const after = protectedText.slice(tokenStart + token.length);
+      slot.beforeParagraphBreaks = Array.from(
+        before.matchAll(/\{\{WEBMIND_PARAGRAPH_BREAK_\d+\}\}/g)
+      ).length;
+      slot.afterParagraphBreaks = /\{\{WEBMIND_PARAGRAPH_BREAK_\d+\}\}/.test(
+        after
+      ) ? slot.beforeParagraphBreaks + 1 : 0;
+    });
+    return {
+      text: protectedText,
+      citations,
+      links,
+      formats,
+      htmlTags,
+      codeBlocks,
+      codeBlockSlots,
+      paragraphBreaks,
+      sourceLineMarkers: withoutCodeBlocks.split("\n").map(sourceLineMarker)
+    };
   }
-  function restoreTranslationText(text2, protection) {
+  function sourceLineMarker(line) {
+    const trimmed = line.trimStart();
+    if (trimmed.startsWith("{{WEBMIND_CODE_BLOCK_")) return "code";
+    if (/^\d+[.)][\t ]+/.test(trimmed)) return "ordered";
+    if (/^[-+*][\t ]+/.test(trimmed)) return "unordered";
+    if (/^>+[\t ]?/.test(trimmed)) return "quote";
+    if (/^#{1,6}[\t ]+/.test(trimmed)) return "heading";
+    return null;
+  }
+  function protectedTokenMatch(text2, kind, index) {
+    const match = protectedTokenPattern(kind, index).exec(text2);
+    return match ? { start: match.index, end: match.index + match[0].length } : null;
+  }
+  function insertMissingCodeBlockSentinels(text2, missing, slots) {
+    let result = text2;
+    for (const item of missing) {
+      const slot = slots[item.index];
+      const previous = slot?.beforeParagraphBreaks ? protectedTokenMatch(
+        result,
+        "PARAGRAPH_BREAK",
+        slot.beforeParagraphBreaks
+      ) : null;
+      const next = slot?.afterParagraphBreaks ? protectedTokenMatch(
+        result,
+        "PARAGRAPH_BREAK",
+        slot.afterParagraphBreaks
+      ) : null;
+      if (next) {
+        result = `${result.slice(0, next.start)}${item.sentinel}${result.slice(next.start)}`;
+        continue;
+      }
+      if (previous) {
+        result = `${result.slice(0, previous.end)}${item.sentinel}${result.slice(previous.end)}`;
+        continue;
+      }
+      const lines = result.split("\n");
+      const lineIndex = Math.min(
+        Math.max(0, slot?.lineIndex ?? lines.length),
+        lines.length
+      );
+      lines.splice(lineIndex, 0, item.sentinel, "");
+      result = lines.join("\n");
+    }
+    return result;
+  }
+  function stripInventedListMarkers(text2, sourceLineMarkers) {
+    if (sourceLineMarkers.length < 2) return text2;
+    const lines = text2.split("\n");
+    const ordered = lines.map((line, index) => {
+      if (sourceLineMarkers[index] === void 0 || line.includes("\uE000")) {
+        return null;
+      }
+      const match = line.match(/^(\s*)(\d+)[.)][\t ]+/);
+      return match ? {
+        index,
+        number: Number(match[2]),
+        sourceMarker: sourceLineMarkers[index]
+      } : null;
+    });
+    const unordered = lines.map((line, index) => {
+      if (sourceLineMarkers[index] === void 0 || line.includes("\uE000")) {
+        return null;
+      }
+      const match = line.match(/^(\s*)([-+*])[\t ]+/);
+      return match ? { index, marker: match[2], sourceMarker: sourceLineMarkers[index] } : null;
+    });
+    const remove = /* @__PURE__ */ new Set();
+    let orderedRun = [];
+    for (const marker of ordered) {
+      if (!marker) continue;
+      const previous = orderedRun.at(-1);
+      if (!previous || marker.number !== previous.number + 1) {
+        orderedRun = [marker];
+      } else {
+        orderedRun.push(marker);
+      }
+      if (orderedRun.length >= 2 && orderedRun[0].number <= 1) {
+        orderedRun.forEach((item) => {
+          if (item.sourceMarker !== "ordered") remove.add(item.index);
+        });
+      }
+    }
+    let unorderedRun = [];
+    for (const marker of unordered) {
+      if (!marker) continue;
+      const previous = unorderedRun.at(-1);
+      if (!previous || marker.marker !== previous.marker) {
+        unorderedRun = [marker];
+      } else {
+        unorderedRun.push(marker);
+      }
+      if (unorderedRun.length >= 2) {
+        unorderedRun.forEach((item) => {
+          if (item.sourceMarker !== "unordered") remove.add(item.index);
+        });
+      }
+    }
+    return lines.map(
+      (line, index) => remove.has(index) ? line.replace(/^\s*(?:\d+[.)]|[-+*])[\t ]+/, "") : line
+    ).join("\n");
+  }
+  function restoreTranslationText(text2, protection, options = {}) {
+    const visibleText = options.streaming ? stripIncompleteProtectedTokenSuffix(text2) : text2;
     let restored = stripCitationExplanationNoise(
-      text2,
+      visibleText,
       protection.citations.length
     );
     protection.citations.forEach((marker, index) => {
       restored = restored.replace(
         protectedTokenPattern("CITATION", index + 1),
         marker
-      );
-    });
-    protection.paragraphBreaks.forEach((separator, index) => {
-      restored = restored.replace(
-        protectedTokenPattern("PARAGRAPH_BREAK", index + 1),
-        separator.includes("\n\n") ? "\n\n" : separator
       );
     });
     (protection.links ?? []).forEach((link, index) => {
@@ -18265,8 +21071,8 @@
         "gi"
       );
       restored = restored.replace(linkPattern, (_match, label) => {
-        const visibleText = label.replace(/\s+/g, " ").trim() || link.text;
-        return `[${visibleText.replace(/([\\\]])/g, "\\$1")}](<${link.href}>)`;
+        const visibleText2 = label.replace(/\s+/g, " ").trim() || link.text;
+        return `[${visibleText2.replace(/([\\\]])/g, "\\$1")}](<${link.href}>)`;
       });
       restored = restored.replace(protectedTokenPattern("LINK_START", index + 1), "").replace(protectedTokenPattern("LINK_END", index + 1), "");
     });
@@ -18280,8 +21086,8 @@
         "gi"
       );
       restored = restored.replace(formatPattern, (_match, value) => {
-        const visibleText = value.replace(/\s+/g, " ").trim() || format.text;
-        return `<${format.tag}>${visibleText}</${format.tag}>`;
+        const visibleText2 = value.replace(/\s+/g, " ").trim() || format.text;
+        return `<${format.tag}>${visibleText2}</${format.tag}>`;
       });
       restored = restored.replace(protectedTokenPattern("FORMAT_START", index + 1), "").replace(protectedTokenPattern("FORMAT_END", index + 1), "");
     });
@@ -18291,22 +21097,65 @@
         tag
       );
     });
+    const codeBlockSentinels = [];
+    const missingCodeBlocks = [];
+    (protection.codeBlocks ?? []).forEach((code, index) => {
+      if (!code) return;
+      const sentinel = `\uE000${index}\uE001`;
+      const pattern = protectedTokenPattern("CODE_BLOCK", index + 1);
+      let matched = false;
+      restored = restored.replace(pattern, () => {
+        matched = true;
+        return sentinel;
+      });
+      if (matched) {
+        codeBlockSentinels.push({ sentinel, code });
+      } else if (!options.streaming) {
+        missingCodeBlocks.push({ index, sentinel });
+      }
+    });
+    if (!options.streaming && missingCodeBlocks.length) {
+      restored = insertMissingCodeBlockSentinels(
+        restored,
+        missingCodeBlocks,
+        protection.codeBlockSlots ?? []
+      );
+      missingCodeBlocks.forEach(({ index, sentinel }) => {
+        const code = protection.codeBlocks?.[index];
+        if (code) codeBlockSentinels.push({ sentinel, code });
+      });
+    }
+    protection.paragraphBreaks.forEach((separator, index) => {
+      restored = restored.replace(
+        protectedTokenPattern("PARAGRAPH_BREAK", index + 1),
+        separator.includes("\n\n") ? "\n\n" : separator
+      );
+    });
+    restored = stripInventedListMarkers(
+      restored,
+      protection.sourceLineMarkers ?? []
+    );
     const missingCitations = protection.citations.filter(
       (marker) => marker && !restored.includes(marker)
     );
-    if (missingCitations.length) {
+    if (!options.streaming && missingCitations.length) {
       restored = `${restored.trimEnd()} ${missingCitations.join(" ")}`;
     }
     restored = stripCitationMarkerExplanationNoise(restored, protection.citations);
     restored = stripBrokenTranslationPlaceholderFragments(restored);
     restored = stripTranslationTaskPreface(restored);
-    return restored.replace(/\n[\t ]*\n(?:[\t ]*\n)+/g, "\n\n");
+    restored = restored.replace(/\n[\t ]*\n(?:[\t ]*\n)+/g, "\n\n");
+    for (const { sentinel, code } of codeBlockSentinels) {
+      restored = restored.split(sentinel).join(code);
+    }
+    return restored;
   }
   function buildPageTranslationSystemPrompt(config, sourceText) {
     return [
       autoTranslateInstruction(config, sourceText),
       translationDirectionInstruction(config, sourceText),
       translationFormatInstruction(config),
+      translationStructureIntegrityInstruction(),
       htmlFormattingInstruction(config),
       uiText(
         typeof config === "object" ? config?.interfaceLanguage : config,
@@ -19075,6 +21924,102 @@ ${normalized.slice(-tail)}`;
   function markdownHref(value) {
     return encodeURI(value).replace(/\(/g, "%28").replace(/\)/g, "%29").replace(/</g, "%3C").replace(/>/g, "%3E");
   }
+  function normalizedCodeLanguage(value) {
+    const candidate = value?.trim().toLowerCase().replace(/^(?:language|lang)-/, "");
+    if (!candidate || !/^[a-z0-9_+#.-]+$/.test(candidate)) return "";
+    if (candidate === "c++") return "cpp";
+    if (candidate === "c#") return "csharp";
+    return candidate;
+  }
+  function codeLanguageFromElement(element) {
+    const code = element.querySelector("code");
+    const attributeCandidates = [
+      code?.getAttribute("data-language"),
+      code?.getAttribute("data-lang"),
+      element.getAttribute("data-language"),
+      element.getAttribute("data-lang")
+    ];
+    for (const candidate of attributeCandidates) {
+      const language = normalizedCodeLanguage(candidate);
+      if (language) return language;
+    }
+    const classSources = [code, element, element.parentElement].filter(
+      (candidate) => Boolean(candidate)
+    );
+    for (const source of classSources) {
+      for (const className of Array.from(source.classList)) {
+        const match = className.match(/^(?:language|lang|highlight-source)-(.+)$/i);
+        const language = normalizedCodeLanguage(match?.[1]);
+        if (language) return language;
+      }
+    }
+    return "";
+  }
+  var BLOCK_CODE_ELEMENT_TAGS = /* @__PURE__ */ new Set([
+    "PRE",
+    "DIV",
+    "SECTION",
+    "FIGURE",
+    "CODE"
+  ]);
+  var BLOCK_CODE_PROSE_SELECTOR = "p, h1, h2, h3, h4, h5, h6, ul, ol, dl, table, blockquote, article, section, pre";
+  function hasBlockCodeMetadata(value) {
+    const normalized = value.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/[_-]+/g, " ");
+    return /(?:^|\s)(?:code|source|highlight|syntax|prettyprint)(?:\s|$)/i.test(
+      normalized
+    );
+  }
+  function isBlockCodeElement(element) {
+    if (element.tagName === "PRE") return true;
+    if (!BLOCK_CODE_ELEMENT_TAGS.has(element.tagName)) return false;
+    if (element.querySelector("pre")) return false;
+    const hasDirectCodeChild = Array.from(element.children).some(
+      (child) => child.tagName === "CODE"
+    );
+    const metadata = [
+      element.id,
+      element.className,
+      element.getAttribute("role"),
+      element.getAttribute("data-language"),
+      element.getAttribute("data-lang"),
+      element.getAttribute("data-highlight-language")
+    ].filter(Boolean).join(" ");
+    const language = codeLanguageFromElement(element);
+    const text2 = element.textContent ?? "";
+    const style = element.isConnected ? element.ownerDocument.defaultView?.getComputedStyle(element) : null;
+    const blockCodeSignal = Boolean(language) || hasDirectCodeChild || hasBlockCodeMetadata(metadata) || Boolean(style && /^(?:pre|pre-wrap|break-spaces)$/.test(style.whiteSpace));
+    if (!blockCodeSignal) return false;
+    if (element.tagName === "CODE") {
+      return /\r|\n/.test(text2) || Boolean(style && style.display !== "inline");
+    }
+    return !element.querySelector(BLOCK_CODE_PROSE_SELECTOR);
+  }
+  function blockCodeAncestor(node) {
+    let element = node instanceof HTMLElement ? node : node.parentElement;
+    while (element) {
+      if (isBlockCodeElement(element)) return element;
+      element = element.parentElement;
+    }
+    return null;
+  }
+  function codeTextFromElement(element) {
+    return (element.textContent ?? "").replace(/\r\n?/g, "\n").replace(/\u00a0/g, " ").replace(/^\n+|\n+$/g, "");
+  }
+  function markdownCodeFence(code, language = "") {
+    const longestBacktickRun = Math.max(
+      0,
+      ...Array.from(code.matchAll(/`+/g), (match) => match[0].length)
+    );
+    const fence = "`".repeat(Math.max(3, longestBacktickRun + 1));
+    const info = normalizedCodeLanguage(language);
+    return `
+
+${fence}${info}
+${code}
+${fence}
+
+`;
+  }
   function markdownInlineFromNode(node) {
     if (node instanceof Text) {
       return escapeMarkdownText(
@@ -19110,15 +22055,9 @@ ${normalized.slice(-tail)}`;
       if (!label || !link.href) return label;
       return `[${label}](${markdownHref(link.href)})`;
     }
-    if (node.tagName === "PRE") {
-      const code = (node.textContent ?? "").replace(/\r\n?/g, "\n").trim();
-      return code ? `
-
-${"```"}
-${code}
-${"```"}
-
-` : "";
+    if (isBlockCodeElement(node)) {
+      const code = codeTextFromElement(node);
+      return code ? markdownCodeFence(code, codeLanguageFromElement(node)) : "";
     }
     const content = Array.from(node.childNodes).map(markdownInlineFromNode).join("");
     switch (node.tagName) {
@@ -19172,6 +22111,9 @@ ${index}. ${content.trim()}
   }
   function markdownFromElement(element) {
     if (!element) return "";
+    if (element instanceof HTMLElement && isBlockCodeElement(element)) {
+      return cleanCitationExplanationText(markdownInlineFromNode(element).trim());
+    }
     return cleanCitationExplanationText(
       Array.from(element.childNodes).map(markdownInlineFromNode).join("").replace(/\u00a0/g, " ").replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim()
     );
@@ -19193,8 +22135,15 @@ ${index}. ${content.trim()}
   function selectionMarkdownWithLayout(selection) {
     if (!selection?.rangeCount) return "";
     try {
+      const range = selection.getRangeAt(0);
+      const startCode = blockCodeAncestor(range.startContainer);
+      const endCode = blockCodeAncestor(range.endContainer);
+      if (startCode && startCode === endCode) {
+        const code = selection.toString().replace(/\r\n?/g, "\n").replace(/^\n+|\n+$/g, "");
+        if (code) return markdownCodeFence(code, codeLanguageFromElement(startCode));
+      }
       const container = document.createElement("div");
-      container.append(selection.getRangeAt(0).cloneContents());
+      container.append(range.cloneContents());
       const structured = markdownFromElement(container);
       if (structured) return structured;
     } catch {
@@ -25114,16 +28063,22 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     breaks: true,
     gfm: true
   });
+  function renderMarkdownHtml(content, codeRenderer) {
+    const renderer = codeRenderer ? new P() : void 0;
+    if (renderer && codeRenderer) {
+      const defaultCodeRenderer = renderer.code.bind(renderer);
+      renderer.code = (token) => codeRenderer(token.text, token.lang) ?? defaultCodeRenderer(token);
+    }
+    const rendered = k.parse(content, { renderer });
+    return purify.sanitize(rendered, {
+      ADD_ATTR: ["target", "rel"]
+    }).replace(
+      /<a /g,
+      '<a target="_blank" rel="noreferrer noopener" '
+    );
+  }
   function Markdown({ content }) {
-    const html2 = (0, import_react4.useMemo)(() => {
-      const rendered = k.parse(content);
-      return purify.sanitize(rendered, {
-        ADD_ATTR: ["target", "rel"]
-      }).replace(
-        /<a /g,
-        '<a target="_blank" rel="noreferrer noopener" '
-      );
-    }, [content]);
+    const html2 = (0, import_react4.useMemo)(() => renderMarkdownHtml(content), [content]);
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
       "div",
       {
@@ -25260,6 +28215,69 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     line-height: 1.65;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
+  }
+  .md-result-body .markdown {
+    min-width: 0;
+    white-space: normal;
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+    overflow-wrap: anywhere;
+  }
+  .md-result-body .markdown > :first-child { margin-top: 0; }
+  .md-result-body .markdown > :last-child { margin-bottom: 0; }
+  .md-result-body .markdown p,
+  .md-result-body .markdown ul,
+  .md-result-body .markdown ol,
+  .md-result-body .markdown blockquote,
+  .md-result-body .markdown pre,
+  .md-result-body .markdown table {
+    margin: 0 0 8px;
+  }
+  .md-result-body .markdown ul,
+  .md-result-body .markdown ol { padding-left: 20px; }
+  .md-result-body .markdown li + li { margin-top: 3px; }
+  .md-result-body .markdown strong,
+  .md-result-body .markdown b {
+    font-synthesis: weight;
+    font-weight: 700;
+  }
+  .md-result-body .markdown a { color: var(--md-teal); }
+  .md-result-body .markdown blockquote {
+    padding-left: 9px;
+    border-left: 3px solid var(--md-border);
+    color: var(--md-muted);
+  }
+  .md-result-body .markdown code {
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: var(--md-surface);
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: .92em;
+  }
+  .md-result-body .markdown pre {
+    max-width: 100%;
+    overflow: auto;
+    padding: 8px;
+    border: 1px solid var(--md-border);
+    border-radius: 5px;
+    background: var(--md-surface);
+  }
+  .md-result-body .markdown pre code {
+    padding: 0;
+    background: transparent;
+  }
+  .md-result-body .markdown table {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    border-collapse: collapse;
+  }
+  .md-result-body .markdown th,
+  .md-result-body .markdown td {
+    padding: 5px 7px;
+    border: 1px solid var(--md-border);
+    text-align: left;
   }
   .md-result-error { color: #b33427; }
   .md-result-actions {
@@ -25893,7 +28911,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
 `;
   var PAGE_STYLES = `
   ::highlight(webmind-hover-definition) {
-    background-color: rgba(143, 185, 215, .32);
+    background-color: rgba(19, 139, 120, .42);
     color: inherit;
   }
   ::highlight(webmind-hover-definition-underline) {
@@ -26075,6 +29093,13 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     }
   }
 	`;
+
+  // src/content/hoverDefinition.ts
+  function textRectAtPoint(rects, clientX, clientY) {
+    return rects.find(
+      (rect) => rect.width > 0 && rect.height > 0 && clientX >= rect.left && clientX < rect.right && clientY >= rect.top && clientY < rect.bottom
+    ) ?? null;
+  }
 
   // src/content/index.tsx
   var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
@@ -26277,21 +29302,8 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     range.setStart(node, start);
     range.setEnd(node, end);
     const clientRects = Array.from(range.getClientRects());
-    const rect = clientRects.find(
-      (candidate) => clientX >= candidate.left - 2 && clientX <= candidate.right + 2 && clientY >= candidate.top - 2 && clientY <= candidate.bottom + 2
-    ) ?? clientRects.reduce((nearest, candidate) => {
-      if (!nearest) return candidate;
-      const distance = (rect2) => {
-        const dx = Math.max(rect2.left - clientX, 0, clientX - rect2.right);
-        const dy = Math.max(rect2.top - clientY, 0, clientY - rect2.bottom);
-        return dx * dx + dy * dy;
-      };
-      return distance(candidate) < distance(nearest) ? candidate : nearest;
-    }, null) ?? range.getBoundingClientRect();
-    return {
-      range,
-      rect: rect.width || rect.height ? rect : new DOMRect(clientX, clientY, 1, 1)
-    };
+    const rect = textRectAtPoint(clientRects, clientX, clientY);
+    return rect ? { range, rect } : null;
   }
   function setHoverDefinitionHighlight(range, style = "none") {
     const registry = CSS.highlights;
@@ -26333,18 +29345,18 @@ Please report this to https://github.com/markedjs/marked.`, e) {
         const last = Math.min(index, end2 - length);
         for (let candidateStart = first; candidateStart <= last; candidateStart += 1) {
           const candidate = text2.slice(candidateStart, candidateStart + length);
-          if (!candidates.includes(candidate)) {
-            candidates.push(candidate);
-            const details2 = textRangeDetails(
-              point.node,
-              candidateStart,
-              candidateStart + length,
-              clientX,
-              clientY
-            );
-            rects.push(details2.rect);
-            ranges.push(details2.range);
-          }
+          if (candidates.includes(candidate)) continue;
+          const details2 = textRangeDetails(
+            point.node,
+            candidateStart,
+            candidateStart + length,
+            clientX,
+            clientY
+          );
+          if (!details2) continue;
+          candidates.push(candidate);
+          rects.push(details2.rect);
+          ranges.push(details2.range);
         }
       }
       if (!candidates.length) return null;
@@ -26365,6 +29377,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     const word = text2.slice(start, end).replace(/^[-'\u2019]+|[-'\u2019]+$/g, "");
     if (!word || !/[A-Za-z]/u.test(word)) return null;
     const details = textRangeDetails(point.node, start, end, clientX, clientY);
+    if (!details) return null;
     return {
       text: word,
       candidates: [word],

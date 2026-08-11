@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { buildSystemMessage, contextModeAfterTabSwitch } from "./context";
+import {
+  buildSystemMessage,
+  contextModeAfterTabSwitch,
+  contextTranslationSourceText
+} from "./context";
 import type { PageContext, ProviderProfile } from "../shared/types";
 
 const profile = {
@@ -53,5 +57,41 @@ describe("contextModeAfterTabSwitch", () => {
     expect(contextModeAfterTabSwitch("none", "article", null)).toBe("none");
     expect(contextModeAfterTabSwitch("page", "article", null)).toBe("page");
     expect(contextModeAfterTabSwitch("article", "page", null)).toBe("article");
+  });
+});
+
+describe("contextTranslationSourceText", () => {
+  it("uses the visible article preview blocks as the canonical translation input", () => {
+    const context: PageContext = {
+      kind: "article",
+      title: "Article",
+      url: "https://example.com/article",
+      text: "stale plain text",
+      markdown: "stale markdown",
+      articlePreview: [
+        { id: "heading", text: "Heading", markdown: "# Heading" },
+        {
+          id: "code",
+          text: "const answer = 42;",
+          markdown: "```javascript\nconst answer = 42;\n```"
+        }
+      ]
+    };
+
+    expect(contextTranslationSourceText(context)).toBe(
+      "# Heading\n\n```javascript\nconst answer = 42;\n```"
+    );
+  });
+
+  it("keeps the page Markdown fallback for non-article contexts", () => {
+    expect(
+      contextTranslationSourceText({
+        kind: "webpage",
+        title: "Page",
+        url: "https://example.com",
+        text: "plain text",
+        markdown: "# Rich page"
+      })
+    ).toBe("# Rich page");
   });
 });

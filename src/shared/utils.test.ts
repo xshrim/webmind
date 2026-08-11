@@ -5,6 +5,7 @@ import {
   extractJsonArray,
   extractPageTranslationEntries,
   isPointInsideAnyRect,
+  normalizeDictionaryTranslationMarkdown,
   originPattern,
   parseCustomHeaders,
   protectTranslationText,
@@ -71,6 +72,48 @@ describe("shared utilities", () => {
     expect(isPointInsideAnyRect([wordRect], 120, 60)).toBe(false);
   });
 
+  it("normalizes dictionary fields into separate Markdown paragraphs", () => {
+    expect(
+      normalizeDictionaryTranslationMarkdown(
+        "**获取** /huò qǔ/ **释义** acquire；**义项：** v. to obtain **例句** 获取数据（acquire data）"
+      )
+    ).toBe(
+      "**获取** /huò qǔ/\n\n**释义** acquire\n\n**义项：** v. to obtain\n\n**例句** 获取数据（acquire data）"
+    );
+  });
+
+  it("keeps already separated dictionary paragraphs stable", () => {
+    const markdown =
+      "**模型** /mó xíng/\n\n**釋義** model\n\n**語域** computing";
+
+    expect(normalizeDictionaryTranslationMarkdown(markdown)).toBe(markdown);
+  });
+
+  it("promotes single dictionary line breaks to Markdown paragraphs", () => {
+    expect(
+      normalizeDictionaryTranslationMarkdown(
+        "**获取** /huò qǔ/\n**释义** acquire\n**义项** v. to obtain"
+      )
+    ).toBe(
+      "**获取** /huò qǔ/\n\n**释义** acquire\n\n**义项** v. to obtain"
+    );
+  });
+
+  it("normalizes localized western dictionary fields", () => {
+    const cases = [
+      ["**mot** /mo/ **Définition** sens **Exemples** phrase", "Définition", "Exemples"],
+      ["**Wort** /vɔʁt/ **Bedeutungen** Sinn **Beispiele** Satz", "Bedeutungen", "Beispiele"],
+      ["**parola** /paˈrɔla/ **Definizione** senso **Esempi** frase", "Definizione", "Esempi"],
+      ["**palabra** /paˈlaβɾa/ **Definición** significado **Ejemplos** frase", "Definición", "Ejemplos"]
+    ] as const;
+
+    for (const [input, firstField, secondField] of cases) {
+      const normalized = normalizeDictionaryTranslationMarkdown(input);
+      expect(normalized).toContain(`\n\n**${firstField}**`);
+      expect(normalized).toContain(`\n\n**${secondField}**`);
+    }
+  });
+
   it("keeps translations attached to their requested blocks when IDs change", () => {
     expect(
       alignPageTranslations(
@@ -133,6 +176,123 @@ describe("shared utilities", () => {
         protection
       )
     ).toBe("第一段 [1-3]。\n\n第二段¹。");
+  });
+
+  it("protects every source line break instead of allowing line merging", () => {
+    const protection = protectTranslationText("Title\nFirst line\n\nSecond paragraph");
+
+    expect(protection.paragraphBreaks).toEqual(["\n", "\n\n"]);
+    expect(protection.text).toBe(
+      "Title{{WEBMIND_PARAGRAPH_BREAK_1}}First line{{WEBMIND_PARAGRAPH_BREAK_2}}Second paragraph"
+    );
+    expect(
+      restoreTranslationText(
+        "标题{{WEBMIND_PARAGRAPH_BREAK_1}}第一行{{WEBMIND_PARAGRAPH_BREAK_2}}第二段",
+        protection
+      )
+    ).toBe("标题\n第一行\n\n第二段");
+  });
+
+  it("restores fenced code blocks verbatim when the model wraps placeholders", () => {
+    const source =
+      "Run this example:\n\n```javascript\nconst answer = 42;\nconsole.log(answer);\n```\n\nDone.";
+    const protection = protectTranslationText(source);
+
+    expect(protection.codeBlocks).toEqual([
+      "```javascript\nconst answer = 42;\nconsole.log(answer);\n```"
+    ]);
+    expect(protection.text).not.toContain("const answer");
+    expect(
+      restoreTranslationText(
+        "运行这个示例：{{WEBMIND_PARAGRAPH_BREAK_1}}``{{WEBMIND_CODE_BLOCK_1}}``{{WEBMIND_PARAGRAPH_BREAK_2}}完成。",
+        protection
+      )
+    ).toBe(
+      "运行这个示例：\n\n```javascript\nconst answer = 42;\nconsole.log(answer);\n```\n\n完成。"
+    );
+  });
+
+  it("restores a code block at its source position when the model drops its placeholder", () => {
+    const source =
+      "Before.\n\n```typescript\nconst answer = 42;\n```\n\nAfter.";
+    const protection = protectTranslationText(source);
+
+    expect(
+      restoreTranslationText("之前。{{WEBMIND_PARAGRAPH_BREAK_1}}{{WEBMIND_PARAGRAPH_BREAK_2}}之后。", protection)
+    ).toBe("之前。\n\n```typescript\nconst answer = 42;\n```\n\n之后。");
+  });
+
+  it("removes numbering that was invented for ordinary source paragraphs", () => {
+    const protection = protectTranslationText("First paragraph.\n\nSecond paragraph.\n\nThird paragraph.");
+
+    expect(
+      restoreTranslationText(
+        "第一段。{{WEBMIND_PARAGRAPH_BREAK_1}}1. 第二段。{{WEBMIND_PARAGRAPH_BREAK_2}}2. 第三段。",
+        protection
+      )
+    ).toBe("第一段。\n\n第二段。\n\n第三段。");
+  });
+
+  it("preserves source list markers while restoring translations", () => {
+    const source = "1. First item\n2. Second item";
+    const protection = protectTranslationText(source);
+
+    expect(
+      restoreTranslationText(
+        "1. 第一项{{WEBMIND_PARAGRAPH_BREAK_1}}2. 第二项",
+        protection
+      )
+    ).toBe("1. 第一项\n2. 第二项");
+  });
+
+  it("removes numbering continued by the model after a genuine source list", () => {
+    const source = "1. First item\n2. Second item\n\nOrdinary paragraph.\n\nAnother paragraph.";
+    const protection = protectTranslationText(source);
+
+    expect(
+      restoreTranslationText(
+        "1. 第一项{{WEBMIND_PARAGRAPH_BREAK_1}}2. 第二项{{WEBMIND_PARAGRAPH_BREAK_2}}3. 普通段落。{{WEBMIND_PARAGRAPH_BREAK_3}}4. 另一个段落。",
+        protection
+      )
+    ).toBe("1. 第一项\n2. 第二项\n\n普通段落。\n\n另一个段落。");
+  });
+
+  it("hides incomplete protected tokens only in the streaming view", () => {
+    const protection = protectTranslationText("First\n\nSecond");
+    const partialResponses = [
+      "第一段{",
+      "第一段{{",
+      "第一段{{W",
+      "第一段{{WEB",
+      "第一段``{{WEBMI",
+      "第一段{{WEBMIND_PARAGRAPH_BREAK_"
+    ];
+
+    for (const response of partialResponses) {
+      expect(
+        restoreTranslationText(response, protection, { streaming: true })
+      ).toBe("第一段");
+    }
+    expect(
+      restoreTranslationText(
+        "第一段{{WEBMIND_PARAGRAPH_BREAK_1}}第二段",
+        protection,
+        { streaming: true }
+      )
+    ).toBe("第一段\n\n第二段");
+    expect(restoreTranslationText("最终内容 WEB", protection)).toBe(
+      "最终内容 WEB"
+    );
+
+    const citationProtection = protectTranslationText("Claim [1].");
+    expect(
+      restoreTranslationText("译文仍在生成", citationProtection, {
+        streaming: true
+      })
+    ).toBe("译文仍在生成");
+    expect(restoreTranslationText("完整译文", citationProtection)).toBe(
+      "完整译文 [1]"
+    );
   });
 
   it("restores mildly reformatted translation placeholders", () => {

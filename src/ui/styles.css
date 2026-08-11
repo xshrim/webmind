@@ -812,6 +812,16 @@ svg {
   gap: 18px;
 }
 
+.language-settings-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.language-settings-row .field {
+  min-width: 0;
+}
+
 .settings-card {
   min-width: 0;
   overflow: hidden;
@@ -2498,6 +2508,15 @@ svg {
   line-height: 1.55;
 }
 
+.message .markdown {
+  font-synthesis: weight;
+}
+
+.message .markdown strong,
+.message .markdown b {
+  font-weight: 700;
+}
+
 .message.user .markdown p,
 .message.user .markdown ul,
 .message.user .markdown ol,
@@ -3339,6 +3358,10 @@ button.prompt-row:hover {
   overflow-x: auto;
 }
 
+.syntax-highlighted-markdown {
+  min-width: 0;
+}
+
 .body-preview-block-content .markdown {
   min-width: 0;
   margin: 0;
@@ -3405,6 +3428,54 @@ button.prompt-row:hover {
 .body-preview-block-content .markdown pre code {
   padding: 0;
   background: transparent;
+}
+
+.syntax-highlighted-markdown .hljs-comment,
+.syntax-highlighted-markdown .hljs-quote {
+  color: var(--faint);
+  font-style: italic;
+}
+
+.syntax-highlighted-markdown .hljs-keyword,
+.syntax-highlighted-markdown .hljs-selector-tag,
+.syntax-highlighted-markdown .hljs-literal,
+.syntax-highlighted-markdown .hljs-section,
+.syntax-highlighted-markdown .hljs-link {
+  color: var(--violet);
+}
+
+.syntax-highlighted-markdown .hljs-string,
+.syntax-highlighted-markdown .hljs-title,
+.syntax-highlighted-markdown .hljs-name,
+.syntax-highlighted-markdown .hljs-type,
+.syntax-highlighted-markdown .hljs-attribute,
+.syntax-highlighted-markdown .hljs-symbol,
+.syntax-highlighted-markdown .hljs-bullet,
+.syntax-highlighted-markdown .hljs-addition,
+.syntax-highlighted-markdown .hljs-variable,
+.syntax-highlighted-markdown .hljs-template-tag,
+.syntax-highlighted-markdown .hljs-template-variable {
+  color: var(--teal);
+}
+
+.syntax-highlighted-markdown .hljs-number,
+.syntax-highlighted-markdown .hljs-meta,
+.syntax-highlighted-markdown .hljs-built_in,
+.syntax-highlighted-markdown .hljs-builtin-name,
+.syntax-highlighted-markdown .hljs-params {
+  color: var(--blue);
+}
+
+.syntax-highlighted-markdown .hljs-deletion {
+  color: var(--danger);
+}
+
+.syntax-highlighted-markdown .hljs-emphasis {
+  font-style: italic;
+}
+
+.syntax-highlighted-markdown .hljs-strong {
+  font-weight: 700;
 }
 
 .body-preview-block:hover,
@@ -3675,6 +3746,11 @@ button.prompt-row:hover {
 
   .feature-settings-grid {
     grid-template-columns: 1fr;
+  }
+
+  .language-settings-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
   }
 
   .tool-surface-row {

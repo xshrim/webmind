@@ -211,6 +211,124 @@ function markdownHref(value: string): string {
     .replace(/>/g, "%3E");
 }
 
+function normalizedCodeLanguage(value: string | null | undefined): string {
+  const candidate = value
+    ?.trim()
+    .toLowerCase()
+    .replace(/^(?:language|lang)-/, "");
+  if (!candidate || !/^[a-z0-9_+#.-]+$/.test(candidate)) return "";
+  if (candidate === "c++") return "cpp";
+  if (candidate === "c#") return "csharp";
+  return candidate;
+}
+
+function codeLanguageFromElement(element: HTMLElement): string {
+  const code = element.querySelector<HTMLElement>("code");
+  const attributeCandidates = [
+    code?.getAttribute("data-language"),
+    code?.getAttribute("data-lang"),
+    element.getAttribute("data-language"),
+    element.getAttribute("data-lang")
+  ];
+  for (const candidate of attributeCandidates) {
+    const language = normalizedCodeLanguage(candidate);
+    if (language) return language;
+  }
+
+  const classSources = [code, element, element.parentElement].filter(
+    (candidate): candidate is HTMLElement => Boolean(candidate)
+  );
+  for (const source of classSources) {
+    for (const className of Array.from(source.classList)) {
+      const match = className.match(/^(?:language|lang|highlight-source)-(.+)$/i);
+      const language = normalizedCodeLanguage(match?.[1]);
+      if (language) return language;
+    }
+  }
+  return "";
+}
+
+const BLOCK_CODE_ELEMENT_TAGS = new Set([
+  "PRE",
+  "DIV",
+  "SECTION",
+  "FIGURE",
+  "CODE"
+]);
+const BLOCK_CODE_PROSE_SELECTOR =
+  "p, h1, h2, h3, h4, h5, h6, ul, ol, dl, table, blockquote, article, section, pre";
+
+export function hasBlockCodeMetadata(value: string): boolean {
+  const normalized = value
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/[_-]+/g, " ");
+  return /(?:^|\s)(?:code|source|highlight|syntax|prettyprint)(?:\s|$)/i.test(
+    normalized
+  );
+}
+
+function isBlockCodeElement(element: HTMLElement): boolean {
+  if (element.tagName === "PRE") return true;
+  if (!BLOCK_CODE_ELEMENT_TAGS.has(element.tagName)) return false;
+  if (element.querySelector("pre")) return false;
+
+  const hasDirectCodeChild = Array.from(element.children).some(
+    (child) => child.tagName === "CODE"
+  );
+  const metadata = [
+    element.id,
+    element.className,
+    element.getAttribute("role"),
+    element.getAttribute("data-language"),
+    element.getAttribute("data-lang"),
+    element.getAttribute("data-highlight-language")
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const language = codeLanguageFromElement(element);
+  const text = element.textContent ?? "";
+  const style = element.isConnected
+    ? element.ownerDocument.defaultView?.getComputedStyle(element)
+    : null;
+  const blockCodeSignal =
+    Boolean(language) ||
+    hasDirectCodeChild ||
+    hasBlockCodeMetadata(metadata) ||
+    Boolean(style && /^(?:pre|pre-wrap|break-spaces)$/.test(style.whiteSpace));
+  if (!blockCodeSignal) return false;
+
+  if (element.tagName === "CODE") {
+    return /\r|\n/.test(text) || Boolean(style && style.display !== "inline");
+  }
+  return !element.querySelector(BLOCK_CODE_PROSE_SELECTOR);
+}
+
+function blockCodeAncestor(node: Node): HTMLElement | null {
+  let element = node instanceof HTMLElement ? node : node.parentElement;
+  while (element) {
+    if (isBlockCodeElement(element)) return element;
+    element = element.parentElement;
+  }
+  return null;
+}
+
+function codeTextFromElement(element: HTMLElement): string {
+  return (element.textContent ?? "")
+    .replace(/\r\n?/g, "\n")
+    .replace(/\u00a0/g, " ")
+    .replace(/^\n+|\n+$/g, "");
+}
+
+export function markdownCodeFence(code: string, language = ""): string {
+  const longestBacktickRun = Math.max(
+    0,
+    ...Array.from(code.matchAll(/`+/g), (match) => match[0].length)
+  );
+  const fence = "`".repeat(Math.max(3, longestBacktickRun + 1));
+  const info = normalizedCodeLanguage(language);
+  return `\n\n${fence}${info}\n${code}\n${fence}\n\n`;
+}
+
 function markdownInlineFromNode(node: Node): string {
   if (node instanceof Text) {
     return escapeMarkdownText(
@@ -268,9 +386,9 @@ function markdownInlineFromNode(node: Node): string {
     if (!label || !link.href) return label;
     return `[${label}](${markdownHref(link.href)})`;
   }
-  if (node.tagName === "PRE") {
-    const code = (node.textContent ?? "").replace(/\r\n?/g, "\n").trim();
-    return code ? `\n\n${"```"}\n${code}\n${"```"}\n\n` : "";
+  if (isBlockCodeElement(node)) {
+    const code = codeTextFromElement(node);
+    return code ? markdownCodeFence(code, codeLanguageFromElement(node)) : "";
   }
   const content = Array.from(node.childNodes)
     .map(markdownInlineFromNode)
@@ -317,6 +435,9 @@ function markdownInlineFromNode(node: Node): string {
 
 export function markdownFromElement(element: Element | null): string {
   if (!element) return "";
+  if (element instanceof HTMLElement && isBlockCodeElement(element)) {
+    return cleanCitationExplanationText(markdownInlineFromNode(element).trim());
+  }
   return cleanCitationExplanationText(
     Array.from(element.childNodes)
       .map(markdownInlineFromNode)
@@ -354,8 +475,18 @@ export function selectionTextWithLayout(selection: Selection | null): string {
 export function selectionMarkdownWithLayout(selection: Selection | null): string {
   if (!selection?.rangeCount) return "";
   try {
+    const range = selection.getRangeAt(0);
+    const startCode = blockCodeAncestor(range.startContainer);
+    const endCode = blockCodeAncestor(range.endContainer);
+    if (startCode && startCode === endCode) {
+      const code = selection
+        .toString()
+        .replace(/\r\n?/g, "\n")
+        .replace(/^\n+|\n+$/g, "");
+      if (code) return markdownCodeFence(code, codeLanguageFromElement(startCode));
+    }
     const container = document.createElement("div");
-    container.append(selection.getRangeAt(0).cloneContents());
+    container.append(range.cloneContents());
     const structured = markdownFromElement(container);
     if (structured) return structured;
   } catch {

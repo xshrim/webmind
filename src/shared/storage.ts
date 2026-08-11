@@ -2,6 +2,7 @@ import { DEFAULT_SETTINGS } from "./defaults";
 import { uiText } from "./i18n";
 import type {
   ArticleExtractionRule,
+  AppLanguage,
   AppLogLevel,
   AppSettings,
   Conversation,
@@ -11,6 +12,19 @@ import type {
   PendingAction,
   ProviderProfile
 } from "./types";
+
+const APP_LANGUAGES = new Set<AppLanguage>([
+  "auto",
+  "zh-CN",
+  "zh-TW",
+  "en",
+  "ja",
+  "ko",
+  "es",
+  "fr",
+  "de",
+  "it"
+]);
 
 type StorageAreaName = "local" | "session" | "sync";
 
@@ -211,9 +225,13 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
     autoScrollDuringStreaming: stored.autoScrollDuringStreaming ?? true,
     modelThinkingTimeoutSeconds: storedTimeoutSeconds,
     interfaceLanguage:
-      stored.interfaceLanguage ?? DEFAULT_SETTINGS.interfaceLanguage,
+      stored.interfaceLanguage && APP_LANGUAGES.has(stored.interfaceLanguage)
+        ? stored.interfaceLanguage
+        : DEFAULT_SETTINGS.interfaceLanguage,
     translationLanguage:
-      stored.translationLanguage ?? DEFAULT_SETTINGS.translationLanguage,
+      stored.translationLanguage && APP_LANGUAGES.has(stored.translationLanguage)
+        ? stored.translationLanguage
+        : DEFAULT_SETTINGS.translationLanguage,
     defaultContextScope:
       stored.defaultContextScope === "page" ? "page" : "article",
     selectionOverlayMode:

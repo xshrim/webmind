@@ -100,6 +100,24 @@ describe("toolInstruction", () => {
     expect(result).toContain("tool prompt takes priority");
   });
 
+  it("uses an English rule template with the exact new interface language", () => {
+    const tool: CustomTool = {
+      id: "custom-spanish-language-tool",
+      title: "Language tool",
+      description: "Language test",
+      template: "Summarize {{text}}",
+      icon: "languages"
+    };
+    const result = toolPromptWithContext(
+      tool,
+      { interfaceLanguage: "es", toolResponseUseContextLanguage: false },
+      "Texto original"
+    );
+
+    expect(result).toContain("current interface language (Spanish)");
+    expect(result).toContain("tool prompt takes priority");
+  });
+
   it("uses a page language hint for non-English Latin text", () => {
     const tool: CustomTool = {
       id: "custom-french-tool",

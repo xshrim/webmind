@@ -146,6 +146,7 @@ import {
 } from "../shared/immersiveWorkflow";
 import { Markdown } from "../ui/Markdown";
 import { PAGE_STYLES, SHADOW_STYLES } from "./styles";
+import { textRectAtPoint } from "./hoverDefinition";
 
 const IMMERSIVE_READING_BATCH_SIZE = 20;
 const IMMERSIVE_TRANSLATION_BATCH_SIZE = 10;
@@ -457,33 +458,13 @@ function textRangeDetails(
   end: number,
   clientX: number,
   clientY: number
-): { range: Range; rect: DOMRect } {
+): { range: Range; rect: DOMRect } | null {
   const range = document.createRange();
   range.setStart(node, start);
   range.setEnd(node, end);
   const clientRects = Array.from(range.getClientRects());
-  const rect =
-    clientRects.find(
-      (candidate) =>
-        clientX >= candidate.left - 2 &&
-        clientX <= candidate.right + 2 &&
-        clientY >= candidate.top - 2 &&
-        clientY <= candidate.bottom + 2
-    ) ??
-    clientRects.reduce<DOMRect | null>((nearest, candidate) => {
-      if (!nearest) return candidate;
-      const distance = (rect: DOMRect) => {
-        const dx = Math.max(rect.left - clientX, 0, clientX - rect.right);
-        const dy = Math.max(rect.top - clientY, 0, clientY - rect.bottom);
-        return dx * dx + dy * dy;
-      };
-      return distance(candidate) < distance(nearest) ? candidate : nearest;
-    }, null) ??
-    range.getBoundingClientRect();
-  return {
-    range,
-    rect: rect.width || rect.height ? rect : new DOMRect(clientX, clientY, 1, 1)
-  };
+  const rect = textRectAtPoint(clientRects, clientX, clientY);
+  return rect ? { range, rect } : null;
 }
 
 function setHoverDefinitionHighlight(
@@ -548,18 +529,18 @@ function definitionCandidateAtPoint(
       const last = Math.min(index, end - length);
       for (let candidateStart = first; candidateStart <= last; candidateStart += 1) {
         const candidate = text.slice(candidateStart, candidateStart + length);
-        if (!candidates.includes(candidate)) {
-          candidates.push(candidate);
-          const details = textRangeDetails(
-            point.node,
-            candidateStart,
-            candidateStart + length,
-            clientX,
-            clientY
-          );
-          rects.push(details.rect);
-          ranges.push(details.range);
-        }
+        if (candidates.includes(candidate)) continue;
+        const details = textRangeDetails(
+          point.node,
+          candidateStart,
+          candidateStart + length,
+          clientX,
+          clientY
+        );
+        if (!details) continue;
+        candidates.push(candidate);
+        rects.push(details.rect);
+        ranges.push(details.range);
       }
     }
     if (!candidates.length) return null;
@@ -581,6 +562,7 @@ function definitionCandidateAtPoint(
   const word = text.slice(start, end).replace(/^[-'\u2019]+|[-'\u2019]+$/g, "");
   if (!word || !/[A-Za-z]/u.test(word)) return null;
   const details = textRangeDetails(point.node, start, end, clientX, clientY);
+  if (!details) return null;
   return {
     text: word,
     candidates: [word],

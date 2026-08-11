@@ -6,6 +6,7 @@ import {
   isDictionaryTranslationInput,
   translationDirectionInstruction,
   translationFormatInstruction,
+  translationStructureIntegrityInstruction,
   type PromptConfigSource
 } from "./prompts";
 import type {
@@ -21,8 +22,25 @@ export interface ProtectedTranslationText {
   links: ProtectedTranslationLink[];
   formats: ProtectedTranslationFormat[];
   htmlTags: string[];
+  codeBlocks: string[];
+  codeBlockSlots?: ProtectedCodeBlockSlot[];
   paragraphBreaks: string[];
+  sourceLineMarkers?: SourceLineMarker[];
 }
+
+interface ProtectedCodeBlockSlot {
+  lineIndex: number;
+  beforeParagraphBreaks: number;
+  afterParagraphBreaks: number;
+}
+
+type SourceLineMarker =
+  | "ordered"
+  | "unordered"
+  | "quote"
+  | "heading"
+  | "code"
+  | null;
 
 interface ProtectedTranslationLink {
   href: string;
@@ -66,19 +84,22 @@ export async function mapWithConcurrency<T, R>(
 const TRANSLATION_CITATION_PATTERN =
   /\[\s*\d+(?:\s*[-,–—]\s*\d+)*\s*\]|[¹²³⁴⁵⁶⁷⁸⁹⁰]+/g;
 
+type ProtectedTokenKind =
+  | "CITATION"
+  | "PARAGRAPH_BREAK"
+  | "LINK_START"
+  | "LINK_END"
+  | "FORMAT_START"
+  | "FORMAT_END"
+  | "HTML_TAG"
+  | "CODE_BLOCK";
+
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function protectedTokenPattern(
-  kind:
-    | "CITATION"
-    | "PARAGRAPH_BREAK"
-    | "LINK_START"
-    | "LINK_END"
-    | "FORMAT_START"
-    | "FORMAT_END"
-    | "HTML_TAG",
+  kind: ProtectedTokenKind,
   index: number
 ) {
   return new RegExp(
@@ -88,18 +109,56 @@ function protectedTokenPattern(
 }
 
 function protectedTokenSource(
-  kind:
-    | "CITATION"
-    | "PARAGRAPH_BREAK"
-    | "LINK_START"
-    | "LINK_END"
-    | "FORMAT_START"
-    | "FORMAT_END"
-    | "HTML_TAG",
+  kind: ProtectedTokenKind,
   index: number
 ): string {
   const token = `WEBMIND_${kind}_${index}(?!\\d)`;
-  return `\`?(?:\\{\\{\\s*${token}\\s*\\}\\}|\\[\\s*${token}\\s*\\]|${token})\`?`;
+  const backtickWrapper = "`{0,3}";
+  return `${backtickWrapper}(?:\\{\\{\\s*${token}\\s*\\}\\}|\\[\\s*${token}\\s*\\]|${token})${backtickWrapper}`;
+}
+
+function protectFencedCodeBlocks(
+  text: string,
+  codeBlocks: string[],
+  codeBlockSlots: ProtectedCodeBlockSlot[]
+): string {
+  const lines = text.split("\n");
+  const protectedLines: string[] = [];
+  for (let index = 0; index < lines.length;) {
+    const opening = lines[index].match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
+    if (!opening || (opening[1][0] === "`" && opening[2].includes("`"))) {
+      protectedLines.push(lines[index]);
+      index += 1;
+      continue;
+    }
+    const marker = opening[1][0];
+    const minimumLength = opening[1].length;
+    let closingIndex = index + 1;
+    for (; closingIndex < lines.length; closingIndex += 1) {
+      const closing = lines[closingIndex].match(/^ {0,3}(`+|~+)[\t ]*$/);
+      if (
+        closing &&
+        closing[1][0] === marker &&
+        closing[1].length >= minimumLength
+      ) {
+        break;
+      }
+    }
+    if (closingIndex >= lines.length) {
+      protectedLines.push(lines[index]);
+      index += 1;
+      continue;
+    }
+    codeBlocks.push(lines.slice(index, closingIndex + 1).join("\n"));
+    codeBlockSlots.push({
+      lineIndex: protectedLines.length,
+      beforeParagraphBreaks: 0,
+      afterParagraphBreaks: 0
+    });
+    protectedLines.push(`{{WEBMIND_CODE_BLOCK_${codeBlocks.length}}}`);
+    index = closingIndex + 1;
+  }
+  return protectedLines.join("\n");
 }
 
 function visibleTextFromHtmlFragment(value: string): string {
@@ -249,12 +308,63 @@ function stripBrokenTranslationPlaceholderFragments(text: string): string {
     .replace(/[ \t]{2,}/g, " ");
 }
 
+function isIncompleteProtectedTokenBody(value: string): boolean {
+  const compact = value.replace(/[\t ]/g, "").toUpperCase();
+  if (!compact) return true;
+  return (
+    "WEBMIND_".startsWith(compact) ||
+    (compact.startsWith("WEBMIND_") && /^[A-Z0-9_]+$/.test(compact))
+  );
+}
+
+function stripIncompleteProtectedTokenSuffix(text: string): string {
+  const scanStart = Math.max(0, text.length - 96);
+  for (let index = scanStart; index < text.length; index += 1) {
+    let remainder = text.slice(index);
+    const backticks = remainder.match(/^`{1,3}[\t ]*/)?.[0] ?? "";
+    if (backticks) remainder = remainder.slice(backticks.length);
+    let hasWrapper = Boolean(backticks);
+    if (remainder.startsWith("{{")) {
+      remainder = remainder.slice(2);
+      hasWrapper = true;
+    } else if (remainder.startsWith("{") || remainder.startsWith("[")) {
+      remainder = remainder.slice(1);
+      hasWrapper = true;
+    }
+    if (
+      hasWrapper &&
+      isIncompleteProtectedTokenBody(remainder.trimEnd())
+    ) {
+      return text.slice(0, index).trimEnd();
+    }
+  }
+
+  for (let index = text.length - 1; index >= scanStart; index -= 1) {
+    if (text[index] !== "W") continue;
+    const candidate = text.slice(index).trimEnd();
+    if (
+      candidate === candidate.toUpperCase() &&
+      isIncompleteProtectedTokenBody(candidate)
+    ) {
+      return text.slice(0, index).trimEnd();
+    }
+  }
+  return text;
+}
+
 export function protectTranslationText(text: string): ProtectedTranslationText {
   const citations: string[] = [];
   const links: ProtectedTranslationLink[] = [];
   const formats: ProtectedTranslationFormat[] = [];
   const htmlTags: string[] = [];
+  const codeBlocks: string[] = [];
+  const codeBlockSlots: ProtectedCodeBlockSlot[] = [];
   const paragraphBreaks: string[] = [];
+  const withoutCodeBlocks = protectFencedCodeBlocks(
+    text.replace(/\r\n?/g, "\n"),
+    codeBlocks,
+    codeBlockSlots
+  );
   const protectFormat = (tag: "sup" | "sub", value: string) => {
     const visibleText = visibleTextFromHtmlFragment(value);
     if (!visibleText) return "";
@@ -262,7 +372,7 @@ export function protectTranslationText(text: string): ProtectedTranslationText {
     const index = formats.length;
     return `{{WEBMIND_FORMAT_START_${index}}}${visibleText}{{WEBMIND_FORMAT_END_${index}}}`;
   };
-  const withFormats = text.replace(
+  const withFormats = withoutCodeBlocks.replace(
     /<(sup|sub)\b[^>]*>([\s\S]*?)<\/\1>/gi,
     (_match, tag: string, value: string) =>
       protectFormat(tag.toLowerCase() as "sup" | "sub", value)
@@ -306,33 +416,218 @@ export function protectTranslationText(text: string): ProtectedTranslationText {
     }
   );
   const protectedText = withHtmlTags
-    .replace(/\r\n?/g, "\n")
-    .replace(/\n[\t ]*\n+/g, (separator) => {
-      paragraphBreaks.push(separator);
+    .replace(/\n+/g, (separator) => {
+      paragraphBreaks.push(separator.length > 1 ? "\n\n" : "\n");
       return `{{WEBMIND_PARAGRAPH_BREAK_${paragraphBreaks.length}}}`;
     });
-  return { text: protectedText, citations, links, formats, htmlTags, paragraphBreaks };
+  codeBlockSlots.forEach((slot, index) => {
+    const token = `{{WEBMIND_CODE_BLOCK_${index + 1}}}`;
+    const tokenStart = protectedText.indexOf(token);
+    if (tokenStart < 0) return;
+    const before = protectedText.slice(0, tokenStart);
+    const after = protectedText.slice(tokenStart + token.length);
+    slot.beforeParagraphBreaks = Array.from(
+      before.matchAll(/\{\{WEBMIND_PARAGRAPH_BREAK_\d+\}\}/g)
+    ).length;
+    slot.afterParagraphBreaks = /\{\{WEBMIND_PARAGRAPH_BREAK_\d+\}\}/.test(
+      after
+    )
+      ? slot.beforeParagraphBreaks + 1
+      : 0;
+  });
+  return {
+    text: protectedText,
+    citations,
+    links,
+    formats,
+    htmlTags,
+    codeBlocks,
+    codeBlockSlots,
+    paragraphBreaks,
+    sourceLineMarkers: withoutCodeBlocks.split("\n").map(sourceLineMarker)
+  };
+}
+
+export function scopeProtectedTranslationText(
+  protection: ProtectedTranslationText,
+  protectedInput: string
+): ProtectedTranslationText {
+  if (protectedInput === protection.text) return protection;
+  return {
+    ...protection,
+    citations: protection.citations.map((marker, index) =>
+      protectedTokenPattern("CITATION", index + 1).test(protectedInput)
+        ? marker
+        : ""
+    ),
+    codeBlocks: protection.codeBlocks.map((code, index) =>
+      protectedTokenPattern("CODE_BLOCK", index + 1).test(protectedInput)
+        ? code
+        : ""
+    ),
+    sourceLineMarkers: undefined
+  };
+}
+
+function sourceLineMarker(line: string): SourceLineMarker {
+  const trimmed = line.trimStart();
+  if (trimmed.startsWith("{{WEBMIND_CODE_BLOCK_")) return "code";
+  if (/^\d+[.)][\t ]+/.test(trimmed)) return "ordered";
+  if (/^[-+*][\t ]+/.test(trimmed)) return "unordered";
+  if (/^>+[\t ]?/.test(trimmed)) return "quote";
+  if (/^#{1,6}[\t ]+/.test(trimmed)) return "heading";
+  return null;
+}
+
+function protectedTokenMatch(
+  text: string,
+  kind: ProtectedTokenKind,
+  index: number
+): { start: number; end: number } | null {
+  const match = protectedTokenPattern(kind, index).exec(text);
+  return match
+    ? { start: match.index, end: match.index + match[0].length }
+    : null;
+}
+
+function insertMissingCodeBlockSentinels(
+  text: string,
+  missing: Array<{ index: number; sentinel: string }>,
+  slots: ProtectedCodeBlockSlot[]
+): string {
+  let result = text;
+  for (const item of missing) {
+    const slot = slots[item.index];
+    const previous = slot?.beforeParagraphBreaks
+      ? protectedTokenMatch(
+          result,
+          "PARAGRAPH_BREAK",
+          slot.beforeParagraphBreaks
+        )
+      : null;
+    const next = slot?.afterParagraphBreaks
+      ? protectedTokenMatch(
+          result,
+          "PARAGRAPH_BREAK",
+          slot.afterParagraphBreaks
+        )
+      : null;
+    if (next) {
+      result = `${result.slice(0, next.start)}${item.sentinel}${result.slice(next.start)}`;
+      continue;
+    }
+    if (previous) {
+      result = `${result.slice(0, previous.end)}${item.sentinel}${result.slice(previous.end)}`;
+      continue;
+    }
+
+    // Preserve the code block even when the model also dropped its break tokens.
+    const lines = result.split("\n");
+    const lineIndex = Math.min(
+      Math.max(0, slot?.lineIndex ?? lines.length),
+      lines.length
+    );
+    lines.splice(lineIndex, 0, item.sentinel, "");
+    result = lines.join("\n");
+  }
+  return result;
+}
+
+function stripInventedListMarkers(
+  text: string,
+  sourceLineMarkers: SourceLineMarker[]
+): string {
+  if (sourceLineMarkers.length < 2) return text;
+  const lines = text.split("\n");
+  const ordered = lines.map((line, index) => {
+    if (sourceLineMarkers[index] === undefined || line.includes("\uE000")) {
+      return null;
+    }
+    const match = line.match(/^(\s*)(\d+)[.)][\t ]+/);
+    return match
+      ? {
+          index,
+          number: Number(match[2]),
+          sourceMarker: sourceLineMarkers[index]
+        }
+      : null;
+  });
+  const unordered = lines.map((line, index) => {
+    if (sourceLineMarkers[index] === undefined || line.includes("\uE000")) {
+      return null;
+    }
+    const match = line.match(/^(\s*)([-+*])[\t ]+/);
+    return match
+      ? { index, marker: match[2], sourceMarker: sourceLineMarkers[index] }
+      : null;
+  });
+  const remove = new Set<number>();
+  let orderedRun: NonNullable<(typeof ordered)[number]>[] = [];
+  for (const marker of ordered) {
+    if (!marker) continue;
+    const previous = orderedRun.at(-1);
+    if (!previous || marker.number !== previous.number + 1) {
+      orderedRun = [marker];
+    } else {
+      orderedRun.push(marker);
+    }
+    if (orderedRun.length >= 2 && orderedRun[0].number <= 1) {
+      orderedRun.forEach((item) => {
+        if (item.sourceMarker !== "ordered") remove.add(item.index);
+      });
+    }
+  }
+  let unorderedRun: NonNullable<(typeof unordered)[number]>[] = [];
+  for (const marker of unordered) {
+    if (!marker) continue;
+    const previous = unorderedRun.at(-1);
+    if (!previous || marker.marker !== previous.marker) {
+      unorderedRun = [marker];
+    } else {
+      unorderedRun.push(marker);
+    }
+    if (unorderedRun.length >= 2) {
+      unorderedRun.forEach((item) => {
+        if (item.sourceMarker !== "unordered") remove.add(item.index);
+      });
+    }
+  }
+  return lines
+    .map((line, index) =>
+      remove.has(index)
+        ? line.replace(/^\s*(?:\d+[.)]|[-+*])[\t ]+/, "")
+        : line
+    )
+    .join("\n");
 }
 
 export function restoreTranslationText(
   text: string,
   protection: Pick<ProtectedTranslationText, "citations" | "paragraphBreaks"> &
-    Partial<Pick<ProtectedTranslationText, "links" | "formats" | "htmlTags">>
+    Partial<
+      Pick<
+        ProtectedTranslationText,
+        | "links"
+        | "formats"
+        | "htmlTags"
+        | "codeBlocks"
+        | "codeBlockSlots"
+        | "sourceLineMarkers"
+      >
+    >,
+  options: { streaming?: boolean } = {}
 ): string {
+  const visibleText = options.streaming
+    ? stripIncompleteProtectedTokenSuffix(text)
+    : text;
   let restored = stripCitationExplanationNoise(
-    text,
+    visibleText,
     protection.citations.length
   );
   protection.citations.forEach((marker, index) => {
     restored = restored.replace(
       protectedTokenPattern("CITATION", index + 1),
       marker
-    );
-  });
-  protection.paragraphBreaks.forEach((separator, index) => {
-    restored = restored.replace(
-      protectedTokenPattern("PARAGRAPH_BREAK", index + 1),
-      separator.includes("\n\n") ? "\n\n" : separator
     );
   });
   (protection.links ?? []).forEach((link, index) => {
@@ -375,16 +670,77 @@ export function restoreTranslationText(
       tag
     );
   });
+  const codeBlockSentinels: Array<{ sentinel: string; code: string }> = [];
+  const missingCodeBlocks: Array<{ index: number; sentinel: string }> = [];
+  (protection.codeBlocks ?? []).forEach((code, index) => {
+    if (!code) return;
+    const sentinel = `\uE000${index}\uE001`;
+    const pattern = protectedTokenPattern("CODE_BLOCK", index + 1);
+    let matched = false;
+    restored = restored.replace(pattern, () => {
+      matched = true;
+      return sentinel;
+    });
+    if (matched) {
+      codeBlockSentinels.push({ sentinel, code });
+    } else if (!options.streaming) {
+      missingCodeBlocks.push({ index, sentinel });
+    }
+  });
+  if (!options.streaming && missingCodeBlocks.length) {
+    restored = insertMissingCodeBlockSentinels(
+      restored,
+      missingCodeBlocks,
+      protection.codeBlockSlots ?? []
+    );
+    missingCodeBlocks.forEach(({ index, sentinel }) => {
+      const code = protection.codeBlocks?.[index];
+      if (code) codeBlockSentinels.push({ sentinel, code });
+    });
+  }
+  protection.paragraphBreaks.forEach((separator, index) => {
+    restored = restored.replace(
+      protectedTokenPattern("PARAGRAPH_BREAK", index + 1),
+      separator.includes("\n\n") ? "\n\n" : separator
+    );
+  });
+  restored = stripInventedListMarkers(
+    restored,
+    protection.sourceLineMarkers ?? []
+  );
   const missingCitations = protection.citations.filter(
     (marker) => marker && !restored.includes(marker)
   );
-  if (missingCitations.length) {
+  if (!options.streaming && missingCitations.length) {
     restored = `${restored.trimEnd()} ${missingCitations.join(" ")}`;
   }
   restored = stripCitationMarkerExplanationNoise(restored, protection.citations);
   restored = stripBrokenTranslationPlaceholderFragments(restored);
   restored = stripTranslationTaskPreface(restored);
-  return restored.replace(/\n[\t ]*\n(?:[\t ]*\n)+/g, "\n\n");
+  restored = restored.replace(/\n[\t ]*\n(?:[\t ]*\n)+/g, "\n\n");
+  for (const { sentinel, code } of codeBlockSentinels) {
+    restored = restored.split(sentinel).join(code);
+  }
+  return restored;
+}
+
+const DICTIONARY_FIELD_LABEL =
+  /[\t ]*(?:[;；|][\t ]*)?(?:\n[\t ]*)?(\*\*(?:释义|釋義|义项|義項|语域|語域|搭配|变体|變體|助记|助記|例句|Definition|Senses|Register|Collocations|Variants|Mnemonic|Examples|Definición|Acepciones|Registro|Colocaciones|Variantes|Mnemotecnia|Ejemplos|Définition|Sens|Registre|Mnémotechnique|Exemples|Bedeutungen|Kollokationen|Varianten|Merksatz|Beispiele|Definizione|Accezioni|Collocazioni|Varianti|Mnemonico|Esempi)[：:]?\*\*)/g;
+
+export function normalizeDictionaryTranslationMarkdown(text: string): string {
+  const normalized = text.replace(/\r\n?/g, "\n").trim();
+  if (!normalized) return normalized;
+
+  return normalized
+    .replace(
+      DICTIONARY_FIELD_LABEL,
+      (match, label: string, offset: number, source: string) => {
+        const before = source.slice(0, offset);
+        if (!before || /\n[\t ]*$/.test(before)) return match;
+        return `\n\n${label}`;
+      }
+    )
+    .replace(/\n[\t ]*\n(?:[\t ]*\n)+/g, "\n\n");
 }
 
 export function buildProtectedTranslationPrompt(
@@ -412,6 +768,7 @@ export function buildProtectedTranslationInstruction(
       : autoTranslateInstruction(config, sourceText),
     translationDirectionInstruction(config, sourceText),
     dictionaryMode ? "" : translationFormatInstruction(config),
+    dictionaryMode ? "" : translationStructureIntegrityInstruction(),
     dictionaryMode ? "" : htmlFormattingInstruction(config),
     dictionaryMode
       ? ""
@@ -438,6 +795,7 @@ export function buildPageTranslationSystemPrompt(
     autoTranslateInstruction(config, sourceText),
     translationDirectionInstruction(config, sourceText),
     translationFormatInstruction(config),
+    translationStructureIntegrityInstruction(),
     htmlFormattingInstruction(config),
     uiText(
       typeof config === "object" ? config?.interfaceLanguage : config,

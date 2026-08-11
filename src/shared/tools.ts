@@ -4,7 +4,12 @@ import {
   originalLanguageLabel,
   type PromptConfigSource
 } from "./prompts";
-import { LANGUAGE_LABELS, resolveLanguage, uiText } from "./i18n";
+import {
+  LANGUAGE_LABELS,
+  resolveLanguage,
+  resolvePromptLanguage,
+  uiText
+} from "./i18n";
 import type { AppSettings, CustomTool, ToolDefinition } from "./types";
 
 type ToolPromptSettings = Pick<AppSettings, "interfaceLanguage"> &
@@ -67,10 +72,11 @@ export function toolResponseLanguageInstruction(
 ): string {
   if (TOOL_RESPONSE_LANGUAGE_EXCLUDED_IDS.has(tool.id)) return "";
   const language = resolveLanguage(settings?.interfaceLanguage);
+  const promptLanguage = resolvePromptLanguage(settings?.interfaceLanguage);
   const interfaceLanguage = LANGUAGE_LABELS[language];
   const useContextLanguage =
     settings?.toolResponseUseContextLanguage === true;
-  switch (language) {
+  switch (promptLanguage) {
     case "zh-TW":
       return useContextLanguage
         ? contextLanguage
