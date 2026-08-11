@@ -235,6 +235,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   searchAnswerEnabled: false,
   includePageByDefault: true,
   webSearchByDefault: false,
+  toolResponseUseContextLanguage: false,
   historyLimit: 60
 };
 

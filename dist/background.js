@@ -135,6 +135,7 @@ var UI_TEXT = {
     selectMoreTools: "\u9009\u62E9\u66F4\u591A\u5DE5\u5177",
     moreTools: "\u66F4\u591A\u5DE5\u5177",
     copyContent: "\u590D\u5236\u5185\u5BB9",
+    clearComposer: "\u6E05\u7A7A\u8F93\u5165",
     copyCurrentBody: "\u590D\u5236\u6B63\u6587",
     copyUrl: "\u590D\u5236\u7F51\u9875 URL",
     copied: "\u5DF2\u590D\u5236",
@@ -147,7 +148,11 @@ var UI_TEXT = {
     currentPage: "\u5F53\u524D\u9875\u9762",
     currentBody: "\u5F53\u524D\u6B63\u6587",
     currentSelection: "\u5F53\u524D\u9009\u4E2D",
-    currentBodyPreview: "\u5F53\u524D\u6B63\u6587\u9884\u89C8",
+    currentBodyPreview: "\u4E0A\u4E0B\u6587\u9884\u89C8",
+    nonePreview: "\u9884\u89C8",
+    pagePreview: "\u9875\u9762\u9884\u89C8",
+    bodyPreview: "\u6B63\u6587\u9884\u89C8",
+    selectionPreview: "\u9009\u4E2D\u9884\u89C8",
     expand: "\u5C55\u5F00",
     collapse: "\u6536\u8D77",
     currentBodyBlocks: "{count} \u6BB5",
@@ -169,7 +174,12 @@ var UI_TEXT = {
     restoreCurrentBody: "\u8FD8\u539F\u6B63\u6587",
     highlightCurrentBodyBlock: "\u5728\u9875\u9762\u4E2D\u9AD8\u4EAE\u8FD9\u4E00\u6BB5",
     removeCurrentBodyBlock: "\u4ECE\u5F53\u524D\u6B63\u6587\u4E2D\u5220\u9664\u8FD9\u4E00\u6BB5",
-    smartPruneCurrentBody: "\u667A\u80FD\u5254\u9664",
+    smartPruneCurrentBody: "\u81EA\u52A8\u5254\u9664",
+    modelPruneCurrentBody: "\u667A\u80FD\u5254\u9664",
+    modelPruneCurrentBodyRunning: "\u6B63\u5728\u8BA9\u5927\u6A21\u578B\u5224\u65AD\u6B63\u6587 block",
+    modelPruneInvalidResult: "\u5927\u6A21\u578B\u8FD4\u56DE\u7684\u6B63\u6587\u5254\u9664\u7ED3\u679C\u65E0\u6CD5\u89E3\u6790",
+    modelPruneNoChanges: "\u5927\u6A21\u578B\u5224\u65AD\u6CA1\u6709\u9700\u8981\u5254\u9664\u7684\u6B63\u6587 block",
+    modelPruneAllRejected: "\u4E3A\u907F\u514D\u8BEF\u5220\uFF0C\u4E0D\u80FD\u5254\u9664\u5168\u90E8\u6B63\u6587 block",
     articleRecognition: "\u6B63\u6587\u8BC6\u522B",
     recognitionRules: "\u8BC6\u522B\u89C4\u5219",
     articleExtractionRules: "\u6B63\u6587\u63D0\u53D6\u89C4\u5219",
@@ -323,6 +333,8 @@ var UI_TEXT = {
     includePageByDefaultHelp: "\u53D1\u9001\u524D\u4ECD\u53EF\u5728\u8F93\u5165\u533A\u5173\u95ED\u9875\u9762\u4E0A\u4E0B\u6587\u3002",
     webSearchByDefault: "\u5BF9\u8BDD\u9ED8\u8BA4\u542F\u7528\u7F51\u9875\u641C\u7D22",
     webSearchByDefaultHelp: "\u4FA7\u8FB9\u680F\u666E\u901A\u5BF9\u8BDD\u9ED8\u8BA4\u4F7F\u7528 DuckDuckGo \u7ED3\u679C\u8865\u5145\u95EE\u9898\u3002",
+    toolResponseUseContextLanguage: "\u5DE5\u5177\u4F7F\u7528\u63D0\u95EE\u4E0A\u4E0B\u6587\u539F\u59CB\u8BED\u8A00\u8FDB\u884C\u56DE\u7B54",
+    toolResponseUseContextLanguageHelp: "\u5173\u95ED\u65F6\u4F7F\u7528\u5F53\u524D\u754C\u9762\u8BED\u8A00\uFF1B\u4EC5\u5F71\u54CD\u5DE5\u5177\uFF0C\u5DE5\u5177\u63D0\u793A\u8BCD\u4E2D\u660E\u786E\u6307\u5B9A\u7684\u56DE\u7B54\u8BED\u8A00\u4F18\u5148\u3002",
     historyLimit: "\u6700\u591A\u4FDD\u5B58\u5BF9\u8BDD",
     modelThinkingTimeout: "\u5927\u6A21\u578B\u601D\u8003\u8D85\u65F6\u65F6\u95F4\uFF08\u79D2\uFF09",
     modelThinkingTimeoutHelp: "0 \u8868\u793A\u4E0D\u8D85\u65F6\uFF1B\u8D85\u65F6\u540E\u4F1A\u4E2D\u65AD\u5F53\u524D\u56DE\u7B54\uFF0C\u5E76\u5728\u56DE\u7B54\u4E2D\u8BF4\u660E\u8D85\u65F6\u3002",
@@ -440,7 +452,7 @@ var UI_TEXT = {
     chooseContextFirst: "\u8BF7\u5148\u5728\u4E0A\u4E0B\u6587\u4E2D\u9009\u62E9\u5F53\u524D\u9875\u9762\u6216\u9009\u4E2D\u5185\u5BB9",
     directQuestionPlaceholder: "\u76F4\u63A5\u63D0\u95EE\u2026",
     askContextPlaceholder: "\u5411\u5F53\u524D\u9875\u9762\u63D0\u95EE\u2026",
-    composerShortcutHint: "Enter \u53D1\u9001\uFF0CCtrl+Enter \u6362\u884C",
+    composerShortcutHint: "Enter \u53D1\u9001\uFF0CShift+Enter \u6362\u884C",
     addEngineFirst: "\u5148\u5728\u8BBE\u7F6E\u4E2D\u6DFB\u52A0\u6A21\u578B\u5F15\u64CE",
     copyFailed: "\u590D\u5236\u5931\u8D25",
     readingPdf: "\u6B63\u5728\u8BFB\u53D6 PDF",
@@ -668,6 +680,7 @@ var UI_TEXT = {
     selectMoreTools: "\u9078\u64C7\u66F4\u591A\u5DE5\u5177",
     moreTools: "\u66F4\u591A\u5DE5\u5177",
     copyContent: "\u8907\u88FD\u5167\u5BB9",
+    clearComposer: "\u6E05\u7A7A\u8F38\u5165",
     copyCurrentBody: "\u8907\u88FD\u6B63\u6587",
     copyUrl: "\u8907\u88FD\u7DB2\u9801 URL",
     copied: "\u5DF2\u8907\u88FD",
@@ -680,7 +693,11 @@ var UI_TEXT = {
     currentPage: "\u76EE\u524D\u9801\u9762",
     currentBody: "\u76EE\u524D\u6B63\u6587",
     currentSelection: "\u76EE\u524D\u9078\u53D6",
-    currentBodyPreview: "\u76EE\u524D\u6B63\u6587\u9810\u89BD",
+    currentBodyPreview: "\u4E0A\u4E0B\u6587\u9810\u89BD",
+    nonePreview: "\u9810\u89BD",
+    pagePreview: "\u9801\u9762\u9810\u89BD",
+    bodyPreview: "\u6B63\u6587\u9810\u89BD",
+    selectionPreview: "\u9078\u53D6\u9810\u89BD",
     expand: "\u5C55\u958B",
     collapse: "\u6536\u8D77",
     currentBodyBlocks: "{count} \u6BB5",
@@ -702,7 +719,12 @@ var UI_TEXT = {
     restoreCurrentBody: "\u9084\u539F\u6B63\u6587",
     highlightCurrentBodyBlock: "\u5728\u9801\u9762\u4E2D\u9AD8\u4EAE\u9019\u4E00\u6BB5",
     removeCurrentBodyBlock: "\u5F9E\u76EE\u524D\u6B63\u6587\u4E2D\u522A\u9664\u9019\u4E00\u6BB5",
-    smartPruneCurrentBody: "\u667A\u6167\u5254\u9664",
+    smartPruneCurrentBody: "\u81EA\u52D5\u5254\u9664",
+    modelPruneCurrentBody: "\u667A\u6167\u5254\u9664",
+    modelPruneCurrentBodyRunning: "\u6B63\u5728\u8B93\u5927\u6A21\u578B\u5224\u65B7\u6B63\u6587 block",
+    modelPruneInvalidResult: "\u5927\u6A21\u578B\u8FD4\u56DE\u7684\u6B63\u6587\u5254\u9664\u7D50\u679C\u7121\u6CD5\u89E3\u6790",
+    modelPruneNoChanges: "\u5927\u6A21\u578B\u5224\u65B7\u6C92\u6709\u9700\u8981\u5254\u9664\u7684\u6B63\u6587 block",
+    modelPruneAllRejected: "\u70BA\u907F\u514D\u8AA4\u522A\uFF0C\u4E0D\u80FD\u5254\u9664\u5168\u90E8\u6B63\u6587 block",
     articleRecognition: "\u6B63\u6587\u8B58\u5225",
     recognitionRules: "\u8B58\u5225\u898F\u5247",
     articleExtractionRules: "\u6B63\u6587\u64F7\u53D6\u898F\u5247",
@@ -856,6 +878,8 @@ var UI_TEXT = {
     includePageByDefaultHelp: "\u9001\u51FA\u524D\u4ECD\u53EF\u5728\u8F38\u5165\u5340\u95DC\u9589\u9801\u9762\u4E0A\u4E0B\u6587\u3002",
     webSearchByDefault: "\u5C0D\u8A71\u9810\u8A2D\u555F\u7528\u7DB2\u9801\u641C\u5C0B",
     webSearchByDefaultHelp: "\u5074\u908A\u6B04\u4E00\u822C\u5C0D\u8A71\u9810\u8A2D\u4F7F\u7528 DuckDuckGo \u7D50\u679C\u88DC\u5145\u554F\u984C\u3002",
+    toolResponseUseContextLanguage: "\u5DE5\u5177\u4F7F\u7528\u63D0\u554F\u4E0A\u4E0B\u6587\u539F\u59CB\u8A9E\u8A00\u56DE\u7B54",
+    toolResponseUseContextLanguageHelp: "\u95DC\u9589\u6642\u4F7F\u7528\u76EE\u524D\u4ECB\u9762\u8A9E\u8A00\uFF1B\u50C5\u5F71\u97FF\u5DE5\u5177\uFF0C\u5DE5\u5177\u63D0\u793A\u8A5E\u4E2D\u660E\u78BA\u6307\u5B9A\u7684\u56DE\u7B54\u8A9E\u8A00\u512A\u5148\u3002",
     historyLimit: "\u6700\u591A\u5132\u5B58\u5C0D\u8A71",
     modelThinkingTimeout: "\u6A21\u578B\u601D\u8003\u903E\u6642\u6642\u9593\uFF08\u79D2\uFF09",
     modelThinkingTimeoutHelp: "0 \u8868\u793A\u4E0D\u903E\u6642\uFF1B\u903E\u6642\u5F8C\u6703\u4E2D\u65B7\u76EE\u524D\u56DE\u7B54\uFF0C\u4E26\u5728\u56DE\u7B54\u4E2D\u8AAA\u660E\u903E\u6642\u3002",
@@ -973,7 +997,7 @@ var UI_TEXT = {
     chooseContextFirst: "\u8ACB\u5148\u5728\u4E0A\u4E0B\u6587\u4E2D\u9078\u64C7\u76EE\u524D\u9801\u9762\u6216\u9078\u53D6\u5167\u5BB9",
     directQuestionPlaceholder: "\u76F4\u63A5\u63D0\u554F\u2026",
     askContextPlaceholder: "\u5411\u76EE\u524D\u9801\u9762\u63D0\u554F\u2026",
-    composerShortcutHint: "Enter \u9001\u51FA\uFF0CCtrl+Enter \u63DB\u884C",
+    composerShortcutHint: "Enter \u9001\u51FA\uFF0CShift+Enter \u63DB\u884C",
     addEngineFirst: "\u5148\u5728\u8A2D\u5B9A\u4E2D\u65B0\u589E\u6A21\u578B\u5F15\u64CE",
     copyFailed: "\u8907\u88FD\u5931\u6557",
     readingPdf: "\u6B63\u5728\u8B80\u53D6 PDF",
@@ -1201,6 +1225,7 @@ var UI_TEXT = {
     selectMoreTools: "Select More Tools",
     moreTools: "More Tools",
     copyContent: "Copy Content",
+    clearComposer: "Clear input",
     copyCurrentBody: "Copy Body",
     copyUrl: "Copy Page URL",
     copied: "Copied",
@@ -1213,7 +1238,11 @@ var UI_TEXT = {
     currentPage: "Current Page",
     currentBody: "Current Body",
     currentSelection: "Current Selection",
-    currentBodyPreview: "Current Body Preview",
+    currentBodyPreview: "Context Preview",
+    nonePreview: "Preview",
+    pagePreview: "Page Preview",
+    bodyPreview: "Body Preview",
+    selectionPreview: "Selection Preview",
     expand: "Expand",
     collapse: "Collapse",
     currentBodyBlocks: "{count} blocks",
@@ -1235,7 +1264,12 @@ var UI_TEXT = {
     restoreCurrentBody: "Restore Body",
     highlightCurrentBodyBlock: "Highlight this block on the page",
     removeCurrentBodyBlock: "Remove this block from current body",
-    smartPruneCurrentBody: "Smart Prune",
+    smartPruneCurrentBody: "Automatic Prune",
+    modelPruneCurrentBody: "AI Prune",
+    modelPruneCurrentBodyRunning: "Asking the model to classify article blocks",
+    modelPruneInvalidResult: "The model returned an unreadable prune result",
+    modelPruneNoChanges: "The model found no body blocks to remove",
+    modelPruneAllRejected: "All body blocks cannot be removed to prevent data loss",
     articleRecognition: "Body Recognition",
     recognitionRules: "Recognition Rules",
     articleExtractionRules: "Body Extraction Rules",
@@ -1389,6 +1423,8 @@ var UI_TEXT = {
     includePageByDefaultHelp: "You can still disable page context before sending.",
     webSearchByDefault: "Enable Web Search by Default",
     webSearchByDefaultHelp: "Regular sidebar chats use DuckDuckGo results to supplement the question by default.",
+    toolResponseUseContextLanguage: "Answer Tools in the Question Context's Original Language",
+    toolResponseUseContextLanguageHelp: "When disabled, tools use the current interface language. This affects tools only, and an explicit language requirement in a tool prompt takes priority.",
     historyLimit: "Max Saved Chats",
     modelThinkingTimeout: "Model Thinking Timeout (seconds)",
     modelThinkingTimeoutHelp: "0 means no timeout. When it expires, the current response is interrupted with a timeout notice.",
@@ -1506,7 +1542,7 @@ var UI_TEXT = {
     chooseContextFirst: "Choose the current page or selected content in the context first",
     directQuestionPlaceholder: "Ask directly\u2026",
     askContextPlaceholder: "Ask the current page\u2026",
-    composerShortcutHint: "Enter to send, Ctrl+Enter for newline",
+    composerShortcutHint: "Enter to send, Shift+Enter for newline",
     addEngineFirst: "Add a model engine in Settings first",
     copyFailed: "Copy failed",
     readingPdf: "Reading PDF",
@@ -1734,6 +1770,7 @@ var UI_TEXT = {
     selectMoreTools: "\u4ED6\u306E\u30C4\u30FC\u30EB\u3092\u9078\u629E",
     moreTools: "\u305D\u306E\u4ED6\u306E\u30C4\u30FC\u30EB",
     copyContent: "\u5185\u5BB9\u3092\u30B3\u30D4\u30FC",
+    clearComposer: "\u5165\u529B\u3092\u30AF\u30EA\u30A2",
     copyCurrentBody: "\u672C\u6587\u3092\u30B3\u30D4\u30FC",
     copyUrl: "\u30DA\u30FC\u30B8 URL \u3092\u30B3\u30D4\u30FC",
     copied: "\u30B3\u30D4\u30FC\u6E08\u307F",
@@ -1746,7 +1783,11 @@ var UI_TEXT = {
     currentPage: "\u73FE\u5728\u306E\u30DA\u30FC\u30B8",
     currentBody: "\u73FE\u5728\u306E\u672C\u6587",
     currentSelection: "\u73FE\u5728\u306E\u9078\u629E",
-    currentBodyPreview: "\u672C\u6587\u30D7\u30EC\u30D3\u30E5\u30FC",
+    currentBodyPreview: "\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u30D7\u30EC\u30D3\u30E5\u30FC",
+    nonePreview: "\u30D7\u30EC\u30D3\u30E5\u30FC",
+    pagePreview: "\u30DA\u30FC\u30B8\u30D7\u30EC\u30D3\u30E5\u30FC",
+    bodyPreview: "\u672C\u6587\u30D7\u30EC\u30D3\u30E5\u30FC",
+    selectionPreview: "\u9078\u629E\u30D7\u30EC\u30D3\u30E5\u30FC",
     expand: "\u5C55\u958B",
     collapse: "\u6298\u308A\u305F\u305F\u3080",
     currentBodyBlocks: "{count} \u30D6\u30ED\u30C3\u30AF",
@@ -1768,7 +1809,12 @@ var UI_TEXT = {
     restoreCurrentBody: "\u672C\u6587\u3092\u5FA9\u5143",
     highlightCurrentBodyBlock: "\u30DA\u30FC\u30B8\u4E0A\u3067\u3053\u306E\u6BB5\u843D\u3092\u30CF\u30A4\u30E9\u30A4\u30C8",
     removeCurrentBodyBlock: "\u73FE\u5728\u306E\u672C\u6587\u304B\u3089\u3053\u306E\u30D6\u30ED\u30C3\u30AF\u3092\u524A\u9664",
-    smartPruneCurrentBody: "\u30B9\u30DE\u30FC\u30C8\u9664\u5916",
+    smartPruneCurrentBody: "\u81EA\u52D5\u9664\u5916",
+    modelPruneCurrentBody: "AI \u9664\u5916",
+    modelPruneCurrentBodyRunning: "\u30E2\u30C7\u30EB\u306B\u672C\u6587 block \u3092\u5224\u5B9A\u3055\u305B\u3066\u3044\u307E\u3059",
+    modelPruneInvalidResult: "\u30E2\u30C7\u30EB\u304C\u8FD4\u3057\u305F\u672C\u6587\u9664\u5916\u7D50\u679C\u3092\u89E3\u6790\u3067\u304D\u307E\u305B\u3093",
+    modelPruneNoChanges: "\u30E2\u30C7\u30EB\u306F\u9664\u5916\u3059\u308B\u672C\u6587 block \u304C\u306A\u3044\u3068\u5224\u65AD\u3057\u307E\u3057\u305F",
+    modelPruneAllRejected: "\u8AA4\u524A\u9664\u3092\u9632\u3050\u305F\u3081\u3001\u672C\u6587 block \u3092\u3059\u3079\u3066\u9664\u5916\u3059\u308B\u3053\u3068\u306F\u3067\u304D\u307E\u305B\u3093",
     articleRecognition: "\u672C\u6587\u8A8D\u8B58",
     recognitionRules: "\u8A8D\u8B58\u30EB\u30FC\u30EB",
     articleExtractionRules: "\u672C\u6587\u62BD\u51FA\u30EB\u30FC\u30EB",
@@ -1922,6 +1968,8 @@ var UI_TEXT = {
     includePageByDefaultHelp: "\u9001\u4FE1\u524D\u306B\u5165\u529B\u6B04\u3067\u30DA\u30FC\u30B8\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u3092\u30AA\u30D5\u306B\u3067\u304D\u307E\u3059\u3002",
     webSearchByDefault: "\u30C1\u30E3\u30C3\u30C8\u3067\u30A6\u30A7\u30D6\u691C\u7D22\u3092\u65E2\u5B9A\u3067\u6709\u52B9\u5316",
     webSearchByDefaultHelp: "\u901A\u5E38\u306E\u30B5\u30A4\u30C9\u30D0\u30FC\u30C1\u30E3\u30C3\u30C8\u3067 DuckDuckGo \u306E\u7D50\u679C\u3092\u4F7F\u3063\u3066\u8CEA\u554F\u3092\u88DC\u8DB3\u3057\u307E\u3059\u3002",
+    toolResponseUseContextLanguage: "\u8CEA\u554F\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u306E\u539F\u6587\u8A00\u8A9E\u3067\u30C4\u30FC\u30EB\u56DE\u7B54",
+    toolResponseUseContextLanguageHelp: "\u7121\u52B9\u6642\u306F\u73FE\u5728\u306E\u30A4\u30F3\u30BF\u30FC\u30D5\u30A7\u30FC\u30B9\u8A00\u8A9E\u3092\u4F7F\u7528\u3057\u307E\u3059\u3002\u30C4\u30FC\u30EB\u3060\u3051\u306B\u9069\u7528\u3055\u308C\u3001\u30C4\u30FC\u30EB\u30D7\u30ED\u30F3\u30D7\u30C8\u3067\u660E\u793A\u3055\u308C\u305F\u56DE\u7B54\u8A00\u8A9E\u304C\u512A\u5148\u3055\u308C\u307E\u3059\u3002",
     historyLimit: "\u4FDD\u5B58\u3059\u308B\u30C1\u30E3\u30C3\u30C8\u6570\u306E\u4E0A\u9650",
     modelThinkingTimeout: "\u30E2\u30C7\u30EB\u601D\u8003\u30BF\u30A4\u30E0\u30A2\u30A6\u30C8\uFF08\u79D2\uFF09",
     modelThinkingTimeoutHelp: "0 \u306F\u30BF\u30A4\u30E0\u30A2\u30A6\u30C8\u306A\u3057\u3067\u3059\u3002\u6642\u9593\u3092\u8D85\u3048\u308B\u3068\u73FE\u5728\u306E\u56DE\u7B54\u3092\u4E2D\u65AD\u3057\u3001\u30BF\u30A4\u30E0\u30A2\u30A6\u30C8\u3092\u77E5\u3089\u305B\u307E\u3059\u3002",
@@ -2039,7 +2087,7 @@ var UI_TEXT = {
     chooseContextFirst: "\u5148\u306B\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u3067\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u307E\u305F\u306F\u9078\u629E\u5185\u5BB9\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044",
     directQuestionPlaceholder: "\u76F4\u63A5\u8CEA\u554F\u2026",
     askContextPlaceholder: "\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u306B\u8CEA\u554F\u2026",
-    composerShortcutHint: "Enter \u3067\u9001\u4FE1\u3001Ctrl+Enter \u3067\u6539\u884C",
+    composerShortcutHint: "Enter \u3067\u9001\u4FE1\u3001Shift+Enter \u3067\u6539\u884C",
     addEngineFirst: "\u5148\u306B\u8A2D\u5B9A\u3067\u30E2\u30C7\u30EB\u30A8\u30F3\u30B8\u30F3\u3092\u8FFD\u52A0\u3057\u3066\u304F\u3060\u3055\u3044",
     copyFailed: "\u30B3\u30D4\u30FC\u306B\u5931\u6557\u3057\u307E\u3057\u305F",
     readingPdf: "PDF \u3092\u8AAD\u307F\u53D6\u308A\u4E2D",
@@ -2267,6 +2315,7 @@ var UI_TEXT = {
     selectMoreTools: "\uB354 \uB9CE\uC740 \uB3C4\uAD6C \uC120\uD0DD",
     moreTools: "\uB354 \uB9CE\uC740 \uB3C4\uAD6C",
     copyContent: "\uB0B4\uC6A9 \uBCF5\uC0AC",
+    clearComposer: "\uC785\uB825 \uC9C0\uC6B0\uAE30",
     copyCurrentBody: "\uBCF8\uBB38 \uBCF5\uC0AC",
     copyUrl: "\uD398\uC774\uC9C0 URL \uBCF5\uC0AC",
     copied: "\uBCF5\uC0AC\uB428",
@@ -2279,7 +2328,11 @@ var UI_TEXT = {
     currentPage: "\uD604\uC7AC \uD398\uC774\uC9C0",
     currentBody: "\uD604\uC7AC \uBCF8\uBB38",
     currentSelection: "\uD604\uC7AC \uC120\uD0DD",
-    currentBodyPreview: "\uD604\uC7AC \uBCF8\uBB38 \uBBF8\uB9AC\uBCF4\uAE30",
+    currentBodyPreview: "\uCEE8\uD14D\uC2A4\uD2B8 \uBBF8\uB9AC\uBCF4\uAE30",
+    nonePreview: "\uBBF8\uB9AC\uBCF4\uAE30",
+    pagePreview: "\uD398\uC774\uC9C0 \uBBF8\uB9AC\uBCF4\uAE30",
+    bodyPreview: "\uBCF8\uBB38 \uBBF8\uB9AC\uBCF4\uAE30",
+    selectionPreview: "\uC120\uD0DD \uBBF8\uB9AC\uBCF4\uAE30",
     expand: "\uD3BC\uCE58\uAE30",
     collapse: "\uC811\uAE30",
     currentBodyBlocks: "{count}\uAC1C \uBE14\uB85D",
@@ -2301,7 +2354,12 @@ var UI_TEXT = {
     restoreCurrentBody: "\uBCF8\uBB38 \uBCF5\uC6D0",
     highlightCurrentBodyBlock: "\uD398\uC774\uC9C0\uC5D0\uC11C \uC774 \uBE14\uB85D \uAC15\uC870",
     removeCurrentBodyBlock: "\uD604\uC7AC \uBCF8\uBB38\uC5D0\uC11C \uC774 \uBE14\uB85D \uC0AD\uC81C",
-    smartPruneCurrentBody: "\uC2A4\uB9C8\uD2B8 \uC81C\uAC70",
+    smartPruneCurrentBody: "\uC790\uB3D9 \uC81C\uAC70",
+    modelPruneCurrentBody: "AI \uC81C\uAC70",
+    modelPruneCurrentBodyRunning: "\uBAA8\uB378\uC5D0 \uBCF8\uBB38 block \uD310\uC815\uC744 \uC694\uCCAD\uD558\uB294 \uC911",
+    modelPruneInvalidResult: "\uBAA8\uB378\uC774 \uBC18\uD658\uD55C \uBCF8\uBB38 \uC81C\uAC70 \uACB0\uACFC\uB97C \uD574\uC11D\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4",
+    modelPruneNoChanges: "\uBAA8\uB378\uC774 \uC81C\uAC70\uD560 \uBCF8\uBB38 block\uC774 \uC5C6\uB2E4\uACE0 \uD310\uB2E8\uD588\uC2B5\uB2C8\uB2E4",
+    modelPruneAllRejected: "\uB370\uC774\uD130 \uC190\uC2E4\uC744 \uB9C9\uAE30 \uC704\uD574 \uBAA8\uB4E0 \uBCF8\uBB38 block\uC744 \uC81C\uAC70\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4",
     articleRecognition: "\uBCF8\uBB38 \uC778\uC2DD",
     recognitionRules: "\uC778\uC2DD \uADDC\uCE59",
     articleExtractionRules: "\uBCF8\uBB38 \uCD94\uCD9C \uADDC\uCE59",
@@ -2455,6 +2513,8 @@ var UI_TEXT = {
     includePageByDefaultHelp: "\uBCF4\uB0B4\uAE30 \uC804\uC5D0 \uC785\uB825 \uC601\uC5ED\uC5D0\uC11C \uD398\uC774\uC9C0 \uCEE8\uD14D\uC2A4\uD2B8\uB97C \uB04C \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
     webSearchByDefault: "\uB300\uD654\uC5D0\uC11C \uC6F9 \uAC80\uC0C9 \uAE30\uBCF8 \uC0AC\uC6A9",
     webSearchByDefaultHelp: "\uC77C\uBC18 \uC0AC\uC774\uB4DC\uBC14 \uB300\uD654\uC5D0\uC11C DuckDuckGo \uACB0\uACFC\uB85C \uC9C8\uBB38\uC744 \uBCF4\uC644\uD569\uB2C8\uB2E4.",
+    toolResponseUseContextLanguage: "\uC9C8\uBB38 \uCEE8\uD14D\uC2A4\uD2B8\uC758 \uC6D0\uBB38 \uC5B8\uC5B4\uB85C \uB3C4\uAD6C \uB2F5\uBCC0",
+    toolResponseUseContextLanguageHelp: "\uB044\uBA74 \uD604\uC7AC \uC778\uD130\uD398\uC774\uC2A4 \uC5B8\uC5B4\uB97C \uC0AC\uC6A9\uD569\uB2C8\uB2E4. \uB3C4\uAD6C\uC5D0\uB9CC \uC801\uC6A9\uB418\uBA70 \uB3C4\uAD6C \uD504\uB86C\uD504\uD2B8\uC5D0 \uBA85\uC2DC\uB41C \uB2F5\uBCC0 \uC5B8\uC5B4\uAC00 \uC6B0\uC120\uD569\uB2C8\uB2E4.",
     historyLimit: "\uCD5C\uB300 \uC800\uC7A5 \uB300\uD654 \uC218",
     modelThinkingTimeout: "\uBAA8\uB378 \uC0AC\uACE0 \uC2DC\uAC04 \uCD08\uACFC (\uCD08)",
     modelThinkingTimeoutHelp: "0\uC740 \uC2DC\uAC04 \uC81C\uD55C\uC774 \uC5C6\uB2E4\uB294 \uB73B\uC785\uB2C8\uB2E4. \uC2DC\uAC04\uC774 \uCD08\uACFC\uB418\uBA74 \uD604\uC7AC \uB2F5\uBCC0\uC744 \uC911\uB2E8\uD558\uACE0 \uC2DC\uAC04 \uCD08\uACFC\uB97C \uC54C\uB9BD\uB2C8\uB2E4.",
@@ -2572,7 +2632,7 @@ var UI_TEXT = {
     chooseContextFirst: "\uBA3C\uC800 \uCEE8\uD14D\uC2A4\uD2B8\uC5D0\uC11C \uD604\uC7AC \uD398\uC774\uC9C0 \uB610\uB294 \uC120\uD0DD \uB0B4\uC6A9\uC744 \uC120\uD0DD\uD558\uC138\uC694",
     directQuestionPlaceholder: "\uC9C1\uC811 \uC9C8\uBB38\u2026",
     askContextPlaceholder: "\uD604\uC7AC \uD398\uC774\uC9C0\uC5D0 \uC9C8\uBB38\u2026",
-    composerShortcutHint: "Enter\uB85C \uBCF4\uB0B4\uAE30, Ctrl+Enter\uB85C \uC904\uBC14\uAFC8",
+    composerShortcutHint: "Enter\uB85C \uBCF4\uB0B4\uAE30, Shift+Enter\uB85C \uC904\uBC14\uAFC8",
     addEngineFirst: "\uBA3C\uC800 \uC124\uC815\uC5D0\uC11C \uBAA8\uB378 \uC5D4\uC9C4\uC744 \uCD94\uAC00\uD558\uC138\uC694",
     copyFailed: "\uBCF5\uC0AC \uC2E4\uD328",
     readingPdf: "PDF \uC77D\uB294 \uC911",
@@ -2707,8 +2767,14 @@ var TRANSLATION_FAMILY_LABELS = {
   ja: "Japanese",
   ko: "Korean"
 };
+function visibleTranslationSourceText(text) {
+  return text.replace(
+    /\[([^\]\n]{1,500})\]\(\s*(?:<[^>\n]+>|[^)\n]+)\s*\)/g,
+    "$1"
+  ).replace(/<[^>]*>/g, " ");
+}
 function detectTranslationLanguage(text) {
-  const source = text.replace(/<[^>]*>/g, " ");
+  const source = visibleTranslationSourceText(text);
   const latinWordCount = source.match(/[A-Za-z]+/g)?.length ?? 0;
   const chineseCount = source.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g)?.length ?? 0;
   const japaneseKanaCount = source.match(/[\u3040-\u30ff\u31f0-\u31ff]/g)?.length ?? 0;
@@ -2718,10 +2784,37 @@ function detectTranslationLanguage(text) {
   if (chineseCount >= 2 && chineseCount >= latinWordCount) {
     return "zh";
   }
+  if (chineseCount >= 1 && latinWordCount === 0) {
+    return "zh";
+  }
   if (latinWordCount >= 2 && latinWordCount > chineseCount) return "en";
   if (chineseCount >= 2) return "zh";
   if (latinWordCount >= 1 && chineseCount === 0) return "en";
   return null;
+}
+function originalLanguageLabel(text, languageHint) {
+  const detected = detectTranslationLanguage(text);
+  const normalizedHint = languageHint?.trim().replace(/_/g, "-") || "";
+  const primaryHint = normalizedHint.toLowerCase().split("-")[0];
+  if (detected === "zh") {
+    return primaryHint === "zh" && /(?:^|-)tw|(?:^|-)hk|hant/i.test(normalizedHint) ? LANGUAGE_LABELS["zh-TW"] : LANGUAGE_LABELS["zh-CN"];
+  }
+  if (detected === "ja") return LANGUAGE_LABELS.ja;
+  if (detected === "ko") return LANGUAGE_LABELS.ko;
+  if (detected === "en" && (!primaryHint || primaryHint === "en")) {
+    return LANGUAGE_LABELS.en;
+  }
+  if (normalizedHint && !["auto", "und"].includes(primaryHint)) {
+    try {
+      const displayName = new Intl.DisplayNames(["en"], { type: "language" }).of(
+        normalizedHint
+      );
+      return displayName ? `${displayName} (${normalizedHint})` : normalizedHint;
+    } catch {
+      return normalizedHint;
+    }
+  }
+  return detected ? TRANSLATION_FAMILY_LABELS[detected] : null;
 }
 function translationLanguageMatchesInterface(sourceLanguage, interfaceLanguage) {
   if (sourceLanguage === "zh") {
@@ -2765,6 +2858,13 @@ function translationFormatInstruction(config) {
     default:
       return "\u4E25\u683C\u4FDD\u6301\u539F\u6587\u7684\u6BB5\u843D\u3001\u6362\u884C\u3001\u6807\u9898\u548C\u5217\u8868\u7ED3\u6784\uFF0C\u6BCF\u4E2A\u539F\u6587\u6BB5\u843D\u5BF9\u5E94\u4E00\u4E2A\u8BD1\u6587\u6BB5\u843D\uFF0C\u4E0D\u8981\u5408\u5E76\u6BB5\u843D\u3002{{WEBMIND_PARAGRAPH_BREAK_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u6BB5\u843D\u5206\u9694\u5360\u4F4D\u7B26\uFF0C{{WEBMIND_CITATION_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u5F15\u7528\u4E0B\u6807\u5360\u4F4D\u7B26\uFF1B\u4E24\u8005\u90FD\u5FC5\u987B\u9010\u5B57\u4FDD\u7559\u5728\u539F\u4F4D\u7F6E\uFF0C\u4E0D\u8981\u5C55\u5F00\u3001\u89E3\u91CA\u3001\u6539\u5199\u6216\u5220\u9664\uFF0C\u4E0D\u8981\u8F93\u51FA\u2018\u8BE5\u4FE1\u606F\u6765\u81EA\u2026\u2026\u5F15\u7528\u2019\u4E4B\u7C7B\u7684\u8BF4\u660E\u3002{{WEBMIND_LINK_START_N}} \u548C {{WEBMIND_LINK_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u94FE\u63A5\u8FB9\u754C\u5360\u4F4D\u7B26\uFF0C\u5FC5\u987B\u539F\u6837\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8BD1\u4E24\u8005\u4E4B\u95F4\u53EF\u89C1\u7684\u94FE\u63A5\u6587\u5B57\uFF0C\u4E0D\u8981\u8865\u5145\u3001\u7FFB\u8BD1\u6216\u8F93\u51FA\u94FE\u63A5\u5730\u5740\u3002{{WEBMIND_FORMAT_START_N}} \u548C {{WEBMIND_FORMAT_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u4E0A\u6807/\u4E0B\u6807\u683C\u5F0F\u8FB9\u754C\uFF0C\u5FC5\u987B\u539F\u6837\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8BD1\u8FB9\u754C\u4E4B\u95F4\u53EF\u89C1\u7684\u6587\u5B57\u3002";
   }
+}
+function htmlFormattingInstruction(config) {
+  const language = resolvePromptConfig(config).interfaceLanguage;
+  if (language === "en") {
+    return "Preserve every {{WEBMIND_HTML_TAG_N}} placeholder verbatim. These placeholders represent visible formatting tags such as strong, em, underline, del, code, and their matching closing tags; translate only the visible text around them. Do not translate or remove link destinations.";
+  }
+  return "{{WEBMIND_HTML_TAG_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u53EF\u89C1\u6837\u5F0F\u6807\u7B7E\u5360\u4F4D\u7B26\uFF08\u5305\u62EC\u7C97\u4F53\u3001\u659C\u4F53\u3001\u4E0B\u5212\u7EBF\u3001\u5220\u9664\u7EBF\u3001\u4EE3\u7801\u53CA\u5176\u95ED\u5408\u6807\u7B7E\uFF09\uFF0C\u5FC5\u987B\u9010\u5B57\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8BD1\u6807\u7B7E\u5305\u56F4\u6216\u76F8\u90BB\u7684\u53EF\u89C1\u6587\u5B57\uFF0C\u4E0D\u8981\u7FFB\u8BD1\u3001\u6539\u5199\u6216\u5220\u9664\u94FE\u63A5\u5730\u5740\u3002";
 }
 function translateDocumentSuffix(language) {
   switch (language) {
@@ -2841,7 +2941,7 @@ function buildAutoTranslateInstruction(config, sourceText = "") {
   }
 }
 function isDictionaryTranslationInput(sourceText) {
-  const text = sourceText.replace(/<[^>]*>/g, " ").trim();
+  const text = visibleTranslationSourceText(sourceText).trim();
   if (!text || text.length > 80 || /[\r\n]/.test(text)) return false;
   if (/[。！？!?；;]/.test(text)) return false;
   if (/[.!?]$/.test(text)) return false;
@@ -2850,9 +2950,25 @@ function isDictionaryTranslationInput(sourceText) {
     /[A-Za-z]+(?:['’-][A-Za-z]+)*|[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]+|[\u3040-\u30ff\u31f0-\u31ff]+|[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af]+|\d+/g
   ) ?? [];
   if (!parts.length) return false;
-  if (parts.length > 6) return false;
+  if (parts.length > 5) return false;
   const cjkLength = (text.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g) ?? []).length;
-  return cjkLength === 0 || cjkLength <= 16;
+  const latinWords = text.match(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g) ?? [];
+  if (cjkLength > 0) {
+    if (cjkLength > 10) return false;
+    if (/(可以|应该|應該|需要|必须|必須|正在|已经|已經|将会|將會|不会|不會|不是|没有|沒有|怎么|怎麼|为什么|為什麼|如何|如果|因为|因為|所以|但是|不过|不過|而且|或者|以及|然后|然後|请|請)/.test(text)) {
+      return false;
+    }
+    if (cjkLength > 4 && /^(获取|取得|打开|開啟|关闭|關閉|点击|點擊|选择|選擇|输入|輸入|返回|生成|创建|建立|删除|刪除|更新|保存|儲存|翻译|翻譯|复制|複製|检查|檢查|处理|處理|显示|顯示|跳转|跳轉|运行|執行|加载|載入|使用|查看)/.test(text)) {
+      return false;
+    }
+    if (cjkLength <= 6) return true;
+    return /(模型|算法|演算法|系统|系統|平台|框架|协议|協議|接口|介面|组件|元件|函数|函式|变量|變數|数据库|資料庫|机器学习|機器學習|深度学习|深度學習|自然语言|自然語言|用户体验|使用者體驗|项目管理|專案管理)$/.test(text);
+  }
+  if (latinWords.length > 4) return false;
+  if (latinWords.length >= 4 && /^(open|close|click|select|enter|return|create|delete|update|save|translate|copy|check|process|show|display|go|run|load|use|view)$/i.test(latinWords[0] ?? "")) {
+    return false;
+  }
+  return true;
 }
 function dictionaryTranslationInstruction(config, sourceText = "") {
   const { interfaceLanguage, translationLanguage } = resolvePromptConfig(config);
@@ -2866,8 +2982,10 @@ function dictionaryTranslationInstruction(config, sourceText = "") {
         "\u9019\u662F\u4E00\u500B\u77ED\u8A5E/\u8A5E\u7D44\u67E5\u8A5E\u5F0F\u7FFB\u8B6F\u4EFB\u52D9\u3002\u8ACB\u7528\u7DCA\u6E4A\u3001\u81EA\u7136\u7684 Markdown \u8F38\u51FA\u8FD1\u4F3C\u8A5E\u5178\u5361\u7247\uFF0C\u4E0D\u8981\u53EA\u7D66\u4E00\u500B\u8B6F\u6587\u3002",
         `\u76EE\u524D\u4ECB\u9762\u8A9E\u8A00\u662F${interfaceLabel}\uFF0C\u91CB\u7FA9\u8207\u8AAA\u660E\u4E3B\u8981\u4F7F\u7528${interfaceLabel}\uFF1B\u8B6F\u6587\u8207\u4F8B\u53E5\u7FFB\u8B6F\u4F7F\u7528${targetLabel}\u3002`,
         "\u53EA\u5206\u6790 <translation-input> \u4E2D\u76F4\u63A5\u53EF\u898B\u7684\u8A5E\u6216\u8A5E\u7D44\uFF0C\u4E0D\u8981\u628A\u6A19\u7C64\u3001URL\u3001HTML \u5C6C\u6027\u3001\u9023\u7D50\u5730\u5740\u6216\u5176\u4ED6\u4E0D\u53EF\u898B\u6587\u5B57\u7576\u4F5C\u7FFB\u8B6F\u5C0D\u8C61\u3002",
-        "\u8F38\u51FA\u8981\u7DCA\u6E4A\u4F46\u6E05\u695A\uFF1A\u6700\u591A\u4E00\u500B\u77ED\u6A19\u984C\uFF0C\u4E0D\u8981\u5C64\u5C64\u6A19\u984C\uFF0C\u4E0D\u8981\u5927\u6BB5\u7A7A\u884C\uFF1B\u4E0D\u540C\u7DAD\u5EA6\u8ACB\u7528\u5FC5\u8981\u63DB\u884C\u5206\u6210\u77ED\u884C\uFF0C\u4E0D\u8981\u628A\u6240\u6709\u8CC7\u8A0A\u64E0\u5728\u540C\u4E00\u6BB5\u3002\u512A\u5148\u7528 4-8 \u884C\u77ED\u9805\uFF0C\u4F8B\u5982\uFF1A**\u8A5E** /\u97F3\u6A19/ \xB7 \u6838\u5FC3\u8B6F\u7FA9\uFF1B\u63DB\u884C **\u7FA9\u9805** n./v./adj. 1... 2...\uFF1B\u63DB\u884C **\u5E38\u7528** \u9AD8/\u4E2D/\u4F4E\u983B + \u8A9E\u57DF\uFF1B\u63DB\u884C **\u642D\u914D** phrase: meaning\uFF1B\u63DB\u884C **\u8FD1\u5F62/\u8B8A\u9AD4** ...\uFF1B\u63DB\u884C **\u4F8B** sentence \u2014 \u8B6F\u6587\u3002",
-        "\u53EF\u4EE5\u6309\u5167\u5BB9\u9748\u6D3B\u53D6\u6368\uFF0C\u4E0D\u5FC5\u6BCF\u6B21\u586B\u6EFF\u6240\u6709\u6B04\u4F4D\uFF1B\u8CC7\u8A0A\u8981\u6709\u7528\u3001\u77ED\u3001\u5BC6\u5EA6\u9AD8\u3002\u8A5E\u983B\u53EA\u80FD\u7D66\u9AD8/\u4E2D/\u4F4E\u6216\u5E38\u898B/\u8F03\u5C11\u898B\u7B49\u4F30\u8A08\uFF0C\u4E0D\u8981\u7DE8\u9020\u7CBE\u78BA\u6578\u5B57\u3002",
+        `\u6838\u5FC3\u8B6F\u7FA9\u5FC5\u9808\u4F7F\u7528${targetLabel}\uFF0C\u9664\u975E\u662F\u4E0D\u53EF\u7FFB\u8B6F\u7684\u5C08\u6709\u540D\u8A5E\u6216\u7A0B\u5F0F\u78BC\uFF0C\u5426\u5247\u4E0D\u8981\u628A\u539F\u6587\u539F\u6A23\u7576\u4F5C\u552F\u4E00\u8B6F\u6587\u3002`,
+        "\u8ACB\u56B4\u683C\u4F7F\u7528\u56FA\u5B9A\u884C\u683C\u5F0F\uFF0C\u4E0D\u8981\u52A0\u5165\u5176\u4ED6\u6A19\u984C\u3002\u7B2C\u4E00\u884C\u683C\u5F0F\u70BA **\u539F\u8A5E** /\u97F3\u6A19\u6216\u62FC\u97F3/ \u2605\u2605\u2605\u2605\u2606 CET-6 / GRE / IELTS\uFF1A\u82F1\u6587\u8A5E\u4F7F\u7528\u97F3\u6A19\uFF0C\u661F\u7D1A\u5F8C\u53EF\u5217 CET-6 / GRE / IELTS\uFF1B\u4E2D\u6587\u8A5E\u4F7F\u7528\u62FC\u97F3\uFF0C\u4E14\u4E0D\u8981\u5217 CET-6 / GRE / IELTS\u3002\u53EA\u4FDD\u7559\u6709\u53EF\u9760\u5167\u5BB9\u7684\u90E8\u5206\uFF1B\u6C92\u6709\u97F3\u6A19\u3001\u62FC\u97F3\u3001\u661F\u7D1A\u6216\u8003\u8A66\u6A19\u7C64\u6642\uFF0C\u7701\u7565\u5C0D\u61C9\u90E8\u5206\uFF0C\u4E0D\u8981\u586B\u5BEB\u4F54\u4F4D\u7B26\u3002",
+        "\u5F8C\u7E8C\u884C\u53EA\u80FD\u4F7F\u7528\u9019\u4E9B\u6B04\u4F4D\uFF0C\u9806\u5E8F\u56FA\u5B9A\uFF1A**\u91CB\u7FA9** \u6838\u5FC3\u8B6F\u7FA9\uFF1B**\u7FA9\u9805** \u8A5E\u6027 + \u7DE8\u865F\u7FA9\u9805\uFF1B**\u8A9E\u57DF** \u9818\u57DF\u3001\u8A9E\u9AD4\uFF1B**\u642D\u914D** phrase: source phrase\uFF08\u8B6F\u6587\uFF09\uFF1B**\u8B8A\u9AD4** \u8A5E\u5F62\u3001\u6D3E\u751F\u6216\u76F8\u95DC\u5F62\u5F0F\uFF1B**\u52A9\u8A18** \u806F\u60F3\u6216\u69CB\u8A5E\u8A18\u61B6\uFF1B**\u4F8B\u53E5** source sentence\uFF08\u8B6F\u6587\uFF09\u3002",
+        "\u6C92\u6709\u53EF\u9760\u5167\u5BB9\u7684\u6B04\u4F4D\u4E0D\u8981\u986F\u793A\uFF1B\u4E0D\u8981\u70BA\u4E86\u6E4A\u683C\u5F0F\u7DE8\u9020\u97F3\u6A19\u3001\u62FC\u97F3\u3001\u661F\u7D1A\u3001\u8003\u8A66\u6A19\u7C64\u3001\u642D\u914D\u3001\u8B8A\u9AD4\u3001\u52A9\u8A18\u6216\u4F8B\u53E5\u3002",
         "\u5982\u679C\u8F38\u5165\u5176\u5BE6\u4E0D\u662F\u53EF\u67E5\u8A5E\u7684\u55AE\u8A5E\u3001\u8A5E\u8A9E\u6216\u56FA\u5B9A\u77ED\u8A9E\uFF0C\u8ACB\u9000\u56DE\u666E\u901A\u7FFB\u8B6F\uFF0C\u53EA\u8F38\u51FA\u81EA\u7136\u8B6F\u6587\u3002",
         "\u4E0D\u8981\u8F38\u51FA JSON \u6216\u7A0B\u5F0F\u78BC\u5340\u584A\u3002"
       ].join("\n");
@@ -2876,8 +2994,10 @@ function dictionaryTranslationInstruction(config, sourceText = "") {
         "This is a dictionary-style translation task for a single word or short phrase. Do not return only one translation; produce a compact, natural Markdown dictionary card.",
         `The interface language is ${interfaceLabel}. Use ${interfaceLabel} for headings and explanations; use ${targetLabel} for translations and example-sentence translations.`,
         "Analyze only the directly visible word or phrase inside <translation-input>. Do not treat tags, URLs, HTML attributes, link destinations, or other invisible text as source text.",
-        "Keep the output compact but readable: at most one short heading, no stacked section headings, no large blank gaps. Use necessary line breaks for different dimensions; do not squeeze everything into one paragraph. Prefer 4-8 dense short lines such as: **word** /pronunciation/ \xB7 core translations; newline **meanings** n./v./adj. 1... 2...; newline **usage** high/medium/low frequency + register; newline **phrases** phrase: meaning; newline **forms** variants/related words; newline **example** sentence \u2014 translation.",
-        "Adapt the fields flexibly; do not force every field every time. Make it useful, brief, and information-dense. Frequency must be a rough high/medium/low or common/less common estimate; do not invent exact statistics.",
+        `The core translation must be in ${targetLabel}; unless the source is an untranslatable proper noun or code token, do not use the original text as the only translation.`,
+        "Use this fixed line format and do not add other headings. The first line must follow **source word** /pronunciation or pinyin/ \u2605\u2605\u2605\u2605\u2606 CET-6 / GRE / IELTS. For English words, use pronunciation and optionally list CET-6 / GRE / IELTS after the stars; for Chinese words, use pinyin and do not list CET-6 / GRE / IELTS. Keep only parts with reliable content; omit pronunciation, pinyin, stars, or exam tags when unavailable instead of writing placeholders.",
+        "Following lines must use only these fields in this order: **\u91CA\u4E49** core translations; **\u4E49\u9879** part of speech + numbered senses; **\u8BED\u57DF** domain and register; **\u642D\u914D** phrase: source phrase\uFF08translation\uFF09; **\u53D8\u4F53** forms, derivatives, or related forms; **\u52A9\u8BB0** memory hint; **\u4F8B\u53E5** source sentence\uFF08translation\uFF09.",
+        "Omit any field that lacks reliable content; do not invent pronunciation, pinyin, stars, exam tags, phrases, forms, mnemonics, or examples just to fill the format.",
         "If the input is not actually a dictionary-like word, term, or fixed phrase, fall back to ordinary translation and output only the natural translation.",
         "Do not output JSON or code fences."
       ].join("\n");
@@ -2886,8 +3006,10 @@ function dictionaryTranslationInstruction(config, sourceText = "") {
         "\u3053\u308C\u306F\u5358\u8A9E\u307E\u305F\u306F\u77ED\u3044\u30D5\u30EC\u30FC\u30BA\u5411\u3051\u306E\u8F9E\u66F8\u98A8\u7FFB\u8A33\u30BF\u30B9\u30AF\u3067\u3059\u3002\u8A33\u8A9E\u3092\u4E00\u3064\u3060\u3051\u8FD4\u3055\u305A\u3001\u30B3\u30F3\u30D1\u30AF\u30C8\u3067\u81EA\u7136\u306A Markdown \u306E\u8F9E\u66F8\u30AB\u30FC\u30C9\u3068\u3057\u3066\u51FA\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
         `\u30A4\u30F3\u30BF\u30FC\u30D5\u30A7\u30FC\u30B9\u8A00\u8A9E\u306F${interfaceLabel}\u3067\u3059\u3002\u898B\u51FA\u3057\u3068\u8AAC\u660E\u306F\u4E3B\u306B${interfaceLabel}\u3092\u4F7F\u3044\u3001\u8A33\u8A9E\u3068\u4F8B\u6587\u8A33\u306B\u306F${targetLabel}\u3092\u4F7F\u3063\u3066\u304F\u3060\u3055\u3044\u3002`,
         "<translation-input> \u5185\u306B\u76F4\u63A5\u8868\u793A\u3055\u308C\u3066\u3044\u308B\u5358\u8A9E\u307E\u305F\u306F\u30D5\u30EC\u30FC\u30BA\u3060\u3051\u3092\u5206\u6790\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u30BF\u30B0\u3001URL\u3001HTML \u5C5E\u6027\u3001\u30EA\u30F3\u30AF\u5148\u3001\u305D\u306E\u4ED6\u306E\u975E\u8868\u793A\u6587\u5B57\u5217\u3092\u7FFB\u8A33\u5BFE\u8C61\u306B\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002",
-        "\u51FA\u529B\u306F\u30B3\u30F3\u30D1\u30AF\u30C8\u304B\u3064\u8AAD\u307F\u3084\u3059\u304F\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u77ED\u3044\u898B\u51FA\u3057\u306F\u6700\u5927 1 \u3064\u307E\u3067\u3001\u968E\u5C64\u7684\u306A\u898B\u51FA\u3057\u3092\u91CD\u306D\u305A\u3001\u5927\u304D\u306A\u7A7A\u884C\u3092\u5165\u308C\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002\u7570\u306A\u308B\u89B3\u70B9\u306F\u5FC5\u8981\u306B\u5FDC\u3058\u3066\u6539\u884C\u3057\u3001\u3059\u3079\u3066\u3092\u4E00\u6BB5\u843D\u306B\u8A70\u3081\u8FBC\u307E\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u30024-8 \u884C\u7A0B\u5EA6\u3067\u3001\u4F8B\uFF1A**\u8A9E** /\u767A\u97F3/ \xB7 \u4E2D\u6838\u8A33\u3001\u6539\u884C **\u610F\u5473** n./v./adj. 1... 2...\u3001\u6539\u884C **\u7528\u6CD5** \u9AD8/\u4E2D/\u4F4E\u983B\u5EA6 + \u30EC\u30B8\u30B9\u30BF\u30FC\u3001\u6539\u884C **\u8868\u73FE** phrase: meaning\u3001\u6539\u884C **\u5909\u5316/\u95A2\u9023\u8A9E** ...\u3001\u6539\u884C **\u4F8B** sentence \u2014 \u8A33\u3002",
-        "\u5185\u5BB9\u306B\u5FDC\u3058\u3066\u9805\u76EE\u306F\u67D4\u8EDF\u306B\u9078\u3073\u3001\u6BCE\u56DE\u3059\u3079\u3066\u57CB\u3081\u308B\u5FC5\u8981\u306F\u3042\u308A\u307E\u305B\u3093\u3002\u6709\u7528\u3067\u77ED\u304F\u3001\u60C5\u5831\u5BC6\u5EA6\u3092\u9AD8\u304F\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u983B\u5EA6\u306F\u9AD8/\u4E2D/\u4F4E\u3084\u4E00\u822C\u7684/\u3084\u3084\u5C11\u306A\u3044\u7A0B\u5EA6\u306E\u63A8\u5B9A\u306B\u3057\u3001\u7CBE\u5BC6\u306A\u7D71\u8A08\u5024\u3092\u4F5C\u3089\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002",
+        `\u4E2D\u6838\u8A33\u306F\u5FC5\u305A${targetLabel}\u3067\u66F8\u3044\u3066\u304F\u3060\u3055\u3044\u3002\u7FFB\u8A33\u3067\u304D\u306A\u3044\u56FA\u6709\u540D\u8A5E\u3084\u30B3\u30FC\u30C9\u3067\u306A\u3044\u9650\u308A\u3001\u539F\u6587\u3060\u3051\u3092\u552F\u4E00\u306E\u8A33\u3068\u3057\u3066\u8FD4\u3055\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002`,
+        "\u6B21\u306E\u56FA\u5B9A\u884C\u5F62\u5F0F\u3092\u53B3\u5B88\u3057\u3001\u4ED6\u306E\u898B\u51FA\u3057\u306F\u8FFD\u52A0\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u30021 \u884C\u76EE\u306F **\u539F\u8A9E** /\u767A\u97F3\u307E\u305F\u306F\u30D4\u30F3\u30A4\u30F3/ \u2605\u2605\u2605\u2605\u2606 CET-6 / GRE / IELTS \u306E\u5F62\u5F0F\u3067\u3059\u3002\u82F1\u8A9E\u8A9E\u5F59\u306F\u767A\u97F3\u3092\u4F7F\u3044\u3001\u661F\u306E\u5F8C\u306B CET-6 / GRE / IELTS \u3092\u4ED8\u3051\u3066\u3082\u3088\u304F\u3001\u4E2D\u56FD\u8A9E\u8A9E\u5F59\u306F\u30D4\u30F3\u30A4\u30F3\u3092\u4F7F\u3044\u3001CET-6 / GRE / IELTS \u306F\u4ED8\u3051\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002\u4FE1\u983C\u3067\u304D\u308B\u60C5\u5831\u304C\u306A\u3044\u90E8\u5206\u306F\u7701\u7565\u3057\u3001\u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3092\u4F5C\u3089\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002",
+        "\u4EE5\u964D\u306E\u884C\u306F\u3053\u306E\u9806\u5E8F\u306E\u6B04\u4F4D\u3060\u3051\u3092\u4F7F\u3063\u3066\u304F\u3060\u3055\u3044\uFF1A**\u91CA\u4E49** \u4E2D\u6838\u8A33\u3001**\u4E49\u9879** \u54C1\u8A5E + \u756A\u53F7\u4ED8\u304D\u8A9E\u7FA9\u3001**\u8BED\u57DF** \u5206\u91CE\u30FB\u30EC\u30B8\u30B9\u30BF\u30FC\u3001**\u642D\u914D** phrase: source phrase\uFF08\u8A33\uFF09\u3001**\u53D8\u4F53** \u6D3B\u7528\u5F62\u30FB\u6D3E\u751F\u8A9E\u30FB\u95A2\u9023\u8A9E\u3001**\u52A9\u8BB0** \u8A18\u61B6\u30D2\u30F3\u30C8\u3001**\u4F8B\u53E5** source sentence\uFF08\u8A33\uFF09\u3002",
+        "\u4FE1\u983C\u3067\u304D\u308B\u5185\u5BB9\u304C\u306A\u3044\u6B04\u4F4D\u306F\u8868\u793A\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002\u767A\u97F3\u3001\u30D4\u30F3\u30A4\u30F3\u3001\u661F\u3001\u8A66\u9A13\u30BF\u30B0\u3001\u642D\u914D\u3001\u5909\u4F53\u3001\u52A9\u8A18\u3001\u4F8B\u53E5\u3092\u57CB\u3081\u308B\u305F\u3081\u306B\u4F5C\u3089\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002",
         "\u5165\u529B\u304C\u8F9E\u66F8\u7684\u306B\u6271\u3048\u308B\u8A9E\u30FB\u7528\u8A9E\u30FB\u56FA\u5B9A\u30D5\u30EC\u30FC\u30BA\u3067\u306A\u3044\u5834\u5408\u306F\u901A\u5E38\u7FFB\u8A33\u306B\u623B\u308A\u3001\u81EA\u7136\u306A\u8A33\u6587\u3060\u3051\u3092\u51FA\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
         "JSON \u3084\u30B3\u30FC\u30C9\u30D6\u30ED\u30C3\u30AF\u306F\u51FA\u529B\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002"
       ].join("\n");
@@ -2896,8 +3018,10 @@ function dictionaryTranslationInstruction(config, sourceText = "") {
         "\uC774\uAC83\uC740 \uB2E8\uC5B4 \uB610\uB294 \uC9E7\uC740 \uAD6C\uB97C \uC704\uD55C \uC0AC\uC804\uC2DD \uBC88\uC5ED \uC791\uC5C5\uC785\uB2C8\uB2E4. \uBC88\uC5ED\uC5B4 \uD558\uB098\uB9CC \uBC18\uD658\uD558\uC9C0 \uB9D0\uACE0 compact\uD558\uACE0 \uC790\uC5F0\uC2A4\uB7EC\uC6B4 Markdown \uC0AC\uC804 \uCE74\uB4DC\uB85C \uCD9C\uB825\uD558\uC138\uC694.",
         `\uC778\uD130\uD398\uC774\uC2A4 \uC5B8\uC5B4\uB294 ${interfaceLabel}\uC785\uB2C8\uB2E4. \uC81C\uBAA9\uACFC \uC124\uBA85\uC740 \uC8FC\uB85C ${interfaceLabel}\uB85C \uC4F0\uACE0, \uBC88\uC5ED\uC5B4\uC640 \uC608\uBB38 \uBC88\uC5ED\uC740 ${targetLabel}\uB97C \uC0AC\uC6A9\uD558\uC138\uC694.`,
         "<translation-input> \uC548\uC5D0 \uC9C1\uC811 \uBCF4\uC774\uB294 \uB2E8\uC5B4 \uB610\uB294 \uAD6C\uB9CC \uBD84\uC11D\uD558\uC138\uC694. \uD0DC\uADF8, URL, HTML \uC18D\uC131, \uB9C1\uD06C \uC8FC\uC18C \uB610\uB294 \uBCF4\uC774\uC9C0 \uC54A\uB294 \uBB38\uC790\uC5F4\uC744 \uBC88\uC5ED \uB300\uC0C1\uC73C\uB85C \uC0BC\uC9C0 \uB9C8\uC138\uC694.",
-        "\uCD9C\uB825\uC740 compact\uD558\uC9C0\uB9CC \uC77D\uAE30 \uC27D\uAC8C \uC791\uC131\uD558\uC138\uC694. \uC9E7\uC740 \uC81C\uBAA9\uC740 \uCD5C\uB300 \uD558\uB098\uB9CC \uC4F0\uACE0, \uC5EC\uB7EC \uB2E8\uACC4\uC758 \uC81C\uBAA9\uC744 \uC313\uAC70\uB098 \uD070 \uBE48 \uC904\uC744 \uB9CC\uB4E4\uC9C0 \uB9C8\uC138\uC694. \uC11C\uB85C \uB2E4\uB978 \uC815\uBCF4 \uCC28\uC6D0\uC740 \uD544\uC694\uD55C \uB9CC\uD07C \uC904\uBC14\uAFC8\uC73C\uB85C \uC9E7\uAC8C \uB098\uB204\uACE0, \uBAA8\uB4E0 \uC815\uBCF4\uB97C \uD55C \uBB38\uB2E8\uC5D0 \uBC00\uC5B4 \uB123\uC9C0 \uB9C8\uC138\uC694. 4-8\uC904 \uC815\uB3C4\uC758 \uBC00\uB3C4 \uC788\uB294 \uD615\uC2DD\uC744 \uC120\uD638\uD569\uB2C8\uB2E4: **\uB2E8\uC5B4** /\uBC1C\uC74C/ \xB7 \uD575\uC2EC \uBC88\uC5ED; \uC904\uBC14\uAFC8 **\uB73B** n./v./adj. 1... 2...; \uC904\uBC14\uAFC8 **\uC6A9\uBC95** \uB192\uC74C/\uC911\uAC04/\uB0AE\uC74C \uBE48\uB3C4 + \uBB38\uCCB4; \uC904\uBC14\uAFC8 **\uD45C\uD604** phrase: meaning; \uC904\uBC14\uAFC8 **\uBCC0\uD615/\uAD00\uB828\uC5B4** ...; \uC904\uBC14\uAFC8 **\uC608\uBB38** sentence \u2014 \uBC88\uC5ED.",
-        "\uD56D\uBAA9\uC740 \uB0B4\uC6A9\uC5D0 \uB9DE\uAC8C \uC720\uC5F0\uD558\uAC8C \uACE0\uB974\uACE0 \uB9E4\uBC88 \uBAA8\uB450 \uCC44\uC6B8 \uD544\uC694\uB294 \uC5C6\uC2B5\uB2C8\uB2E4. \uC720\uC6A9\uD558\uACE0 \uC9E7\uACE0 \uC815\uBCF4 \uBC00\uB3C4\uAC00 \uB192\uC544\uC57C \uD569\uB2C8\uB2E4. \uBE48\uB3C4\uB294 \uB192\uC74C/\uC911\uAC04/\uB0AE\uC74C \uB610\uB294 \uD754\uD568/\uB35C \uD754\uD568 \uC815\uB3C4\uB85C\uB9CC \uCD94\uC815\uD558\uACE0 \uC815\uD655\uD55C \uD1B5\uACC4 \uC218\uCE58\uB97C \uB9CC\uB4E4\uC9C0 \uB9C8\uC138\uC694.",
+        `\uD575\uC2EC \uBC88\uC5ED\uC740 \uBC18\uB4DC\uC2DC ${targetLabel}\uB85C \uC791\uC131\uD558\uC138\uC694. \uBC88\uC5ED\uD560 \uC218 \uC5C6\uB294 \uACE0\uC720\uBA85\uC0AC\uB098 \uCF54\uB4DC \uD1A0\uD070\uC774 \uC544\uB2C8\uB77C\uBA74 \uC6D0\uBB38\uC744 \uC720\uC77C\uD55C \uBC88\uC5ED\uC73C\uB85C \uADF8\uB300\uB85C \uBC18\uD658\uD558\uC9C0 \uB9C8\uC138\uC694.`,
+        "\uB2E4\uC74C \uACE0\uC815 \uC904 \uD615\uC2DD\uC744 \uC5C4\uACA9\uD788 \uC0AC\uC6A9\uD558\uACE0 \uB2E4\uB978 \uC81C\uBAA9\uC740 \uCD94\uAC00\uD558\uC9C0 \uB9C8\uC138\uC694. \uCCAB \uC904\uC740 **\uC6D0\uC5B4** /\uBC1C\uC74C \uB610\uB294 \uBCD1\uC74C/ \u2605\u2605\u2605\u2605\u2606 CET-6 / GRE / IELTS \uD615\uC2DD\uC785\uB2C8\uB2E4. \uC601\uC5B4 \uB2E8\uC5B4\uB294 \uBC1C\uC74C\uC744 \uC4F0\uACE0 \uBCC4\uC810 \uB4A4\uC5D0 CET-6 / GRE / IELTS\uB97C \uB123\uC744 \uC218 \uC788\uC9C0\uB9CC, \uC911\uAD6D\uC5B4 \uB2E8\uC5B4\uB294 \uBCD1\uC74C\uC744 \uC4F0\uACE0 CET-6 / GRE / IELTS\uB97C \uB123\uC9C0 \uB9C8\uC138\uC694. \uC2E0\uB8B0\uD560 \uC218 \uC5C6\uB294 \uD56D\uBAA9\uC740 \uC0DD\uB7B5\uD558\uACE0 \uC790\uB9AC\uD45C\uC2DC\uC790\uB97C \uB9CC\uB4E4\uC9C0 \uB9C8\uC138\uC694.",
+        "\uC774\uD6C4 \uC904\uC740 \uB2E4\uC74C \uD544\uB4DC\uB9CC \uC774 \uC21C\uC11C\uB85C \uC0AC\uC6A9\uD558\uC138\uC694: **\u91CA\u4E49** \uD575\uC2EC \uBC88\uC5ED, **\u4E49\u9879** \uD488\uC0AC + \uBC88\uD638\uAC00 \uC788\uB294 \uB73B, **\u8BED\u57DF** \uBD84\uC57C\uC640 \uBB38\uCCB4, **\u642D\u914D** phrase: source phrase\uFF08\uBC88\uC5ED\uFF09, **\u53D8\u4F53** \uD615\uD0DC\xB7\uD30C\uC0DD\uC5B4\xB7\uAD00\uB828\uC5B4, **\u52A9\u8BB0** \uAE30\uC5B5 \uD78C\uD2B8, **\u4F8B\u53E5** source sentence\uFF08\uBC88\uC5ED\uFF09.",
+        "\uC2E0\uB8B0\uD560 \uB0B4\uC6A9\uC774 \uC5C6\uB294 \uD544\uB4DC\uB294 \uD45C\uC2DC\uD558\uC9C0 \uB9C8\uC138\uC694. \uBC1C\uC74C, \uBCD1\uC74C, \uBCC4\uC810, \uC2DC\uD5D8 \uD0DC\uADF8, \uD45C\uD604, \uBCC0\uD615, \uC554\uAE30 \uD78C\uD2B8, \uC608\uBB38\uC744 \uD615\uC2DD \uCC44\uC6B0\uAE30 \uC704\uD574 \uB9CC\uB4E4\uC9C0 \uB9C8\uC138\uC694.",
         "\uC785\uB825\uC774 \uC0AC\uC804\uC2DD\uC73C\uB85C \uB2E4\uB8F0 \uC218 \uC788\uB294 \uB2E8\uC5B4, \uC6A9\uC5B4, \uACE0\uC815 \uD45C\uD604\uC774 \uC544\uB2C8\uB77C\uBA74 \uC77C\uBC18 \uBC88\uC5ED\uC73C\uB85C \uB3CC\uC544\uAC00 \uC790\uC5F0\uC2A4\uB7EC\uC6B4 \uBC88\uC5ED\uBB38\uB9CC \uCD9C\uB825\uD558\uC138\uC694.",
         "JSON\uC774\uB098 \uCF54\uB4DC \uBE14\uB85D\uC740 \uCD9C\uB825\uD558\uC9C0 \uB9C8\uC138\uC694."
       ].join("\n");
@@ -2907,8 +3031,10 @@ function dictionaryTranslationInstruction(config, sourceText = "") {
         "\u8FD9\u662F\u4E00\u4E2A\u77ED\u8BCD/\u8BCD\u7EC4\u67E5\u8BCD\u5F0F\u7FFB\u8BD1\u4EFB\u52A1\u3002\u8BF7\u4E0D\u8981\u53EA\u7ED9\u4E00\u4E2A\u8BD1\u6587\uFF0C\u800C\u662F\u7528\u7D27\u51D1\u3001\u81EA\u7136\u7684 Markdown \u8F93\u51FA\u8FD1\u4F3C\u8BCD\u5178\u5361\u7247\u3002",
         `\u5F53\u524D\u754C\u9762\u8BED\u8A00\u662F${interfaceLabel}\uFF0C\u91CA\u4E49\u4E0E\u8BF4\u660E\u4E3B\u8981\u4F7F\u7528${interfaceLabel}\uFF1B\u8BD1\u6587\u4E0E\u4F8B\u53E5\u7FFB\u8BD1\u4F7F\u7528${targetLabel}\u3002`,
         "\u53EA\u5206\u6790 <translation-input> \u4E2D\u76F4\u63A5\u53EF\u89C1\u7684\u5355\u8BCD\u3001\u8BCD\u8BED\u6216\u8BCD\u7EC4\uFF0C\u4E0D\u8981\u628A\u6807\u7B7E\u3001URL\u3001HTML \u5C5E\u6027\u3001\u94FE\u63A5\u5730\u5740\u6216\u5176\u4ED6\u4E0D\u53EF\u89C1\u6587\u5B57\u5F53\u4F5C\u7FFB\u8BD1\u5BF9\u8C61\u3002",
-        "\u8F93\u51FA\u8981\u7D27\u51D1\u4F46\u6E05\u695A\uFF1A\u6700\u591A\u4E00\u4E2A\u77ED\u6807\u9898\uFF0C\u4E0D\u8981\u5C42\u5C42\u6807\u9898\uFF0C\u4E0D\u8981\u5927\u6BB5\u7A7A\u884C\uFF1B\u4E0D\u540C\u7EF4\u5EA6\u8BF7\u7528\u5FC5\u8981\u6362\u884C\u5206\u6210\u77ED\u884C\uFF0C\u4E0D\u8981\u628A\u6240\u6709\u4FE1\u606F\u6324\u5728\u540C\u4E00\u6BB5\u3002\u4F18\u5148\u7528 4-8 \u884C\u77ED\u9879\uFF0C\u4F8B\u5982\uFF1A**\u8BCD** /\u97F3\u6807/ \xB7 \u6838\u5FC3\u8BD1\u4E49\uFF1B\u6362\u884C **\u4E49\u9879** n./v./adj. 1... 2...\uFF1B\u6362\u884C **\u5E38\u7528** \u9AD8/\u4E2D/\u4F4E\u9891 + \u8BED\u57DF\uFF1B\u6362\u884C **\u642D\u914D** phrase: meaning\uFF1B\u6362\u884C **\u8FD1\u5F62/\u53D8\u4F53** ...\uFF1B\u6362\u884C **\u4F8B** sentence \u2014 \u8BD1\u6587\u3002",
-        "\u53EF\u4EE5\u6309\u5185\u5BB9\u7075\u6D3B\u53D6\u820D\uFF0C\u4E0D\u5FC5\u6BCF\u6B21\u586B\u6EE1\u6240\u6709\u680F\u76EE\uFF1B\u4FE1\u606F\u8981\u6709\u7528\u3001\u77ED\u3001\u5BC6\u5EA6\u9AD8\u3002\u8BCD\u9891\u53EA\u80FD\u7ED9\u9AD8/\u4E2D/\u4F4E\u6216\u5E38\u89C1/\u8F83\u5C11\u89C1\u7B49\u4F30\u8BA1\uFF0C\u4E0D\u8981\u7F16\u9020\u7CBE\u786E\u6570\u5B57\u3002",
+        `\u6838\u5FC3\u8BD1\u4E49\u5FC5\u987B\u4F7F\u7528${targetLabel}\uFF0C\u9664\u975E\u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u4E13\u6709\u540D\u8BCD\u6216\u4EE3\u7801\uFF0C\u5426\u5219\u4E0D\u8981\u628A\u539F\u6587\u539F\u6837\u5F53\u4F5C\u552F\u4E00\u8BD1\u6587\u3002`,
+        "\u8BF7\u4E25\u683C\u4F7F\u7528\u56FA\u5B9A\u884C\u683C\u5F0F\uFF0C\u4E0D\u8981\u52A0\u5165\u5176\u4ED6\u6807\u9898\u3002\u7B2C\u4E00\u884C\u683C\u5F0F\u4E3A **\u539F\u8BCD** /\u97F3\u6807\u6216\u62FC\u97F3/ \u2605\u2605\u2605\u2605\u2606 CET-6 / GRE / IELTS\uFF1A\u82F1\u6587\u8BCD\u4F7F\u7528\u97F3\u6807\uFF0C\u661F\u7EA7\u540E\u53EF\u5217 CET-6 / GRE / IELTS\uFF1B\u4E2D\u6587\u8BCD\u4F7F\u7528\u62FC\u97F3\uFF0C\u4E14\u4E0D\u8981\u5217 CET-6 / GRE / IELTS\u3002\u53EA\u4FDD\u7559\u6709\u53EF\u9760\u5185\u5BB9\u7684\u90E8\u5206\uFF1B\u6CA1\u6709\u97F3\u6807\u3001\u62FC\u97F3\u3001\u661F\u7EA7\u6216\u8003\u8BD5\u6807\u7B7E\u65F6\uFF0C\u7701\u7565\u5BF9\u5E94\u90E8\u5206\uFF0C\u4E0D\u8981\u586B\u5199\u5360\u4F4D\u7B26\u3002",
+        "\u540E\u7EED\u884C\u53EA\u80FD\u4F7F\u7528\u8FD9\u4E9B\u5B57\u6BB5\uFF0C\u987A\u5E8F\u56FA\u5B9A\uFF1A**\u91CA\u4E49** \u6838\u5FC3\u8BD1\u4E49\uFF1B**\u4E49\u9879** \u8BCD\u6027 + \u7F16\u53F7\u4E49\u9879\uFF1B**\u8BED\u57DF** \u9886\u57DF\u3001\u8BED\u4F53\uFF1B**\u642D\u914D** phrase: source phrase\uFF08\u8BD1\u6587\uFF09\uFF1B**\u53D8\u4F53** \u8BCD\u5F62\u3001\u6D3E\u751F\u6216\u76F8\u5173\u5F62\u5F0F\uFF1B**\u52A9\u8BB0** \u8054\u60F3\u6216\u6784\u8BCD\u8BB0\u5FC6\uFF1B**\u4F8B\u53E5** source sentence\uFF08\u8BD1\u6587\uFF09\u3002",
+        "\u6CA1\u6709\u53EF\u9760\u5185\u5BB9\u7684\u5B57\u6BB5\u4E0D\u8981\u663E\u793A\uFF1B\u4E0D\u8981\u4E3A\u4E86\u51D1\u683C\u5F0F\u7F16\u9020\u97F3\u6807\u3001\u62FC\u97F3\u3001\u661F\u7EA7\u3001\u8003\u8BD5\u6807\u7B7E\u3001\u642D\u914D\u3001\u53D8\u4F53\u3001\u52A9\u8BB0\u6216\u4F8B\u53E5\u3002",
         "\u5982\u679C\u8F93\u5165\u5176\u5B9E\u4E0D\u662F\u53EF\u67E5\u8BCD\u7684\u5355\u8BCD\u3001\u8BCD\u8BED\u6216\u56FA\u5B9A\u77ED\u8BED\uFF0C\u8BF7\u9000\u56DE\u666E\u901A\u7FFB\u8BD1\uFF0C\u53EA\u8F93\u51FA\u81EA\u7136\u8BD1\u6587\u3002",
         "\u4E0D\u8981\u8F93\u51FA JSON \u6216\u4EE3\u7801\u5757\u3002"
       ].join("\n");
@@ -3618,6 +3744,7 @@ function buildProtectedTranslationInstruction(config, sourceText, options = {}) 
     dictionaryMode ? dictionaryTranslationInstruction(config, sourceText) : autoTranslateInstruction(config, sourceText),
     translationDirectionInstruction(config, sourceText),
     dictionaryMode ? "" : translationFormatInstruction(config),
+    dictionaryMode ? "" : htmlFormattingInstruction(config),
     dictionaryMode ? "" : uiText(
       typeof config === "object" ? config?.interfaceLanguage : config,
       "translationOutputOnlyInstruction"
@@ -3863,6 +3990,7 @@ var DEFAULT_SETTINGS = {
   searchAnswerEnabled: false,
   includePageByDefault: true,
   webSearchByDefault: false,
+  toolResponseUseContextLanguage: false,
   historyLimit: 60
 };
 
@@ -4022,6 +4150,7 @@ function normalizeSettings(stored = {}) {
     searchAnswerEnabled: stored.searchAnswerEnabled ?? DEFAULT_SETTINGS.searchAnswerEnabled,
     includePageByDefault: stored.includePageByDefault ?? DEFAULT_SETTINGS.includePageByDefault,
     webSearchByDefault: stored.webSearchByDefault ?? DEFAULT_SETTINGS.webSearchByDefault,
+    toolResponseUseContextLanguage: stored.toolResponseUseContextLanguage ?? DEFAULT_SETTINGS.toolResponseUseContextLanguage,
     historyLimit: stored.historyLimit ?? DEFAULT_SETTINGS.historyLimit
   };
 }
@@ -4606,6 +4735,11 @@ async function requestOriginPermission(url) {
 }
 
 // src/shared/tools.ts
+var TOOL_RESPONSE_LANGUAGE_EXCLUDED_IDS = /* @__PURE__ */ new Set([
+  "translate-text",
+  "translate-document",
+  "explain-code"
+]);
 function allTools(customTools = [], language) {
   const customById = new Map(
     customTools.map((tool) => [tool.id, tool])
@@ -4628,13 +4762,50 @@ function findTool(toolId, customTools = [], language) {
 }
 function toolInstruction(tool, settings, contextText) {
   const language = resolveLanguage(settings?.interfaceLanguage);
-  const resolvedContextText = contextText ?? uiText(settings?.interfaceLanguage, "currentContext");
+  const resolvedContextText = contextText ?? "";
   return fillPrompt(tool.template, {
     text: resolvedContextText,
     context: resolvedContextText,
     targetLanguage: LANGUAGE_LABELS[language],
     interfaceLanguage: LANGUAGE_LABELS[language]
   });
+}
+function toolResponseLanguageInstruction(tool, settings, contextLanguage) {
+  if (TOOL_RESPONSE_LANGUAGE_EXCLUDED_IDS.has(tool.id)) return "";
+  const language = resolveLanguage(settings?.interfaceLanguage);
+  const interfaceLanguage = LANGUAGE_LABELS[language];
+  const useContextLanguage = settings?.toolResponseUseContextLanguage === true;
+  switch (language) {
+    case "zh-TW":
+      return useContextLanguage ? contextLanguage ? `\u56DE\u7B54\u8A9E\u8A00\u898F\u5247\uFF1A\u5DF2\u5224\u5B9A\u63D0\u554F\u4E0A\u4E0B\u6587\u7684\u4E3B\u8981\u539F\u59CB\u8A9E\u8A00\u70BA${contextLanguage}\u3002\u9664\u975E\u5DE5\u5177\u63D0\u793A\u8A5E\u660E\u78BA\u8981\u6C42\u4F7F\u7528\u53E6\u4E00\u7A2E\u8A9E\u8A00\u56DE\u7B54\uFF0C\u5426\u5247\u6700\u7D42\u56DE\u7B54\u5FC5\u9808\u5B8C\u6574\u4F7F\u7528${contextLanguage}\u3002\u5DE5\u5177\u63D0\u793A\u8A5E\u672C\u8EAB\u4EE5\u4F55\u7A2E\u8A9E\u8A00\u66F8\u5BEB\u4E0D\u7B97\u56DE\u7B54\u8A9E\u8A00\u8981\u6C42\u3002` : `\u56DE\u7B54\u8A9E\u8A00\u898F\u5247\uFF1A\u5FFD\u7565\u5DE5\u5177\u63D0\u793A\u8A5E\u672C\u8EAB\u4F7F\u7528\u7684\u8A9E\u8A00\uFF0C\u5224\u65B7\u63D0\u554F\u4E0A\u4E0B\u6587\u7684\u4E3B\u8981\u539F\u59CB\u8A9E\u8A00\u4E26\u7528\u8A72\u8A9E\u8A00\u56DE\u7B54\u3002\u53EA\u6709\u5DE5\u5177\u63D0\u793A\u8A5E\u660E\u78BA\u8981\u6C42\u4F7F\u7528\u67D0\u7A2E\u8A9E\u8A00\u56DE\u7B54\u6642\u624D\u8986\u84CB\u6B64\u898F\u5247\uFF1B\u7121\u6CD5\u5224\u65B7\u6642\u4F7F\u7528${interfaceLanguage}\u3002` : `\u56DE\u7B54\u8A9E\u8A00\u898F\u5247\uFF1A\u5982\u679C\u5DE5\u5177\u63D0\u793A\u8A5E\u672C\u8EAB\u660E\u78BA\u6307\u5B9A\u56DE\u7B54\u8A9E\u8A00\uFF0C\u512A\u5148\u9075\u5FAA\u5DE5\u5177\u63D0\u793A\u8A5E\uFF1B\u5426\u5247\uFF0C\u56DE\u7B54\u5FC5\u9808\u4F7F\u7528\u76EE\u524D\u4ECB\u9762\u8A9E\u8A00\uFF08${interfaceLanguage}\uFF09\u3002`;
+    case "en":
+      return useContextLanguage ? contextLanguage ? `Response-language rule: the question context's primary original language has been identified as ${contextLanguage}. The final answer must be entirely in ${contextLanguage} unless the tool prompt explicitly requests a different response language. The language in which the tool prompt itself is written is not a response-language request.` : `Response-language rule: ignore the language in which the tool prompt itself is written. Identify the question context's primary original language and answer in that language. Override this only when the tool prompt explicitly requests a response language; if detection is impossible, use ${interfaceLanguage}.` : `Response-language rule: an explicit response-language requirement in the tool prompt takes priority. Otherwise, respond in the current interface language (${interfaceLanguage}).`;
+    case "ja":
+      return useContextLanguage ? contextLanguage ? `\u56DE\u7B54\u8A00\u8A9E\u30EB\u30FC\u30EB\uFF1A\u8CEA\u554F\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u306E\u4E3B\u8981\u306A\u539F\u6587\u8A00\u8A9E\u306F${contextLanguage}\u3068\u5224\u5B9A\u6E08\u307F\u3067\u3059\u3002\u30C4\u30FC\u30EB\u30D7\u30ED\u30F3\u30D7\u30C8\u304C\u5225\u306E\u56DE\u7B54\u8A00\u8A9E\u3092\u660E\u793A\u7684\u306B\u8981\u6C42\u3057\u3066\u3044\u306A\u3044\u9650\u308A\u3001\u6700\u7D42\u56DE\u7B54\u5168\u4F53\u3092${contextLanguage}\u3067\u4F5C\u6210\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u30C4\u30FC\u30EB\u30D7\u30ED\u30F3\u30D7\u30C8\u81EA\u4F53\u306E\u8A18\u8FF0\u8A00\u8A9E\u306F\u56DE\u7B54\u8A00\u8A9E\u306E\u6307\u5B9A\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u3002` : `\u56DE\u7B54\u8A00\u8A9E\u30EB\u30FC\u30EB\uFF1A\u30C4\u30FC\u30EB\u30D7\u30ED\u30F3\u30D7\u30C8\u81EA\u4F53\u306E\u8A18\u8FF0\u8A00\u8A9E\u3092\u7121\u8996\u3057\u3001\u8CEA\u554F\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u306E\u4E3B\u8981\u306A\u539F\u6587\u8A00\u8A9E\u3092\u5224\u5B9A\u3057\u3066\u3001\u305D\u306E\u8A00\u8A9E\u3067\u56DE\u7B54\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u30C4\u30FC\u30EB\u30D7\u30ED\u30F3\u30D7\u30C8\u304C\u56DE\u7B54\u8A00\u8A9E\u3092\u660E\u793A\u3057\u305F\u5834\u5408\u3060\u3051\u305D\u306E\u6307\u5B9A\u3092\u512A\u5148\u3057\u3001\u5224\u5B9A\u3067\u304D\u306A\u3044\u5834\u5408\u306F${interfaceLanguage}\u3092\u4F7F\u7528\u3057\u3066\u304F\u3060\u3055\u3044\u3002` : `\u56DE\u7B54\u8A00\u8A9E\u30EB\u30FC\u30EB\uFF1A\u30C4\u30FC\u30EB\u30D7\u30ED\u30F3\u30D7\u30C8\u81EA\u4F53\u306B\u56DE\u7B54\u8A00\u8A9E\u304C\u660E\u793A\u3055\u308C\u3066\u3044\u308B\u5834\u5408\u306F\u3001\u305D\u306E\u6307\u5B9A\u3092\u512A\u5148\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u305D\u308C\u4EE5\u5916\u306F\u73FE\u5728\u306E\u30A4\u30F3\u30BF\u30FC\u30D5\u30A7\u30FC\u30B9\u8A00\u8A9E\uFF08${interfaceLanguage}\uFF09\u3067\u56DE\u7B54\u3057\u3066\u304F\u3060\u3055\u3044\u3002`;
+    case "ko":
+      return useContextLanguage ? contextLanguage ? `\uB2F5\uBCC0 \uC5B8\uC5B4 \uADDC\uCE59: \uC9C8\uBB38 \uCEE8\uD14D\uC2A4\uD2B8\uC758 \uC8FC\uC694 \uC6D0\uBB38 \uC5B8\uC5B4\uB294 ${contextLanguage}(\uC73C)\uB85C \uD310\uC815\uB418\uC5C8\uC2B5\uB2C8\uB2E4. \uB3C4\uAD6C \uD504\uB86C\uD504\uD2B8\uAC00 \uB2E4\uB978 \uB2F5\uBCC0 \uC5B8\uC5B4\uB97C \uBA85\uC2DC\uC801\uC73C\uB85C \uC694\uAD6C\uD558\uC9C0 \uC54A\uB294 \uD55C \uCD5C\uC885 \uB2F5\uBCC0 \uC804\uCCB4\uB97C ${contextLanguage}(\uC73C)\uB85C \uC791\uC131\uD558\uC138\uC694. \uB3C4\uAD6C \uD504\uB86C\uD504\uD2B8 \uC790\uCCB4\uAC00 \uC4F0\uC778 \uC5B8\uC5B4\uB294 \uB2F5\uBCC0 \uC5B8\uC5B4 \uC694\uAD6C\uAC00 \uC544\uB2D9\uB2C8\uB2E4.` : `\uB2F5\uBCC0 \uC5B8\uC5B4 \uADDC\uCE59: \uB3C4\uAD6C \uD504\uB86C\uD504\uD2B8 \uC790\uCCB4\uAC00 \uC4F0\uC778 \uC5B8\uC5B4\uB294 \uBB34\uC2DC\uD558\uACE0 \uC9C8\uBB38 \uCEE8\uD14D\uC2A4\uD2B8\uC758 \uC8FC\uC694 \uC6D0\uBB38 \uC5B8\uC5B4\uB97C \uD310\uC815\uD558\uC5EC \uADF8 \uC5B8\uC5B4\uB85C \uB2F5\uD558\uC138\uC694. \uB3C4\uAD6C \uD504\uB86C\uD504\uD2B8\uAC00 \uB2F5\uBCC0 \uC5B8\uC5B4\uB97C \uBA85\uC2DC\uC801\uC73C\uB85C \uC694\uAD6C\uD560 \uB54C\uB9CC \uADF8 \uC694\uAD6C\uB97C \uC6B0\uC120\uD558\uBA70, \uD310\uC815\uD560 \uC218 \uC5C6\uC73C\uBA74 ${interfaceLanguage}\uB97C \uC0AC\uC6A9\uD558\uC138\uC694.` : `\uB2F5\uBCC0 \uC5B8\uC5B4 \uADDC\uCE59: \uB3C4\uAD6C \uD504\uB86C\uD504\uD2B8 \uC790\uCCB4\uC5D0 \uB2F5\uBCC0 \uC5B8\uC5B4\uAC00 \uBA85\uC2DC\uB418\uC5B4 \uC788\uC73C\uBA74 \uADF8 \uC694\uAD6C\uB97C \uC6B0\uC120\uD558\uC138\uC694. \uADF8\uB807\uC9C0 \uC54A\uC73C\uBA74 \uD604\uC7AC \uC778\uD130\uD398\uC774\uC2A4 \uC5B8\uC5B4(${interfaceLanguage})\uB85C \uB2F5\uD558\uC138\uC694.`;
+    case "zh-CN":
+    default:
+      return useContextLanguage ? contextLanguage ? `\u56DE\u7B54\u8BED\u8A00\u89C4\u5219\uFF1A\u5DF2\u5224\u5B9A\u63D0\u95EE\u4E0A\u4E0B\u6587\u7684\u4E3B\u8981\u539F\u59CB\u8BED\u8A00\u4E3A${contextLanguage}\u3002\u9664\u975E\u5DE5\u5177\u63D0\u793A\u8BCD\u660E\u786E\u8981\u6C42\u4F7F\u7528\u53E6\u4E00\u79CD\u8BED\u8A00\u56DE\u7B54\uFF0C\u5426\u5219\u6700\u7EC8\u56DE\u7B54\u5FC5\u987B\u5B8C\u6574\u4F7F\u7528${contextLanguage}\u3002\u5DE5\u5177\u63D0\u793A\u8BCD\u672C\u8EAB\u4EE5\u4F55\u79CD\u8BED\u8A00\u4E66\u5199\u4E0D\u7B97\u56DE\u7B54\u8BED\u8A00\u8981\u6C42\u3002` : `\u56DE\u7B54\u8BED\u8A00\u89C4\u5219\uFF1A\u5FFD\u7565\u5DE5\u5177\u63D0\u793A\u8BCD\u672C\u8EAB\u4F7F\u7528\u7684\u8BED\u8A00\uFF0C\u5224\u65AD\u63D0\u95EE\u4E0A\u4E0B\u6587\u7684\u4E3B\u8981\u539F\u59CB\u8BED\u8A00\u5E76\u7528\u8BE5\u8BED\u8A00\u56DE\u7B54\u3002\u53EA\u6709\u5DE5\u5177\u63D0\u793A\u8BCD\u660E\u786E\u8981\u6C42\u4F7F\u7528\u67D0\u79CD\u8BED\u8A00\u56DE\u7B54\u65F6\u624D\u8986\u76D6\u6B64\u89C4\u5219\uFF1B\u65E0\u6CD5\u5224\u65AD\u65F6\u4F7F\u7528${interfaceLanguage}\u3002` : `\u56DE\u7B54\u8BED\u8A00\u89C4\u5219\uFF1A\u5982\u679C\u5DE5\u5177\u63D0\u793A\u8BCD\u672C\u8EAB\u660E\u786E\u6307\u5B9A\u4E86\u56DE\u7B54\u8BED\u8A00\uFF0C\u4F18\u5148\u9075\u5FAA\u5DE5\u5177\u63D0\u793A\u8BCD\uFF1B\u5426\u5219\uFF0C\u56DE\u7B54\u5FC5\u987B\u4F7F\u7528\u5F53\u524D\u754C\u9762\u8BED\u8A00\uFF08${interfaceLanguage}\uFF09\u3002`;
+  }
+}
+function toolPromptWithContext(tool, settings, contextText, metadata = "", contextLabel = uiText(settings?.interfaceLanguage, "currentContext"), contextLanguageHint) {
+  const instruction = toolInstruction(tool, settings, contextText);
+  const hasContextPlaceholder = /\{\{(?:text|context)\}\}/.test(
+    tool.template
+  );
+  const responseLanguage = toolResponseLanguageInstruction(
+    tool,
+    settings,
+    originalLanguageLabel(contextText, contextLanguageHint)
+  );
+  return [
+    instruction,
+    metadata,
+    !hasContextPlaceholder && contextText ? `${contextLabel}\uFF1A
+${contextText}` : "",
+    responseLanguage
+  ].filter(Boolean).join("\n\n");
 }
 
 // src/shared/webSearch.ts
@@ -5073,19 +5244,23 @@ chrome.runtime.onMessage.addListener(
         if (tool.id === "ask-selection") {
           return { text: "" };
         }
-        const contextText = String(message.payload?.text ?? "");
+        const contextMarkdown = String(message.payload?.markdown ?? "").trim();
+        const contextText = contextMarkdown || String(message.payload?.text ?? "");
         const isTranslationTool = tool.id === "translate-text" || tool.id === "translate-document";
         const protectedText = isTranslationTool ? protectTranslationText(contextText) : null;
-        const instruction = toolInstruction(tool, settings, contextText);
         const userPrompt = isTranslationTool ? buildProtectedTranslationPrompt(
           settings,
           contextText,
           protectedText?.text ?? contextText,
           { dictionaryForShortInput: tool.id === "translate-text" }
-        ) : `${instruction}
-
-${uiText(settings.interfaceLanguage, "currentContext")}\uFF1A
-${contextText}`;
+        ) : toolPromptWithContext(
+          tool,
+          settings,
+          contextText,
+          "",
+          void 0,
+          String(message.payload?.language ?? "") || void 0
+        );
         const result = await completeModel({
           profileId: String(message.payload?.profileId ?? "") || void 0,
           purpose: modelPurposeForToolId(tool.id),

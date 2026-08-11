@@ -87,6 +87,37 @@ describe("immersive workflow", () => {
     ]);
   });
 
+  it("splits a batch when the model repeatedly returns no usable entries", async () => {
+    const calls: string[][] = [];
+    const applied: string[] = [];
+    const result = await runImmersiveTranslationWorkflow({
+      blocks,
+      batchSize: 3,
+      concurrency: 1,
+      requestTranslations: async (requestBlocks) => {
+        calls.push(requestBlocks.map((block) => block.id));
+        if (requestBlocks.length > 1) return [];
+        return [{ id: requestBlocks[0].id, text: `译文 ${requestBlocks[0].id}` }];
+      },
+      applyTranslations: (translations) => {
+        applied.push(...translations.map((translation) => translation.id));
+        return translations.length;
+      },
+      invalidTranslationsError: () => new Error("invalid"),
+      applyCountMismatchError: () => new Error("apply failed")
+    });
+
+    expect(result.completed).toBe(3);
+    expect(applied).toEqual(["a", "b", "c"]);
+    expect(calls).toEqual([
+      ["a", "b", "c"],
+      ["a", "b"],
+      ["c"],
+      ["a"],
+      ["b"]
+    ]);
+  });
+
   it("applies the first translation batch before starting concurrent remainder", async () => {
     const appliedOrder: string[] = [];
     const result = await runImmersiveTranslationWorkflow({

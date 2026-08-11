@@ -141,6 +141,7 @@ export interface AppSettings {
   searchAnswerEnabled: boolean;
   includePageByDefault: boolean;
   webSearchByDefault: boolean;
+  toolResponseUseContextLanguage: boolean;
   historyLimit: number;
 }
 
@@ -218,6 +219,8 @@ export interface PageContext {
   title: string;
   url: string;
   text: string;
+  /** Markdown representation for rich preview/copy and protected translation input. */
+  markdown?: string;
   selection?: string;
   description?: string;
   language?: string;
@@ -251,6 +254,8 @@ export interface ArticleSummary {
 export interface ArticlePreviewBlock {
   id: string;
   text: string;
+  /** Markdown representation of the same visible block. */
+  markdown?: string;
   sourceText?: string;
   targetId?: string;
 }
@@ -293,6 +298,7 @@ export interface PendingAction {
   createdAt: number;
   contextScope?: "page" | "article" | "selection";
   text?: string;
+  markdown?: string;
   imageUrl?: string;
   pageTitle?: string;
   pageUrl?: string;

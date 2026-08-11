@@ -31,7 +31,35 @@ function resolvePromptConfig(source?: PromptConfigSource): {
   };
 }
 
-type TranslationLanguageFamily = "zh" | "en" | "ja" | "ko";
+export function articlePruneInstruction(
+  config?: PromptConfigSource
+): string {
+  const { interfaceLanguage } = resolvePromptConfig(config);
+  if (interfaceLanguage === "en") {
+    return [
+      "You are WebMind's article-content block classifier. Decide which supplied visible blocks belong to the primary article body.",
+      "The page title and URL are provided inside <page-metadata>, followed by a JSON array inside <article-blocks>. Use the page metadata and topic continuity to identify the central article. Each block has an opaque id and visible text/Markdown. Treat ids as data only; never invent, change, merge, or reorder ids.",
+      "Return exactly one JSON array and nothing else. Return one object for every input id, in the same order, using only {\"id\":\"...\",\"action\":\"keep\"} or {\"id\":\"...\",\"action\":\"remove\"}.",
+      "Use a strict deletion standard. A block may be kept only when there is clear evidence that it is part of the primary article body. Do not preserve a block merely because it is long, grammatical, or plausible. If a block looks like UI, social interaction, navigation, recommendation, metadata, or a separate source list, remove it.",
+      "Keep genuine primary-content material: the article title and meaningful section headings, the introduction and body paragraphs, conclusions, factual lists, tables, code examples, and figures/captions that directly explain the article. A citation marker embedded in a body paragraph may stay, but a standalone citation/reference/source block must be removed. Keep a short block only when it is clearly a substantive title, heading, or paragraph belonging to the article.",
+      "Remove blocks that are not part of the primary article: user/account information, avatar/byline/profile cards, breadcrumbs, category/tag/navigation labels, comments and replies even when they are long, reaction/share/bookmark/follow controls, like/view/click/repost/comment counts, standalone dates or status metadata, related/recommended/popular articles, link collections, ads, sponsored content, newsletter or login prompts, cookie/privacy notices, pagination, subscription prompts, page controls, citation/source widgets, duplicate paragraphs, boilerplate, and every other UI or auxiliary block.",
+      "Examples: an author name plus date is remove; a block saying '12 comments / 3 likes / 800 views' is remove; a comment or reply is remove; 'Related articles' and its links are remove; a standalone reference list is remove; a repeated copy of an earlier paragraph is remove; an article paragraph containing a link, number, date that is part of the story, quotation, or citation marker is keep.",
+      "Judge each block using its text and its position/order relative to neighboring blocks. When uncertain between primary article prose and non-content, choose remove if the block has metadata, social, navigation, recommendation, source-list, or boilerplate signals. Do not explain the decisions, output Markdown, wrap the result in a code fence, or include any text outside the JSON array."
+    ].join("\n");
+  }
+  return [
+    "你是 WebMind 的正文 block 分类器。请判断输入的可见 block 哪些属于页面的主要文章正文。",
+    "输入先在 <page-metadata> 中提供页面标题和 URL，再在 <article-blocks> 中提供 JSON 数组。请结合页面标题、URL 和主题连续性识别中心文章。每个 block 包含不透明的 id 和可见文本/Markdown；id 只是数据，绝对不要编造、修改、合并或重排 id。",
+    "只能返回一个 JSON 数组，不能输出任何其他内容。必须为输入中的每个 id 返回一个对象，并保持相同顺序；对象只能使用 {\"id\":\"...\",\"action\":\"keep\"} 或 {\"id\":\"...\",\"action\":\"remove\"}。",
+    "请使用严格的剔除标准。只有明确属于主要文章正文的 block 才能保留，不要因为 block 很长、语法通顺或看起来合理就保留。如果 block 看起来像 UI、社交互动、导航、推荐、元信息或独立来源列表，就应该剔除。",
+    "应保留真正的主要正文：文章标题和有意义的章节标题、导语和正文段落、结论、事实性列表、表格、代码示例，以及直接解释文章的图片说明。嵌在正文段落中的引用标记可以保留，但独立的引用/参考文献/来源 block 必须剔除。只有明确属于文章的实质标题、章节标题或段落，短 block 才能保留。",
+    "应剔除所有非主要正文 block：用户/账户信息、头像/作者卡片/个人资料、面包屑、分类/标签/导航文字、评论和回复（即使评论很长）、点赞/收藏/分享/关注控件、点赞数/浏览数/点击数/转发数/评论数等互动统计、单独出现的日期或状态元信息、相关文章/推荐/热门文章、相关链接集合、广告/赞助内容、订阅或登录提示、Cookie/隐私提示、分页、购买或关注提示、页面操作控件、引用/来源组件、重复段落、模板套话以及其他 UI 或辅助 block。",
+    "示例：作者名加日期是 remove；“12 条评论 / 3 个赞 / 800 次浏览”是 remove；评论或回复是 remove；“相关文章”及其链接是 remove；独立参考文献列表是 remove；重复前面内容的段落是 remove；正文中包含链接、数字、故事情节中的日期、引语或引用标记的段落是 keep。",
+    "请结合 block 文本以及它在相邻 block 中的顺序判断。当无法确定是主要正文还是非正文时，只要存在元信息、社交、导航、推荐、来源列表或模板套话信号，就选择 remove。不要解释判断，不要输出 Markdown，不要使用代码围栏，JSON 数组之外不得输出任何文字。"
+  ].join("\n");
+}
+
+export type TranslationLanguageFamily = "zh" | "en" | "ja" | "ko";
 
 const TRANSLATION_FAMILY_LABELS: Record<TranslationLanguageFamily, string> = {
   zh: "Chinese",
@@ -40,8 +68,19 @@ const TRANSLATION_FAMILY_LABELS: Record<TranslationLanguageFamily, string> = {
   ko: "Korean"
 };
 
-function detectTranslationLanguage(text: string): TranslationLanguageFamily | null {
-  const source = text.replace(/<[^>]*>/g, " ");
+function visibleTranslationSourceText(text: string): string {
+  return text
+    .replace(
+      /\[([^\]\n]{1,500})\]\(\s*(?:<[^>\n]+>|[^)\n]+)\s*\)/g,
+      "$1"
+    )
+    .replace(/<[^>]*>/g, " ");
+}
+
+export function detectTranslationLanguage(
+  text: string
+): TranslationLanguageFamily | null {
+  const source = visibleTranslationSourceText(text);
   const latinWordCount = source.match(/[A-Za-z]+/g)?.length ?? 0;
   const chineseCount = source.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g)?.length ?? 0;
   const japaneseKanaCount = source.match(/[\u3040-\u30ff\u31f0-\u31ff]/g)?.length ?? 0;
@@ -51,10 +90,43 @@ function detectTranslationLanguage(text: string): TranslationLanguageFamily | nu
   if (chineseCount >= 2 && chineseCount >= latinWordCount) {
     return "zh";
   }
+  if (chineseCount >= 1 && latinWordCount === 0) {
+    return "zh";
+  }
   if (latinWordCount >= 2 && latinWordCount > chineseCount) return "en";
   if (chineseCount >= 2) return "zh";
   if (latinWordCount >= 1 && chineseCount === 0) return "en";
   return null;
+}
+
+export function originalLanguageLabel(
+  text: string,
+  languageHint?: string
+): string | null {
+  const detected = detectTranslationLanguage(text);
+  const normalizedHint = languageHint?.trim().replace(/_/g, "-") || "";
+  const primaryHint = normalizedHint.toLowerCase().split("-")[0];
+  if (detected === "zh") {
+    return primaryHint === "zh" && /(?:^|-)tw|(?:^|-)hk|hant/i.test(normalizedHint)
+      ? LANGUAGE_LABELS["zh-TW"]
+      : LANGUAGE_LABELS["zh-CN"];
+  }
+  if (detected === "ja") return LANGUAGE_LABELS.ja;
+  if (detected === "ko") return LANGUAGE_LABELS.ko;
+  if (detected === "en" && (!primaryHint || primaryHint === "en")) {
+    return LANGUAGE_LABELS.en;
+  }
+  if (normalizedHint && !["auto", "und"].includes(primaryHint)) {
+    try {
+      const displayName = new Intl.DisplayNames(["en"], { type: "language" }).of(
+        normalizedHint
+      );
+      return displayName ? `${displayName} (${normalizedHint})` : normalizedHint;
+    } catch {
+      return normalizedHint;
+    }
+  }
+  return detected ? TRANSLATION_FAMILY_LABELS[detected] : null;
 }
 
 function translationLanguageMatchesInterface(
@@ -114,6 +186,16 @@ export function translationFormatInstruction(
     default:
       return "严格保持原文的段落、换行、标题和列表结构，每个原文段落对应一个译文段落，不要合并段落。{{WEBMIND_PARAGRAPH_BREAK_N}} 是不可翻译的段落分隔占位符，{{WEBMIND_CITATION_N}} 是不可翻译的引用下标占位符；两者都必须逐字保留在原位置，不要展开、解释、改写或删除，不要输出‘该信息来自……引用’之类的说明。{{WEBMIND_LINK_START_N}} 和 {{WEBMIND_LINK_END_N}} 是不可翻译的链接边界占位符，必须原样保留；只翻译两者之间可见的链接文字，不要补充、翻译或输出链接地址。{{WEBMIND_FORMAT_START_N}} 和 {{WEBMIND_FORMAT_END_N}} 是不可翻译的上标/下标格式边界，必须原样保留；只翻译边界之间可见的文字。";
   }
+}
+
+export function htmlFormattingInstruction(
+  config?: PromptConfigSource
+): string {
+  const language = resolvePromptConfig(config).interfaceLanguage;
+  if (language === "en") {
+    return "Preserve every {{WEBMIND_HTML_TAG_N}} placeholder verbatim. These placeholders represent visible formatting tags such as strong, em, underline, del, code, and their matching closing tags; translate only the visible text around them. Do not translate or remove link destinations.";
+  }
+  return "{{WEBMIND_HTML_TAG_N}} 是不可翻译的可见样式标签占位符（包括粗体、斜体、下划线、删除线、代码及其闭合标签），必须逐字保留；只翻译标签包围或相邻的可见文字，不要翻译、改写或删除链接地址。";
 }
 
 export function immersiveReadingInstruction(
@@ -370,7 +452,7 @@ function buildAutoTranslateInstruction(
 }
 
 export function isDictionaryTranslationInput(sourceText: string): boolean {
-  const text = sourceText.replace(/<[^>]*>/g, " ").trim();
+  const text = visibleTranslationSourceText(sourceText).trim();
   if (!text || text.length > 80 || /[\r\n]/.test(text)) return false;
   if (/[。！？!?；;]/.test(text)) return false;
   if (/[.!?]$/.test(text)) return false;
@@ -380,10 +462,34 @@ export function isDictionaryTranslationInput(sourceText: string): boolean {
       /[A-Za-z]+(?:['’-][A-Za-z]+)*|[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]+|[\u3040-\u30ff\u31f0-\u31ff]+|[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af]+|\d+/g
     ) ?? [];
   if (!parts.length) return false;
-  if (parts.length > 6) return false;
+  if (parts.length > 5) return false;
   const cjkLength = (text.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g) ?? [])
     .length;
-  return cjkLength === 0 || cjkLength <= 16;
+  const latinWords = text.match(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g) ?? [];
+  if (cjkLength > 0) {
+    if (cjkLength > 10) return false;
+    if (
+      /(可以|应该|應該|需要|必须|必須|正在|已经|已經|将会|將會|不会|不會|不是|没有|沒有|怎么|怎麼|为什么|為什麼|如何|如果|因为|因為|所以|但是|不过|不過|而且|或者|以及|然后|然後|请|請)/.test(text)
+    ) {
+      return false;
+    }
+    if (
+      cjkLength > 4 &&
+      /^(获取|取得|打开|開啟|关闭|關閉|点击|點擊|选择|選擇|输入|輸入|返回|生成|创建|建立|删除|刪除|更新|保存|儲存|翻译|翻譯|复制|複製|检查|檢查|处理|處理|显示|顯示|跳转|跳轉|运行|執行|加载|載入|使用|查看)/.test(text)
+    ) {
+      return false;
+    }
+    if (cjkLength <= 6) return true;
+    return /(模型|算法|演算法|系统|系統|平台|框架|协议|協議|接口|介面|组件|元件|函数|函式|变量|變數|数据库|資料庫|机器学习|機器學習|深度学习|深度學習|自然语言|自然語言|用户体验|使用者體驗|项目管理|專案管理)$/.test(text);
+  }
+  if (latinWords.length > 4) return false;
+  if (
+    latinWords.length >= 4 &&
+    /^(open|close|click|select|enter|return|create|delete|update|save|translate|copy|check|process|show|display|go|run|load|use|view)$/i.test(latinWords[0] ?? "")
+  ) {
+    return false;
+  }
+  return true;
 }
 
 export function dictionaryTranslationInstruction(
@@ -406,8 +512,10 @@ export function dictionaryTranslationInstruction(
         "這是一個短詞/詞組查詞式翻譯任務。請用緊湊、自然的 Markdown 輸出近似詞典卡片，不要只給一個譯文。",
         `目前介面語言是${interfaceLabel}，釋義與說明主要使用${interfaceLabel}；譯文與例句翻譯使用${targetLabel}。`,
         "只分析 <translation-input> 中直接可見的詞或詞組，不要把標籤、URL、HTML 屬性、連結地址或其他不可見文字當作翻譯對象。",
-        "輸出要緊湊但清楚：最多一個短標題，不要層層標題，不要大段空行；不同維度請用必要換行分成短行，不要把所有資訊擠在同一段。優先用 4-8 行短項，例如：**詞** /音標/ · 核心譯義；換行 **義項** n./v./adj. 1... 2...；換行 **常用** 高/中/低頻 + 語域；換行 **搭配** phrase: meaning；換行 **近形/變體** ...；換行 **例** sentence — 譯文。",
-        "可以按內容靈活取捨，不必每次填滿所有欄位；資訊要有用、短、密度高。詞頻只能給高/中/低或常見/較少見等估計，不要編造精確數字。",
+        `核心譯義必須使用${targetLabel}，除非是不可翻譯的專有名詞或程式碼，否則不要把原文原樣當作唯一譯文。`,
+        "請嚴格使用固定行格式，不要加入其他標題。第一行格式為 **原詞** /音標或拼音/ ★★★★☆ CET-6 / GRE / IELTS：英文詞使用音標，星級後可列 CET-6 / GRE / IELTS；中文詞使用拼音，且不要列 CET-6 / GRE / IELTS。只保留有可靠內容的部分；沒有音標、拼音、星級或考試標籤時，省略對應部分，不要填寫佔位符。",
+        "後續行只能使用這些欄位，順序固定：**釋義** 核心譯義；**義項** 詞性 + 編號義項；**語域** 領域、語體；**搭配** phrase: source phrase（譯文）；**變體** 詞形、派生或相關形式；**助記** 聯想或構詞記憶；**例句** source sentence（譯文）。",
+        "沒有可靠內容的欄位不要顯示；不要為了湊格式編造音標、拼音、星級、考試標籤、搭配、變體、助記或例句。",
         "如果輸入其實不是可查詞的單詞、詞語或固定短語，請退回普通翻譯，只輸出自然譯文。",
         "不要輸出 JSON 或程式碼區塊。"
       ].join("\n");
@@ -416,8 +524,10 @@ export function dictionaryTranslationInstruction(
         "This is a dictionary-style translation task for a single word or short phrase. Do not return only one translation; produce a compact, natural Markdown dictionary card.",
         `The interface language is ${interfaceLabel}. Use ${interfaceLabel} for headings and explanations; use ${targetLabel} for translations and example-sentence translations.`,
         "Analyze only the directly visible word or phrase inside <translation-input>. Do not treat tags, URLs, HTML attributes, link destinations, or other invisible text as source text.",
-        "Keep the output compact but readable: at most one short heading, no stacked section headings, no large blank gaps. Use necessary line breaks for different dimensions; do not squeeze everything into one paragraph. Prefer 4-8 dense short lines such as: **word** /pronunciation/ · core translations; newline **meanings** n./v./adj. 1... 2...; newline **usage** high/medium/low frequency + register; newline **phrases** phrase: meaning; newline **forms** variants/related words; newline **example** sentence — translation.",
-        "Adapt the fields flexibly; do not force every field every time. Make it useful, brief, and information-dense. Frequency must be a rough high/medium/low or common/less common estimate; do not invent exact statistics.",
+        `The core translation must be in ${targetLabel}; unless the source is an untranslatable proper noun or code token, do not use the original text as the only translation.`,
+        "Use this fixed line format and do not add other headings. The first line must follow **source word** /pronunciation or pinyin/ ★★★★☆ CET-6 / GRE / IELTS. For English words, use pronunciation and optionally list CET-6 / GRE / IELTS after the stars; for Chinese words, use pinyin and do not list CET-6 / GRE / IELTS. Keep only parts with reliable content; omit pronunciation, pinyin, stars, or exam tags when unavailable instead of writing placeholders.",
+        "Following lines must use only these fields in this order: **释义** core translations; **义项** part of speech + numbered senses; **语域** domain and register; **搭配** phrase: source phrase（translation）; **变体** forms, derivatives, or related forms; **助记** memory hint; **例句** source sentence（translation）.",
+        "Omit any field that lacks reliable content; do not invent pronunciation, pinyin, stars, exam tags, phrases, forms, mnemonics, or examples just to fill the format.",
         "If the input is not actually a dictionary-like word, term, or fixed phrase, fall back to ordinary translation and output only the natural translation.",
         "Do not output JSON or code fences."
       ].join("\n");
@@ -426,8 +536,10 @@ export function dictionaryTranslationInstruction(
         "これは単語または短いフレーズ向けの辞書風翻訳タスクです。訳語を一つだけ返さず、コンパクトで自然な Markdown の辞書カードとして出力してください。",
         `インターフェース言語は${interfaceLabel}です。見出しと説明は主に${interfaceLabel}を使い、訳語と例文訳には${targetLabel}を使ってください。`,
         "<translation-input> 内に直接表示されている単語またはフレーズだけを分析してください。タグ、URL、HTML 属性、リンク先、その他の非表示文字列を翻訳対象にしないでください。",
-        "出力はコンパクトかつ読みやすくしてください。短い見出しは最大 1 つまで、階層的な見出しを重ねず、大きな空行を入れないでください。異なる観点は必要に応じて改行し、すべてを一段落に詰め込まないでください。4-8 行程度で、例：**語** /発音/ · 中核訳、改行 **意味** n./v./adj. 1... 2...、改行 **用法** 高/中/低頻度 + レジスター、改行 **表現** phrase: meaning、改行 **変化/関連語** ...、改行 **例** sentence — 訳。",
-        "内容に応じて項目は柔軟に選び、毎回すべて埋める必要はありません。有用で短く、情報密度を高くしてください。頻度は高/中/低や一般的/やや少ない程度の推定にし、精密な統計値を作らないでください。",
+        `中核訳は必ず${targetLabel}で書いてください。翻訳できない固有名詞やコードでない限り、原文だけを唯一の訳として返さないでください。`,
+        "次の固定行形式を厳守し、他の見出しは追加しないでください。1 行目は **原語** /発音またはピンイン/ ★★★★☆ CET-6 / GRE / IELTS の形式です。英語語彙は発音を使い、星の後に CET-6 / GRE / IELTS を付けてもよく、中国語語彙はピンインを使い、CET-6 / GRE / IELTS は付けないでください。信頼できる情報がない部分は省略し、プレースホルダーを作らないでください。",
+        "以降の行はこの順序の欄位だけを使ってください：**释义** 中核訳、**义项** 品詞 + 番号付き語義、**语域** 分野・レジスター、**搭配** phrase: source phrase（訳）、**变体** 活用形・派生語・関連語、**助记** 記憶ヒント、**例句** source sentence（訳）。",
+        "信頼できる内容がない欄位は表示しないでください。発音、ピンイン、星、試験タグ、搭配、変体、助記、例句を埋めるために作らないでください。",
         "入力が辞書的に扱える語・用語・固定フレーズでない場合は通常翻訳に戻り、自然な訳文だけを出力してください。",
         "JSON やコードブロックは出力しないでください。"
       ].join("\n");
@@ -436,8 +548,10 @@ export function dictionaryTranslationInstruction(
         "이것은 단어 또는 짧은 구를 위한 사전식 번역 작업입니다. 번역어 하나만 반환하지 말고 compact하고 자연스러운 Markdown 사전 카드로 출력하세요.",
         `인터페이스 언어는 ${interfaceLabel}입니다. 제목과 설명은 주로 ${interfaceLabel}로 쓰고, 번역어와 예문 번역은 ${targetLabel}를 사용하세요.`,
         "<translation-input> 안에 직접 보이는 단어 또는 구만 분석하세요. 태그, URL, HTML 속성, 링크 주소 또는 보이지 않는 문자열을 번역 대상으로 삼지 마세요.",
-        "출력은 compact하지만 읽기 쉽게 작성하세요. 짧은 제목은 최대 하나만 쓰고, 여러 단계의 제목을 쌓거나 큰 빈 줄을 만들지 마세요. 서로 다른 정보 차원은 필요한 만큼 줄바꿈으로 짧게 나누고, 모든 정보를 한 문단에 밀어 넣지 마세요. 4-8줄 정도의 밀도 있는 형식을 선호합니다: **단어** /발음/ · 핵심 번역; 줄바꿈 **뜻** n./v./adj. 1... 2...; 줄바꿈 **용법** 높음/중간/낮음 빈도 + 문체; 줄바꿈 **표현** phrase: meaning; 줄바꿈 **변형/관련어** ...; 줄바꿈 **예문** sentence — 번역.",
-        "항목은 내용에 맞게 유연하게 고르고 매번 모두 채울 필요는 없습니다. 유용하고 짧고 정보 밀도가 높아야 합니다. 빈도는 높음/중간/낮음 또는 흔함/덜 흔함 정도로만 추정하고 정확한 통계 수치를 만들지 마세요.",
+        `핵심 번역은 반드시 ${targetLabel}로 작성하세요. 번역할 수 없는 고유명사나 코드 토큰이 아니라면 원문을 유일한 번역으로 그대로 반환하지 마세요.`,
+        "다음 고정 줄 형식을 엄격히 사용하고 다른 제목은 추가하지 마세요. 첫 줄은 **원어** /발음 또는 병음/ ★★★★☆ CET-6 / GRE / IELTS 형식입니다. 영어 단어는 발음을 쓰고 별점 뒤에 CET-6 / GRE / IELTS를 넣을 수 있지만, 중국어 단어는 병음을 쓰고 CET-6 / GRE / IELTS를 넣지 마세요. 신뢰할 수 없는 항목은 생략하고 자리표시자를 만들지 마세요.",
+        "이후 줄은 다음 필드만 이 순서로 사용하세요: **释义** 핵심 번역, **义项** 품사 + 번호가 있는 뜻, **语域** 분야와 문체, **搭配** phrase: source phrase（번역）, **变体** 형태·파생어·관련어, **助记** 기억 힌트, **例句** source sentence（번역）.",
+        "신뢰할 내용이 없는 필드는 표시하지 마세요. 발음, 병음, 별점, 시험 태그, 표현, 변형, 암기 힌트, 예문을 형식 채우기 위해 만들지 마세요.",
         "입력이 사전식으로 다룰 수 있는 단어, 용어, 고정 표현이 아니라면 일반 번역으로 돌아가 자연스러운 번역문만 출력하세요.",
         "JSON이나 코드 블록은 출력하지 마세요."
       ].join("\n");
@@ -447,8 +561,10 @@ export function dictionaryTranslationInstruction(
         "这是一个短词/词组查词式翻译任务。请不要只给一个译文，而是用紧凑、自然的 Markdown 输出近似词典卡片。",
         `当前界面语言是${interfaceLabel}，释义与说明主要使用${interfaceLabel}；译文与例句翻译使用${targetLabel}。`,
         "只分析 <translation-input> 中直接可见的单词、词语或词组，不要把标签、URL、HTML 属性、链接地址或其他不可见文字当作翻译对象。",
-        "输出要紧凑但清楚：最多一个短标题，不要层层标题，不要大段空行；不同维度请用必要换行分成短行，不要把所有信息挤在同一段。优先用 4-8 行短项，例如：**词** /音标/ · 核心译义；换行 **义项** n./v./adj. 1... 2...；换行 **常用** 高/中/低频 + 语域；换行 **搭配** phrase: meaning；换行 **近形/变体** ...；换行 **例** sentence — 译文。",
-        "可以按内容灵活取舍，不必每次填满所有栏目；信息要有用、短、密度高。词频只能给高/中/低或常见/较少见等估计，不要编造精确数字。",
+        `核心译义必须使用${targetLabel}，除非是不可翻译的专有名词或代码，否则不要把原文原样当作唯一译文。`,
+        "请严格使用固定行格式，不要加入其他标题。第一行格式为 **原词** /音标或拼音/ ★★★★☆ CET-6 / GRE / IELTS：英文词使用音标，星级后可列 CET-6 / GRE / IELTS；中文词使用拼音，且不要列 CET-6 / GRE / IELTS。只保留有可靠内容的部分；没有音标、拼音、星级或考试标签时，省略对应部分，不要填写占位符。",
+        "后续行只能使用这些字段，顺序固定：**释义** 核心译义；**义项** 词性 + 编号义项；**语域** 领域、语体；**搭配** phrase: source phrase（译文）；**变体** 词形、派生或相关形式；**助记** 联想或构词记忆；**例句** source sentence（译文）。",
+        "没有可靠内容的字段不要显示；不要为了凑格式编造音标、拼音、星级、考试标签、搭配、变体、助记或例句。",
         "如果输入其实不是可查词的单词、词语或固定短语，请退回普通翻译，只输出自然译文。",
         "不要输出 JSON 或代码块。"
       ].join("\n");

@@ -14,24 +14,25 @@ import {
   LoaderCircle,
   MessageCirclePlus,
   MessageSquareText,
-  MousePointerClick,
   Paperclip,
   PanelTop,
   PenLine,
   Presentation,
   RefreshCcw,
+  RedoDot,
   ScanText,
   Search,
   Send,
   Settings,
   Sparkles,
   Square,
+  SquareMousePointer,
   StickyNote,
-  TextAlignStart,
   TextSelect,
   Trash2,
   Undo2,
   UserRound,
+  Wand,
   Wand2,
   WandSparkles,
   X
@@ -47,6 +48,7 @@ import {
 } from "react";
 import {
   getActivePageContext,
+  getActiveTab,
   isExtensionRuntime,
   openOptions,
   requestOriginPermission,
@@ -69,9 +71,14 @@ import {
   saveCustomTools,
   saveSettings
 } from "../shared/storage";
-import { allTools, toolInstruction } from "../shared/tools";
+import {
+  allTools,
+  toolInstruction,
+  toolPromptWithContext
+} from "../shared/tools";
 import { modelPurposeForToolId, profileForPurpose } from "../shared/models";
 import {
+  articlePruneInstruction,
   immersiveReadingInstruction
 } from "../shared/prompts";
 import {
@@ -112,6 +119,7 @@ import {
   createMessage,
   errorMessage,
   extractPageTranslationEntries,
+  extractJsonArray,
   protectTranslationText,
   restoreTranslationText,
   shortTitle,
@@ -149,6 +157,7 @@ import {
 } from "./attachments";
 import {
   buildSystemMessage,
+  contextModeAfterTabSwitch,
   contextLabel,
   contextSnapshotExcerpt,
   defaultContextMode,
@@ -209,12 +218,56 @@ interface OperationLogRuntimeMessage {
 const IMMERSIVE_READING_BATCH_SIZE = 20;
 const IMMERSIVE_TRANSLATION_BATCH_SIZE = 10;
 const IMMERSIVE_TRANSLATION_CONCURRENCY = 3;
+const PINNED_MESSAGE_TOOL_IDS = new Set([
+  "translate-text",
+  "summary",
+  "explain-code"
+]);
 
 function isFocusOutside(
   container: HTMLElement,
   nextTarget: EventTarget | null
 ): boolean {
   return !(nextTarget instanceof Node) || !container.contains(nextTarget);
+}
+
+function articleBlockIdsToRemove(
+  modelText: string,
+  blocks: ArticlePreviewBlock[],
+  language?: AppLanguage
+): Set<string> {
+  const validIds = new Set(blocks.map((block) => block.id));
+  const decisions = extractJsonArray<{
+    id?: unknown;
+    action?: unknown;
+    decision?: unknown;
+  }>(modelText, language);
+  const removed = new Set<string>();
+  let recognized = 0;
+  for (const decision of decisions) {
+    if (!decision || typeof decision.id !== "string") continue;
+    if (!validIds.has(decision.id)) continue;
+    const action = String(decision.action ?? decision.decision ?? "")
+      .trim()
+      .toLowerCase();
+    if (!action) continue;
+    recognized += 1;
+    if (
+      action === "remove" ||
+      action === "exclude" ||
+      action === "discard" ||
+      action === "drop" ||
+      action.includes("剔除") ||
+      action.includes("删除") ||
+      action.includes("刪除")
+    ) {
+      removed.add(decision.id);
+    }
+  }
+  if (!recognized) {
+    throw new Error(uiText(language, "modelPruneInvalidResult"));
+  }
+  return removed;
 }
 
 export function App() {
@@ -236,6 +289,7 @@ export function App() {
   const [contextError, setContextError] = useState("");
   const [contextLoading, setContextLoading] = useState(true);
   const [articlePicking, setArticlePicking] = useState(false);
+  const [articlePruning, setArticlePruning] = useState(false);
   const [bodyPreviewExpanded, setBodyPreviewExpanded] = useState(false);
   const [streamingId, setStreamingId] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
@@ -302,6 +356,13 @@ export function App() {
   const chatToolsStreamStartedRef = useRef(false);
   const selectionContextVersionRef = useRef(0);
   const pendingSelectionContextRef = useRef<PageContext | null>(null);
+  const selectionContextRef = useRef<PageContext | null>(null);
+  const selectionOverrideRef = useRef<{
+    previousMode: ContextMode;
+    previousIncludePage: boolean;
+    previousContext: PageContext | null;
+    url: string;
+  } | null>(null);
   const activeTabContextVersionRef = useRef(0);
   const activeTabIdRef = useRef<number | null>(null);
   const articlePickingRef = useRef(false);
@@ -472,6 +533,10 @@ export function App() {
   }, [articlePicking]);
 
   useEffect(() => {
+    selectionContextRef.current = selectionContext;
+  }, [selectionContext]);
+
+  useEffect(() => {
     const previousTabId = activeTabIdRef.current;
     const nextTabId = activeTab?.id ?? null;
     if (
@@ -480,6 +545,9 @@ export function App() {
       previousTabId !== nextTabId
     ) {
       cancelArticlePicking(previousTabId);
+    }
+    if (previousTabId !== null && previousTabId !== nextTabId) {
+      selectionOverrideRef.current = null;
     }
     activeTabIdRef.current = nextTabId;
   }, [activeTab?.id, cancelArticlePicking]);
@@ -561,6 +629,7 @@ export function App() {
           uiText(settingsRef.current?.interfaceLanguage, "currentPage"),
         url: pending.pageUrl,
         text: pending.text ?? "",
+        markdown: pending.markdown ?? pending.text ?? "",
         selection: pending.text
       };
       if (next.kind === "selection" && pending.text?.trim()) {
@@ -627,47 +696,133 @@ export function App() {
   }, [activeTab?.id, appendOperationLog]);
 
   const refreshActivePageContext = useCallback(
-    async (reason: string, showLoading = true) => {
+    async (
+      reason: string,
+      showLoading = true,
+      policy: "default" | "preserve" = "default"
+    ) => {
       const version = ++activeTabContextVersionRef.current;
       selectionContextVersionRef.current += 1;
       if (showLoading) setContextLoading(true);
       try {
-        const scope = defaultContextMode(settingsRef.current);
-        const page = await getActivePageContext(
-          settingsRef.current?.interfaceLanguage,
-          { ignoreSelection: true, scope }
-        );
+        const currentMode = contextModeRef.current;
+        const defaultMode = defaultContextMode(settingsRef.current);
+        const activeTabBeforeRefresh = activeTabIdRef.current;
+        const getPage = (
+          scope: "page" | "article",
+          ignoreSelection = true
+        ) =>
+          getActivePageContext(settingsRef.current?.interfaceLanguage, {
+            ignoreSelection,
+            scope
+          });
+        const requestedMode: ContextMode =
+          policy === "preserve" ? currentMode : defaultMode;
+        let page =
+          requestedMode === "none"
+            ? { tab: await getActiveTab(), context: null }
+            : await getPage(
+                requestedMode === "article" ? "article" : "page",
+                requestedMode !== "selection"
+              );
         if (activeTabContextVersionRef.current !== version) return;
-        const preservedSelection = pendingSelectionContextRef.current;
-        const keepPreservedSelection = Boolean(
-          preservedSelection &&
+        const tabChanged = Boolean(
+          policy === "preserve" &&
+            page.tab?.id &&
+            activeTabBeforeRefresh !== null &&
+            page.tab.id !== activeTabBeforeRefresh
+        );
+        let nextContextMode = requestedMode;
+        let normalizedContext = normalizePageContext(page.context);
+        if (tabChanged) {
+          nextContextMode = contextModeAfterTabSwitch(
+            requestedMode,
+            defaultMode,
+            normalizedContext
+          );
+        }
+        if (
+          tabChanged &&
+          requestedMode === "selection" &&
+          nextContextMode === "article"
+        ) {
+          if (defaultMode === "article") {
+            page = await getPage("article", true);
+            if (activeTabContextVersionRef.current !== version) return;
+            normalizedContext = normalizePageContext(page.context);
+          }
+        }
+        const preservedSelection = selectionContextRef.current;
+        const keepSelection = Boolean(
+          nextContextMode === "selection" &&
+            !tabChanged &&
+            preservedSelection &&
             (!page.tab?.url || page.tab.url === preservedSelection.url)
         );
-        if (preservedSelection && !keepPreservedSelection) {
-          pendingSelectionContextRef.current = null;
-        }
-        const context = keepPreservedSelection
+        const context = keepSelection
           ? preservedSelection
-          : normalizePageContext(page.context);
+          : nextContextMode === "selection" &&
+              normalizedContext?.kind !== "selection"
+            ? null
+            : normalizedContext;
+
+        if (tabChanged) {
+          selectionOverrideRef.current = null;
+          pendingSelectionContextRef.current = null;
+          selectionContextRef.current = null;
+          setSelectionContext(null);
+        }
+        contextModeRef.current = nextContextMode;
         setActiveTab(page.tab);
+        activeTabIdRef.current = page.tab?.id ?? null;
+        setIncludePage(nextContextMode !== "none");
+
+        if (nextContextMode === "none") {
+          setPageContext(null);
+          setCurrentPageContext(null);
+          setCurrentArticleContext(null);
+          setSelectionContext(null);
+          setContextError("");
+          if (page.tab?.id) {
+            void sendToTab(page.tab.id, {
+              type: "immersive.contextScope.set",
+              scope: "none"
+            }).catch(() => undefined);
+          }
+          appendOperationLog(
+            `[workflow] active tab context refreshed reason=${reason} title=${
+              page.tab?.title ?? "-"
+            } mode=none`,
+            "debug"
+          );
+          return;
+        }
+
         setPageContext(context);
-        let nextContextMode: ContextMode = "page";
-        if (context?.kind === "selection") {
-          nextContextMode = "selection";
-          contextModeRef.current = nextContextMode;
+        if (nextContextMode === "selection" && context?.kind === "selection") {
+          selectionContextRef.current = context;
           setSelectionContext(context);
           setCurrentPageContext(null);
           setCurrentArticleContext(null);
-        } else if (context?.kind === "article") {
-          nextContextMode = "article";
-          contextModeRef.current = nextContextMode;
+        } else if (nextContextMode === "selection") {
+          selectionContextRef.current = null;
           setSelectionContext(null);
+          setCurrentPageContext(
+            normalizedContext && normalizedContext.kind !== "article"
+              ? normalizedContext
+              : null
+          );
+          setCurrentArticleContext(null);
+        } else if (nextContextMode === "article") {
+          setSelectionContext(null);
+          selectionContextRef.current = null;
           setCurrentPageContext(null);
-          setCurrentArticleContext(context);
+          setCurrentArticleContext(
+            context?.kind === "article" ? context : null
+          );
         } else {
-          nextContextMode = "page";
-          contextModeRef.current = nextContextMode;
           setSelectionContext(null);
+          selectionContextRef.current = null;
           setCurrentPageContext(context);
           setCurrentArticleContext(null);
         }
@@ -681,7 +836,7 @@ export function App() {
         appendOperationLog(
           `[workflow] active tab context refreshed reason=${reason} title=${
             page.tab?.title ?? context?.title ?? "-"
-          }`,
+          } mode=${nextContextMode}`,
           "debug"
         );
       } catch (error) {
@@ -783,7 +938,7 @@ export function App() {
       if (refreshTimer !== null) window.clearTimeout(refreshTimer);
       refreshTimer = window.setTimeout(() => {
         refreshTimer = null;
-        void refreshActivePageContext(reason, true);
+        void refreshActivePageContext(reason, true, "preserve");
       }, 120);
     };
     const handleActivated = () => scheduleRefresh("tab-activated");
@@ -1110,7 +1265,7 @@ export function App() {
     context: PageContext | null | undefined
   ): context is PageContext => {
     if (!context) return false;
-    const url = pageContext?.url || activeTab?.url || "";
+    const url = activeTab?.url || pageContext?.url || "";
     return !url || !context.url || context.url === url;
   };
 
@@ -1168,18 +1323,7 @@ export function App() {
 
   const effectiveContextMode = (): ContextMode => {
     if (!includePage) return "none";
-    if (pageContext?.kind === "selection") return "selection";
-    if (pageContext?.kind === "article") return "article";
-    if (
-      contextModeRef.current === "selection" &&
-      selectionContextForActivePage()
-    ) {
-      return "selection";
-    }
-    if (contextModeRef.current === "article" && articleContextForActivePage()) {
-      return "article";
-    }
-    return "page";
+    return contextModeRef.current;
   };
 
   const contextForCurrentMode = (): PageContext | null => {
@@ -1187,17 +1331,59 @@ export function App() {
     if (mode === "none") return null;
     if (mode === "selection") return selectionContextForActivePage();
     if (mode === "article") return articleContextForActivePage();
-    return pageContextForActivePage() ?? pageContext;
+    return pageContextForActivePage();
   };
+
+  const contextMatchesMode = (
+    context: PageContext | null,
+    mode: Exclude<ContextMode, "none">
+  ): context is PageContext =>
+    Boolean(
+      context &&
+        (mode === "selection"
+          ? context.kind === "selection"
+          : mode === "article"
+            ? context.kind === "article"
+            : context.kind !== "selection" && context.kind !== "article")
+    );
 
   const resolveRichContext = async (
     profile: ProviderProfile,
     forceIncludePage = false,
     contextOverride?: PageContext | null
   ): Promise<PageContext | null> => {
-    if (contextOverride !== undefined) return contextOverride;
-    const context = forceIncludePage ? pageContext : contextForCurrentMode();
-    if ((!includePage && !forceIncludePage) || !context) return null;
+    if (contextOverride !== undefined && contextOverride !== null) {
+      return contextOverride;
+    }
+    if (!includePage && !forceIncludePage) return null;
+    const requestedMode =
+      forceIncludePage && contextModeRef.current === "none"
+        ? defaultContextMode(settingsRef.current)
+        : effectiveContextMode();
+    if (requestedMode === "none") return null;
+    let context = contextForCurrentMode();
+    if (!contextMatchesMode(context, requestedMode) && activeTab?.id) {
+      const refreshed = normalizePageContext(
+        await sendToTab<PageContext>(activeTab.id, {
+          type: "page.context",
+          ignoreSelection: requestedMode !== "selection",
+          scope: requestedMode === "article" ? "article" : "page"
+        })
+      );
+      if (contextMatchesMode(refreshed, requestedMode)) {
+        context = refreshed;
+        setPageContext(refreshed);
+        if (requestedMode === "selection") {
+          selectionContextRef.current = refreshed;
+          setSelectionContext(refreshed);
+        } else if (requestedMode === "article") {
+          setCurrentArticleContext(refreshed);
+        } else {
+          setCurrentPageContext(refreshed);
+        }
+      }
+    }
+    if (!contextMatchesMode(context, requestedMode)) return null;
     if (context.kind === "youtube" && !context.text) {
       setContextLoading(true);
       try {
@@ -1261,6 +1447,7 @@ export function App() {
   };
 
   const changeContextMode = async (mode: ContextMode) => {
+    selectionOverrideRef.current = null;
     contextModeRef.current = mode;
     syncImmersiveContextScope(mode);
     appendOperationLog(
@@ -1499,8 +1686,105 @@ export function App() {
     }
   };
 
-  const copyCurrentBodyText = async () => {
-    const text = pageContext?.kind === "article" ? pageContext.text.trim() : "";
+  const pruneCurrentBodyWithModel = async () => {
+    if (!activeTab?.id || articlePicking || articlePruning) return;
+    const tabId = activeTab.id;
+    const contextVersion = activeTabContextVersionRef.current;
+    const profile = requireProfile("default");
+    if (!profile) return;
+    const currentArticle = articleContextForActivePage();
+    const blocks = currentArticle?.articlePreview ?? [];
+    if (!blocks.length) {
+      setNotice(t("noProcessablePageBody"));
+      return;
+    }
+    setArticlePruning(true);
+    setToolStatus(t("modelPruneCurrentBodyRunning"));
+    setNotice("");
+    try {
+      const modelBlocks = blocks.map((block) => ({
+        id: block.id,
+        text: block.text,
+        markdown: block.markdown ?? block.text
+      }));
+      const response = await runtimeRequest<{ text: string }>("model.complete", {
+        profileId: profile.id,
+        purpose: "default",
+        temperature: 0,
+        messages: [
+          createMessage(
+            "system",
+            articlePruneInstruction(settingsRef.current ?? undefined)
+          ),
+          createMessage(
+            "user",
+            [
+              "<page-metadata>",
+              JSON.stringify({
+                title: currentArticle?.title ?? "",
+                url: currentArticle?.url ?? "",
+                siteName: currentArticle?.siteName ?? ""
+              }),
+              "</page-metadata>",
+              "<article-blocks>",
+              JSON.stringify(modelBlocks),
+              "</article-blocks>"
+            ].join("\n")
+          )
+        ]
+      });
+      const removeIds = articleBlockIdsToRemove(
+        response.text,
+        blocks,
+        settingsRef.current?.interfaceLanguage
+      );
+      if (
+        activeTabIdRef.current !== tabId ||
+        activeTabContextVersionRef.current !== contextVersion
+      ) {
+        return;
+      }
+      if (!removeIds.size) {
+        setNotice(t("modelPruneNoChanges"));
+        appendOperationLog(t("modelPruneNoChanges"), "info");
+        return;
+      }
+      if (removeIds.size >= blocks.length) {
+        throw new Error(t("modelPruneAllRejected"));
+      }
+      const next = await sendToTab<PageContext>(tabId, {
+        type: "page.article.preview.remove-many",
+        blocks: blocks
+          .filter((block) => removeIds.has(block.id))
+          .map((block) => ({
+            text: block.text,
+            sourceText: block.sourceText,
+            targetId: block.targetId
+          }))
+      });
+      const normalized = normalizePageContext(next);
+      setCurrentArticleContext(normalized);
+      setPageContext(normalized);
+      setIncludePage(true);
+      contextModeRef.current = "article";
+      syncImmersiveContextScope("article");
+      setContextError("");
+      setBodyPreviewExpanded(true);
+      appendOperationLog(
+        `${t("modelPruneCurrentBody")}: ${removeIds.size}`,
+        "success"
+      );
+    } catch (error) {
+      setNotice(errorMessage(error));
+      appendOperationLog(errorMessage(error), "error");
+    } finally {
+      setArticlePruning(false);
+      setToolStatus("");
+    }
+  };
+
+  const copyContextPreviewText = async (value?: string) => {
+    const text = value?.trim() ?? "";
     if (!text) return;
     try {
       await navigator.clipboard.writeText(text);
@@ -1551,7 +1835,11 @@ export function App() {
     setArticleRuleEditorOpen(false);
     setNotice(t("articleExtractionRuleSaved"));
     appendOperationLog(t("articleExtractionRuleSaved"), "success");
-    await refreshActivePageContext("article-extraction-rule-saved", true);
+    await refreshActivePageContext(
+      "article-extraction-rule-saved",
+      true,
+      "preserve"
+    );
     setBodyPreviewExpanded(true);
   };
 
@@ -1573,6 +1861,7 @@ export function App() {
       const version = ++selectionContextVersionRef.current;
       const payload = message.payload ?? {};
       const text = String(payload.text ?? "").trim();
+      const markdown = String(payload.markdown ?? text).trim();
       const url = String(payload.url ?? senderTab.url ?? activeTab.url ?? "");
       const title = String(
         payload.title ?? senderTab.title ?? activeTab.title ?? t("currentPage")
@@ -1580,6 +1869,17 @@ export function App() {
       setIncludePage(true);
       setNotice("");
       if (Boolean(payload.hasSelection) && text) {
+        if (
+          !selectionOverrideRef.current &&
+          (contextModeRef.current !== "selection" || !includePage)
+        ) {
+          selectionOverrideRef.current = {
+            previousMode: includePage ? effectiveContextMode() : "none",
+            previousIncludePage: includePage,
+            previousContext: includePage ? contextForCurrentMode() : null,
+            url
+          };
+        }
         contextModeRef.current = "selection";
         void sendToTab(senderTab.id, {
           type: "immersive.contextScope.set",
@@ -1590,6 +1890,7 @@ export function App() {
           title,
           url,
           text,
+          markdown,
           selection: text,
           description: t("selectionDescription").replace(
             "{count}",
@@ -1604,6 +1905,75 @@ export function App() {
 
       pendingSelectionContextRef.current = null;
       setSelectionContext(null);
+      const selectionOverride = selectionOverrideRef.current;
+      selectionOverrideRef.current = null;
+      if (selectionOverride) {
+        const previousMode = selectionOverride.previousMode;
+        const previousContext = selectionOverride.previousContext;
+        const previousContextMatches =
+          previousContext && (!url || !previousContext.url || previousContext.url === url);
+        contextModeRef.current = previousMode;
+        setIncludePage(selectionOverride.previousIncludePage);
+        void sendToTab(senderTab.id, {
+          type: "immersive.contextScope.set",
+          scope: previousMode
+        }).catch(() => undefined);
+        if (!selectionOverride.previousIncludePage || previousMode === "none") {
+          return;
+        }
+        if (previousContextMatches) {
+          if (previousContext.kind === "article") {
+            setCurrentArticleContext(previousContext);
+          } else if (previousContext.kind !== "selection") {
+            setCurrentPageContext(previousContext);
+          }
+          setPageContext(previousContext);
+          return;
+        }
+        if (
+          previousMode === "article" &&
+          currentArticleContext &&
+          (!url || currentArticleContext.url === url)
+        ) {
+          setPageContext(currentArticleContext);
+          return;
+        }
+        if (
+          previousMode === "page" &&
+          currentPageContext &&
+          (!url || currentPageContext.url === url)
+        ) {
+          setPageContext(currentPageContext);
+          return;
+        }
+        const restoreScope = previousMode === "article" ? "article" : "page";
+        void sendToTab<PageContext>(senderTab.id, {
+          type: "page.context",
+          ignoreSelection: true,
+          scope: restoreScope
+        })
+          .then((context) => {
+            if (selectionContextVersionRef.current !== version) return;
+            const next = normalizePageContext(context);
+            if (previousMode === "article" && next?.kind === "article") {
+              setCurrentArticleContext(next);
+              setPageContext(next);
+            } else {
+              setCurrentPageContext(next);
+              setPageContext(next);
+            }
+            setContextError("");
+          })
+          .catch((error) => {
+            if (selectionContextVersionRef.current === version) {
+              setContextError(errorMessage(error));
+            }
+          });
+        return;
+      }
+      if (contextModeRef.current !== "selection") {
+        return;
+      }
       if (
         currentArticleContext &&
         (!url || currentArticleContext.url === url)
@@ -1657,7 +2027,17 @@ export function App() {
     };
     chrome.runtime.onMessage.addListener(listener);
     return () => chrome.runtime.onMessage.removeListener(listener);
-  }, [activeTab?.id, activeTab?.title, activeTab?.url, currentArticleContext, currentPageContext, settings?.interfaceLanguage]);
+  }, [
+    activeTab?.id,
+    activeTab?.title,
+    activeTab?.url,
+    currentArticleContext,
+    currentPageContext,
+    includePage,
+    pageContext,
+    selectionContext,
+    settings?.interfaceLanguage
+  ]);
 
   const sendMessage = useCallback(
     async (
@@ -1678,6 +2058,7 @@ export function App() {
         translationProtection?: ProtectedTranslationText;
         requestModelContent?: string;
         requestSystemInstruction?: string;
+        toolContextInput?: boolean;
         purpose?: ModelPurpose;
       } = {}
     ): Promise<boolean> => {
@@ -1754,18 +2135,50 @@ export function App() {
               settingsRef.current?.interfaceLanguage,
               "attachmentIntro"
             )}\n${supplementalText}`
-          : ""
+        : ""
       ].join("");
+      const contextSourceText =
+        context?.markdown?.trim() || context?.text?.trim() || "";
+      const toolContextText =
+        options.toolContextInput && contextSourceText
+          ? truncateText(
+              contextSourceText,
+              profile.maxContextChars,
+              settingsRef.current?.interfaceLanguage
+            )
+          : "";
+      const toolMetadata = context
+        ? [
+            `${uiText(settingsRef.current?.interfaceLanguage, "title")}：${context.title}`,
+            `${uiText(settingsRef.current?.interfaceLanguage, "url")}：${context.url}`,
+            context.description
+              ? `${uiText(settingsRef.current?.interfaceLanguage, "description")}：${context.description}`
+              : ""
+          ]
+            .filter(Boolean)
+            .join("\n")
+        : "";
+      const contextualToolModelContent =
+        options.toolContextInput && options.toolInvocation
+          ? toolPromptWithContext(
+              options.toolInvocation,
+              settingsRef.current ?? undefined,
+              toolContextText,
+              toolMetadata,
+              undefined,
+              context?.language
+            )
+          : undefined;
       const contextualTranslationProtection =
-        options.contextAsInput && context?.text.trim()
-          ? protectTranslationText(context.text)
+        options.contextAsInput && contextSourceText
+          ? protectTranslationText(contextSourceText)
           : null;
       const requestTranslationProtection =
         options.translationProtection ?? contextualTranslationProtection;
       const protectedContextText =
         contextualTranslationProtection?.text ?? context?.text ?? "";
       const truncatedProtectedContextText =
-        options.contextAsInput && context?.text.trim()
+        options.contextAsInput && contextSourceText
           ? truncateText(
               protectedContextText,
               profile.maxContextChars,
@@ -1773,18 +2186,18 @@ export function App() {
             )
           : "";
       const contextualTranslationSystemInstruction =
-        options.contextAsInput && context?.text.trim()
+        options.contextAsInput && contextSourceText
           ? buildProtectedTranslationInstruction(
               settingsRef.current ?? undefined,
-              context.text,
+              contextSourceText,
               { dictionaryForShortInput: options.dictionaryForShortInput }
             )
           : undefined;
       const modelContent =
         options.requestModelContent ??
-        (options.contextAsInput && context?.text.trim()
+        (options.contextAsInput && contextSourceText
           ? buildProtectedTranslationInput(truncatedProtectedContextText)
-          : undefined);
+          : contextualToolModelContent);
       const requestSystemInstruction =
         options.requestSystemInstruction ?? contextualTranslationSystemInstruction;
       const invocationContext: ToolInvocationContext =
@@ -1851,7 +2264,7 @@ export function App() {
       }
       setStreamingId(requestId);
       const baseSystemMessage = buildSystemMessage(
-        options.contextAsInput ? null : context,
+        options.contextAsInput || options.toolContextInput ? null : context,
         results,
         profile,
         settingsRef.current?.interfaceLanguage
@@ -2194,16 +2607,20 @@ export function App() {
       );
       return;
     }
+    const toolRequestText =
+      toolInstruction(tool, settings ?? undefined) || tool.title;
     await sendMessage(
-        [
-          toolInstruction(tool, settings ?? undefined, content),
-          "",
-          `${t("currentAnswer")}：`,
-          content
-        ].join("\n"),
+      toolRequestText,
       {
         skipPageContext: true,
         skipWebSearch: true,
+        requestModelContent: toolPromptWithContext(
+          tool,
+          settings ?? undefined,
+          content,
+          "",
+          t("currentAnswer")
+        ),
         toolInvocation: tool,
         toolInvocationContext: { kind: "answer", text: content },
         purpose: modelPurposeForToolId(tool.id)
@@ -2323,7 +2740,7 @@ export function App() {
             : [],
         text:
           scope === "selection"
-            ? pageContext?.text ?? ""
+            ? selectionContextForActivePage()?.text ?? ""
             : scope === "article"
               ? articleContextForActivePage()?.text ?? ""
               : ""
@@ -2556,7 +2973,7 @@ export function App() {
             : [],
         text:
           scope === "selection"
-            ? pageContext?.text ?? ""
+            ? selectionContextForActivePage()?.text ?? ""
             : scope === "article"
               ? articleContextForActivePage()?.text ?? ""
               : ""
@@ -2991,6 +3408,11 @@ export function App() {
         skipPageContext: true,
         skipWebSearch: true,
         modelHistoryOverride,
+        requestModelContent: toolPromptWithContext(
+          tool,
+          settings ?? undefined,
+          ""
+        ),
         toolInvocation: tool,
         purpose: "vision"
       });
@@ -3001,6 +3423,8 @@ export function App() {
     }
     const isTranslationTool =
       tool.id === "translate-text" || tool.id === "translate-document";
+    const toolRequestText =
+      toolInstruction(tool, settings ?? undefined) || tool.title;
     const respectCurrentContext = options.respectCurrentContext ?? true;
     const currentContextForTool = respectCurrentContext
       ? contextForCurrentMode()
@@ -3008,12 +3432,13 @@ export function App() {
     if (!respectCurrentContext && pageContext) setIncludePage(true);
     setView("chat");
     const started = await sendMessage(
-      toolInstruction(tool, settings ?? undefined),
+      toolRequestText,
       {
         forceIncludePage: !respectCurrentContext,
         skipWebSearch: isTranslationTool,
         contextAsInput: isTranslationTool,
-        contextOverride: currentContextForTool,
+        toolContextInput: !isTranslationTool,
+        contextOverride: currentContextForTool ?? undefined,
         dictionaryForShortInput: tool.id === "translate-text",
         modelHistoryOverride: isTranslationTool ? [] : modelHistoryOverride,
         toolInvocation: tool,
@@ -3055,6 +3480,11 @@ export function App() {
         skipPageContext: true,
         skipWebSearch: true,
         attachmentsOverride: nextAttachments,
+        requestModelContent: toolPromptWithContext(
+          tool,
+          settings ?? undefined,
+          ""
+        ),
         toolInvocation: tool,
         purpose: "vision"
       });
@@ -3201,11 +3631,12 @@ export function App() {
     }
   };
 
-  const ContextIcon = contextIcon(pageContext);
-  const contextScope = includePage
-    ? contextLabel(pageContext, settings?.interfaceLanguage)
-    : uiText(settings?.interfaceLanguage, "noneContext");
   const contextMode = effectiveContextMode();
+  const previewContext = includePage ? contextForCurrentMode() : null;
+  const ContextIcon = contextIcon(previewContext);
+  const contextScope = includePage
+    ? contextLabel(previewContext, settings?.interfaceLanguage)
+    : uiText(settings?.interfaceLanguage, "noneContext");
   const contextOptions = [
     {
       id: "none" as const,
@@ -3232,6 +3663,14 @@ export function App() {
     contextOptions.find((option) => option.id === contextMode) ??
     contextOptions[0];
   const SelectedContextIcon = selectedContextOption.icon;
+  const contextPreviewTitle =
+    contextMode === "none"
+      ? t("nonePreview")
+      : contextMode === "page"
+        ? t("pagePreview")
+        : contextMode === "article"
+          ? t("bodyPreview")
+          : t("selectionPreview");
   const runHeaderImmersiveTranslate = async () => {
     if (contextMode === "none") {
       setNotice(t("chooseContextFirst"));
@@ -3269,16 +3708,15 @@ export function App() {
         ? TOOL_TAB_PRIORITY.indexOf(right.id)
         : 100)
   );
-  const messageTools = allTools(customTools, settings ?? undefined).filter(
-    (tool) =>
-      !["ask-selection", "analyze-image"].includes(
-        tool.id
-      )
-  );
+  const messageTools = allTools(customTools, settings ?? undefined);
   const translateMessageTool =
     messageTools.find((tool) => tool.id === "translate-text") ?? null;
+  const summaryMessageTool =
+    messageTools.find((tool) => tool.id === "summary") ?? null;
+  const explainCodeMessageTool =
+    messageTools.find((tool) => tool.id === "explain-code") ?? null;
   const moreMessageTools = messageTools.filter(
-    (tool) => tool.id !== "translate-text"
+    (tool) => !PINNED_MESSAGE_TOOL_IDS.has(tool.id)
   );
   const streamingMessageId = streamingId
     ? requestMapRef.current.get(streamingId) ?? null
@@ -3288,10 +3726,26 @@ export function App() {
       logLevelWeight(entry.level) >=
       logLevelWeight(settings?.logLevel ?? "info")
   );
+  const isArticlePreview = previewContext?.kind === "article";
+  const previewContextText = previewContext?.text?.trim() ?? "";
+  const previewContextMarkdown =
+    previewContext?.markdown?.trim() || previewContextText;
   const articleSummary =
-    pageContext?.kind === "article" ? pageContext.articleSummary : undefined;
+    isArticlePreview ? previewContext.articleSummary : undefined;
   const articlePreview =
-    pageContext?.kind === "article" ? pageContext.articlePreview ?? [] : [];
+    isArticlePreview ? previewContext.articlePreview ?? [] : [];
+  const contextPreviewBlocks: ArticlePreviewBlock[] = isArticlePreview
+    ? articlePreview
+    : previewContextMarkdown
+      ? previewContextMarkdown
+          .split(/\n{2,}/)
+          .map((markdown, index) => ({
+            id: `context-preview-${index}`,
+            text: markdown.trim(),
+            markdown: markdown.trim()
+          }))
+          .filter((block) => block.text)
+      : [];
   const bodySourceLabel =
     articleSummary?.source === "edited"
         ? t("currentBodySourceEdited")
@@ -3303,20 +3757,20 @@ export function App() {
         ? t("currentBodySourceDom")
         : "";
   const bodyBlockCount =
-    articleSummary?.blockCount ?? articlePreview.length;
+    articleSummary?.blockCount ?? contextPreviewBlocks.length;
   const bodyCharCount =
-    articleSummary?.charCount ?? pageContext?.text?.length ?? 0;
+    articleSummary?.charCount ?? previewContextText.length;
   const articleScore = articleSummary?.score;
   const articleScoreMetrics = articleSummary?.scoreMetrics;
 
   useEffect(() => {
-    if (pageContext?.kind !== "article" || typeof articleScore !== "number") {
+    if (!isArticlePreview || typeof articleScore !== "number") {
       previousArticleScoreRef.current = null;
       setArticleScoreTrend("same");
       return;
     }
 
-    const pageUrl = pageContext.url ?? "";
+    const pageUrl = previewContext.url ?? "";
     const previous = previousArticleScoreRef.current;
     if (!previous || previous.pageUrl !== pageUrl) {
       setArticleScoreTrend("same");
@@ -3334,9 +3788,9 @@ export function App() {
     articleSummary?.charCount,
     articleSummary?.selector,
     articleSummary?.source,
-    pageContext?.kind,
-    pageContext?.text,
-    pageContext?.url
+    isArticlePreview,
+    previewContext?.text,
+    previewContext?.url
   ]);
 
   const articleScoreMetricRows: Array<[UiTextKey, number]> = [
@@ -3515,6 +3969,49 @@ export function App() {
                           ? t("you")
                           : activeProfile?.name ?? "WebMind"}
                       </span>
+                      {message.role === "user" &&
+                        editingMessageId !== message.id && (
+                          <span className="message-meta-actions">
+                            <button
+                              className="message-meta-action"
+                              type="button"
+                              title={t("edit")}
+                              aria-label={t("edit")}
+                              disabled={
+                                Boolean(streamingId) || editingMessageSubmitting
+                              }
+                              onClick={() => editUserMessage(message.id)}
+                            >
+                              <PenLine />
+                            </button>
+                            <button
+                              className="message-meta-action"
+                              type="button"
+                              title={
+                                copiedMessageId === message.id
+                                  ? t("copied")
+                                  : t("copyContent")
+                              }
+                              aria-label={t("copyContent")}
+                              onClick={async () => {
+                                await navigator.clipboard.writeText(
+                                  message.content
+                                );
+                                setCopiedMessageId(message.id);
+                                window.setTimeout(
+                                  () => setCopiedMessageId(null),
+                                  1400
+                                );
+                              }}
+                            >
+                              {copiedMessageId === message.id ? (
+                                <Check />
+                              ) : (
+                                <Copy />
+                              )}
+                            </button>
+                          </span>
+                        )}
                     </div>
                     {message.attachments?.length ? (
                       <div className="message-images">
@@ -3542,9 +4039,14 @@ export function App() {
                           {streamingMessageId !== message.id && (
                             <div className="message-actions assistant-actions">
                               <button
-                                className="message-action-button"
+                                className="message-action-button icon-only"
                                 type="button"
-                                title={t("copyContent")}
+                                title={
+                                  copiedMessageId === message.id
+                                    ? t("copied")
+                                    : t("copyContent")
+                                }
+                                aria-label={t("copyContent")}
                                 onClick={async () => {
                                   await navigator.clipboard.writeText(
                                     message.content
@@ -3561,27 +4063,23 @@ export function App() {
                                 ) : (
                                   <Copy />
                                 )}
-                                <span>
-                                  {copiedMessageId === message.id
-                                    ? t("copied")
-                                    : t("copyContent")}
-                                </span>
                               </button>
                               <button
-                                className="message-action-button"
+                                className="message-action-button icon-only"
                                 type="button"
                                 title={t("regenerate")}
+                                aria-label={t("regenerate")}
                                 disabled={Boolean(streamingId)}
                                 onClick={() => void rerunAssistant(message.id)}
                               >
-                                <RefreshCcw />
-                                <span>{t("regenerate")}</span>
+                                <RedoDot />
                               </button>
                               {translateMessageTool && (
                                 <button
-                                  className="message-action-button"
+                                  className="message-action-button icon-only"
                                   type="button"
-                                  title={translateMessageTool.description}
+                                  title={translateMessageTool.title}
+                                  aria-label={translateMessageTool.title}
                                   disabled={Boolean(streamingId)}
                                   onClick={() =>
                                     void runMessageTool(
@@ -3591,7 +4089,40 @@ export function App() {
                                   }
                                 >
                                   <ToolIcon name={translateMessageTool.icon} />
-                                  <span>{translateMessageTool.title}</span>
+                                </button>
+                              )}
+                              {summaryMessageTool && (
+                                <button
+                                  className="message-action-button icon-only"
+                                  type="button"
+                                  title={summaryMessageTool.title}
+                                  aria-label={summaryMessageTool.title}
+                                  disabled={Boolean(streamingId)}
+                                  onClick={() =>
+                                    void runMessageTool(
+                                      summaryMessageTool,
+                                      message.content
+                                    )
+                                  }
+                                >
+                                  <ToolIcon name={summaryMessageTool.icon} />
+                                </button>
+                              )}
+                              {explainCodeMessageTool && (
+                                <button
+                                  className="message-action-button icon-only"
+                                  type="button"
+                                  title={explainCodeMessageTool.title}
+                                  aria-label={explainCodeMessageTool.title}
+                                  disabled={Boolean(streamingId)}
+                                  onClick={() =>
+                                    void runMessageTool(
+                                      explainCodeMessageTool,
+                                      message.content
+                                    )
+                                  }
+                                >
+                                  <ToolIcon name={explainCodeMessageTool.icon} />
                                 </button>
                               )}
                               {moreMessageTools.length > 0 && (
@@ -3724,44 +4255,6 @@ export function App() {
                           ) : (
                             <Markdown content={message.content} />
                           )}
-                          <div className="message-actions">
-                            <button
-                              className="message-action-button"
-                              type="button"
-                              title={t("copyContent")}
-                              onClick={async () => {
-                                await navigator.clipboard.writeText(
-                                  message.content
-                                );
-                                setCopiedMessageId(message.id);
-                                window.setTimeout(
-                                  () => setCopiedMessageId(null),
-                                  1400
-                                );
-                              }}
-                            >
-                              {copiedMessageId === message.id ? (
-                                <Check />
-                              ) : (
-                                <Copy />
-                              )}
-                              {copiedMessageId === message.id
-                                ? t("copied")
-                                : t("copyContent")}
-                            </button>
-                            <button
-                              className="message-action-button"
-                              type="button"
-                              title={t("edit")}
-                              disabled={
-                                Boolean(streamingId) || editingMessageSubmitting
-                              }
-                              onClick={() => editUserMessage(message.id)}
-                            >
-                              <PenLine />
-                              {t("edit")}
-                            </button>
-                          </div>
                         </>
                       )
                     ) : message.role === "assistant" &&
@@ -4091,17 +4584,16 @@ export function App() {
               ))}
             </div>
           )}
-          {pageContext?.kind === "article" && (
-            <details
-              className="body-preview"
-              open={bodyPreviewExpanded}
-              onToggle={(event) =>
-                setBodyPreviewExpanded(event.currentTarget.open)
-              }
-            >
+          <details
+            className="body-preview"
+            open={bodyPreviewExpanded}
+            onToggle={(event) =>
+              setBodyPreviewExpanded(event.currentTarget.open)
+            }
+          >
               <summary>
-                <TextAlignStart />
-                <span>{t("currentBody")}</span>
+                <SelectedContextIcon />
+                <span>{contextPreviewTitle}</span>
                 <span className="body-preview-summary-actions">
                   {(articleSummary?.source === "manual" ||
                     articleSummary?.source === "edited") && (
@@ -4110,7 +4602,7 @@ export function App() {
                       type="button"
                       title={t("restoreCurrentBody")}
                       aria-label={t("restoreCurrentBody")}
-                      disabled={articlePicking}
+                      disabled={articlePicking || articlePruning}
                       onClick={(event) => {
                         event.preventDefault();
                         event.stopPropagation();
@@ -4120,38 +4612,44 @@ export function App() {
                       <Undo2 />
                     </button>
                   )}
+                  {isArticlePreview && (
+                    <button
+                      className="body-preview-action icon-only"
+                      type="button"
+                      title={
+                        articlePicking
+                          ? t("selectingBodyRange")
+                          : t("selectCurrentBody")
+                      }
+                      aria-label={
+                        articlePicking
+                          ? t("selectingBodyRange")
+                          : t("selectCurrentBody")
+                      }
+                      disabled={articlePicking || articlePruning}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        void pickCurrentBodyRange();
+                      }}
+                    >
+                      <SquareMousePointer />
+                    </button>
+                  )}
                   <button
                     className="body-preview-action icon-only"
                     type="button"
                     title={
-                      articlePicking
-                        ? t("selectingBodyRange")
-                        : t("selectCurrentBody")
+                      isArticlePreview ? t("copyCurrentBody") : t("copyContent")
                     }
                     aria-label={
-                      articlePicking
-                        ? t("selectingBodyRange")
-                        : t("selectCurrentBody")
+                      isArticlePreview ? t("copyCurrentBody") : t("copyContent")
                     }
-                    disabled={articlePicking}
+                    disabled={!previewContextText}
                     onClick={(event) => {
                       event.preventDefault();
                       event.stopPropagation();
-                      void pickCurrentBodyRange();
-                    }}
-                  >
-                    <MousePointerClick />
-                  </button>
-                  <button
-                    className="body-preview-action icon-only"
-                    type="button"
-                    title={t("copyCurrentBody")}
-                    aria-label={t("copyCurrentBody")}
-                    disabled={!pageContext.text.trim()}
-                    onClick={(event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      void copyCurrentBodyText();
+                      void copyContextPreviewText(previewContextMarkdown);
                     }}
                   >
                     {bodyCopied ? <Check /> : <Copy />}
@@ -4215,15 +4713,30 @@ export function App() {
                 </span>
               </summary>
               <div className="body-preview-meta">
-                <button
-                  className="body-preview-meta-action"
-                  type="button"
-                  disabled={articlePicking}
-                  onClick={() => void pruneCurrentBodyPreviewBlocks()}
-                >
-                  <Eraser />
-                  {t("smartPruneCurrentBody")}
-                </button>
+                {isArticlePreview && (
+                  <button
+                    className="body-preview-meta-action icon-only"
+                    type="button"
+                    title={t("smartPruneCurrentBody")}
+                    aria-label={t("smartPruneCurrentBody")}
+                    disabled={articlePicking || articlePruning}
+                    onClick={() => void pruneCurrentBodyPreviewBlocks()}
+                  >
+                    <Eraser />
+                  </button>
+                )}
+                {isArticlePreview && (
+                  <button
+                    className="body-preview-meta-action icon-only"
+                    type="button"
+                    title={t("modelPruneCurrentBody")}
+                    aria-label={t("modelPruneCurrentBody")}
+                    disabled={articlePicking || articlePruning}
+                    onClick={() => void pruneCurrentBodyWithModel()}
+                  >
+                    <Wand />
+                  </button>
+                )}
                 {articleSummary?.selector && (
                   <button
                     className="body-preview-meta-action body-preview-selector"
@@ -4234,7 +4747,11 @@ export function App() {
                     {articleSummary.selector}
                   </button>
                 )}
-                {bodySourceLabel && <span>{bodySourceLabel}</span>}
+                {!isArticlePreview && <span>{selectedContextOption.title}</span>}
+                {!isArticlePreview && previewContext?.title && (
+                  <span title={previewContext.title}>{previewContext.title}</span>
+                )}
+                {isArticlePreview && bodySourceLabel && <span>{bodySourceLabel}</span>}
                 <span>
                   {t("currentBodyBlocks").replace(
                     "{count}",
@@ -4248,45 +4765,74 @@ export function App() {
                   )}
                 </span>
               </div>
-              {articlePreview.length > 0 && (
+              {contextPreviewBlocks.length > 0 && (
                 <div className="body-preview-blocks">
-                  {articlePreview.map((block) => (
-                    <div
-                      key={block.id}
-                      className="body-preview-block"
-                      title={t("highlightCurrentBodyBlock")}
-                      role="button"
-                      tabIndex={0}
-                      onClick={() =>
-                        void highlightCurrentBodyPreviewBlock(block)
-                      }
-                      onKeyDown={(event) => {
-                        if (event.key !== "Enter" && event.key !== " ") return;
-                        event.preventDefault();
-                        void highlightCurrentBodyPreviewBlock(block);
-                      }}
-                    >
-                      <span>{block.sourceText ?? block.text}</span>
-                      <button
-                        className="body-preview-block-remove"
-                        type="button"
-                        title={t("removeCurrentBodyBlock")}
-                        aria-label={t("removeCurrentBodyBlock")}
+                  {contextPreviewBlocks.map((block) =>
+                    isArticlePreview ? (
+                      <div
+                        key={block.id}
+                        className="body-preview-block"
+                        role="button"
+                        tabIndex={0}
                         onClick={(event) => {
+                          if ((event.target as Element).closest("a")) return;
+                          void highlightCurrentBodyPreviewBlock(block);
+                        }}
+                        onKeyDown={(event) => {
+                          if (event.key !== "Enter" && event.key !== " ") return;
                           event.preventDefault();
-                          event.stopPropagation();
-                          void removeCurrentBodyPreviewBlock(block);
+                          void highlightCurrentBodyPreviewBlock(block);
                         }}
                       >
-                        <X />
-                      </button>
-                    </div>
-                  ))}
+                        <div className="body-preview-block-content">
+                          <Markdown
+                            content={block.markdown ?? block.sourceText ?? block.text}
+                          />
+                        </div>
+                        <button
+                          className="body-preview-block-remove"
+                          type="button"
+                          title={t("removeCurrentBodyBlock")}
+                          aria-label={t("removeCurrentBodyBlock")}
+                          disabled={articlePruning}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            void removeCurrentBodyPreviewBlock(block);
+                          }}
+                        >
+                          <X />
+                        </button>
+                      </div>
+                    ) : (
+                      <div
+                        key={block.id}
+                        className="body-preview-block passive"
+                      >
+                        <div className="body-preview-block-content">
+                          <Markdown
+                            content={block.markdown ?? block.sourceText ?? block.text}
+                          />
+                        </div>
+                      </div>
+                    )
+                  )}
                 </div>
               )}
             </details>
-          )}
           <div className="composer">
+            {composer.trim() && (
+              <button
+                className="composer-clear"
+                type="button"
+                title={t("clearComposer")}
+                aria-label={t("clearComposer")}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => setComposer("")}
+              >
+                <X />
+              </button>
+            )}
             <textarea
               value={composer}
               rows={1}
@@ -4303,8 +4849,7 @@ export function App() {
               onKeyDown={(event) => {
                 if (
                   event.key === "Enter" &&
-                  !event.ctrlKey &&
-                  !event.metaKey &&
+                  !event.shiftKey &&
                   !event.nativeEvent.isComposing
                 ) {
                   event.preventDefault();
@@ -4328,6 +4873,8 @@ export function App() {
                     className={`context-select ${includePage ? "active" : ""}`}
                     type="button"
                     title={t("currentContext")}
+                    aria-haspopup="menu"
+                    aria-expanded={contextMenuOpen}
                     disabled={contextLoading}
                     onClick={() => setContextMenuOpen((open) => !open)}
                   >

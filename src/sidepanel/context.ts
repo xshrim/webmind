@@ -21,6 +21,15 @@ export function defaultContextMode(settings: AppSettings | null): Extract<
   return settings?.defaultContextScope === "page" ? "page" : "article";
 }
 
+export function contextModeAfterTabSwitch(
+  currentMode: ContextMode,
+  fallbackMode: Extract<ContextMode, "page" | "article">,
+  nextContext: PageContext | null
+): ContextMode {
+  if (currentMode !== "selection") return currentMode;
+  return nextContext?.kind === "selection" ? "selection" : fallbackMode;
+}
+
 function isPdfUrl(url: string): boolean {
   try {
     return new URL(url).pathname.toLowerCase().endsWith(".pdf");
@@ -77,11 +86,12 @@ export function buildSystemMessage(
   profile: ProviderProfile,
   interfaceLanguage: AppLanguage | undefined
 ): ChatMessage {
+  const contextBody = context?.markdown?.trim() || context?.text?.trim() || "";
   const sections = [
     uiText(interfaceLanguage, "assistantSystem"),
     uiText(interfaceLanguage, "assistantGuard")
   ];
-  if (context?.text) {
+  if (context && contextBody) {
     sections.push(
       [
         context.kind === "selection"
@@ -95,7 +105,7 @@ export function buildSystemMessage(
           ? `${uiText(interfaceLanguage, "description")}：${context.description}`
           : "",
         uiText(interfaceLanguage, "body"),
-        truncateText(context.text, profile.maxContextChars, interfaceLanguage)
+        truncateText(contextBody, profile.maxContextChars, interfaceLanguage)
       ]
         .filter(Boolean)
         .join("\n")

@@ -315,6 +315,9 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
       stored.includePageByDefault ?? DEFAULT_SETTINGS.includePageByDefault,
     webSearchByDefault:
       stored.webSearchByDefault ?? DEFAULT_SETTINGS.webSearchByDefault,
+    toolResponseUseContextLanguage:
+      stored.toolResponseUseContextLanguage ??
+      DEFAULT_SETTINGS.toolResponseUseContextLanguage,
     historyLimit: stored.historyLimit ?? DEFAULT_SETTINGS.historyLimit
   };
 }

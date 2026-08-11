@@ -2,6 +2,7 @@ import { uiText } from "./i18n";
 import {
   autoTranslateInstruction,
   dictionaryTranslationInstruction,
+  htmlFormattingInstruction,
   isDictionaryTranslationInput,
   translationDirectionInstruction,
   translationFormatInstruction,
@@ -411,6 +412,7 @@ export function buildProtectedTranslationInstruction(
       : autoTranslateInstruction(config, sourceText),
     translationDirectionInstruction(config, sourceText),
     dictionaryMode ? "" : translationFormatInstruction(config),
+    dictionaryMode ? "" : htmlFormattingInstruction(config),
     dictionaryMode
       ? ""
       : uiText(
@@ -436,6 +438,7 @@ export function buildPageTranslationSystemPrompt(
     autoTranslateInstruction(config, sourceText),
     translationDirectionInstruction(config, sourceText),
     translationFormatInstruction(config),
+    htmlFormattingInstruction(config),
     uiText(
       typeof config === "object" ? config?.interfaceLanguage : config,
       "jsonArrayTranslationInstruction"

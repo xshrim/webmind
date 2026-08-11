@@ -54,6 +54,14 @@ describe("settings normalization", () => {
     expect(normalizeSettings().modelThinkingTimeoutSeconds).toBe(0);
   });
 
+  it("defaults tool answers to the interface language", () => {
+    expect(normalizeSettings().toolResponseUseContextLanguage).toBe(false);
+    expect(
+      normalizeSettings({ toolResponseUseContextLanguage: true })
+        .toolResponseUseContextLanguage
+    ).toBe(true);
+  });
+
   it("marks only the first configured model as default", () => {
     const first = createProviderProfile("openai-compatible", { id: "first" });
     const second = createProviderProfile("ollama", { id: "second" });

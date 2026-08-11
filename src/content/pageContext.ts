@@ -11,7 +11,12 @@ import type {
   WebSearchResult
 } from "../shared/types";
 import { cleanCitationExplanationText, truncateText } from "../shared/utils";
-import { pageSelectionText, textFromElement } from "./selection";
+import {
+  markdownFromElement,
+  pageSelectionMarkdown,
+  pageSelectionText,
+  textFromElement
+} from "./selection";
 import { urlMatchesWhitelist } from "./urlRules";
 
 export function searchQuery(): string | null {
@@ -66,6 +71,7 @@ export function linkCitationMarkers(
 
 interface ArticlePreviewSourceBlock {
   text: string;
+  markdown?: string;
   element: HTMLElement;
   exclusionElement?: HTMLElement;
 }
@@ -79,6 +85,7 @@ interface ArticleRootSelection {
 interface ArticleSnapshot {
   title?: string;
   text: string;
+  markdown?: string;
   description?: string;
   summary?: ArticleSummary;
   preview?: ArticlePreviewBlock[];
@@ -95,10 +102,19 @@ let articlePickerSession: Promise<PageContext | null> | null = null;
 let cancelArticlePickerSession: (() => void) | null = null;
 let articlePreviewIdCounter = 0;
 let activeArticleExtractionCache: ArticleExtractionCache | null = null;
+let retainedPageSelectionTextValue = "";
 
 const articlePreviewTargets = new Map<string, HTMLElement>();
 const articlePreviewExclusionTargets = new Map<string, HTMLElement>();
 const removedArticleBlockTextKeys = new Set<string>();
+
+export function setRetainedPageSelectionText(text: string): void {
+  retainedPageSelectionTextValue = text.trim();
+}
+
+function retainedPageSelectionText(): string | undefined {
+  return retainedPageSelectionTextValue || undefined;
+}
 
 const ARTICLE_ROOT_SELECTOR = [
   "article",
@@ -171,6 +187,28 @@ function waitForPageIdle(timeout = 140): Promise<void> {
   });
 }
 
+type ArticleExtractionCheckpoint = (force?: boolean) => Promise<void>;
+
+function createArticleExtractionCheckpoint(
+  budgetMs = 6
+): ArticleExtractionCheckpoint {
+  let sliceStarted = performance.now();
+  return async (force = false) => {
+    if (!force && performance.now() - sliceStarted < budgetMs) return;
+    const scheduler = (
+      globalThis as typeof globalThis & {
+        scheduler?: { yield?: () => Promise<void> };
+      }
+    ).scheduler;
+    if (scheduler?.yield) {
+      await scheduler.yield();
+    } else {
+      await new Promise<void>((resolve) => window.setTimeout(resolve, 0));
+    }
+    sliceStarted = performance.now();
+  };
+}
+
 function clamp(value: number, min = 0, max = 1): number {
   return Math.max(min, Math.min(max, value));
 }
@@ -212,6 +250,21 @@ function withArticleExtractionCache<T>(callback: () => T): T {
   };
   try {
     return callback();
+  } finally {
+    activeArticleExtractionCache = null;
+  }
+}
+
+async function withArticleExtractionCacheAsync<T>(
+  callback: () => Promise<T>
+): Promise<T> {
+  if (activeArticleExtractionCache) return callback();
+  activeArticleExtractionCache = {
+    visible: new WeakMap(),
+    text: new WeakMap()
+  };
+  try {
+    return await callback();
   } finally {
     activeArticleExtractionCache = null;
   }
@@ -271,6 +324,65 @@ function visibleTextFromElement(element: HTMLElement): string {
   };
 
   visit(element);
+  const text = preserveArticleBlockText(parts.join(""));
+  activeArticleExtractionCache?.text.set(element, text);
+  return text;
+}
+
+async function visibleTextFromElementAsync(
+  element: HTMLElement,
+  checkpoint: ArticleExtractionCheckpoint
+): Promise<string> {
+  const cached = activeArticleExtractionCache?.text.get(element);
+  if (typeof cached === "string") return cached;
+  const parts: string[] = [];
+  const stack: Array<{ node: Node; exit: boolean }> = [
+    { node: element, exit: false }
+  ];
+  while (stack.length) {
+    const current = stack.pop();
+    if (!current) break;
+    const { node, exit } = current;
+    if (node instanceof Text) {
+      const parent = node.parentElement;
+      if (parent && isElementVisible(parent)) {
+        parts.push(node.textContent ?? "");
+      }
+      await checkpoint();
+      continue;
+    }
+    if (!(node instanceof HTMLElement) || !isElementVisible(node)) {
+      await checkpoint();
+      continue;
+    }
+    if (exit) {
+      if (/^(?:ADDRESS|ARTICLE|BLOCKQUOTE|DETAILS|DIV|FIGCAPTION|FIGURE|H[1-6]|LI|MAIN|P|SECTION)$/.test(node.tagName)) {
+        parts.push("\n");
+      } else if (node.tagName === "TR" || /^(?:DD|DT)$/.test(node.tagName)) {
+        parts.push("\n");
+      } else if (/^(?:TD|TH)$/.test(node.tagName)) {
+        parts.push("\t");
+      }
+      await checkpoint();
+      continue;
+    }
+    if (node.tagName === "BR") {
+      parts.push("\n");
+      await checkpoint();
+      continue;
+    }
+    if (node.tagName === "PRE") {
+      parts.push(node.innerText || node.textContent || "", "\n");
+      await checkpoint();
+      continue;
+    }
+    stack.push({ node, exit: true });
+    const children = Array.from(node.childNodes);
+    for (let index = children.length - 1; index >= 0; index -= 1) {
+      stack.push({ node: children[index], exit: false });
+    }
+    await checkpoint();
+  }
   const text = preserveArticleBlockText(parts.join(""));
   activeArticleExtractionCache?.text.set(element, text);
   return text;
@@ -616,6 +728,31 @@ function configuredArticleRoot(
   return null;
 }
 
+async function configuredArticleRootAsync(
+  rules: ArticleExtractionRule[],
+  checkpoint: ArticleExtractionCheckpoint
+): Promise<ArticleRootSelection | null> {
+  for (const rule of rules) {
+    if (
+      !rule.urlPattern ||
+      !rule.selector ||
+      !urlMatchesWhitelist(location.href, [rule.urlPattern])
+    ) {
+      continue;
+    }
+    const element = elementForArticleRuleSelector(rule.selector);
+    if (!element || !isElementVisible(element)) continue;
+    if (
+      textLength(await visibleTextFromElementAsync(element, checkpoint)) <
+      AUTO_ARTICLE_MIN_CHARS
+    ) {
+      continue;
+    }
+    return { element, source: "rule", selector: rule.selector };
+  }
+  return null;
+}
+
 interface ArticleBlockCollectionOptions {
   includeArticleNoise: boolean;
 }
@@ -675,7 +812,12 @@ function sourceBlockFromElement(
 ): ArticlePreviewSourceBlock | null {
   const text = preserveArticleBlockText(visibleTextFromElement(element));
   if (textLength(text) === 0) return null;
-  const block = { text, element, exclusionElement: element };
+  const block = {
+    text,
+    markdown: markdownFromElement(element),
+    element,
+    exclusionElement: element
+  };
   return isArticleTextBlockExcluded(block) ? null : block;
 }
 
@@ -685,7 +827,11 @@ function inlineSourceBlock(
 ): ArticlePreviewSourceBlock | null {
   const normalized = preserveArticleBlockText(text);
   if (textLength(normalized) === 0) return null;
-  const block = { text: normalized, element };
+  const block = {
+    text: normalized,
+    markdown: markdownFromElement(element),
+    element
+  };
   return isArticleTextBlockExcluded(block) ? null : block;
 }
 
@@ -749,6 +895,151 @@ function articleSourceBlocks(
   };
 
   visitContainer(root);
+  return blocks;
+}
+
+async function hasReadableCompactDescendantAsync(
+  element: HTMLElement,
+  options: ArticleBlockCollectionOptions,
+  checkpoint: ArticleExtractionCheckpoint
+): Promise<boolean> {
+  const descendants = Array.from(
+    element.querySelectorAll<HTMLElement>(ARTICLE_BLOCK_SELECTOR)
+  );
+  for (const child of descendants) {
+    if (child === element || shouldSkipArticleBlockElement(child, options)) {
+      await checkpoint();
+      continue;
+    }
+    if (textLength(await visibleTextFromElementAsync(child, checkpoint)) > 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
+async function shouldUseWholeElementAsBlockAsync(
+  element: HTMLElement,
+  root: HTMLElement,
+  options: ArticleBlockCollectionOptions,
+  checkpoint: ArticleExtractionCheckpoint
+): Promise<boolean> {
+  const text = await visibleTextFromElementAsync(element, checkpoint);
+  if (!text || textLength(text) === 0) return false;
+  if (shouldSkipArticleBlockElement(element, options)) return false;
+  if (isCompactArticleBlock(element)) return true;
+  const hasCompactDescendant = await hasReadableCompactDescendantAsync(
+    element,
+    options,
+    checkpoint
+  );
+  if (element === root && !hasCompactDescendant) return true;
+  return (
+    element.matches(ARTICLE_CONTAINER_FALLBACK_SELECTOR) &&
+    !hasCompactDescendant
+  );
+}
+
+async function sourceBlockFromElementAsync(
+  element: HTMLElement,
+  checkpoint: ArticleExtractionCheckpoint
+): Promise<ArticlePreviewSourceBlock | null> {
+  const text = preserveArticleBlockText(
+    await visibleTextFromElementAsync(element, checkpoint)
+  );
+  if (textLength(text) === 0) return null;
+  await checkpoint();
+  const block = {
+    text,
+    markdown: markdownFromElement(element),
+    element,
+    exclusionElement: element
+  };
+  await checkpoint();
+  return isArticleTextBlockExcluded(block) ? null : block;
+}
+
+async function articleSourceBlocksAsync(
+  root: HTMLElement,
+  options: ArticleBlockCollectionOptions,
+  checkpoint: ArticleExtractionCheckpoint
+): Promise<ArticlePreviewSourceBlock[]> {
+  if (shouldSkipArticleBlockElement(root, options)) return [];
+  if (
+    await shouldUseWholeElementAsBlockAsync(root, root, options, checkpoint)
+  ) {
+    const rootBlock = await sourceBlockFromElementAsync(root, checkpoint);
+    return rootBlock ? [rootBlock] : [];
+  }
+
+  const blocks: ArticlePreviewSourceBlock[] = [];
+  const visitContainer = async (element: HTMLElement): Promise<void> => {
+    if (shouldSkipArticleBlockElement(element, options)) return;
+    let inlineParts: string[] = [];
+    let inlineElement: HTMLElement = element;
+    const flushInline = async () => {
+      const text = preserveArticleBlockText(inlineParts.join(""));
+      if (textLength(text) > 0) {
+        await checkpoint();
+        const block = {
+          text,
+          markdown: markdownFromElement(inlineElement),
+          element: inlineElement
+        };
+        if (!isArticleTextBlockExcluded(block)) blocks.push(block);
+      }
+      inlineParts = [];
+      inlineElement = element;
+      await checkpoint();
+    };
+
+    for (const node of Array.from(element.childNodes)) {
+      if (node instanceof Text) {
+        const parent = node.parentElement;
+        if (parent && !shouldSkipArticleBlockElement(parent, options)) {
+          if (!inlineParts.length) inlineElement = parent;
+          inlineParts.push(node.textContent ?? "");
+        }
+        await checkpoint();
+        continue;
+      }
+      if (!(node instanceof HTMLElement)) continue;
+      if (node.tagName === "BR") {
+        inlineParts.push("\n");
+        continue;
+      }
+      if (shouldSkipArticleBlockElement(node, options)) continue;
+      if (
+        await shouldUseWholeElementAsBlockAsync(
+          node,
+          root,
+          options,
+          checkpoint
+        )
+      ) {
+        await flushInline();
+        const block = await sourceBlockFromElementAsync(node, checkpoint);
+        if (block) blocks.push(block);
+        continue;
+      }
+      if (
+        await hasReadableCompactDescendantAsync(node, options, checkpoint)
+      ) {
+        await flushInline();
+        await visitContainer(node);
+        continue;
+      }
+      const text = await visibleTextFromElementAsync(node, checkpoint);
+      if (textLength(text) > 0) {
+        if (!inlineParts.length) inlineElement = node;
+        inlineParts.push(text);
+      }
+      await checkpoint();
+    }
+    await flushInline();
+  };
+
+  await visitContainer(root);
   return blocks;
 }
 
@@ -817,6 +1108,102 @@ function continuousRootCandidates(root: ParentNode = document): HTMLElement[] {
     }
   });
 
+  return Array.from(summaries.entries())
+    .filter(([, summary]) => summary.blocks >= 2 && summary.textLength >= 80)
+    .sort((left, right) => {
+      const score = (summary: (typeof left)[1]) =>
+        summary.textLength +
+        summary.blocks * 60 +
+        (summary.blocks / Math.max(1, summary.last - summary.first + 1)) * 240;
+      return score(right[1]) - score(left[1]);
+    })
+    .slice(0, 16)
+    .map(([element]) => element);
+}
+
+async function articleRootElementsAsync(
+  root: ParentNode,
+  checkpoint: ArticleExtractionCheckpoint
+): Promise<HTMLElement[]> {
+  const roots = Array.from(
+    new Set([
+      ...Array.from(root.querySelectorAll<HTMLElement>(ARTICLE_ROOT_SELECTOR)),
+      ...collectOpenShadowElements(root)
+    ])
+  );
+  const candidates: HTMLElement[] = [];
+  for (const element of roots) {
+    if (
+      !isArticleNoiseElement(element) &&
+      isElementVisible(element) &&
+      textLength(await visibleTextFromElementAsync(element, checkpoint)) >=
+        AUTO_ARTICLE_MIN_CHARS
+    ) {
+      candidates.push(element);
+      if (candidates.length >= ARTICLE_ROOT_CANDIDATE_LIMIT) break;
+    }
+    await checkpoint();
+  }
+  return candidates;
+}
+
+async function continuousRootCandidatesAsync(
+  root: ParentNode,
+  checkpoint: ArticleExtractionCheckpoint
+): Promise<HTMLElement[]> {
+  const elements = Array.from(
+    root.querySelectorAll<HTMLElement>(ARTICLE_BLOCK_SELECTOR)
+  );
+  const blockEntries: Array<{
+    element: HTMLElement;
+    order: number;
+    text: string;
+  }> = [];
+  for (let order = 0; order < elements.length; order += 1) {
+    const element = elements[order];
+    if (!isArticleNoiseElement(element) && isElementVisible(element)) {
+      const text = normalizedText(
+        await visibleTextFromElementAsync(element, checkpoint)
+      );
+      if (textLength(text) >= 8) {
+        blockEntries.push({ element, order, text });
+        if (blockEntries.length >= ARTICLE_BLOCK_CANDIDATE_LIMIT) break;
+      }
+    }
+    await checkpoint();
+  }
+
+  const summaries = new Map<
+    HTMLElement,
+    { blocks: number; textLength: number; first: number; last: number }
+  >();
+  for (const entry of blockEntries) {
+    let ancestor = entry.element.parentElement;
+    let depth = 0;
+    while (
+      ancestor &&
+      ancestor !== document.body &&
+      ancestor !== document.documentElement &&
+      depth < 7
+    ) {
+      if (!isArticleNoiseElement(ancestor) && isElementVisible(ancestor)) {
+        const summary = summaries.get(ancestor) ?? {
+          blocks: 0,
+          textLength: 0,
+          first: entry.order,
+          last: entry.order
+        };
+        summary.blocks += 1;
+        summary.textLength += textLength(entry.text);
+        summary.first = Math.min(summary.first, entry.order);
+        summary.last = Math.max(summary.last, entry.order);
+        summaries.set(ancestor, summary);
+      }
+      ancestor = ancestor.parentElement;
+      depth += 1;
+    }
+    await checkpoint();
+  }
   return Array.from(summaries.entries())
     .filter(([, summary]) => summary.blocks >= 2 && summary.textLength >= 80)
     .sort((left, right) => {
@@ -1042,6 +1429,134 @@ function selectArticleRoot(
     : null;
 }
 
+async function promoteRootToIncludeTitleAsync(
+  root: HTMLElement,
+  checkpoint: ArticleExtractionCheckpoint
+): Promise<HTMLElement> {
+  if (articleHeadingInElement(root)) return root;
+  const heading = precedingArticleHeading(root);
+  if (!heading) return root;
+  let promoted = root.parentElement;
+  while (
+    promoted &&
+    promoted !== document.body &&
+    promoted !== document.documentElement &&
+    !promoted.contains(heading)
+  ) {
+    promoted = promoted.parentElement;
+  }
+  if (!promoted || isArticleNoiseElement(promoted)) return root;
+  const rootLength = textLength(
+    await visibleTextFromElementAsync(root, checkpoint)
+  );
+  const promotedLength = textLength(
+    await visibleTextFromElementAsync(promoted, checkpoint)
+  );
+  const headingLength = textLength(
+    await visibleTextFromElementAsync(heading, checkpoint)
+  );
+  const maxPromotedLength = Math.max(
+    rootLength * 1.65,
+    rootLength + headingLength + 320
+  );
+  if (promotedLength > maxPromotedLength) return root;
+  const rootBlocks = await articleSourceBlocksAsync(
+    root,
+    SCORING_ARTICLE_BLOCK_OPTIONS,
+    checkpoint
+  );
+  if (promoted.childElementCount > Math.max(10, rootBlocks.length * 3)) {
+    return root;
+  }
+  return promoted;
+}
+
+async function selectArticleRootAsync(
+  articleExtractionRules: ArticleExtractionRule[],
+  checkpoint: ArticleExtractionCheckpoint
+): Promise<ArticleRootSelection | null> {
+  invalidateDisconnectedArticleState();
+  if (manualArticleRoot?.isConnected) {
+    return {
+      element: manualArticleRoot,
+      source: "manual",
+      selector: selectorHint(manualArticleRoot)
+    };
+  }
+  if (editedArticleRoot?.isConnected) {
+    return {
+      element: editedArticleRoot,
+      source: "edited",
+      selector: selectorHint(editedArticleRoot)
+    };
+  }
+  const configured = await configuredArticleRootAsync(
+    articleExtractionRules,
+    checkpoint
+  );
+  if (configured) return configured;
+
+  const rootScopes: ParentNode[] = [document, ...sameOriginIframeBodies()];
+  const candidateElements: HTMLElement[] = [];
+  for (const rootScope of rootScopes) {
+    if (rootScope instanceof HTMLElement) candidateElements.push(rootScope);
+    candidateElements.push(
+      ...(await articleRootElementsAsync(rootScope, checkpoint)),
+      ...(await continuousRootCandidatesAsync(rootScope, checkpoint))
+    );
+    await checkpoint(true);
+  }
+  const uniqueCandidates = Array.from(new Set(candidateElements));
+  const candidates: Array<{
+    element: HTMLElement;
+    order: number;
+    score: number;
+  }> = [];
+  for (let order = 0; order < uniqueCandidates.length; order += 1) {
+    const element = uniqueCandidates[order];
+    const blocks = await articleSourceBlocksAsync(
+      element,
+      SCORING_ARTICLE_BLOCK_OPTIONS,
+      checkpoint
+    );
+    const text = articleTextFromBlocks(blocks);
+    candidates.push({
+      element,
+      order,
+      score: scoreArticleRoot(
+        element,
+        SCORING_ARTICLE_BLOCK_OPTIONS,
+        blocks,
+        text
+      ).rawScore
+    });
+    await checkpoint(true);
+  }
+  candidates.sort((left, right) => {
+    if (left.score !== right.score) return right.score - left.score;
+    return left.order - right.order;
+  });
+  const best = candidates.find((candidate) =>
+    Number.isFinite(candidate.score)
+  )?.element;
+  if (best) {
+    const promoted = await promoteRootToIncludeTitleAsync(best, checkpoint);
+    return {
+      element: promoted,
+      source: "dom",
+      selector: selectorHint(promoted)
+    };
+  }
+  const fallback =
+    document.querySelector<HTMLElement>("article") ??
+    document.querySelector<HTMLElement>("main") ??
+    document.querySelector<HTMLElement>("[role='main']") ??
+    document.body;
+  return fallback
+    ? { element: fallback, source: "dom", selector: selectorHint(fallback) }
+    : null;
+}
+
 export function findBestArticleRoot(
   articleExtractionRules: ArticleExtractionRule[] = []
 ): HTMLElement | null {
@@ -1097,6 +1612,7 @@ function articlePreview(blocks: ArticlePreviewSourceBlock[]): ArticlePreviewBloc
   return blocks.map((block, index) => ({
     id: `preview-${index + 1}`,
     text: block.text,
+    markdown: block.markdown || block.text,
     sourceText: block.text,
     targetId: articlePreviewTargetId(block)
   }));
@@ -1132,6 +1648,7 @@ function readableArticleText(
       return {
         title: document.title || location.hostname,
         text: "",
+        markdown: "",
         description: "",
         preview: [],
         summary: {
@@ -1144,6 +1661,10 @@ function readableArticleText(
 
     const blocks = articleSourceBlocks(selection.element);
     const text = articleTextFromBlocks(blocks);
+    const markdown = blocks
+      .map((block) => block.markdown || block.text)
+      .filter(Boolean)
+      .join("\n\n");
     const source = articleSourceAfterEdits(selection.source);
     const selector =
       selection.selector ?? selectorHint(selection.element) ?? undefined;
@@ -1156,6 +1677,74 @@ function readableArticleText(
     return {
       title: document.title || location.hostname,
       text,
+      markdown,
+      description: "",
+      preview: articlePreview(blocks),
+      summary: {
+        source,
+        selector,
+        blockCount: blocks.length,
+        charCount: textLength(text),
+        score: score.score,
+        scoreMetrics: score.metrics
+      }
+    };
+  });
+}
+
+async function readableArticleTextAsync(
+  articleExtractionRules: ArticleExtractionRule[] = []
+): Promise<ArticleSnapshot> {
+  return withArticleExtractionCacheAsync(async () => {
+    const checkpoint = createArticleExtractionCheckpoint();
+    articlePreviewTargets.clear();
+    articlePreviewExclusionTargets.clear();
+    articlePreviewIdCounter = 0;
+    await checkpoint(true);
+
+    const selection = await selectArticleRootAsync(
+      articleExtractionRules,
+      checkpoint
+    );
+    if (!selection) {
+      return {
+        title: document.title || location.hostname,
+        text: "",
+        markdown: "",
+        description: "",
+        preview: [],
+        summary: {
+          source: "dom",
+          blockCount: 0,
+          charCount: 0
+        }
+      };
+    }
+    const blocks = await articleSourceBlocksAsync(
+      selection.element,
+      SELECTED_ARTICLE_BLOCK_OPTIONS,
+      checkpoint
+    );
+    const text = articleTextFromBlocks(blocks);
+    await checkpoint(true);
+    const markdownParts: string[] = [];
+    for (const block of blocks) {
+      markdownParts.push(block.markdown || block.text);
+      await checkpoint();
+    }
+    const source = articleSourceAfterEdits(selection.source);
+    const selector =
+      selection.selector ?? selectorHint(selection.element) ?? undefined;
+    const score = scoreArticleRoot(
+      selection.element,
+      SELECTED_ARTICLE_BLOCK_OPTIONS,
+      blocks,
+      text
+    );
+    return {
+      title: document.title || location.hostname,
+      text,
+      markdown: markdownParts.filter(Boolean).join("\n\n"),
       description: "",
       preview: articlePreview(blocks),
       summary: {
@@ -1270,38 +1859,63 @@ export function highlightArticlePreviewBlock(
   return match ? applyArticlePreviewHighlight(match.element) : { ok: false };
 }
 
-function setEditedArticleRootFromCurrent(
+async function setEditedArticleRootFromCurrentAsync(
   articleExtractionRules: ArticleExtractionRule[] = []
-): HTMLElement | null {
-  const root =
-    manualArticleRoot?.isConnected
-      ? manualArticleRoot
-      : editedArticleRoot?.isConnected
-        ? editedArticleRoot
-        : findBestArticleRoot(articleExtractionRules);
-  if (root?.isConnected) {
-    editedArticleRoot = root;
-    return root;
+): Promise<HTMLElement | null> {
+  const current = manualArticleRoot?.isConnected
+    ? manualArticleRoot
+    : editedArticleRoot?.isConnected
+      ? editedArticleRoot
+      : null;
+  if (current) {
+    editedArticleRoot = current;
+    return current;
   }
-  return null;
+  const root = await withArticleExtractionCacheAsync(async () =>
+    (
+      await selectArticleRootAsync(
+        articleExtractionRules,
+        createArticleExtractionCheckpoint()
+      )
+    )?.element ?? null
+  );
+  if (root?.isConnected) editedArticleRoot = root;
+  return root;
 }
 
-export function removeArticlePreviewBlock(
+export async function removeArticlePreviewBlock(
   text: string,
   targetId?: string,
   language?: AppSettings["interfaceLanguage"],
   articleExtractionRules: ArticleExtractionRule[] = []
-): PageContext {
-  setEditedArticleRootFromCurrent(articleExtractionRules);
-  const target = articlePreviewExclusionElementById(targetId);
-  if (target) {
-    target.dataset.webmindArticleExcluded = "true";
+): Promise<PageContext> {
+  return removeArticlePreviewBlocks(
+    [{ text, targetId }],
+    language,
+    articleExtractionRules
+  );
+}
+
+export async function removeArticlePreviewBlocks(
+  blocks: Array<Pick<ArticlePreviewBlock, "text" | "sourceText" | "targetId">>,
+  language?: AppSettings["interfaceLanguage"],
+  articleExtractionRules: ArticleExtractionRule[] = []
+): Promise<PageContext> {
+  await setEditedArticleRootFromCurrentAsync(articleExtractionRules);
+  for (const block of blocks) {
+    const target = articlePreviewExclusionElementById(block.targetId);
+    if (target) target.dataset.webmindArticleExcluded = "true";
+    const normalized = normalizedText(block.sourceText ?? block.text);
+    if (normalized) {
+      removedArticleBlockTextKeys.add(articleBlockTextKey(normalized));
+    }
   }
-  const normalized = normalizedText(text);
-  if (normalized) {
-    removedArticleBlockTextKeys.add(articleBlockTextKey(normalized));
-  }
-  return extractPageContext(true, language, "article", articleExtractionRules);
+  return extractPageContextAsync(
+    true,
+    language,
+    "article",
+    articleExtractionRules
+  );
 }
 
 function isLikelyNonArticlePreviewBlock(block: ArticlePreviewBlock): boolean {
@@ -1351,12 +1965,12 @@ function isLikelyNonArticlePreviewBlock(block: ArticlePreviewBlock): boolean {
   );
 }
 
-export function pruneArticlePreviewBlocks(
+export async function pruneArticlePreviewBlocks(
   language?: AppSettings["interfaceLanguage"],
   articleExtractionRules: ArticleExtractionRule[] = []
-): PageContext {
-  setEditedArticleRootFromCurrent(articleExtractionRules);
-  const snapshot = readableArticleText(articleExtractionRules);
+): Promise<PageContext> {
+  await setEditedArticleRootFromCurrentAsync(articleExtractionRules);
+  const snapshot = await readableArticleTextAsync(articleExtractionRules);
   const preview = snapshot.preview ?? [];
   const removable = preview.filter(isLikelyNonArticlePreviewBlock);
   const removableKeys = new Set(
@@ -1376,7 +1990,12 @@ export function pruneArticlePreviewBlocks(
       if (blockText) removedArticleBlockTextKeys.add(articleBlockTextKey(blockText));
     });
   }
-  return extractPageContext(true, language, "article", articleExtractionRules);
+  return extractPageContextAsync(
+    true,
+    language,
+    "article",
+    articleExtractionRules
+  );
 }
 
 function pickerTextLength(element: HTMLElement): number {
@@ -1484,7 +2103,7 @@ export function startManualArticleSelection(
       articlePickerSession = null;
     };
 
-    const finish = (element: HTMLElement | null) => {
+    const finish = async (element: HTMLElement | null) => {
       if (settled) return;
       settled = true;
       cleanup();
@@ -1498,7 +2117,7 @@ export function startManualArticleSelection(
       clearArticleBlockEdits();
       manualArticleRoot = element;
       manualArticleRoot.dataset.webmindManualArticle = "true";
-      resolve(extractPageContext(true, language, "article"));
+      resolve(await extractPageContextAsync(true, language, "article"));
     };
 
     cancelArticlePickerSession = () => finish(null);
@@ -1566,16 +2185,21 @@ export function cancelManualArticleSelection(): { ok: boolean } {
   return { ok: true };
 }
 
-export function restoreAutomaticArticleSelection(
+export async function restoreAutomaticArticleSelection(
   language?: AppSettings["interfaceLanguage"],
   articleExtractionRules: ArticleExtractionRule[] = []
-): PageContext {
+): Promise<PageContext> {
   if (manualArticleRoot) {
     delete manualArticleRoot.dataset.webmindManualArticle;
   }
   manualArticleRoot = null;
   clearArticleBlockEdits();
-  return extractPageContext(true, language, "article", articleExtractionRules);
+  return extractPageContextAsync(
+    true,
+    language,
+    "article",
+    articleExtractionRules
+  );
 }
 
 export function extractPageContext(
@@ -1584,7 +2208,10 @@ export function extractPageContext(
   scope: "page" | "article" = "page",
   articleExtractionRules: ArticleExtractionRule[] = []
 ): PageContext {
-  const selection = ignoreSelection ? undefined : pageSelectionText() || undefined;
+  const selection =
+    ignoreSelection
+      ? undefined
+      : pageSelectionText() || retainedPageSelectionText();
   const description =
     document.querySelector<HTMLMetaElement>('meta[name="description"]')?.content ??
     document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.content;
@@ -1592,11 +2219,13 @@ export function extractPageContext(
     document.querySelector<HTMLMetaElement>('meta[property="og:site_name"]')?.content ??
     location.hostname;
   if (selection) {
+    const selectionMarkdown = pageSelectionMarkdown();
     return {
       kind: "selection",
       title: document.title || location.hostname,
       url: location.href,
       text: truncateText(selection, 20000, language),
+      markdown: truncateText(selectionMarkdown || selection, 20000, language),
       selection,
       description: uiText(language, "selectionDescription").replace(
         "{count}",
@@ -1613,6 +2242,7 @@ export function extractPageContext(
       title: article.title || document.title || location.hostname,
       url: location.href,
       text: article.text,
+      markdown: article.markdown,
       description: article.description || description,
       language: document.documentElement.lang || navigator.language,
       siteName,
@@ -1627,11 +2257,17 @@ export function extractPageContext(
     textFromElement(document.querySelector("[role='main']")) ||
     textFromElement(document.body) ||
     "";
+  const pageMarkdown =
+    markdownFromElement(document.querySelector("main")) ||
+    markdownFromElement(document.querySelector("[role='main']")) ||
+    markdownFromElement(document.body) ||
+    pageText;
   return {
     kind: query ? "search" : "webpage",
     title: document.title || location.hostname,
     url: location.href,
     text: truncateText(pageText, 100000, language),
+    markdown: truncateText(pageMarkdown, 100000, language),
     description,
     language: document.documentElement.lang || navigator.language,
     siteName
@@ -1644,9 +2280,38 @@ export async function extractPageContextAsync(
   scope: "page" | "article" = "page",
   articleExtractionRules: ArticleExtractionRule[] = []
 ): Promise<PageContext> {
-  const selection = ignoreSelection ? undefined : pageSelectionText() || undefined;
-  if (!selection) {
-    await waitForPageIdle();
+  const selection =
+    ignoreSelection
+      ? undefined
+      : pageSelectionText() || retainedPageSelectionText();
+  if (selection) {
+    return extractPageContext(
+      ignoreSelection,
+      language,
+      scope,
+      articleExtractionRules
+    );
+  }
+  await waitForPageIdle();
+  if (scope === "article") {
+    const article = await readableArticleTextAsync(articleExtractionRules);
+    const description =
+      document.querySelector<HTMLMetaElement>('meta[name="description"]')?.content ??
+      document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.content;
+    return {
+      kind: "article",
+      title: article.title || document.title || location.hostname,
+      url: location.href,
+      text: article.text,
+      markdown: article.markdown,
+      description: article.description || description,
+      language: document.documentElement.lang || navigator.language,
+      siteName:
+        document.querySelector<HTMLMetaElement>('meta[property="og:site_name"]')
+          ?.content ?? location.hostname,
+      articleSummary: article.summary,
+      articlePreview: article.preview
+    };
   }
   return extractPageContext(
     ignoreSelection,

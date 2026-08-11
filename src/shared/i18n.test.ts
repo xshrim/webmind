@@ -5,7 +5,9 @@ import {
   protectTranslationText
 } from "./utils";
 import {
+  articlePruneInstruction,
   builtInToolsForLanguage,
+  isDictionaryTranslationInput,
   quickActionPrompt,
   translationDirectionInstruction
 } from "./prompts";
@@ -58,6 +60,18 @@ describe("localized tools and prompts", () => {
     ).toContain("한국어");
   });
 
+  it("gives model pruning conservative block-classification rules", () => {
+    const prompt = articlePruneInstruction("zh-CN");
+    expect(prompt).toContain("<article-blocks>");
+    expect(prompt).toContain("keep");
+    expect(prompt).toContain("remove");
+    expect(prompt).toContain("评论和回复");
+    expect(prompt).toContain("请使用严格的剔除标准");
+    expect(prompt).toContain("评论和回复（即使评论很长）");
+    expect(prompt).toContain("就选择 remove");
+    expect(prompt).toContain("JSON 数组之外不得输出任何文字");
+  });
+
   it("locks the translation direction for short source text", () => {
     const shortEnglish = translationDirectionInstruction(
       { interfaceLanguage: "zh-CN", translationLanguage: "auto" },
@@ -67,12 +81,18 @@ describe("localized tools and prompts", () => {
       { interfaceLanguage: "zh-CN", translationLanguage: "auto" },
       "打开设置面板"
     );
+    const singleChinese = translationDirectionInstruction(
+      { interfaceLanguage: "zh-CN", translationLanguage: "auto" },
+      "词"
+    );
 
     expect(shortEnglish).toContain("简体中文");
     expect(shortEnglish).toContain("English");
     expect(shortEnglish).toContain("强制翻译任务");
     expect(shortEnglish).toContain("不要因为内容简短而原样返回");
     expect(shortChinese).toContain("English");
+    expect(singleChinese).toContain("本地预判原文主要语言为 Chinese");
+    expect(singleChinese).toContain("目标语言已固定为English");
   });
 
   it("treats Chinese text with English terms as Chinese-dominant", () => {
@@ -83,6 +103,16 @@ describe("localized tools and prompts", () => {
 
     expect(mixedChinese).toContain("本地预判原文主要语言为 Chinese");
     expect(mixedChinese).toContain("目标语言已固定为English");
+  });
+
+  it("does not use Markdown link destinations for language detection", () => {
+    const linkedChinese = translationDirectionInstruction(
+      { interfaceLanguage: "zh-CN", translationLanguage: "auto" },
+      "阅读[项目文档](https://example.com/english/documentation/path)"
+    );
+
+    expect(linkedChinese).toContain("本地预判原文主要语言为 Chinese");
+    expect(linkedChinese).toContain("目标语言已固定为English");
   });
 
   it("builds a protected prompt that fixes English source to Chinese target", () => {
@@ -96,6 +126,7 @@ describe("localized tools and prompts", () => {
     expect(prompt).toContain("目标语言已固定为简体中文");
     expect(prompt).toContain("不得复制原文");
     expect(prompt).toContain("<translation-input>");
+    expect(prompt).toContain("WEBMIND_HTML_TAG_N");
     expect(prompt).toContain("Open the settings panel");
   });
 
@@ -129,22 +160,63 @@ describe("localized tools and prompts", () => {
     );
 
     expect(prompt).toContain("查词式翻译任务");
-    expect(prompt).toContain("紧凑但清楚");
-    expect(prompt).toContain("最多一个短标题");
-    expect(prompt).toContain("不要层层标题");
-    expect(prompt).toContain("必要换行");
-    expect(prompt).toContain("4-8 行短项");
+    expect(prompt).toContain("固定行格式");
+    expect(prompt).toContain("第一行格式为 **原词** /音标或拼音/");
+    expect(prompt).toContain("英文词使用音标");
+    expect(prompt).toContain("星级后可列 CET-6 / GRE / IELTS");
+    expect(prompt).toContain("没有音标、拼音、星级或考试标签时，省略对应部分");
+    expect(prompt).toContain("后续行只能使用这些字段");
+    expect(prompt).toContain("**释义**");
+    expect(prompt).toContain("**义项**");
+    expect(prompt).toContain("**语域**");
+    expect(prompt).toContain("**搭配**");
+    expect(prompt).toContain("**变体**");
+    expect(prompt).toContain("**助记**");
+    expect(prompt).toContain("**例句**");
     expect(prompt).not.toContain("只输出 <translation-input> 中原文的译文");
+  });
+
+  it("uses dictionary mode for Chinese words but requires target-language meaning", () => {
+    const prompt = buildProtectedTranslationPrompt(
+      { interfaceLanguage: "zh-CN", translationLanguage: "auto" },
+      "获取",
+      "获取",
+      { dictionaryForShortInput: true }
+    );
+
+    expect(isDictionaryTranslationInput("获取")).toBe(true);
+    expect(prompt).toContain("查词式翻译任务");
+    expect(prompt).toContain("译文与例句翻译使用English");
+    expect(prompt).toContain("核心译义必须使用English");
+    expect(prompt).toContain("中文词使用拼音");
+    expect(prompt).toContain("不要列 CET-6 / GRE / IELTS");
+    expect(prompt).toContain("不要为了凑格式编造音标");
+  });
+
+  it("keeps sentence-like short Chinese inputs in normal translation mode", () => {
+    const prompt = buildProtectedTranslationPrompt(
+      { interfaceLanguage: "zh-CN", translationLanguage: "auto" },
+      "获取可以模型",
+      "获取可以模型",
+      { dictionaryForShortInput: true }
+    );
+
+    expect(isDictionaryTranslationInput("获取可以模型")).toBe(false);
+    expect(prompt).not.toContain("查词式翻译任务");
+    expect(prompt).toContain("这是一个翻译任务");
+    expect(prompt).toContain("目标语言已固定为English");
+    expect(prompt).toContain("只输出 <translation-input> 中原文的译文");
   });
 
   it("keeps sentence-like translation inputs in normal translation mode", () => {
     const prompt = buildProtectedTranslationPrompt(
       { interfaceLanguage: "zh-CN", translationLanguage: "auto" },
-      "Open the settings panel.",
-      "Open the settings panel.",
+      "Open the settings panel",
+      "Open the settings panel",
       { dictionaryForShortInput: true }
     );
 
+    expect(isDictionaryTranslationInput("Open the settings panel")).toBe(false);
     expect(prompt).not.toContain("查词式翻译任务");
     expect(prompt).toContain("只输出 <translation-input> 中原文的译文");
   });

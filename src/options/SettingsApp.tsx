@@ -2264,6 +2264,22 @@ export function SettingsApp() {
                     <small>{t("webSearchByDefaultHelp")}</small>
                   </span>
                 </label>
+                <label className="toggle-row">
+                  <input
+                    type="checkbox"
+                    checked={settings.toolResponseUseContextLanguage}
+                    onChange={(event) =>
+                      void updatePreference(
+                        "toolResponseUseContextLanguage",
+                        event.target.checked
+                      )
+                    }
+                  />
+                  <span>
+                    <strong>{t("toolResponseUseContextLanguage")}</strong>
+                    <small>{t("toolResponseUseContextLanguageHelp")}</small>
+                  </span>
+                </label>
                 <label className="field">
                   <span className="field-label">{t("modelThinkingTimeout")}</span>
                   <input

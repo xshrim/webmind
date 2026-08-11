@@ -231,6 +231,23 @@ describe("shared utilities", () => {
     expect(protection.text).not.toContain("two");
   });
 
+  it("protects and restores visible Markdown HTML formatting", () => {
+    const source =
+      "Use <strong>bold</strong>, <em>italic</em>, <u>underlined</u>, and <del>removed</del> text.";
+    const protection = protectTranslationText(source);
+
+    expect(protection.text).toContain("{{WEBMIND_HTML_TAG_1}}");
+    expect(protection.text).not.toContain("<strong>");
+    expect(
+      restoreTranslationText(
+        "使用 {{WEBMIND_HTML_TAG_1}}粗体{{WEBMIND_HTML_TAG_2}}、{{WEBMIND_HTML_TAG_3}}斜体{{WEBMIND_HTML_TAG_4}}、{{WEBMIND_HTML_TAG_5}}下划线{{WEBMIND_HTML_TAG_6}}和{{WEBMIND_HTML_TAG_7}}删除{{WEBMIND_HTML_TAG_8}}文字。",
+        protection
+      )
+    ).toBe(
+      "使用 <strong>粗体</strong>、<em>斜体</em>、<u>下划线</u>和<del>删除</del>文字。"
+    );
+  });
+
   it("protects general HTML tags while translating visible text", () => {
     const protection = protectTranslationText(
       'Read <span class="secret" hidden>hidden</span> and <br/> keep going.'

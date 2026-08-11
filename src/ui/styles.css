@@ -1831,6 +1831,41 @@ svg {
   gap: 7px;
 }
 
+.message-meta-actions {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 2px;
+}
+
+.message-meta-action {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+}
+
+.message-meta-action:hover {
+  color: var(--teal);
+  background: var(--surface);
+}
+
+.message-meta-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.message-meta-action svg {
+  width: 14px;
+  height: 14px;
+}
+
 .message-avatar {
   display: grid;
   width: 22px;
@@ -2151,28 +2186,25 @@ svg {
   overflow: visible;
 }
 
-.assistant-actions > .message-action-button,
+.assistant-actions > .message-action-button {
+  flex: 0 0 auto;
+}
+
 .assistant-actions > .message-tool-menu {
-  min-width: 0;
-  flex: 1 1 0;
+  flex: 0 0 auto;
+  margin-left: auto;
 }
 
-.assistant-actions .message-action-button,
-.assistant-actions .message-tool-select {
-  width: 100%;
-  min-width: 0;
+.assistant-actions .message-action-button {
+  width: 30px;
   justify-content: center;
-  gap: 4px;
-  padding-right: 5px;
-  padding-left: 5px;
+  padding: 0;
 }
 
-.assistant-actions .message-action-button span,
-.assistant-actions .message-tool-select span {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.assistant-actions .message-tool-select {
+  width: auto;
+  min-width: max-content;
+  justify-content: center;
 }
 
 .message-action-button,
@@ -3226,6 +3258,13 @@ button.prompt-row:hover {
   font-weight: 760;
 }
 
+.body-preview-meta-action.icon-only {
+  width: 23px;
+  max-width: 23px;
+  justify-content: center;
+  padding: 0;
+}
+
 .body-preview-meta-action:hover,
 .body-preview-meta-action:focus-visible {
   border-color: color-mix(in srgb, var(--teal) 38%, var(--border));
@@ -3283,6 +3322,11 @@ button.prompt-row:hover {
   text-align: left;
 }
 
+.body-preview-block.passive {
+  grid-template-columns: minmax(0, 1fr);
+  cursor: default;
+}
+
 .body-preview-block span {
   min-width: 0;
   overflow-x: auto;
@@ -3290,11 +3334,88 @@ button.prompt-row:hover {
   white-space: break-spaces;
 }
 
+.body-preview-block-content {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.body-preview-block-content .markdown {
+  min-width: 0;
+  margin: 0;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  overflow-wrap: anywhere;
+}
+
+.body-preview-block-content .markdown > :first-child {
+  margin-top: 0;
+}
+
+.body-preview-block-content .markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.body-preview-block-content .markdown p,
+.body-preview-block-content .markdown ul,
+.body-preview-block-content .markdown ol,
+.body-preview-block-content .markdown blockquote,
+.body-preview-block-content .markdown pre {
+  margin: 0 0 6px;
+}
+
+.body-preview-block-content .markdown h1,
+.body-preview-block-content .markdown h2,
+.body-preview-block-content .markdown h3,
+.body-preview-block-content .markdown h4,
+.body-preview-block-content .markdown h5,
+.body-preview-block-content .markdown h6 {
+  margin: 0 0 6px;
+  font-size: 1em;
+  line-height: 1.45;
+}
+
+.body-preview-block-content .markdown ul,
+.body-preview-block-content .markdown ol {
+  padding-left: 18px;
+}
+
+.body-preview-block-content .markdown a {
+  color: var(--teal);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.body-preview-block-content .markdown code {
+  padding: 1px 3px;
+  border-radius: 3px;
+  background: var(--surface-2);
+  font-size: 0.94em;
+}
+
+.body-preview-block-content .markdown pre {
+  max-width: 100%;
+  overflow: auto;
+  padding: 5px 6px;
+  border-radius: 4px;
+  background: var(--surface-2);
+}
+
+.body-preview-block-content .markdown pre code {
+  padding: 0;
+  background: transparent;
+}
+
 .body-preview-block:hover,
 .body-preview-block:focus-visible {
   color: var(--text);
   background: color-mix(in srgb, var(--teal) 8%, var(--surface-2));
   outline: none;
+}
+
+.body-preview-block.passive:hover {
+  background: transparent;
 }
 
 .body-preview-block-remove {
@@ -3339,13 +3460,43 @@ button.prompt-row:hover {
   border-color: var(--teal);
 }
 
+.composer-clear {
+  position: absolute;
+  z-index: 2;
+  top: 7px;
+  right: 7px;
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  color: var(--faint);
+  background: transparent;
+  cursor: pointer;
+}
+
+.composer-clear:hover,
+.composer-clear:focus-visible {
+  color: var(--muted);
+  background: var(--surface-2);
+  outline: none;
+}
+
+.composer-clear svg {
+  width: 13px;
+  height: 13px;
+}
+
 .composer textarea {
   display: block;
   width: 100%;
-  min-height: 46px;
-  max-height: 145px;
-  resize: none;
-  padding: 10px 11px 4px;
+  height: 56px;
+  min-height: 56px;
+  max-height: 200px;
+  resize: vertical;
+  padding: 10px 38px 4px 11px;
   overflow-y: auto;
   border: 0;
   outline: 0;

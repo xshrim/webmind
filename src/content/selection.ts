@@ -125,6 +125,14 @@ export function textFromElement(element: Element | null): string {
     .trim());
 }
 
+export function markdownLinkLabel(value: string): string {
+  return value
+    .replace(/\r\n?/g, "\n")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/([\[\]])/g, "\\$1");
+}
+
 export function textFromElementWithLinks(element: Element | null): string {
   if (!element) return "";
   const parts: string[] = [];
@@ -160,12 +168,12 @@ export function textFromElementWithLinks(element: Element | null): string {
     }
     if (node.matches("a[href]")) {
       const link = node as HTMLAnchorElement;
-      const text = (link.innerText || link.textContent || "").trim();
+      const text = markdownLinkLabel(link.innerText || link.textContent || "");
       if (text) {
         const href = encodeURI(link.href)
           .replace(/\(/g, "%28")
           .replace(/\)/g, "%29");
-        parts.push(`[${text.replace(/]/g, "\\]")}](${href})`);
+        parts.push(`[${text}](${href})`);
         return;
       }
     }
@@ -191,6 +199,139 @@ export function textFromElementWithLinks(element: Element | null): string {
     .trim());
 }
 
+function escapeMarkdownText(value: string): string {
+  return value.replace(/[\\`*_~]/g, "\\$&");
+}
+
+function markdownHref(value: string): string {
+  return encodeURI(value)
+    .replace(/\(/g, "%28")
+    .replace(/\)/g, "%29")
+    .replace(/</g, "%3C")
+    .replace(/>/g, "%3E");
+}
+
+function markdownInlineFromNode(node: Node): string {
+  if (node instanceof Text) {
+    return escapeMarkdownText(
+      (node.textContent ?? "").replace(/\r\n?/g, "\n").replace(/[ \t]+/g, " ")
+    );
+  }
+  if (!(node instanceof HTMLElement)) return "";
+  if (
+    node.matches(
+      "script, style, noscript, template, svg, canvas, [hidden], [aria-hidden='true'], .webmind-root, .webmind-translation, .webmind-reading, .webmind-immersive-reading-token"
+    )
+  ) {
+    return "";
+  }
+  if (node.isConnected) {
+    const style = node.ownerDocument.defaultView?.getComputedStyle(node);
+    if (
+      style &&
+      (style.display === "none" ||
+        style.visibility === "hidden" ||
+        style.visibility === "collapse" ||
+        style.contentVisibility === "hidden" ||
+        node.getClientRects().length === 0)
+    ) {
+      return "";
+    }
+  }
+  const citationAnchor = node.matches("a[href]")
+    ? (node as HTMLAnchorElement)
+    : node.tagName === "SUP"
+      ? node.querySelector<HTMLAnchorElement>("a[href]")
+      : null;
+  if (
+    citationAnchor &&
+    (node.tagName === "SUP" || isCitationAnchor(citationAnchor))
+  ) {
+    const marker = (node.innerText || node.textContent || "")
+      .replace(/\s+/g, " ")
+      .trim();
+    return CITATION_MARKER_PATTERN.test(marker)
+      ? marker
+      : /^\d+(?:\s*[-,–—]\s*\d+)*$/.test(marker)
+        ? `[${marker}]`
+        : escapeMarkdownText(marker);
+  }
+  if (node.tagName === "BR") return "\n";
+  if (node.tagName === "IMG") {
+    return escapeMarkdownText(node.getAttribute("alt")?.trim() ?? "");
+  }
+  if (node.tagName === "A") {
+    const link = node as HTMLAnchorElement;
+    const label = markdownLinkLabel(
+      Array.from(link.childNodes).map(markdownInlineFromNode).join("")
+    );
+    if (!label || !link.href) return label;
+    return `[${label}](${markdownHref(link.href)})`;
+  }
+  if (node.tagName === "PRE") {
+    const code = (node.textContent ?? "").replace(/\r\n?/g, "\n").trim();
+    return code ? `\n\n${"```"}\n${code}\n${"```"}\n\n` : "";
+  }
+  const content = Array.from(node.childNodes)
+    .map(markdownInlineFromNode)
+    .join("");
+  switch (node.tagName) {
+    case "STRONG":
+    case "B":
+      return content.trim() ? `<strong>${content}</strong>` : "";
+    case "EM":
+    case "I":
+      return content.trim() ? `<em>${content}</em>` : "";
+    case "U":
+      return content.trim() ? `<u>${content}</u>` : "";
+    case "S":
+    case "DEL":
+    case "STRIKE":
+      return content.trim() ? `<del>${content}</del>` : "";
+    case "CODE":
+      return content.trim() ? `<code>${content}</code>` : "";
+    case "BLOCKQUOTE":
+      return content.trim()
+        ? `\n\n${content.trim().split("\n").map((line) => `> ${line}`).join("\n")}\n\n`
+        : "";
+    case "H1":
+    case "H2":
+    case "H3":
+    case "H4":
+    case "H5":
+    case "H6": {
+      const level = Number(node.tagName.slice(1));
+      return content.trim() ? `\n\n${"#".repeat(level)} ${content.trim()}\n\n` : "";
+    }
+    case "LI":
+      if (!content.trim()) return "";
+      if (node.parentElement?.tagName === "OL") {
+        const index = Array.from(node.parentElement.children).indexOf(node) + 1;
+        return `\n${index}. ${content.trim()}\n`;
+      }
+      return `\n- ${content.trim()}\n`;
+    default:
+      return content + (/^(?:ADDRESS|ARTICLE|ASIDE|DIV|FIGCAPTION|P|SECTION|TR|TD|TH|UL|OL|DL|DT|DD|FIGURE|DETAILS)$/.test(node.tagName) ? "\n\n" : "");
+  }
+}
+
+export function markdownFromElement(element: Element | null): string {
+  if (!element) return "";
+  return cleanCitationExplanationText(
+    Array.from(element.childNodes)
+      .map(markdownInlineFromNode)
+      .join("")
+      .replace(/\u00a0/g, " ")
+      .replace(/[ \t]+\n/g, "\n")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim()
+  );
+}
+
+export function markdownFromText(value: string): string {
+  return escapeMarkdownText(value.replace(/\r\n?/g, "\n").trim());
+}
+
 export function selectionTextWithLayout(selection: Selection | null): string {
   if (!selection?.rangeCount) return "";
   try {
@@ -208,6 +349,32 @@ export function selectionTextWithLayout(selection: Selection | null): string {
     .replace(/ *\n */g, "\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim());
+}
+
+export function selectionMarkdownWithLayout(selection: Selection | null): string {
+  if (!selection?.rangeCount) return "";
+  try {
+    const container = document.createElement("div");
+    container.append(selection.getRangeAt(0).cloneContents());
+    const structured = markdownFromElement(container);
+    if (structured) return structured;
+  } catch {
+    // Fall back to plain selected text below.
+  }
+  return markdownFromText(selection.toString());
+}
+
+export function pageSelectionMarkdown(): string {
+  const active = document.activeElement;
+  if (
+    active instanceof HTMLInputElement ||
+    active instanceof HTMLTextAreaElement
+  ) {
+    const start = active.selectionStart ?? 0;
+    const end = active.selectionEnd ?? start;
+    return markdownFromText(active.value.slice(start, end));
+  }
+  return selectionMarkdownWithLayout(window.getSelection());
 }
 
 export function pageSelectionText(): string {

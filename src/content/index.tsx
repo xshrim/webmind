@@ -75,6 +75,7 @@ import {
   autoReplyTargetFromEvent,
   currentSelection,
   editableText,
+  pageSelectionMarkdown,
   pageSelectionText,
   replaceSelection,
   setEditableText,
@@ -89,9 +90,11 @@ import {
   highlightArticlePreviewBlock,
   linkCitationMarkers,
   pruneArticlePreviewBlocks,
+  removeArticlePreviewBlocks,
   removeArticlePreviewBlock,
   searchQuery,
   searchResultsContext,
+  setRetainedPageSelectionText,
   restoreAutomaticArticleSelection,
   startManualArticleSelection
 } from "./pageContext";
@@ -220,6 +223,7 @@ let selectionReportTimer: number | null = null;
 let selectionOverlayTimer: number | null = null;
 let selectionOverlayShortcutPressed = false;
 let lastSelectionReportKey = "";
+let retainedPageSelection: { text: string; range: Range | null } | null = null;
 let hoverDefinitionDictionaryPromise: Promise<HoverDefinitionDictionary> | null =
   null;
 let englishWordFrequencyPromise: Promise<EnglishWordFrequencyIndex> | null = null;
@@ -667,6 +671,26 @@ function scheduleSelectionContextReport(): void {
   selectionReportTimer = window.setTimeout(() => {
     selectionReportTimer = null;
     const text = pageSelectionText().trim().slice(0, 12000);
+    const markdown = pageSelectionMarkdown().trim().slice(0, 12000);
+    if (text) {
+      const selection = window.getSelection();
+      retainedPageSelection = {
+        text,
+        range:
+          selection?.rangeCount
+            ? selection.getRangeAt(0).cloneRange()
+            : null
+      };
+      setRetainedPageSelectionText(text);
+    } else if (!document.hasFocus() && retainedPageSelection?.text) {
+      // Opening the side panel moves focus away from the page and clears the
+      // native highlight in some Chrome versions. Keep the logical selection
+      // until the user returns to the page and actually clears it.
+      return;
+    } else {
+      retainedPageSelection = null;
+      setRetainedPageSelectionText("");
+    }
     const reportKey = `${location.href}\n${text}`;
     if (reportKey === lastSelectionReportKey) return;
     lastSelectionReportKey = reportKey;
@@ -677,6 +701,7 @@ function scheduleSelectionContextReport(): void {
           payload: {
             hasSelection: Boolean(text),
             text,
+            markdown,
             title: document.title || location.hostname,
             url: location.href
           }
@@ -865,6 +890,37 @@ function translationPreparationDependencies(): TranslationPreparationDependencie
     installStyles: installPageStyles,
     isVisible,
     viewportPriority,
+    retainedSelectionRange: (textFallback) => {
+      const retained = retainedPageSelection;
+      if (
+        !retained?.range ||
+        !retained.range.commonAncestorContainer.isConnected
+      ) {
+        return null;
+      }
+      const rangeText = normalizedBlockText(retained.range.toString());
+      const targetText = normalizedBlockText(textFallback);
+      if (
+        targetText &&
+        rangeText &&
+        !rangeText.includes(targetText) &&
+        !targetText.includes(rangeText)
+      ) {
+        return null;
+      }
+      return retained.range.cloneRange();
+    },
+    retainSelectionRange: (range, textFallback) => {
+      const text =
+        retainedPageSelection?.text ||
+        textFallback.trim() ||
+        normalizedBlockText(range.toString());
+      retainedPageSelection = {
+        text,
+        range: range.cloneRange()
+      };
+      setRetainedPageSelectionText(text);
+    },
     textNodes,
     currentSelection,
     translatableElementFromTarget,
@@ -1903,6 +1959,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
           createdAt: Date.now(),
           contextScope: "selection",
           text: snapshot.text,
+          markdown: pageSelectionMarkdown(),
           pageTitle: document.title,
           pageUrl: location.href
         };
@@ -1929,9 +1986,14 @@ function SelectionAssistant({ query }: { query: string | null }) {
       setResultBusy(true);
       setCopied(false);
       try {
-        const response = await runtimeRequest<{ text: string }>(
-          "model.tool",
-          { toolId: tool.id, text: snapshot.text }
+          const response = await runtimeRequest<{ text: string }>(
+            "model.tool",
+            {
+              toolId: tool.id,
+              text: snapshot.text,
+              markdown: pageSelectionMarkdown(),
+              language: document.documentElement.lang || navigator.language
+            }
         );
         setResult(response.text);
       } catch (requestError) {
@@ -1989,7 +2051,9 @@ function SelectionAssistant({ query }: { query: string | null }) {
     try {
       const response = await runtimeRequest<{ text: string }>("model.tool", {
         toolId: tool.id,
-        text
+        text,
+        markdown: text,
+        language: document.documentElement.lang || navigator.language
       });
       setResult(response.text);
     } catch (requestError) {
@@ -2159,7 +2223,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
       if (!translationProfile) throw new Error(t("modelEngineRequired"));
       const articleContext =
         scope === "article"
-          ? extractPageContext(
+          ? await extractPageContextAsync(
               true,
               activeSettings?.interfaceLanguage,
               "article",
@@ -2385,7 +2449,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
       );
       const articleContext =
         scope === "article"
-          ? extractPageContext(
+          ? await extractPageContextAsync(
               true,
               activeSettings.interfaceLanguage,
               "article",
@@ -4103,6 +4167,25 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       return removeArticlePreviewBlock(
         String(message.text ?? ""),
         typeof message.targetId === "string" ? message.targetId : undefined,
+        settings?.interfaceLanguage,
+        settings?.articleExtractionRules ?? []
+      );
+    }
+    if (message.type === "page.article.preview.remove-many") {
+      const blocks = Array.isArray(message.blocks)
+        ? message.blocks.filter(
+            (block: unknown): block is {
+              text: string;
+              sourceText?: string;
+              targetId?: string;
+            } =>
+              Boolean(block) &&
+              typeof block === "object" &&
+              typeof (block as { text?: unknown }).text === "string"
+          )
+        : [];
+      return removeArticlePreviewBlocks(
+        blocks,
         settings?.interfaceLanguage,
         settings?.articleExtractionRules ?? []
       );

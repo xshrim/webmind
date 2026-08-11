@@ -29,6 +29,8 @@ export interface TranslationPreparationDependencies {
   installStyles: () => void;
   isVisible: (element: HTMLElement) => boolean;
   viewportPriority: (element: HTMLElement, order: number) => number;
+  retainedSelectionRange?: (textFallback: string) => Range | null;
+  retainSelectionRange?: (range: Range, textFallback: string) => void;
   textNodes: (root: Node) => Text[];
   currentSelection: (target: EventTarget | null) => { text: string } | null;
   translatableElementFromTarget: (
@@ -442,7 +444,10 @@ function translationTextFromElement(
       parts.push(linkToken("END", index));
       return;
     }
-    if (formats && (node.tagName === "SUP" || node.tagName === "SUB")) {
+    if (
+      formats &&
+      node.matches("strong, b, em, i, u, s, del, strike, code, mark, sup, sub")
+    ) {
       const visibleText = normalizedBlockText(
         node.innerText || node.textContent || ""
       );
@@ -550,15 +555,25 @@ function wrapCurrentSelection(
 ): HTMLElement | null {
   const selection = window.getSelection();
   const selectedText = selection?.toString().replace(/\s+/g, " ").trim();
-  if (selection && selection.rangeCount && selectedText) {
-    const range = selection.getRangeAt(0).cloneRange();
+  const retainedRange = dependencies.retainedSelectionRange?.(textFallback);
+  const selectedRange =
+    selection && selection.rangeCount && selectedText
+      ? selection.getRangeAt(0).cloneRange()
+      : retainedRange;
+  if (selectedRange && normalizedBlockText(selectedRange.toString())) {
     const wrapper = document.createElement("span");
     wrapper.className = "webmind-immersive-source";
     wrapper.dataset.webmindBlockId = dependencies.nextBlockId();
     try {
-      wrapper.append(range.extractContents());
-      range.insertNode(wrapper);
-      selection.removeAllRanges();
+      wrapper.append(selectedRange.extractContents());
+      selectedRange.insertNode(wrapper);
+      const wrappedRange = document.createRange();
+      wrappedRange.selectNodeContents(wrapper);
+      dependencies.retainSelectionRange?.(wrappedRange, textFallback);
+      if (selection) {
+        selection.removeAllRanges();
+        selection.addRange(wrappedRange.cloneRange());
+      }
       return wrapper;
     } catch {
       return null;
@@ -580,6 +595,13 @@ function wrapCurrentSelection(
   wrapper.dataset.webmindBlockId = dependencies.nextBlockId();
   wrapper.append(range.extractContents());
   range.insertNode(wrapper);
+  const wrappedRange = document.createRange();
+  wrappedRange.selectNodeContents(wrapper);
+  dependencies.retainSelectionRange?.(wrappedRange, textFallback);
+  if (selection) {
+    selection.removeAllRanges();
+    selection.addRange(wrappedRange.cloneRange());
+  }
   return wrapper;
 }
 
@@ -593,12 +615,56 @@ export function prepareTranslationBlocks(
   if (scope === "selection") {
     const wrapper = wrapCurrentSelection(textFallback, dependencies);
     if (!wrapper) return [];
-    const id = wrapper.dataset.webmindBlockId ?? "";
-    const block = prepareTranslationBlock(wrapper, id, true, options, dependencies);
+    const visibleText = translationElementVisibleText(wrapper);
+    const maxVisibleTextLength = options.maxVisibleTextLength ?? 900;
+    if (visibleText.length <= maxVisibleTextLength) {
+      const id = wrapper.dataset.webmindBlockId ?? dependencies.nextBlockId();
+      wrapper.dataset.webmindBlockId = id;
+      const block = prepareTranslationBlock(
+        wrapper,
+        id,
+        true,
+        options,
+        dependencies
+      );
+      return block ? [block] : [];
+    }
+    const candidates = articleContentCandidatesFromRoot(
+      wrapper,
+      options,
+      dependencies
+    );
+    const blocks = candidates.flatMap((element) => {
+      const id = element.dataset.webmindBlockId ?? dependencies.nextBlockId();
+      element.dataset.webmindBlockId = id;
+      const block = prepareTranslationBlock(
+        element,
+        id,
+        true,
+        options,
+        dependencies
+      );
+      return block ? [block] : [];
+    });
+    if (blocks.length) return blocks;
+    const id = wrapper.dataset.webmindBlockId ?? dependencies.nextBlockId();
+    wrapper.dataset.webmindBlockId = id;
+    const block = prepareTranslationBlock(
+      wrapper,
+      id,
+      true,
+      {
+        ...options,
+        maxVisibleTextLength: Math.max(maxVisibleTextLength, visibleText.length)
+      },
+      dependencies
+    );
     return block ? [block] : [];
   }
+  const hasArticlePreviewPlan =
+    scope === "article" && Boolean(options.articlePreviewBlocks?.length);
   const root =
-    scope === "article"
+    scope === "article" && !hasArticlePreviewPlan
       ? findBestArticleRoot(options.articleExtractionRules) ??
         document.querySelector("article") ??
         document.querySelector("main") ??
@@ -621,25 +687,32 @@ export function prepareTranslationBlocks(
   const seen = new Set<string>();
   const blocks: PageTextBlock[] = [];
   if (scope === "article" && Array.isArray(options.articlePreviewBlocks)) {
-    for (const previewBlock of options.articlePreviewBlocks) {
-      const rawSourceText = (previewBlock.sourceText ?? previewBlock.text).trim();
-      const sourceText = normalizedBlockText(rawSourceText);
-      if (!sourceText) continue;
-      if (
-        articleScopeText &&
-        !articleScopeText.includes(sourceText) &&
-        !sourceText.includes(articleScopeText)
-      ) {
-        continue;
-      }
-      const element = articlePreviewBlockElement(
-        previewBlock,
-        root,
-        dependencies
-      );
-      if (!element || !dependencies.isVisible(element)) continue;
-      if (isWebMindGeneratedElement(element)) continue;
-      if (isEditedArticleBlockExcluded(element)) continue;
+    const previewCandidates = options.articlePreviewBlocks
+      .map((previewBlock, order) => {
+        const rawSourceText = (previewBlock.sourceText ?? previewBlock.text).trim();
+        const sourceText = normalizedBlockText(rawSourceText);
+        if (!sourceText) return null;
+        const element = articlePreviewBlockElement(
+          previewBlock,
+          root,
+          dependencies
+        );
+        if (!element || !dependencies.isVisible(element)) return null;
+        if (isWebMindGeneratedElement(element)) return null;
+        if (isEditedArticleBlockExcluded(element)) return null;
+        return {
+          previewBlock,
+          rawSourceText,
+          sourceText,
+          element,
+          order,
+          priority: dependencies.viewportPriority(element, order)
+        };
+      })
+      .filter((candidate): candidate is NonNullable<typeof candidate> => Boolean(candidate))
+      .sort((left, right) => left.priority - right.priority);
+    for (const candidate of previewCandidates) {
+      const { element, rawSourceText, sourceText } = candidate;
       let id = dependencies.nextBlockId();
       let sourceElement: HTMLElement | null = element;
       if (
@@ -661,7 +734,7 @@ export function prepareTranslationBlocks(
       if (!prepared) continue;
       if (seen.has(id)) continue;
       seen.add(id);
-      blocks.push({ id: prepared.id, text: rawSourceText });
+      blocks.push(prepared);
     }
     return blocks;
   }
@@ -693,8 +766,7 @@ export function prepareTranslationBlocks(
     }))
     .sort((left, right) => left.priority - right.priority)
     .map(({ element }) => element);
-  const candidates =
-    scope === "article" ? orderedCandidates : orderedCandidates.slice(0, 160);
+  const candidates = orderedCandidates;
   for (const element of candidates) {
     if (
       articleScopeText &&

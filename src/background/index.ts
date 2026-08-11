@@ -20,7 +20,7 @@ import type {
   ProviderProfile,
   QuickActionId
 } from "../shared/types";
-import { findTool, toolInstruction } from "../shared/tools";
+import { findTool, toolPromptWithContext } from "../shared/tools";
 import { modelPurposeForToolId } from "../shared/models";
 import {
   buildProtectedTranslationPrompt,
@@ -451,13 +451,14 @@ chrome.runtime.onMessage.addListener(
         if (tool.id === "ask-selection") {
           return { text: "" };
         }
-        const contextText = String(message.payload?.text ?? "");
+        const contextMarkdown = String(message.payload?.markdown ?? "").trim();
+        const contextText =
+          contextMarkdown || String(message.payload?.text ?? "");
         const isTranslationTool =
           tool.id === "translate-text" || tool.id === "translate-document";
         const protectedText = isTranslationTool
           ? protectTranslationText(contextText)
           : null;
-        const instruction = toolInstruction(tool, settings, contextText);
         const userPrompt = isTranslationTool
           ? buildProtectedTranslationPrompt(
               settings,
@@ -465,7 +466,14 @@ chrome.runtime.onMessage.addListener(
               protectedText?.text ?? contextText,
               { dictionaryForShortInput: tool.id === "translate-text" }
             )
-          : `${instruction}\n\n${uiText(settings.interfaceLanguage, "currentContext")}：\n${contextText}`;
+          : toolPromptWithContext(
+              tool,
+              settings,
+              contextText,
+              "",
+              undefined,
+              String(message.payload?.language ?? "") || undefined
+            );
         const result = await completeModel({
           profileId: String(message.payload?.profileId ?? "") || undefined,
           purpose: modelPurposeForToolId(tool.id),

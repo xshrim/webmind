@@ -13321,6 +13321,7 @@
       selectMoreTools: "\u9009\u62E9\u66F4\u591A\u5DE5\u5177",
       moreTools: "\u66F4\u591A\u5DE5\u5177",
       copyContent: "\u590D\u5236\u5185\u5BB9",
+      clearComposer: "\u6E05\u7A7A\u8F93\u5165",
       copyCurrentBody: "\u590D\u5236\u6B63\u6587",
       copyUrl: "\u590D\u5236\u7F51\u9875 URL",
       copied: "\u5DF2\u590D\u5236",
@@ -13333,7 +13334,11 @@
       currentPage: "\u5F53\u524D\u9875\u9762",
       currentBody: "\u5F53\u524D\u6B63\u6587",
       currentSelection: "\u5F53\u524D\u9009\u4E2D",
-      currentBodyPreview: "\u5F53\u524D\u6B63\u6587\u9884\u89C8",
+      currentBodyPreview: "\u4E0A\u4E0B\u6587\u9884\u89C8",
+      nonePreview: "\u9884\u89C8",
+      pagePreview: "\u9875\u9762\u9884\u89C8",
+      bodyPreview: "\u6B63\u6587\u9884\u89C8",
+      selectionPreview: "\u9009\u4E2D\u9884\u89C8",
       expand: "\u5C55\u5F00",
       collapse: "\u6536\u8D77",
       currentBodyBlocks: "{count} \u6BB5",
@@ -13355,7 +13360,12 @@
       restoreCurrentBody: "\u8FD8\u539F\u6B63\u6587",
       highlightCurrentBodyBlock: "\u5728\u9875\u9762\u4E2D\u9AD8\u4EAE\u8FD9\u4E00\u6BB5",
       removeCurrentBodyBlock: "\u4ECE\u5F53\u524D\u6B63\u6587\u4E2D\u5220\u9664\u8FD9\u4E00\u6BB5",
-      smartPruneCurrentBody: "\u667A\u80FD\u5254\u9664",
+      smartPruneCurrentBody: "\u81EA\u52A8\u5254\u9664",
+      modelPruneCurrentBody: "\u667A\u80FD\u5254\u9664",
+      modelPruneCurrentBodyRunning: "\u6B63\u5728\u8BA9\u5927\u6A21\u578B\u5224\u65AD\u6B63\u6587 block",
+      modelPruneInvalidResult: "\u5927\u6A21\u578B\u8FD4\u56DE\u7684\u6B63\u6587\u5254\u9664\u7ED3\u679C\u65E0\u6CD5\u89E3\u6790",
+      modelPruneNoChanges: "\u5927\u6A21\u578B\u5224\u65AD\u6CA1\u6709\u9700\u8981\u5254\u9664\u7684\u6B63\u6587 block",
+      modelPruneAllRejected: "\u4E3A\u907F\u514D\u8BEF\u5220\uFF0C\u4E0D\u80FD\u5254\u9664\u5168\u90E8\u6B63\u6587 block",
       articleRecognition: "\u6B63\u6587\u8BC6\u522B",
       recognitionRules: "\u8BC6\u522B\u89C4\u5219",
       articleExtractionRules: "\u6B63\u6587\u63D0\u53D6\u89C4\u5219",
@@ -13509,6 +13519,8 @@
       includePageByDefaultHelp: "\u53D1\u9001\u524D\u4ECD\u53EF\u5728\u8F93\u5165\u533A\u5173\u95ED\u9875\u9762\u4E0A\u4E0B\u6587\u3002",
       webSearchByDefault: "\u5BF9\u8BDD\u9ED8\u8BA4\u542F\u7528\u7F51\u9875\u641C\u7D22",
       webSearchByDefaultHelp: "\u4FA7\u8FB9\u680F\u666E\u901A\u5BF9\u8BDD\u9ED8\u8BA4\u4F7F\u7528 DuckDuckGo \u7ED3\u679C\u8865\u5145\u95EE\u9898\u3002",
+      toolResponseUseContextLanguage: "\u5DE5\u5177\u4F7F\u7528\u63D0\u95EE\u4E0A\u4E0B\u6587\u539F\u59CB\u8BED\u8A00\u8FDB\u884C\u56DE\u7B54",
+      toolResponseUseContextLanguageHelp: "\u5173\u95ED\u65F6\u4F7F\u7528\u5F53\u524D\u754C\u9762\u8BED\u8A00\uFF1B\u4EC5\u5F71\u54CD\u5DE5\u5177\uFF0C\u5DE5\u5177\u63D0\u793A\u8BCD\u4E2D\u660E\u786E\u6307\u5B9A\u7684\u56DE\u7B54\u8BED\u8A00\u4F18\u5148\u3002",
       historyLimit: "\u6700\u591A\u4FDD\u5B58\u5BF9\u8BDD",
       modelThinkingTimeout: "\u5927\u6A21\u578B\u601D\u8003\u8D85\u65F6\u65F6\u95F4\uFF08\u79D2\uFF09",
       modelThinkingTimeoutHelp: "0 \u8868\u793A\u4E0D\u8D85\u65F6\uFF1B\u8D85\u65F6\u540E\u4F1A\u4E2D\u65AD\u5F53\u524D\u56DE\u7B54\uFF0C\u5E76\u5728\u56DE\u7B54\u4E2D\u8BF4\u660E\u8D85\u65F6\u3002",
@@ -13626,7 +13638,7 @@
       chooseContextFirst: "\u8BF7\u5148\u5728\u4E0A\u4E0B\u6587\u4E2D\u9009\u62E9\u5F53\u524D\u9875\u9762\u6216\u9009\u4E2D\u5185\u5BB9",
       directQuestionPlaceholder: "\u76F4\u63A5\u63D0\u95EE\u2026",
       askContextPlaceholder: "\u5411\u5F53\u524D\u9875\u9762\u63D0\u95EE\u2026",
-      composerShortcutHint: "Enter \u53D1\u9001\uFF0CCtrl+Enter \u6362\u884C",
+      composerShortcutHint: "Enter \u53D1\u9001\uFF0CShift+Enter \u6362\u884C",
       addEngineFirst: "\u5148\u5728\u8BBE\u7F6E\u4E2D\u6DFB\u52A0\u6A21\u578B\u5F15\u64CE",
       copyFailed: "\u590D\u5236\u5931\u8D25",
       readingPdf: "\u6B63\u5728\u8BFB\u53D6 PDF",
@@ -13854,6 +13866,7 @@
       selectMoreTools: "\u9078\u64C7\u66F4\u591A\u5DE5\u5177",
       moreTools: "\u66F4\u591A\u5DE5\u5177",
       copyContent: "\u8907\u88FD\u5167\u5BB9",
+      clearComposer: "\u6E05\u7A7A\u8F38\u5165",
       copyCurrentBody: "\u8907\u88FD\u6B63\u6587",
       copyUrl: "\u8907\u88FD\u7DB2\u9801 URL",
       copied: "\u5DF2\u8907\u88FD",
@@ -13866,7 +13879,11 @@
       currentPage: "\u76EE\u524D\u9801\u9762",
       currentBody: "\u76EE\u524D\u6B63\u6587",
       currentSelection: "\u76EE\u524D\u9078\u53D6",
-      currentBodyPreview: "\u76EE\u524D\u6B63\u6587\u9810\u89BD",
+      currentBodyPreview: "\u4E0A\u4E0B\u6587\u9810\u89BD",
+      nonePreview: "\u9810\u89BD",
+      pagePreview: "\u9801\u9762\u9810\u89BD",
+      bodyPreview: "\u6B63\u6587\u9810\u89BD",
+      selectionPreview: "\u9078\u53D6\u9810\u89BD",
       expand: "\u5C55\u958B",
       collapse: "\u6536\u8D77",
       currentBodyBlocks: "{count} \u6BB5",
@@ -13888,7 +13905,12 @@
       restoreCurrentBody: "\u9084\u539F\u6B63\u6587",
       highlightCurrentBodyBlock: "\u5728\u9801\u9762\u4E2D\u9AD8\u4EAE\u9019\u4E00\u6BB5",
       removeCurrentBodyBlock: "\u5F9E\u76EE\u524D\u6B63\u6587\u4E2D\u522A\u9664\u9019\u4E00\u6BB5",
-      smartPruneCurrentBody: "\u667A\u6167\u5254\u9664",
+      smartPruneCurrentBody: "\u81EA\u52D5\u5254\u9664",
+      modelPruneCurrentBody: "\u667A\u6167\u5254\u9664",
+      modelPruneCurrentBodyRunning: "\u6B63\u5728\u8B93\u5927\u6A21\u578B\u5224\u65B7\u6B63\u6587 block",
+      modelPruneInvalidResult: "\u5927\u6A21\u578B\u8FD4\u56DE\u7684\u6B63\u6587\u5254\u9664\u7D50\u679C\u7121\u6CD5\u89E3\u6790",
+      modelPruneNoChanges: "\u5927\u6A21\u578B\u5224\u65B7\u6C92\u6709\u9700\u8981\u5254\u9664\u7684\u6B63\u6587 block",
+      modelPruneAllRejected: "\u70BA\u907F\u514D\u8AA4\u522A\uFF0C\u4E0D\u80FD\u5254\u9664\u5168\u90E8\u6B63\u6587 block",
       articleRecognition: "\u6B63\u6587\u8B58\u5225",
       recognitionRules: "\u8B58\u5225\u898F\u5247",
       articleExtractionRules: "\u6B63\u6587\u64F7\u53D6\u898F\u5247",
@@ -14042,6 +14064,8 @@
       includePageByDefaultHelp: "\u9001\u51FA\u524D\u4ECD\u53EF\u5728\u8F38\u5165\u5340\u95DC\u9589\u9801\u9762\u4E0A\u4E0B\u6587\u3002",
       webSearchByDefault: "\u5C0D\u8A71\u9810\u8A2D\u555F\u7528\u7DB2\u9801\u641C\u5C0B",
       webSearchByDefaultHelp: "\u5074\u908A\u6B04\u4E00\u822C\u5C0D\u8A71\u9810\u8A2D\u4F7F\u7528 DuckDuckGo \u7D50\u679C\u88DC\u5145\u554F\u984C\u3002",
+      toolResponseUseContextLanguage: "\u5DE5\u5177\u4F7F\u7528\u63D0\u554F\u4E0A\u4E0B\u6587\u539F\u59CB\u8A9E\u8A00\u56DE\u7B54",
+      toolResponseUseContextLanguageHelp: "\u95DC\u9589\u6642\u4F7F\u7528\u76EE\u524D\u4ECB\u9762\u8A9E\u8A00\uFF1B\u50C5\u5F71\u97FF\u5DE5\u5177\uFF0C\u5DE5\u5177\u63D0\u793A\u8A5E\u4E2D\u660E\u78BA\u6307\u5B9A\u7684\u56DE\u7B54\u8A9E\u8A00\u512A\u5148\u3002",
       historyLimit: "\u6700\u591A\u5132\u5B58\u5C0D\u8A71",
       modelThinkingTimeout: "\u6A21\u578B\u601D\u8003\u903E\u6642\u6642\u9593\uFF08\u79D2\uFF09",
       modelThinkingTimeoutHelp: "0 \u8868\u793A\u4E0D\u903E\u6642\uFF1B\u903E\u6642\u5F8C\u6703\u4E2D\u65B7\u76EE\u524D\u56DE\u7B54\uFF0C\u4E26\u5728\u56DE\u7B54\u4E2D\u8AAA\u660E\u903E\u6642\u3002",
@@ -14159,7 +14183,7 @@
       chooseContextFirst: "\u8ACB\u5148\u5728\u4E0A\u4E0B\u6587\u4E2D\u9078\u64C7\u76EE\u524D\u9801\u9762\u6216\u9078\u53D6\u5167\u5BB9",
       directQuestionPlaceholder: "\u76F4\u63A5\u63D0\u554F\u2026",
       askContextPlaceholder: "\u5411\u76EE\u524D\u9801\u9762\u63D0\u554F\u2026",
-      composerShortcutHint: "Enter \u9001\u51FA\uFF0CCtrl+Enter \u63DB\u884C",
+      composerShortcutHint: "Enter \u9001\u51FA\uFF0CShift+Enter \u63DB\u884C",
       addEngineFirst: "\u5148\u5728\u8A2D\u5B9A\u4E2D\u65B0\u589E\u6A21\u578B\u5F15\u64CE",
       copyFailed: "\u8907\u88FD\u5931\u6557",
       readingPdf: "\u6B63\u5728\u8B80\u53D6 PDF",
@@ -14387,6 +14411,7 @@
       selectMoreTools: "Select More Tools",
       moreTools: "More Tools",
       copyContent: "Copy Content",
+      clearComposer: "Clear input",
       copyCurrentBody: "Copy Body",
       copyUrl: "Copy Page URL",
       copied: "Copied",
@@ -14399,7 +14424,11 @@
       currentPage: "Current Page",
       currentBody: "Current Body",
       currentSelection: "Current Selection",
-      currentBodyPreview: "Current Body Preview",
+      currentBodyPreview: "Context Preview",
+      nonePreview: "Preview",
+      pagePreview: "Page Preview",
+      bodyPreview: "Body Preview",
+      selectionPreview: "Selection Preview",
       expand: "Expand",
       collapse: "Collapse",
       currentBodyBlocks: "{count} blocks",
@@ -14421,7 +14450,12 @@
       restoreCurrentBody: "Restore Body",
       highlightCurrentBodyBlock: "Highlight this block on the page",
       removeCurrentBodyBlock: "Remove this block from current body",
-      smartPruneCurrentBody: "Smart Prune",
+      smartPruneCurrentBody: "Automatic Prune",
+      modelPruneCurrentBody: "AI Prune",
+      modelPruneCurrentBodyRunning: "Asking the model to classify article blocks",
+      modelPruneInvalidResult: "The model returned an unreadable prune result",
+      modelPruneNoChanges: "The model found no body blocks to remove",
+      modelPruneAllRejected: "All body blocks cannot be removed to prevent data loss",
       articleRecognition: "Body Recognition",
       recognitionRules: "Recognition Rules",
       articleExtractionRules: "Body Extraction Rules",
@@ -14575,6 +14609,8 @@
       includePageByDefaultHelp: "You can still disable page context before sending.",
       webSearchByDefault: "Enable Web Search by Default",
       webSearchByDefaultHelp: "Regular sidebar chats use DuckDuckGo results to supplement the question by default.",
+      toolResponseUseContextLanguage: "Answer Tools in the Question Context's Original Language",
+      toolResponseUseContextLanguageHelp: "When disabled, tools use the current interface language. This affects tools only, and an explicit language requirement in a tool prompt takes priority.",
       historyLimit: "Max Saved Chats",
       modelThinkingTimeout: "Model Thinking Timeout (seconds)",
       modelThinkingTimeoutHelp: "0 means no timeout. When it expires, the current response is interrupted with a timeout notice.",
@@ -14692,7 +14728,7 @@
       chooseContextFirst: "Choose the current page or selected content in the context first",
       directQuestionPlaceholder: "Ask directly\u2026",
       askContextPlaceholder: "Ask the current page\u2026",
-      composerShortcutHint: "Enter to send, Ctrl+Enter for newline",
+      composerShortcutHint: "Enter to send, Shift+Enter for newline",
       addEngineFirst: "Add a model engine in Settings first",
       copyFailed: "Copy failed",
       readingPdf: "Reading PDF",
@@ -14920,6 +14956,7 @@
       selectMoreTools: "\u4ED6\u306E\u30C4\u30FC\u30EB\u3092\u9078\u629E",
       moreTools: "\u305D\u306E\u4ED6\u306E\u30C4\u30FC\u30EB",
       copyContent: "\u5185\u5BB9\u3092\u30B3\u30D4\u30FC",
+      clearComposer: "\u5165\u529B\u3092\u30AF\u30EA\u30A2",
       copyCurrentBody: "\u672C\u6587\u3092\u30B3\u30D4\u30FC",
       copyUrl: "\u30DA\u30FC\u30B8 URL \u3092\u30B3\u30D4\u30FC",
       copied: "\u30B3\u30D4\u30FC\u6E08\u307F",
@@ -14932,7 +14969,11 @@
       currentPage: "\u73FE\u5728\u306E\u30DA\u30FC\u30B8",
       currentBody: "\u73FE\u5728\u306E\u672C\u6587",
       currentSelection: "\u73FE\u5728\u306E\u9078\u629E",
-      currentBodyPreview: "\u672C\u6587\u30D7\u30EC\u30D3\u30E5\u30FC",
+      currentBodyPreview: "\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u30D7\u30EC\u30D3\u30E5\u30FC",
+      nonePreview: "\u30D7\u30EC\u30D3\u30E5\u30FC",
+      pagePreview: "\u30DA\u30FC\u30B8\u30D7\u30EC\u30D3\u30E5\u30FC",
+      bodyPreview: "\u672C\u6587\u30D7\u30EC\u30D3\u30E5\u30FC",
+      selectionPreview: "\u9078\u629E\u30D7\u30EC\u30D3\u30E5\u30FC",
       expand: "\u5C55\u958B",
       collapse: "\u6298\u308A\u305F\u305F\u3080",
       currentBodyBlocks: "{count} \u30D6\u30ED\u30C3\u30AF",
@@ -14954,7 +14995,12 @@
       restoreCurrentBody: "\u672C\u6587\u3092\u5FA9\u5143",
       highlightCurrentBodyBlock: "\u30DA\u30FC\u30B8\u4E0A\u3067\u3053\u306E\u6BB5\u843D\u3092\u30CF\u30A4\u30E9\u30A4\u30C8",
       removeCurrentBodyBlock: "\u73FE\u5728\u306E\u672C\u6587\u304B\u3089\u3053\u306E\u30D6\u30ED\u30C3\u30AF\u3092\u524A\u9664",
-      smartPruneCurrentBody: "\u30B9\u30DE\u30FC\u30C8\u9664\u5916",
+      smartPruneCurrentBody: "\u81EA\u52D5\u9664\u5916",
+      modelPruneCurrentBody: "AI \u9664\u5916",
+      modelPruneCurrentBodyRunning: "\u30E2\u30C7\u30EB\u306B\u672C\u6587 block \u3092\u5224\u5B9A\u3055\u305B\u3066\u3044\u307E\u3059",
+      modelPruneInvalidResult: "\u30E2\u30C7\u30EB\u304C\u8FD4\u3057\u305F\u672C\u6587\u9664\u5916\u7D50\u679C\u3092\u89E3\u6790\u3067\u304D\u307E\u305B\u3093",
+      modelPruneNoChanges: "\u30E2\u30C7\u30EB\u306F\u9664\u5916\u3059\u308B\u672C\u6587 block \u304C\u306A\u3044\u3068\u5224\u65AD\u3057\u307E\u3057\u305F",
+      modelPruneAllRejected: "\u8AA4\u524A\u9664\u3092\u9632\u3050\u305F\u3081\u3001\u672C\u6587 block \u3092\u3059\u3079\u3066\u9664\u5916\u3059\u308B\u3053\u3068\u306F\u3067\u304D\u307E\u305B\u3093",
       articleRecognition: "\u672C\u6587\u8A8D\u8B58",
       recognitionRules: "\u8A8D\u8B58\u30EB\u30FC\u30EB",
       articleExtractionRules: "\u672C\u6587\u62BD\u51FA\u30EB\u30FC\u30EB",
@@ -15108,6 +15154,8 @@
       includePageByDefaultHelp: "\u9001\u4FE1\u524D\u306B\u5165\u529B\u6B04\u3067\u30DA\u30FC\u30B8\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u3092\u30AA\u30D5\u306B\u3067\u304D\u307E\u3059\u3002",
       webSearchByDefault: "\u30C1\u30E3\u30C3\u30C8\u3067\u30A6\u30A7\u30D6\u691C\u7D22\u3092\u65E2\u5B9A\u3067\u6709\u52B9\u5316",
       webSearchByDefaultHelp: "\u901A\u5E38\u306E\u30B5\u30A4\u30C9\u30D0\u30FC\u30C1\u30E3\u30C3\u30C8\u3067 DuckDuckGo \u306E\u7D50\u679C\u3092\u4F7F\u3063\u3066\u8CEA\u554F\u3092\u88DC\u8DB3\u3057\u307E\u3059\u3002",
+      toolResponseUseContextLanguage: "\u8CEA\u554F\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u306E\u539F\u6587\u8A00\u8A9E\u3067\u30C4\u30FC\u30EB\u56DE\u7B54",
+      toolResponseUseContextLanguageHelp: "\u7121\u52B9\u6642\u306F\u73FE\u5728\u306E\u30A4\u30F3\u30BF\u30FC\u30D5\u30A7\u30FC\u30B9\u8A00\u8A9E\u3092\u4F7F\u7528\u3057\u307E\u3059\u3002\u30C4\u30FC\u30EB\u3060\u3051\u306B\u9069\u7528\u3055\u308C\u3001\u30C4\u30FC\u30EB\u30D7\u30ED\u30F3\u30D7\u30C8\u3067\u660E\u793A\u3055\u308C\u305F\u56DE\u7B54\u8A00\u8A9E\u304C\u512A\u5148\u3055\u308C\u307E\u3059\u3002",
       historyLimit: "\u4FDD\u5B58\u3059\u308B\u30C1\u30E3\u30C3\u30C8\u6570\u306E\u4E0A\u9650",
       modelThinkingTimeout: "\u30E2\u30C7\u30EB\u601D\u8003\u30BF\u30A4\u30E0\u30A2\u30A6\u30C8\uFF08\u79D2\uFF09",
       modelThinkingTimeoutHelp: "0 \u306F\u30BF\u30A4\u30E0\u30A2\u30A6\u30C8\u306A\u3057\u3067\u3059\u3002\u6642\u9593\u3092\u8D85\u3048\u308B\u3068\u73FE\u5728\u306E\u56DE\u7B54\u3092\u4E2D\u65AD\u3057\u3001\u30BF\u30A4\u30E0\u30A2\u30A6\u30C8\u3092\u77E5\u3089\u305B\u307E\u3059\u3002",
@@ -15225,7 +15273,7 @@
       chooseContextFirst: "\u5148\u306B\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u3067\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u307E\u305F\u306F\u9078\u629E\u5185\u5BB9\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044",
       directQuestionPlaceholder: "\u76F4\u63A5\u8CEA\u554F\u2026",
       askContextPlaceholder: "\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u306B\u8CEA\u554F\u2026",
-      composerShortcutHint: "Enter \u3067\u9001\u4FE1\u3001Ctrl+Enter \u3067\u6539\u884C",
+      composerShortcutHint: "Enter \u3067\u9001\u4FE1\u3001Shift+Enter \u3067\u6539\u884C",
       addEngineFirst: "\u5148\u306B\u8A2D\u5B9A\u3067\u30E2\u30C7\u30EB\u30A8\u30F3\u30B8\u30F3\u3092\u8FFD\u52A0\u3057\u3066\u304F\u3060\u3055\u3044",
       copyFailed: "\u30B3\u30D4\u30FC\u306B\u5931\u6557\u3057\u307E\u3057\u305F",
       readingPdf: "PDF \u3092\u8AAD\u307F\u53D6\u308A\u4E2D",
@@ -15453,6 +15501,7 @@
       selectMoreTools: "\uB354 \uB9CE\uC740 \uB3C4\uAD6C \uC120\uD0DD",
       moreTools: "\uB354 \uB9CE\uC740 \uB3C4\uAD6C",
       copyContent: "\uB0B4\uC6A9 \uBCF5\uC0AC",
+      clearComposer: "\uC785\uB825 \uC9C0\uC6B0\uAE30",
       copyCurrentBody: "\uBCF8\uBB38 \uBCF5\uC0AC",
       copyUrl: "\uD398\uC774\uC9C0 URL \uBCF5\uC0AC",
       copied: "\uBCF5\uC0AC\uB428",
@@ -15465,7 +15514,11 @@
       currentPage: "\uD604\uC7AC \uD398\uC774\uC9C0",
       currentBody: "\uD604\uC7AC \uBCF8\uBB38",
       currentSelection: "\uD604\uC7AC \uC120\uD0DD",
-      currentBodyPreview: "\uD604\uC7AC \uBCF8\uBB38 \uBBF8\uB9AC\uBCF4\uAE30",
+      currentBodyPreview: "\uCEE8\uD14D\uC2A4\uD2B8 \uBBF8\uB9AC\uBCF4\uAE30",
+      nonePreview: "\uBBF8\uB9AC\uBCF4\uAE30",
+      pagePreview: "\uD398\uC774\uC9C0 \uBBF8\uB9AC\uBCF4\uAE30",
+      bodyPreview: "\uBCF8\uBB38 \uBBF8\uB9AC\uBCF4\uAE30",
+      selectionPreview: "\uC120\uD0DD \uBBF8\uB9AC\uBCF4\uAE30",
       expand: "\uD3BC\uCE58\uAE30",
       collapse: "\uC811\uAE30",
       currentBodyBlocks: "{count}\uAC1C \uBE14\uB85D",
@@ -15487,7 +15540,12 @@
       restoreCurrentBody: "\uBCF8\uBB38 \uBCF5\uC6D0",
       highlightCurrentBodyBlock: "\uD398\uC774\uC9C0\uC5D0\uC11C \uC774 \uBE14\uB85D \uAC15\uC870",
       removeCurrentBodyBlock: "\uD604\uC7AC \uBCF8\uBB38\uC5D0\uC11C \uC774 \uBE14\uB85D \uC0AD\uC81C",
-      smartPruneCurrentBody: "\uC2A4\uB9C8\uD2B8 \uC81C\uAC70",
+      smartPruneCurrentBody: "\uC790\uB3D9 \uC81C\uAC70",
+      modelPruneCurrentBody: "AI \uC81C\uAC70",
+      modelPruneCurrentBodyRunning: "\uBAA8\uB378\uC5D0 \uBCF8\uBB38 block \uD310\uC815\uC744 \uC694\uCCAD\uD558\uB294 \uC911",
+      modelPruneInvalidResult: "\uBAA8\uB378\uC774 \uBC18\uD658\uD55C \uBCF8\uBB38 \uC81C\uAC70 \uACB0\uACFC\uB97C \uD574\uC11D\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4",
+      modelPruneNoChanges: "\uBAA8\uB378\uC774 \uC81C\uAC70\uD560 \uBCF8\uBB38 block\uC774 \uC5C6\uB2E4\uACE0 \uD310\uB2E8\uD588\uC2B5\uB2C8\uB2E4",
+      modelPruneAllRejected: "\uB370\uC774\uD130 \uC190\uC2E4\uC744 \uB9C9\uAE30 \uC704\uD574 \uBAA8\uB4E0 \uBCF8\uBB38 block\uC744 \uC81C\uAC70\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4",
       articleRecognition: "\uBCF8\uBB38 \uC778\uC2DD",
       recognitionRules: "\uC778\uC2DD \uADDC\uCE59",
       articleExtractionRules: "\uBCF8\uBB38 \uCD94\uCD9C \uADDC\uCE59",
@@ -15641,6 +15699,8 @@
       includePageByDefaultHelp: "\uBCF4\uB0B4\uAE30 \uC804\uC5D0 \uC785\uB825 \uC601\uC5ED\uC5D0\uC11C \uD398\uC774\uC9C0 \uCEE8\uD14D\uC2A4\uD2B8\uB97C \uB04C \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
       webSearchByDefault: "\uB300\uD654\uC5D0\uC11C \uC6F9 \uAC80\uC0C9 \uAE30\uBCF8 \uC0AC\uC6A9",
       webSearchByDefaultHelp: "\uC77C\uBC18 \uC0AC\uC774\uB4DC\uBC14 \uB300\uD654\uC5D0\uC11C DuckDuckGo \uACB0\uACFC\uB85C \uC9C8\uBB38\uC744 \uBCF4\uC644\uD569\uB2C8\uB2E4.",
+      toolResponseUseContextLanguage: "\uC9C8\uBB38 \uCEE8\uD14D\uC2A4\uD2B8\uC758 \uC6D0\uBB38 \uC5B8\uC5B4\uB85C \uB3C4\uAD6C \uB2F5\uBCC0",
+      toolResponseUseContextLanguageHelp: "\uB044\uBA74 \uD604\uC7AC \uC778\uD130\uD398\uC774\uC2A4 \uC5B8\uC5B4\uB97C \uC0AC\uC6A9\uD569\uB2C8\uB2E4. \uB3C4\uAD6C\uC5D0\uB9CC \uC801\uC6A9\uB418\uBA70 \uB3C4\uAD6C \uD504\uB86C\uD504\uD2B8\uC5D0 \uBA85\uC2DC\uB41C \uB2F5\uBCC0 \uC5B8\uC5B4\uAC00 \uC6B0\uC120\uD569\uB2C8\uB2E4.",
       historyLimit: "\uCD5C\uB300 \uC800\uC7A5 \uB300\uD654 \uC218",
       modelThinkingTimeout: "\uBAA8\uB378 \uC0AC\uACE0 \uC2DC\uAC04 \uCD08\uACFC (\uCD08)",
       modelThinkingTimeoutHelp: "0\uC740 \uC2DC\uAC04 \uC81C\uD55C\uC774 \uC5C6\uB2E4\uB294 \uB73B\uC785\uB2C8\uB2E4. \uC2DC\uAC04\uC774 \uCD08\uACFC\uB418\uBA74 \uD604\uC7AC \uB2F5\uBCC0\uC744 \uC911\uB2E8\uD558\uACE0 \uC2DC\uAC04 \uCD08\uACFC\uB97C \uC54C\uB9BD\uB2C8\uB2E4.",
@@ -15758,7 +15818,7 @@
       chooseContextFirst: "\uBA3C\uC800 \uCEE8\uD14D\uC2A4\uD2B8\uC5D0\uC11C \uD604\uC7AC \uD398\uC774\uC9C0 \uB610\uB294 \uC120\uD0DD \uB0B4\uC6A9\uC744 \uC120\uD0DD\uD558\uC138\uC694",
       directQuestionPlaceholder: "\uC9C1\uC811 \uC9C8\uBB38\u2026",
       askContextPlaceholder: "\uD604\uC7AC \uD398\uC774\uC9C0\uC5D0 \uC9C8\uBB38\u2026",
-      composerShortcutHint: "Enter\uB85C \uBCF4\uB0B4\uAE30, Ctrl+Enter\uB85C \uC904\uBC14\uAFC8",
+      composerShortcutHint: "Enter\uB85C \uBCF4\uB0B4\uAE30, Shift+Enter\uB85C \uC904\uBC14\uAFC8",
       addEngineFirst: "\uBA3C\uC800 \uC124\uC815\uC5D0\uC11C \uBAA8\uB378 \uC5D4\uC9C4\uC744 \uCD94\uAC00\uD558\uC138\uC694",
       copyFailed: "\uBCF5\uC0AC \uC2E4\uD328",
       readingPdf: "PDF \uC77D\uB294 \uC911",
@@ -16645,8 +16705,14 @@
     ja: "Japanese",
     ko: "Korean"
   };
+  function visibleTranslationSourceText(text2) {
+    return text2.replace(
+      /\[([^\]\n]{1,500})\]\(\s*(?:<[^>\n]+>|[^)\n]+)\s*\)/g,
+      "$1"
+    ).replace(/<[^>]*>/g, " ");
+  }
   function detectTranslationLanguage(text2) {
-    const source = text2.replace(/<[^>]*>/g, " ");
+    const source = visibleTranslationSourceText(text2);
     const latinWordCount = source.match(/[A-Za-z]+/g)?.length ?? 0;
     const chineseCount = source.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g)?.length ?? 0;
     const japaneseKanaCount = source.match(/[\u3040-\u30ff\u31f0-\u31ff]/g)?.length ?? 0;
@@ -16654,6 +16720,9 @@
     if (koreanCount) return "ko";
     if (japaneseKanaCount) return "ja";
     if (chineseCount >= 2 && chineseCount >= latinWordCount) {
+      return "zh";
+    }
+    if (chineseCount >= 1 && latinWordCount === 0) {
       return "zh";
     }
     if (latinWordCount >= 2 && latinWordCount > chineseCount) return "en";
@@ -16703,6 +16772,13 @@
       default:
         return "\u4E25\u683C\u4FDD\u6301\u539F\u6587\u7684\u6BB5\u843D\u3001\u6362\u884C\u3001\u6807\u9898\u548C\u5217\u8868\u7ED3\u6784\uFF0C\u6BCF\u4E2A\u539F\u6587\u6BB5\u843D\u5BF9\u5E94\u4E00\u4E2A\u8BD1\u6587\u6BB5\u843D\uFF0C\u4E0D\u8981\u5408\u5E76\u6BB5\u843D\u3002{{WEBMIND_PARAGRAPH_BREAK_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u6BB5\u843D\u5206\u9694\u5360\u4F4D\u7B26\uFF0C{{WEBMIND_CITATION_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u5F15\u7528\u4E0B\u6807\u5360\u4F4D\u7B26\uFF1B\u4E24\u8005\u90FD\u5FC5\u987B\u9010\u5B57\u4FDD\u7559\u5728\u539F\u4F4D\u7F6E\uFF0C\u4E0D\u8981\u5C55\u5F00\u3001\u89E3\u91CA\u3001\u6539\u5199\u6216\u5220\u9664\uFF0C\u4E0D\u8981\u8F93\u51FA\u2018\u8BE5\u4FE1\u606F\u6765\u81EA\u2026\u2026\u5F15\u7528\u2019\u4E4B\u7C7B\u7684\u8BF4\u660E\u3002{{WEBMIND_LINK_START_N}} \u548C {{WEBMIND_LINK_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u94FE\u63A5\u8FB9\u754C\u5360\u4F4D\u7B26\uFF0C\u5FC5\u987B\u539F\u6837\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8BD1\u4E24\u8005\u4E4B\u95F4\u53EF\u89C1\u7684\u94FE\u63A5\u6587\u5B57\uFF0C\u4E0D\u8981\u8865\u5145\u3001\u7FFB\u8BD1\u6216\u8F93\u51FA\u94FE\u63A5\u5730\u5740\u3002{{WEBMIND_FORMAT_START_N}} \u548C {{WEBMIND_FORMAT_END_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u4E0A\u6807/\u4E0B\u6807\u683C\u5F0F\u8FB9\u754C\uFF0C\u5FC5\u987B\u539F\u6837\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8BD1\u8FB9\u754C\u4E4B\u95F4\u53EF\u89C1\u7684\u6587\u5B57\u3002";
     }
+  }
+  function htmlFormattingInstruction(config) {
+    const language = resolvePromptConfig(config).interfaceLanguage;
+    if (language === "en") {
+      return "Preserve every {{WEBMIND_HTML_TAG_N}} placeholder verbatim. These placeholders represent visible formatting tags such as strong, em, underline, del, code, and their matching closing tags; translate only the visible text around them. Do not translate or remove link destinations.";
+    }
+    return "{{WEBMIND_HTML_TAG_N}} \u662F\u4E0D\u53EF\u7FFB\u8BD1\u7684\u53EF\u89C1\u6837\u5F0F\u6807\u7B7E\u5360\u4F4D\u7B26\uFF08\u5305\u62EC\u7C97\u4F53\u3001\u659C\u4F53\u3001\u4E0B\u5212\u7EBF\u3001\u5220\u9664\u7EBF\u3001\u4EE3\u7801\u53CA\u5176\u95ED\u5408\u6807\u7B7E\uFF09\uFF0C\u5FC5\u987B\u9010\u5B57\u4FDD\u7559\uFF1B\u53EA\u7FFB\u8BD1\u6807\u7B7E\u5305\u56F4\u6216\u76F8\u90BB\u7684\u53EF\u89C1\u6587\u5B57\uFF0C\u4E0D\u8981\u7FFB\u8BD1\u3001\u6539\u5199\u6216\u5220\u9664\u94FE\u63A5\u5730\u5740\u3002";
   }
   function immersiveReadingInstruction(config) {
     const { interfaceLanguage, translationLanguage } = resolvePromptConfig(config);
@@ -17418,6 +17494,7 @@
     searchAnswerEnabled: false,
     includePageByDefault: true,
     webSearchByDefault: false,
+    toolResponseUseContextLanguage: false,
     historyLimit: 60
   };
 
@@ -17595,6 +17672,7 @@
       searchAnswerEnabled: stored.searchAnswerEnabled ?? DEFAULT_SETTINGS.searchAnswerEnabled,
       includePageByDefault: stored.includePageByDefault ?? DEFAULT_SETTINGS.includePageByDefault,
       webSearchByDefault: stored.webSearchByDefault ?? DEFAULT_SETTINGS.webSearchByDefault,
+      toolResponseUseContextLanguage: stored.toolResponseUseContextLanguage ?? DEFAULT_SETTINGS.toolResponseUseContextLanguage,
       historyLimit: stored.historyLimit ?? DEFAULT_SETTINGS.historyLimit
     };
   }
@@ -18229,6 +18307,7 @@
       autoTranslateInstruction(config, sourceText),
       translationDirectionInstruction(config, sourceText),
       translationFormatInstruction(config),
+      htmlFormattingInstruction(config),
       uiText(
         typeof config === "object" ? config?.interfaceLanguage : config,
         "jsonArrayTranslationInstruction"
@@ -18944,6 +19023,9 @@ ${normalized.slice(-tail)}`;
     for (const child of Array.from(element.childNodes)) visit(child);
     return cleanCitationExplanationText(parts.join("").replace(/\u00a0/g, " ").replace(/\r\n?/g, "\n").replace(/[^\S\n]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim());
   }
+  function markdownLinkLabel(value) {
+    return value.replace(/\r\n?/g, "\n").replace(/\s+/g, " ").trim().replace(/([\[\]])/g, "\\$1");
+  }
   function textFromElementWithLinks(element) {
     if (!element) return "";
     const parts = [];
@@ -18968,10 +19050,10 @@ ${normalized.slice(-tail)}`;
       }
       if (node.matches("a[href]")) {
         const link = node;
-        const text2 = (link.innerText || link.textContent || "").trim();
+        const text2 = markdownLinkLabel(link.innerText || link.textContent || "");
         if (text2) {
           const href = encodeURI(link.href).replace(/\(/g, "%28").replace(/\)/g, "%29");
-          parts.push(`[${text2.replace(/]/g, "\\]")}](${href})`);
+          parts.push(`[${text2}](${href})`);
           return;
         }
       }
@@ -18987,6 +19069,116 @@ ${normalized.slice(-tail)}`;
     for (const child of Array.from(element.childNodes)) visit(child);
     return cleanCitationExplanationText(parts.join("").replace(/\u00a0/g, " ").replace(/\r\n?/g, "\n").replace(/[^\S\n]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim());
   }
+  function escapeMarkdownText(value) {
+    return value.replace(/[\\`*_~]/g, "\\$&");
+  }
+  function markdownHref(value) {
+    return encodeURI(value).replace(/\(/g, "%28").replace(/\)/g, "%29").replace(/</g, "%3C").replace(/>/g, "%3E");
+  }
+  function markdownInlineFromNode(node) {
+    if (node instanceof Text) {
+      return escapeMarkdownText(
+        (node.textContent ?? "").replace(/\r\n?/g, "\n").replace(/[ \t]+/g, " ")
+      );
+    }
+    if (!(node instanceof HTMLElement)) return "";
+    if (node.matches(
+      "script, style, noscript, template, svg, canvas, [hidden], [aria-hidden='true'], .webmind-root, .webmind-translation, .webmind-reading, .webmind-immersive-reading-token"
+    )) {
+      return "";
+    }
+    if (node.isConnected) {
+      const style = node.ownerDocument.defaultView?.getComputedStyle(node);
+      if (style && (style.display === "none" || style.visibility === "hidden" || style.visibility === "collapse" || style.contentVisibility === "hidden" || node.getClientRects().length === 0)) {
+        return "";
+      }
+    }
+    const citationAnchor = node.matches("a[href]") ? node : node.tagName === "SUP" ? node.querySelector("a[href]") : null;
+    if (citationAnchor && (node.tagName === "SUP" || isCitationAnchor(citationAnchor))) {
+      const marker = (node.innerText || node.textContent || "").replace(/\s+/g, " ").trim();
+      return CITATION_MARKER_PATTERN2.test(marker) ? marker : /^\d+(?:\s*[-,–—]\s*\d+)*$/.test(marker) ? `[${marker}]` : escapeMarkdownText(marker);
+    }
+    if (node.tagName === "BR") return "\n";
+    if (node.tagName === "IMG") {
+      return escapeMarkdownText(node.getAttribute("alt")?.trim() ?? "");
+    }
+    if (node.tagName === "A") {
+      const link = node;
+      const label = markdownLinkLabel(
+        Array.from(link.childNodes).map(markdownInlineFromNode).join("")
+      );
+      if (!label || !link.href) return label;
+      return `[${label}](${markdownHref(link.href)})`;
+    }
+    if (node.tagName === "PRE") {
+      const code = (node.textContent ?? "").replace(/\r\n?/g, "\n").trim();
+      return code ? `
+
+${"```"}
+${code}
+${"```"}
+
+` : "";
+    }
+    const content = Array.from(node.childNodes).map(markdownInlineFromNode).join("");
+    switch (node.tagName) {
+      case "STRONG":
+      case "B":
+        return content.trim() ? `<strong>${content}</strong>` : "";
+      case "EM":
+      case "I":
+        return content.trim() ? `<em>${content}</em>` : "";
+      case "U":
+        return content.trim() ? `<u>${content}</u>` : "";
+      case "S":
+      case "DEL":
+      case "STRIKE":
+        return content.trim() ? `<del>${content}</del>` : "";
+      case "CODE":
+        return content.trim() ? `<code>${content}</code>` : "";
+      case "BLOCKQUOTE":
+        return content.trim() ? `
+
+${content.trim().split("\n").map((line) => `> ${line}`).join("\n")}
+
+` : "";
+      case "H1":
+      case "H2":
+      case "H3":
+      case "H4":
+      case "H5":
+      case "H6": {
+        const level = Number(node.tagName.slice(1));
+        return content.trim() ? `
+
+${"#".repeat(level)} ${content.trim()}
+
+` : "";
+      }
+      case "LI":
+        if (!content.trim()) return "";
+        if (node.parentElement?.tagName === "OL") {
+          const index = Array.from(node.parentElement.children).indexOf(node) + 1;
+          return `
+${index}. ${content.trim()}
+`;
+        }
+        return `
+- ${content.trim()}
+`;
+      default:
+        return content + (/^(?:ADDRESS|ARTICLE|ASIDE|DIV|FIGCAPTION|P|SECTION|TR|TD|TH|UL|OL|DL|DT|DD|FIGURE|DETAILS)$/.test(node.tagName) ? "\n\n" : "");
+    }
+  }
+  function markdownFromElement(element) {
+    if (!element) return "";
+    return cleanCitationExplanationText(
+      Array.from(element.childNodes).map(markdownInlineFromNode).join("").replace(/\u00a0/g, " ").replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim()
+    );
+  }
+  function markdownFromText(value) {
+    return escapeMarkdownText(value.replace(/\r\n?/g, "\n").trim());
+  }
   function selectionTextWithLayout(selection) {
     if (!selection?.rangeCount) return "";
     try {
@@ -18997,6 +19189,26 @@ ${normalized.slice(-tail)}`;
     } catch {
     }
     return cleanCitationExplanationText(selection.toString().replace(/\r\n?/g, "\n").replace(/[^\S\n]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim());
+  }
+  function selectionMarkdownWithLayout(selection) {
+    if (!selection?.rangeCount) return "";
+    try {
+      const container = document.createElement("div");
+      container.append(selection.getRangeAt(0).cloneContents());
+      const structured = markdownFromElement(container);
+      if (structured) return structured;
+    } catch {
+    }
+    return markdownFromText(selection.toString());
+  }
+  function pageSelectionMarkdown() {
+    const active = document.activeElement;
+    if (active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement) {
+      const start = active.selectionStart ?? 0;
+      const end = active.selectionEnd ?? start;
+      return markdownFromText(active.value.slice(start, end));
+    }
+    return selectionMarkdownWithLayout(window.getSelection());
   }
   function pageSelectionText() {
     const active = document.activeElement;
@@ -19251,9 +19463,16 @@ ${normalized.slice(-tail)}`;
   var cancelArticlePickerSession = null;
   var articlePreviewIdCounter = 0;
   var activeArticleExtractionCache = null;
+  var retainedPageSelectionTextValue = "";
   var articlePreviewTargets = /* @__PURE__ */ new Map();
   var articlePreviewExclusionTargets = /* @__PURE__ */ new Map();
   var removedArticleBlockTextKeys = /* @__PURE__ */ new Set();
+  function setRetainedPageSelectionText(text2) {
+    retainedPageSelectionTextValue = text2.trim();
+  }
+  function retainedPageSelectionText() {
+    return retainedPageSelectionTextValue || void 0;
+  }
   var ARTICLE_ROOT_SELECTOR = [
     "article",
     "main",
@@ -19318,6 +19537,19 @@ ${normalized.slice(-tail)}`;
       window.setTimeout(resolve, 0);
     });
   }
+  function createArticleExtractionCheckpoint(budgetMs = 6) {
+    let sliceStarted = performance.now();
+    return async (force = false) => {
+      if (!force && performance.now() - sliceStarted < budgetMs) return;
+      const scheduler = globalThis.scheduler;
+      if (scheduler?.yield) {
+        await scheduler.yield();
+      } else {
+        await new Promise((resolve) => window.setTimeout(resolve, 0));
+      }
+      sliceStarted = performance.now();
+    };
+  }
   function clamp(value, min = 0, max = 1) {
     return Math.max(min, Math.min(max, value));
   }
@@ -19344,6 +19576,18 @@ ${normalized.slice(-tail)}`;
     };
     try {
       return callback();
+    } finally {
+      activeArticleExtractionCache = null;
+    }
+  }
+  async function withArticleExtractionCacheAsync(callback) {
+    if (activeArticleExtractionCache) return callback();
+    activeArticleExtractionCache = {
+      visible: /* @__PURE__ */ new WeakMap(),
+      text: /* @__PURE__ */ new WeakMap()
+    };
+    try {
+      return await callback();
     } finally {
       activeArticleExtractionCache = null;
     }
@@ -19395,6 +19639,61 @@ ${normalized.slice(-tail)}`;
       }
     };
     visit(element);
+    const text2 = preserveArticleBlockText(parts.join(""));
+    activeArticleExtractionCache?.text.set(element, text2);
+    return text2;
+  }
+  async function visibleTextFromElementAsync(element, checkpoint) {
+    const cached = activeArticleExtractionCache?.text.get(element);
+    if (typeof cached === "string") return cached;
+    const parts = [];
+    const stack = [
+      { node: element, exit: false }
+    ];
+    while (stack.length) {
+      const current = stack.pop();
+      if (!current) break;
+      const { node, exit } = current;
+      if (node instanceof Text) {
+        const parent = node.parentElement;
+        if (parent && isElementVisible(parent)) {
+          parts.push(node.textContent ?? "");
+        }
+        await checkpoint();
+        continue;
+      }
+      if (!(node instanceof HTMLElement) || !isElementVisible(node)) {
+        await checkpoint();
+        continue;
+      }
+      if (exit) {
+        if (/^(?:ADDRESS|ARTICLE|BLOCKQUOTE|DETAILS|DIV|FIGCAPTION|FIGURE|H[1-6]|LI|MAIN|P|SECTION)$/.test(node.tagName)) {
+          parts.push("\n");
+        } else if (node.tagName === "TR" || /^(?:DD|DT)$/.test(node.tagName)) {
+          parts.push("\n");
+        } else if (/^(?:TD|TH)$/.test(node.tagName)) {
+          parts.push("	");
+        }
+        await checkpoint();
+        continue;
+      }
+      if (node.tagName === "BR") {
+        parts.push("\n");
+        await checkpoint();
+        continue;
+      }
+      if (node.tagName === "PRE") {
+        parts.push(node.innerText || node.textContent || "", "\n");
+        await checkpoint();
+        continue;
+      }
+      stack.push({ node, exit: true });
+      const children = Array.from(node.childNodes);
+      for (let index = children.length - 1; index >= 0; index -= 1) {
+        stack.push({ node: children[index], exit: false });
+      }
+      await checkpoint();
+    }
     const text2 = preserveArticleBlockText(parts.join(""));
     activeArticleExtractionCache?.text.set(element, text2);
     return text2;
@@ -19644,6 +19943,20 @@ ${normalized.slice(-tail)}`;
     }
     return null;
   }
+  async function configuredArticleRootAsync(rules, checkpoint) {
+    for (const rule of rules) {
+      if (!rule.urlPattern || !rule.selector || !urlMatchesWhitelist(location.href, [rule.urlPattern])) {
+        continue;
+      }
+      const element = elementForArticleRuleSelector(rule.selector);
+      if (!element || !isElementVisible(element)) continue;
+      if (textLength(await visibleTextFromElementAsync(element, checkpoint)) < AUTO_ARTICLE_MIN_CHARS) {
+        continue;
+      }
+      return { element, source: "rule", selector: rule.selector };
+    }
+    return null;
+  }
   var SELECTED_ARTICLE_BLOCK_OPTIONS = {
     includeArticleNoise: true
   };
@@ -19675,13 +19988,22 @@ ${normalized.slice(-tail)}`;
   function sourceBlockFromElement(element) {
     const text2 = preserveArticleBlockText(visibleTextFromElement(element));
     if (textLength(text2) === 0) return null;
-    const block = { text: text2, element, exclusionElement: element };
+    const block = {
+      text: text2,
+      markdown: markdownFromElement(element),
+      element,
+      exclusionElement: element
+    };
     return isArticleTextBlockExcluded(block) ? null : block;
   }
   function inlineSourceBlock(text2, element) {
     const normalized = preserveArticleBlockText(text2);
     if (textLength(normalized) === 0) return null;
-    const block = { text: normalized, element };
+    const block = {
+      text: normalized,
+      markdown: markdownFromElement(element),
+      element
+    };
     return isArticleTextBlockExcluded(block) ? null : block;
   }
   function articleSourceBlocks(root, options = SELECTED_ARTICLE_BLOCK_OPTIONS) {
@@ -19738,6 +20060,119 @@ ${normalized.slice(-tail)}`;
     visitContainer(root);
     return blocks;
   }
+  async function hasReadableCompactDescendantAsync(element, options, checkpoint) {
+    const descendants = Array.from(
+      element.querySelectorAll(ARTICLE_BLOCK_SELECTOR)
+    );
+    for (const child of descendants) {
+      if (child === element || shouldSkipArticleBlockElement(child, options)) {
+        await checkpoint();
+        continue;
+      }
+      if (textLength(await visibleTextFromElementAsync(child, checkpoint)) > 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+  async function shouldUseWholeElementAsBlockAsync(element, root, options, checkpoint) {
+    const text2 = await visibleTextFromElementAsync(element, checkpoint);
+    if (!text2 || textLength(text2) === 0) return false;
+    if (shouldSkipArticleBlockElement(element, options)) return false;
+    if (isCompactArticleBlock(element)) return true;
+    const hasCompactDescendant = await hasReadableCompactDescendantAsync(
+      element,
+      options,
+      checkpoint
+    );
+    if (element === root && !hasCompactDescendant) return true;
+    return element.matches(ARTICLE_CONTAINER_FALLBACK_SELECTOR) && !hasCompactDescendant;
+  }
+  async function sourceBlockFromElementAsync(element, checkpoint) {
+    const text2 = preserveArticleBlockText(
+      await visibleTextFromElementAsync(element, checkpoint)
+    );
+    if (textLength(text2) === 0) return null;
+    await checkpoint();
+    const block = {
+      text: text2,
+      markdown: markdownFromElement(element),
+      element,
+      exclusionElement: element
+    };
+    await checkpoint();
+    return isArticleTextBlockExcluded(block) ? null : block;
+  }
+  async function articleSourceBlocksAsync(root, options, checkpoint) {
+    if (shouldSkipArticleBlockElement(root, options)) return [];
+    if (await shouldUseWholeElementAsBlockAsync(root, root, options, checkpoint)) {
+      const rootBlock = await sourceBlockFromElementAsync(root, checkpoint);
+      return rootBlock ? [rootBlock] : [];
+    }
+    const blocks = [];
+    const visitContainer = async (element) => {
+      if (shouldSkipArticleBlockElement(element, options)) return;
+      let inlineParts = [];
+      let inlineElement = element;
+      const flushInline = async () => {
+        const text2 = preserveArticleBlockText(inlineParts.join(""));
+        if (textLength(text2) > 0) {
+          await checkpoint();
+          const block = {
+            text: text2,
+            markdown: markdownFromElement(inlineElement),
+            element: inlineElement
+          };
+          if (!isArticleTextBlockExcluded(block)) blocks.push(block);
+        }
+        inlineParts = [];
+        inlineElement = element;
+        await checkpoint();
+      };
+      for (const node of Array.from(element.childNodes)) {
+        if (node instanceof Text) {
+          const parent = node.parentElement;
+          if (parent && !shouldSkipArticleBlockElement(parent, options)) {
+            if (!inlineParts.length) inlineElement = parent;
+            inlineParts.push(node.textContent ?? "");
+          }
+          await checkpoint();
+          continue;
+        }
+        if (!(node instanceof HTMLElement)) continue;
+        if (node.tagName === "BR") {
+          inlineParts.push("\n");
+          continue;
+        }
+        if (shouldSkipArticleBlockElement(node, options)) continue;
+        if (await shouldUseWholeElementAsBlockAsync(
+          node,
+          root,
+          options,
+          checkpoint
+        )) {
+          await flushInline();
+          const block = await sourceBlockFromElementAsync(node, checkpoint);
+          if (block) blocks.push(block);
+          continue;
+        }
+        if (await hasReadableCompactDescendantAsync(node, options, checkpoint)) {
+          await flushInline();
+          await visitContainer(node);
+          continue;
+        }
+        const text2 = await visibleTextFromElementAsync(node, checkpoint);
+        if (textLength(text2) > 0) {
+          if (!inlineParts.length) inlineElement = node;
+          inlineParts.push(text2);
+        }
+        await checkpoint();
+      }
+      await flushInline();
+    };
+    await visitContainer(root);
+    return blocks;
+  }
   function articleBlockElements(root) {
     return Array.from(
       new Set(articleSourceBlocks(root).map((block) => block.element))
@@ -19782,6 +20217,69 @@ ${normalized.slice(-tail)}`;
         depth += 1;
       }
     });
+    return Array.from(summaries.entries()).filter(([, summary]) => summary.blocks >= 2 && summary.textLength >= 80).sort((left, right) => {
+      const score = (summary) => summary.textLength + summary.blocks * 60 + summary.blocks / Math.max(1, summary.last - summary.first + 1) * 240;
+      return score(right[1]) - score(left[1]);
+    }).slice(0, 16).map(([element]) => element);
+  }
+  async function articleRootElementsAsync(root, checkpoint) {
+    const roots = Array.from(
+      /* @__PURE__ */ new Set([
+        ...Array.from(root.querySelectorAll(ARTICLE_ROOT_SELECTOR)),
+        ...collectOpenShadowElements(root)
+      ])
+    );
+    const candidates = [];
+    for (const element of roots) {
+      if (!isArticleNoiseElement(element) && isElementVisible(element) && textLength(await visibleTextFromElementAsync(element, checkpoint)) >= AUTO_ARTICLE_MIN_CHARS) {
+        candidates.push(element);
+        if (candidates.length >= ARTICLE_ROOT_CANDIDATE_LIMIT) break;
+      }
+      await checkpoint();
+    }
+    return candidates;
+  }
+  async function continuousRootCandidatesAsync(root, checkpoint) {
+    const elements = Array.from(
+      root.querySelectorAll(ARTICLE_BLOCK_SELECTOR)
+    );
+    const blockEntries = [];
+    for (let order = 0; order < elements.length; order += 1) {
+      const element = elements[order];
+      if (!isArticleNoiseElement(element) && isElementVisible(element)) {
+        const text2 = normalizedText(
+          await visibleTextFromElementAsync(element, checkpoint)
+        );
+        if (textLength(text2) >= 8) {
+          blockEntries.push({ element, order, text: text2 });
+          if (blockEntries.length >= ARTICLE_BLOCK_CANDIDATE_LIMIT) break;
+        }
+      }
+      await checkpoint();
+    }
+    const summaries = /* @__PURE__ */ new Map();
+    for (const entry of blockEntries) {
+      let ancestor = entry.element.parentElement;
+      let depth = 0;
+      while (ancestor && ancestor !== document.body && ancestor !== document.documentElement && depth < 7) {
+        if (!isArticleNoiseElement(ancestor) && isElementVisible(ancestor)) {
+          const summary = summaries.get(ancestor) ?? {
+            blocks: 0,
+            textLength: 0,
+            first: entry.order,
+            last: entry.order
+          };
+          summary.blocks += 1;
+          summary.textLength += textLength(entry.text);
+          summary.first = Math.min(summary.first, entry.order);
+          summary.last = Math.max(summary.last, entry.order);
+          summaries.set(ancestor, summary);
+        }
+        ancestor = ancestor.parentElement;
+        depth += 1;
+      }
+      await checkpoint();
+    }
     return Array.from(summaries.entries()).filter(([, summary]) => summary.blocks >= 2 && summary.textLength >= 80).sort((left, right) => {
       const score = (summary) => summary.textLength + summary.blocks * 60 + summary.blocks / Math.max(1, summary.last - summary.first + 1) * 240;
       return score(right[1]) - score(left[1]);
@@ -19928,6 +20426,110 @@ ${normalized.slice(-tail)}`;
       selector: selectorHint(fallback)
     } : null;
   }
+  async function promoteRootToIncludeTitleAsync(root, checkpoint) {
+    if (articleHeadingInElement(root)) return root;
+    const heading = precedingArticleHeading(root);
+    if (!heading) return root;
+    let promoted = root.parentElement;
+    while (promoted && promoted !== document.body && promoted !== document.documentElement && !promoted.contains(heading)) {
+      promoted = promoted.parentElement;
+    }
+    if (!promoted || isArticleNoiseElement(promoted)) return root;
+    const rootLength = textLength(
+      await visibleTextFromElementAsync(root, checkpoint)
+    );
+    const promotedLength = textLength(
+      await visibleTextFromElementAsync(promoted, checkpoint)
+    );
+    const headingLength = textLength(
+      await visibleTextFromElementAsync(heading, checkpoint)
+    );
+    const maxPromotedLength = Math.max(
+      rootLength * 1.65,
+      rootLength + headingLength + 320
+    );
+    if (promotedLength > maxPromotedLength) return root;
+    const rootBlocks = await articleSourceBlocksAsync(
+      root,
+      SCORING_ARTICLE_BLOCK_OPTIONS,
+      checkpoint
+    );
+    if (promoted.childElementCount > Math.max(10, rootBlocks.length * 3)) {
+      return root;
+    }
+    return promoted;
+  }
+  async function selectArticleRootAsync(articleExtractionRules, checkpoint) {
+    invalidateDisconnectedArticleState();
+    if (manualArticleRoot?.isConnected) {
+      return {
+        element: manualArticleRoot,
+        source: "manual",
+        selector: selectorHint(manualArticleRoot)
+      };
+    }
+    if (editedArticleRoot?.isConnected) {
+      return {
+        element: editedArticleRoot,
+        source: "edited",
+        selector: selectorHint(editedArticleRoot)
+      };
+    }
+    const configured = await configuredArticleRootAsync(
+      articleExtractionRules,
+      checkpoint
+    );
+    if (configured) return configured;
+    const rootScopes = [document, ...sameOriginIframeBodies()];
+    const candidateElements = [];
+    for (const rootScope of rootScopes) {
+      if (rootScope instanceof HTMLElement) candidateElements.push(rootScope);
+      candidateElements.push(
+        ...await articleRootElementsAsync(rootScope, checkpoint),
+        ...await continuousRootCandidatesAsync(rootScope, checkpoint)
+      );
+      await checkpoint(true);
+    }
+    const uniqueCandidates = Array.from(new Set(candidateElements));
+    const candidates = [];
+    for (let order = 0; order < uniqueCandidates.length; order += 1) {
+      const element = uniqueCandidates[order];
+      const blocks = await articleSourceBlocksAsync(
+        element,
+        SCORING_ARTICLE_BLOCK_OPTIONS,
+        checkpoint
+      );
+      const text2 = articleTextFromBlocks(blocks);
+      candidates.push({
+        element,
+        order,
+        score: scoreArticleRoot(
+          element,
+          SCORING_ARTICLE_BLOCK_OPTIONS,
+          blocks,
+          text2
+        ).rawScore
+      });
+      await checkpoint(true);
+    }
+    candidates.sort((left, right) => {
+      if (left.score !== right.score) return right.score - left.score;
+      return left.order - right.order;
+    });
+    const best = candidates.find(
+      (candidate) => Number.isFinite(candidate.score)
+    )?.element;
+    if (best) {
+      const promoted = await promoteRootToIncludeTitleAsync(best, checkpoint);
+      return {
+        element: promoted,
+        source: "dom",
+        selector: selectorHint(promoted)
+      };
+    }
+    const fallback = document.querySelector("article") ?? document.querySelector("main") ?? document.querySelector("[role='main']") ?? document.body;
+    return fallback ? { element: fallback, source: "dom", selector: selectorHint(fallback) } : null;
+  }
   function findBestArticleRoot(articleExtractionRules = []) {
     return withArticleExtractionCache(
       () => selectArticleRoot(articleExtractionRules)?.element ?? null
@@ -19965,6 +20567,7 @@ ${normalized.slice(-tail)}`;
     return blocks.map((block, index) => ({
       id: `preview-${index + 1}`,
       text: block.text,
+      markdown: block.markdown || block.text,
       sourceText: block.text,
       targetId: articlePreviewTargetId(block)
     }));
@@ -19991,6 +20594,7 @@ ${normalized.slice(-tail)}`;
         return {
           title: document.title || location.hostname,
           text: "",
+          markdown: "",
           description: "",
           preview: [],
           summary: {
@@ -20002,6 +20606,7 @@ ${normalized.slice(-tail)}`;
       }
       const blocks = articleSourceBlocks(selection.element);
       const text2 = articleTextFromBlocks(blocks);
+      const markdown = blocks.map((block) => block.markdown || block.text).filter(Boolean).join("\n\n");
       const source = articleSourceAfterEdits(selection.source);
       const selector = selection.selector ?? selectorHint(selection.element) ?? void 0;
       const score = scoreArticleRoot(
@@ -20013,6 +20618,69 @@ ${normalized.slice(-tail)}`;
       return {
         title: document.title || location.hostname,
         text: text2,
+        markdown,
+        description: "",
+        preview: articlePreview(blocks),
+        summary: {
+          source,
+          selector,
+          blockCount: blocks.length,
+          charCount: textLength(text2),
+          score: score.score,
+          scoreMetrics: score.metrics
+        }
+      };
+    });
+  }
+  async function readableArticleTextAsync(articleExtractionRules = []) {
+    return withArticleExtractionCacheAsync(async () => {
+      const checkpoint = createArticleExtractionCheckpoint();
+      articlePreviewTargets.clear();
+      articlePreviewExclusionTargets.clear();
+      articlePreviewIdCounter = 0;
+      await checkpoint(true);
+      const selection = await selectArticleRootAsync(
+        articleExtractionRules,
+        checkpoint
+      );
+      if (!selection) {
+        return {
+          title: document.title || location.hostname,
+          text: "",
+          markdown: "",
+          description: "",
+          preview: [],
+          summary: {
+            source: "dom",
+            blockCount: 0,
+            charCount: 0
+          }
+        };
+      }
+      const blocks = await articleSourceBlocksAsync(
+        selection.element,
+        SELECTED_ARTICLE_BLOCK_OPTIONS,
+        checkpoint
+      );
+      const text2 = articleTextFromBlocks(blocks);
+      await checkpoint(true);
+      const markdownParts = [];
+      for (const block of blocks) {
+        markdownParts.push(block.markdown || block.text);
+        await checkpoint();
+      }
+      const source = articleSourceAfterEdits(selection.source);
+      const selector = selection.selector ?? selectorHint(selection.element) ?? void 0;
+      const score = scoreArticleRoot(
+        selection.element,
+        SELECTED_ARTICLE_BLOCK_OPTIONS,
+        blocks,
+        text2
+      );
+      return {
+        title: document.title || location.hostname,
+        text: text2,
+        markdown: markdownParts.filter(Boolean).join("\n\n"),
         description: "",
         preview: articlePreview(blocks),
         summary: {
@@ -20109,25 +20777,44 @@ ${normalized.slice(-tail)}`;
     const match = candidates[0];
     return match ? applyArticlePreviewHighlight(match.element) : { ok: false };
   }
-  function setEditedArticleRootFromCurrent(articleExtractionRules = []) {
-    const root = manualArticleRoot?.isConnected ? manualArticleRoot : editedArticleRoot?.isConnected ? editedArticleRoot : findBestArticleRoot(articleExtractionRules);
-    if (root?.isConnected) {
-      editedArticleRoot = root;
-      return root;
+  async function setEditedArticleRootFromCurrentAsync(articleExtractionRules = []) {
+    const current = manualArticleRoot?.isConnected ? manualArticleRoot : editedArticleRoot?.isConnected ? editedArticleRoot : null;
+    if (current) {
+      editedArticleRoot = current;
+      return current;
     }
-    return null;
+    const root = await withArticleExtractionCacheAsync(
+      async () => (await selectArticleRootAsync(
+        articleExtractionRules,
+        createArticleExtractionCheckpoint()
+      ))?.element ?? null
+    );
+    if (root?.isConnected) editedArticleRoot = root;
+    return root;
   }
-  function removeArticlePreviewBlock(text2, targetId, language, articleExtractionRules = []) {
-    setEditedArticleRootFromCurrent(articleExtractionRules);
-    const target = articlePreviewExclusionElementById(targetId);
-    if (target) {
-      target.dataset.webmindArticleExcluded = "true";
+  async function removeArticlePreviewBlock(text2, targetId, language, articleExtractionRules = []) {
+    return removeArticlePreviewBlocks(
+      [{ text: text2, targetId }],
+      language,
+      articleExtractionRules
+    );
+  }
+  async function removeArticlePreviewBlocks(blocks, language, articleExtractionRules = []) {
+    await setEditedArticleRootFromCurrentAsync(articleExtractionRules);
+    for (const block of blocks) {
+      const target = articlePreviewExclusionElementById(block.targetId);
+      if (target) target.dataset.webmindArticleExcluded = "true";
+      const normalized = normalizedText(block.sourceText ?? block.text);
+      if (normalized) {
+        removedArticleBlockTextKeys.add(articleBlockTextKey(normalized));
+      }
     }
-    const normalized = normalizedText(text2);
-    if (normalized) {
-      removedArticleBlockTextKeys.add(articleBlockTextKey(normalized));
-    }
-    return extractPageContext(true, language, "article", articleExtractionRules);
+    return extractPageContextAsync(
+      true,
+      language,
+      "article",
+      articleExtractionRules
+    );
   }
   function isLikelyNonArticlePreviewBlock(block) {
     const text2 = normalizedText(block.sourceText ?? block.text);
@@ -20153,9 +20840,9 @@ ${normalized.slice(-tail)}`;
     const looksLikeShortLabel = length <= 18 && !/[。！？.!?，,；;：:]/.test(text2) && /^[\p{L}\p{N}_@#.\-\s·]+$/u.test(text2);
     return Boolean(target && isArticleNoiseElement(target)) || linkHeavy || looksLikeMetaElement || looksLikeBreadcrumb || looksLikeTime || looksLikeStats || looksLikeShortLabel;
   }
-  function pruneArticlePreviewBlocks(language, articleExtractionRules = []) {
-    setEditedArticleRootFromCurrent(articleExtractionRules);
-    const snapshot = readableArticleText(articleExtractionRules);
+  async function pruneArticlePreviewBlocks(language, articleExtractionRules = []) {
+    await setEditedArticleRootFromCurrentAsync(articleExtractionRules);
+    const snapshot = await readableArticleTextAsync(articleExtractionRules);
     const preview = snapshot.preview ?? [];
     const removable = preview.filter(isLikelyNonArticlePreviewBlock);
     const removableKeys = new Set(
@@ -20175,7 +20862,12 @@ ${normalized.slice(-tail)}`;
         if (blockText) removedArticleBlockTextKeys.add(articleBlockTextKey(blockText));
       });
     }
-    return extractPageContext(true, language, "article", articleExtractionRules);
+    return extractPageContextAsync(
+      true,
+      language,
+      "article",
+      articleExtractionRules
+    );
   }
   function pickerTextLength(element) {
     return textLength(visibleTextFromElement(element));
@@ -20273,7 +20965,7 @@ ${normalized.slice(-tail)}`;
         cancelArticlePickerSession = null;
         articlePickerSession = null;
       };
-      const finish = (element) => {
+      const finish = async (element) => {
         if (settled) return;
         settled = true;
         cleanup();
@@ -20287,7 +20979,7 @@ ${normalized.slice(-tail)}`;
         clearArticleBlockEdits();
         manualArticleRoot = element;
         manualArticleRoot.dataset.webmindManualArticle = "true";
-        resolve(extractPageContext(true, language, "article"));
+        resolve(await extractPageContextAsync(true, language, "article"));
       };
       cancelArticlePickerSession = () => finish(null);
       function onPointerMove(event) {
@@ -20347,24 +21039,31 @@ ${normalized.slice(-tail)}`;
     cancelArticlePickerSession();
     return { ok: true };
   }
-  function restoreAutomaticArticleSelection(language, articleExtractionRules = []) {
+  async function restoreAutomaticArticleSelection(language, articleExtractionRules = []) {
     if (manualArticleRoot) {
       delete manualArticleRoot.dataset.webmindManualArticle;
     }
     manualArticleRoot = null;
     clearArticleBlockEdits();
-    return extractPageContext(true, language, "article", articleExtractionRules);
+    return extractPageContextAsync(
+      true,
+      language,
+      "article",
+      articleExtractionRules
+    );
   }
   function extractPageContext(ignoreSelection = false, language, scope = "page", articleExtractionRules = []) {
-    const selection = ignoreSelection ? void 0 : pageSelectionText() || void 0;
+    const selection = ignoreSelection ? void 0 : pageSelectionText() || retainedPageSelectionText();
     const description = document.querySelector('meta[name="description"]')?.content ?? document.querySelector('meta[property="og:description"]')?.content;
     const siteName = document.querySelector('meta[property="og:site_name"]')?.content ?? location.hostname;
     if (selection) {
+      const selectionMarkdown = pageSelectionMarkdown();
       return {
         kind: "selection",
         title: document.title || location.hostname,
         url: location.href,
         text: truncateText(selection, 2e4, language),
+        markdown: truncateText(selectionMarkdown || selection, 2e4, language),
         selection,
         description: uiText(language, "selectionDescription").replace(
           "{count}",
@@ -20381,6 +21080,7 @@ ${normalized.slice(-tail)}`;
         title: article.title || document.title || location.hostname,
         url: location.href,
         text: article.text,
+        markdown: article.markdown,
         description: article.description || description,
         language: document.documentElement.lang || navigator.language,
         siteName,
@@ -20390,20 +21090,44 @@ ${normalized.slice(-tail)}`;
     }
     const query = searchQuery();
     const pageText = textFromElement(document.querySelector("main")) || textFromElement(document.querySelector("[role='main']")) || textFromElement(document.body) || "";
+    const pageMarkdown = markdownFromElement(document.querySelector("main")) || markdownFromElement(document.querySelector("[role='main']")) || markdownFromElement(document.body) || pageText;
     return {
       kind: query ? "search" : "webpage",
       title: document.title || location.hostname,
       url: location.href,
       text: truncateText(pageText, 1e5, language),
+      markdown: truncateText(pageMarkdown, 1e5, language),
       description,
       language: document.documentElement.lang || navigator.language,
       siteName
     };
   }
   async function extractPageContextAsync(ignoreSelection = false, language, scope = "page", articleExtractionRules = []) {
-    const selection = ignoreSelection ? void 0 : pageSelectionText() || void 0;
-    if (!selection) {
-      await waitForPageIdle();
+    const selection = ignoreSelection ? void 0 : pageSelectionText() || retainedPageSelectionText();
+    if (selection) {
+      return extractPageContext(
+        ignoreSelection,
+        language,
+        scope,
+        articleExtractionRules
+      );
+    }
+    await waitForPageIdle();
+    if (scope === "article") {
+      const article = await readableArticleTextAsync(articleExtractionRules);
+      const description = document.querySelector('meta[name="description"]')?.content ?? document.querySelector('meta[property="og:description"]')?.content;
+      return {
+        kind: "article",
+        title: article.title || document.title || location.hostname,
+        url: location.href,
+        text: article.text,
+        markdown: article.markdown,
+        description: article.description || description,
+        language: document.documentElement.lang || navigator.language,
+        siteName: document.querySelector('meta[property="og:site_name"]')?.content ?? location.hostname,
+        articleSummary: article.summary,
+        articlePreview: article.preview
+      };
     }
     return extractPageContext(
       ignoreSelection,
@@ -20702,7 +21426,7 @@ ${normalized.slice(-tail)}`;
         parts.push(linkToken("END", index));
         return;
       }
-      if (formats && (node.tagName === "SUP" || node.tagName === "SUB")) {
+      if (formats && node.matches("strong, b, em, i, u, s, del, strike, code, mark, sup, sub")) {
         const visibleText = normalizedBlockText4(
           node.innerText || node.textContent || ""
         );
@@ -20789,15 +21513,22 @@ ${normalized.slice(-tail)}`;
   function wrapCurrentSelection(textFallback, dependencies) {
     const selection = window.getSelection();
     const selectedText = selection?.toString().replace(/\s+/g, " ").trim();
-    if (selection && selection.rangeCount && selectedText) {
-      const range2 = selection.getRangeAt(0).cloneRange();
+    const retainedRange = dependencies.retainedSelectionRange?.(textFallback);
+    const selectedRange = selection && selection.rangeCount && selectedText ? selection.getRangeAt(0).cloneRange() : retainedRange;
+    if (selectedRange && normalizedBlockText4(selectedRange.toString())) {
       const wrapper2 = document.createElement("span");
       wrapper2.className = "webmind-immersive-source";
       wrapper2.dataset.webmindBlockId = dependencies.nextBlockId();
       try {
-        wrapper2.append(range2.extractContents());
-        range2.insertNode(wrapper2);
-        selection.removeAllRanges();
+        wrapper2.append(selectedRange.extractContents());
+        selectedRange.insertNode(wrapper2);
+        const wrappedRange2 = document.createRange();
+        wrappedRange2.selectNodeContents(wrapper2);
+        dependencies.retainSelectionRange?.(wrappedRange2, textFallback);
+        if (selection) {
+          selection.removeAllRanges();
+          selection.addRange(wrappedRange2.cloneRange());
+        }
         return wrapper2;
       } catch {
         return null;
@@ -20817,6 +21548,13 @@ ${normalized.slice(-tail)}`;
     wrapper.dataset.webmindBlockId = dependencies.nextBlockId();
     wrapper.append(range.extractContents());
     range.insertNode(wrapper);
+    const wrappedRange = document.createRange();
+    wrappedRange.selectNodeContents(wrapper);
+    dependencies.retainSelectionRange?.(wrappedRange, textFallback);
+    if (selection) {
+      selection.removeAllRanges();
+      selection.addRange(wrappedRange.cloneRange());
+    }
     return wrapper;
   }
   function prepareTranslationBlocks(scope = "page", textFallback = "", options = {}, dependencies) {
@@ -20824,11 +21562,54 @@ ${normalized.slice(-tail)}`;
     if (scope === "selection") {
       const wrapper = wrapCurrentSelection(textFallback, dependencies);
       if (!wrapper) return [];
-      const id = wrapper.dataset.webmindBlockId ?? "";
-      const block = prepareTranslationBlock(wrapper, id, true, options, dependencies);
+      const visibleText = translationElementVisibleText(wrapper);
+      const maxVisibleTextLength = options.maxVisibleTextLength ?? 900;
+      if (visibleText.length <= maxVisibleTextLength) {
+        const id2 = wrapper.dataset.webmindBlockId ?? dependencies.nextBlockId();
+        wrapper.dataset.webmindBlockId = id2;
+        const block2 = prepareTranslationBlock(
+          wrapper,
+          id2,
+          true,
+          options,
+          dependencies
+        );
+        return block2 ? [block2] : [];
+      }
+      const candidates2 = articleContentCandidatesFromRoot(
+        wrapper,
+        options,
+        dependencies
+      );
+      const blocks2 = candidates2.flatMap((element) => {
+        const id2 = element.dataset.webmindBlockId ?? dependencies.nextBlockId();
+        element.dataset.webmindBlockId = id2;
+        const block2 = prepareTranslationBlock(
+          element,
+          id2,
+          true,
+          options,
+          dependencies
+        );
+        return block2 ? [block2] : [];
+      });
+      if (blocks2.length) return blocks2;
+      const id = wrapper.dataset.webmindBlockId ?? dependencies.nextBlockId();
+      wrapper.dataset.webmindBlockId = id;
+      const block = prepareTranslationBlock(
+        wrapper,
+        id,
+        true,
+        {
+          ...options,
+          maxVisibleTextLength: Math.max(maxVisibleTextLength, visibleText.length)
+        },
+        dependencies
+      );
       return block ? [block] : [];
     }
-    const root = scope === "article" ? findBestArticleRoot(options.articleExtractionRules) ?? document.querySelector("article") ?? document.querySelector("main") ?? document.querySelector('[role="main"]') ?? document.body : document.body;
+    const hasArticlePreviewPlan = scope === "article" && Boolean(options.articlePreviewBlocks?.length);
+    const root = scope === "article" && !hasArticlePreviewPlan ? findBestArticleRoot(options.articleExtractionRules) ?? document.querySelector("article") ?? document.querySelector("main") ?? document.querySelector('[role="main"]') ?? document.body : document.body;
     const articleOptions = scope === "article" ? {
       ...options,
       minVisibleTextLength: 1,
@@ -20841,21 +21622,29 @@ ${normalized.slice(-tail)}`;
     const seen = /* @__PURE__ */ new Set();
     const blocks = [];
     if (scope === "article" && Array.isArray(options.articlePreviewBlocks)) {
-      for (const previewBlock of options.articlePreviewBlocks) {
+      const previewCandidates = options.articlePreviewBlocks.map((previewBlock, order) => {
         const rawSourceText = (previewBlock.sourceText ?? previewBlock.text).trim();
         const sourceText = normalizedBlockText4(rawSourceText);
-        if (!sourceText) continue;
-        if (articleScopeText && !articleScopeText.includes(sourceText) && !sourceText.includes(articleScopeText)) {
-          continue;
-        }
+        if (!sourceText) return null;
         const element = articlePreviewBlockElement(
           previewBlock,
           root,
           dependencies
         );
-        if (!element || !dependencies.isVisible(element)) continue;
-        if (isWebMindGeneratedElement(element)) continue;
-        if (isEditedArticleBlockExcluded(element)) continue;
+        if (!element || !dependencies.isVisible(element)) return null;
+        if (isWebMindGeneratedElement(element)) return null;
+        if (isEditedArticleBlockExcluded(element)) return null;
+        return {
+          previewBlock,
+          rawSourceText,
+          sourceText,
+          element,
+          order,
+          priority: dependencies.viewportPriority(element, order)
+        };
+      }).filter((candidate) => Boolean(candidate)).sort((left, right) => left.priority - right.priority);
+      for (const candidate of previewCandidates) {
+        const { element, rawSourceText, sourceText } = candidate;
         let id = dependencies.nextBlockId();
         let sourceElement = element;
         if (normalizedBlockText4(translationElementVisibleText(element)) === sourceText) {
@@ -20875,7 +21664,7 @@ ${normalized.slice(-tail)}`;
         if (!prepared) continue;
         if (seen.has(id)) continue;
         seen.add(id);
-        blocks.push({ id: prepared.id, text: rawSourceText });
+        blocks.push(prepared);
       }
       return blocks;
     }
@@ -20896,7 +21685,7 @@ ${normalized.slice(-tail)}`;
       ...candidate,
       priority: dependencies.viewportPriority(candidate.element, candidate.order)
     })).sort((left, right) => left.priority - right.priority).map(({ element }) => element);
-    const candidates = scope === "article" ? orderedCandidates : orderedCandidates.slice(0, 160);
+    const candidates = orderedCandidates;
     for (const element of candidates) {
       if (articleScopeText && !articleScopeTextMatchesCandidate(
         articleScopeText,
@@ -21390,28 +22179,38 @@ ${normalized.slice(-tail)}`;
     });
   }
   async function requestCompleteBatch(batch, requestTranslations, invalidTranslationsError) {
-    let translations = [];
-    let requestedBlocks = batch.length;
-    try {
-      translations = await requestTranslations(batch);
-    } catch (requestError) {
-      if (batch.length === 1) throw requestError;
-    }
-    const translatedIds = new Set(
-      translations.map((translation) => translation.id)
-    );
-    const missingBlocks = batch.filter((block) => !translatedIds.has(block.id));
-    if (missingBlocks.length) {
-      requestedBlocks += missingBlocks.length;
-      const retry = await requestTranslations(missingBlocks);
-      for (const translation of retry) {
-        translations.push(translation);
-        translatedIds.add(translation.id);
+    let requestedBlocks = 0;
+    const requestMissing = async (requestBlocks) => {
+      requestedBlocks += requestBlocks.length;
+      let translations2 = [];
+      try {
+        translations2 = await requestTranslations(requestBlocks);
+      } catch (error) {
+        if (requestBlocks.length === 1) throw error;
       }
-    }
-    if (translations.length !== batch.length) {
-      throw invalidTranslationsError();
-    }
+      const expectedIds = new Set(requestBlocks.map((block) => block.id));
+      const valid = translations2.filter(
+        (translation, index, all) => expectedIds.has(translation.id) && all.findIndex((item) => item.id === translation.id) === index
+      );
+      const translatedIds = new Set(valid.map((translation) => translation.id));
+      const missing = requestBlocks.filter(
+        (block) => !translatedIds.has(block.id)
+      );
+      if (!missing.length) return orderTranslationsByBlocks(valid, requestBlocks);
+      if (missing.length === requestBlocks.length) {
+        if (requestBlocks.length === 1) throw invalidTranslationsError();
+        const midpoint = Math.ceil(requestBlocks.length / 2);
+        const splitResults = await Promise.all([
+          requestMissing(requestBlocks.slice(0, midpoint)),
+          requestMissing(requestBlocks.slice(midpoint))
+        ]);
+        return splitResults.flat();
+      }
+      const retry = await requestMissing(missing);
+      return orderTranslationsByBlocks([...valid, ...retry], requestBlocks);
+    };
+    const translations = await requestMissing(batch);
+    if (translations.length !== batch.length) throw invalidTranslationsError();
     return {
       translations: orderTranslationsByBlocks(translations, batch),
       requestedBlocks
@@ -25293,6 +26092,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
   var selectionOverlayTimer = null;
   var selectionOverlayShortcutPressed = false;
   var lastSelectionReportKey = "";
+  var retainedPageSelection = null;
   var hoverDefinitionDictionaryPromise = null;
   var englishWordFrequencyPromise = null;
   var HOVER_DEFINITION_HIGHLIGHT_NAME = "webmind-hover-definition";
@@ -25633,6 +26433,20 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     selectionReportTimer = window.setTimeout(() => {
       selectionReportTimer = null;
       const text2 = pageSelectionText().trim().slice(0, 12e3);
+      const markdown = pageSelectionMarkdown().trim().slice(0, 12e3);
+      if (text2) {
+        const selection = window.getSelection();
+        retainedPageSelection = {
+          text: text2,
+          range: selection?.rangeCount ? selection.getRangeAt(0).cloneRange() : null
+        };
+        setRetainedPageSelectionText(text2);
+      } else if (!document.hasFocus() && retainedPageSelection?.text) {
+        return;
+      } else {
+        retainedPageSelection = null;
+        setRetainedPageSelectionText("");
+      }
       const reportKey = `${location.href}
 ${text2}`;
       if (reportKey === lastSelectionReportKey) return;
@@ -25644,6 +26458,7 @@ ${text2}`;
             payload: {
               hasSelection: Boolean(text2),
               text: text2,
+              markdown,
               title: document.title || location.hostname,
               url: location.href
             }
@@ -25782,6 +26597,26 @@ ${text2}`;
       installStyles: installPageStyles,
       isVisible,
       viewportPriority,
+      retainedSelectionRange: (textFallback) => {
+        const retained = retainedPageSelection;
+        if (!retained?.range || !retained.range.commonAncestorContainer.isConnected) {
+          return null;
+        }
+        const rangeText = normalizedBlockText5(retained.range.toString());
+        const targetText = normalizedBlockText5(textFallback);
+        if (targetText && rangeText && !rangeText.includes(targetText) && !targetText.includes(rangeText)) {
+          return null;
+        }
+        return retained.range.cloneRange();
+      },
+      retainSelectionRange: (range, textFallback) => {
+        const text2 = retainedPageSelection?.text || textFallback.trim() || normalizedBlockText5(range.toString());
+        retainedPageSelection = {
+          text: text2,
+          range: range.cloneRange()
+        };
+        setRetainedPageSelectionText(text2);
+      },
       textNodes: textNodes2,
       currentSelection,
       translatableElementFromTarget,
@@ -26641,6 +27476,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
             createdAt: Date.now(),
             contextScope: "selection",
             text: snapshot.text,
+            markdown: pageSelectionMarkdown(),
             pageTitle: document.title,
             pageUrl: location.href
           };
@@ -26667,7 +27503,12 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
         try {
           const response = await runtimeRequest2(
             "model.tool",
-            { toolId: tool.id, text: snapshot.text }
+            {
+              toolId: tool.id,
+              text: snapshot.text,
+              markdown: pageSelectionMarkdown(),
+              language: document.documentElement.lang || navigator.language
+            }
           );
           setResult(response.text);
         } catch (requestError) {
@@ -26713,7 +27554,9 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
       try {
         const response = await runtimeRequest2("model.tool", {
           toolId: tool.id,
-          text: text2
+          text: text2,
+          markdown: text2,
+          language: document.documentElement.lang || navigator.language
         });
         setResult(response.text);
       } catch (requestError) {
@@ -26863,7 +27706,7 @@ ${t("currentResultLabel")}\uFF1A` : "",
       );
       try {
         if (!translationProfile) throw new Error(t("modelEngineRequired"));
-        const articleContext = scope === "article" ? extractPageContext(
+        const articleContext = scope === "article" ? await extractPageContextAsync(
           true,
           activeSettings?.interfaceLanguage,
           "article",
@@ -27075,7 +27918,7 @@ ${t("currentResultLabel")}\uFF1A` : "",
             { surface: "edge" }
           )
         );
-        const articleContext = scope === "article" ? extractPageContext(
+        const articleContext = scope === "article" ? await extractPageContextAsync(
           true,
           activeSettings.interfaceLanguage,
           "article",
@@ -28637,6 +29480,16 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
         return removeArticlePreviewBlock(
           String(message.text ?? ""),
           typeof message.targetId === "string" ? message.targetId : void 0,
+          settings?.interfaceLanguage,
+          settings?.articleExtractionRules ?? []
+        );
+      }
+      if (message.type === "page.article.preview.remove-many") {
+        const blocks = Array.isArray(message.blocks) ? message.blocks.filter(
+          (block) => Boolean(block) && typeof block === "object" && typeof block.text === "string"
+        ) : [];
+        return removeArticlePreviewBlocks(
+          blocks,
           settings?.interfaceLanguage,
           settings?.articleExtractionRules ?? []
         );

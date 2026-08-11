@@ -370,28 +370,42 @@ async function requestCompleteBatch(
   ) => Promise<PageTranslation[]>,
   invalidTranslationsError: () => Error
 ): Promise<CompleteBatchRequestResult> {
-  let translations: PageTranslation[] = [];
-  let requestedBlocks = batch.length;
-  try {
-    translations = await requestTranslations(batch);
-  } catch (requestError) {
-    if (batch.length === 1) throw requestError;
-  }
-  const translatedIds = new Set(
-    translations.map((translation) => translation.id)
-  );
-  const missingBlocks = batch.filter((block) => !translatedIds.has(block.id));
-  if (missingBlocks.length) {
-    requestedBlocks += missingBlocks.length;
-    const retry = await requestTranslations(missingBlocks);
-    for (const translation of retry) {
-      translations.push(translation);
-      translatedIds.add(translation.id);
+  let requestedBlocks = 0;
+  const requestMissing = async (
+    requestBlocks: PageTextBlock[]
+  ): Promise<PageTranslation[]> => {
+    requestedBlocks += requestBlocks.length;
+    let translations: PageTranslation[] = [];
+    try {
+      translations = await requestTranslations(requestBlocks);
+    } catch (error) {
+      if (requestBlocks.length === 1) throw error;
     }
-  }
-  if (translations.length !== batch.length) {
-    throw invalidTranslationsError();
-  }
+    const expectedIds = new Set(requestBlocks.map((block) => block.id));
+    const valid = translations.filter(
+      (translation, index, all) =>
+        expectedIds.has(translation.id) &&
+        all.findIndex((item) => item.id === translation.id) === index
+    );
+    const translatedIds = new Set(valid.map((translation) => translation.id));
+    const missing = requestBlocks.filter(
+      (block) => !translatedIds.has(block.id)
+    );
+    if (!missing.length) return orderTranslationsByBlocks(valid, requestBlocks);
+    if (missing.length === requestBlocks.length) {
+      if (requestBlocks.length === 1) throw invalidTranslationsError();
+      const midpoint = Math.ceil(requestBlocks.length / 2);
+      const splitResults = await Promise.all([
+        requestMissing(requestBlocks.slice(0, midpoint)),
+        requestMissing(requestBlocks.slice(midpoint))
+      ]);
+      return splitResults.flat();
+    }
+    const retry = await requestMissing(missing);
+    return orderTranslationsByBlocks([...valid, ...retry], requestBlocks);
+  };
+  const translations = await requestMissing(batch);
+  if (translations.length !== batch.length) throw invalidTranslationsError();
   return {
     translations: orderTranslationsByBlocks(translations, batch),
     requestedBlocks
