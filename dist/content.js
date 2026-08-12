@@ -22378,6 +22378,47 @@ ${index}. ${content.trim()}
     });
   }
 
+  // src/content/articleExtractionRunner.ts
+  function articleExtractionAbortError() {
+    const error = new Error("Article extraction superseded");
+    error.name = "AbortError";
+    return error;
+  }
+  function throwIfArticleExtractionAborted(signal) {
+    if (signal.aborted) throw articleExtractionAbortError();
+  }
+  function createArticleExtractionRunner() {
+    let tail = Promise.resolve();
+    let latestReplaceableController = null;
+    return {
+      run(task, options = {}) {
+        if (options.replaceable) {
+          latestReplaceableController?.abort(articleExtractionAbortError());
+          latestReplaceableController = null;
+        }
+        const controller = new AbortController();
+        if (options.replaceable) latestReplaceableController = controller;
+        const previous = tail.catch(() => void 0);
+        let release = () => void 0;
+        tail = new Promise((resolve) => {
+          release = resolve;
+        });
+        return (async () => {
+          try {
+            await previous;
+            throwIfArticleExtractionAborted(controller.signal);
+            return await task(controller.signal);
+          } finally {
+            if (latestReplaceableController === controller) {
+              latestReplaceableController = null;
+            }
+            release();
+          }
+        })();
+      }
+    };
+  }
+
   // src/content/pageContext.ts
   function searchQuery() {
     return searchQueryFromUrl(location.href);
@@ -22413,6 +22454,7 @@ ${index}. ${content.trim()}
   var articlePreviewIdCounter = 0;
   var activeArticleExtractionCache = null;
   var retainedPageSelectionTextValue = "";
+  var articleExtractionRunner = createArticleExtractionRunner();
   var articlePreviewTargets = /* @__PURE__ */ new Map();
   var articlePreviewExclusionTargets = /* @__PURE__ */ new Map();
   var removedArticleBlockTextKeys = /* @__PURE__ */ new Set();
@@ -22486,9 +22528,10 @@ ${index}. ${content.trim()}
       window.setTimeout(resolve, 0);
     });
   }
-  function createArticleExtractionCheckpoint(budgetMs = 6) {
+  function createArticleExtractionCheckpoint(signal, budgetMs = 6) {
     let sliceStarted = performance.now();
     return async (force = false) => {
+      if (signal) throwIfArticleExtractionAborted(signal);
       if (!force && performance.now() - sliceStarted < budgetMs) return;
       const scheduler = globalThis.scheduler;
       if (scheduler?.yield) {
@@ -22496,6 +22539,7 @@ ${index}. ${content.trim()}
       } else {
         await new Promise((resolve) => window.setTimeout(resolve, 0));
       }
+      if (signal) throwIfArticleExtractionAborted(signal);
       sliceStarted = performance.now();
     };
   }
@@ -22521,7 +22565,9 @@ ${index}. ${content.trim()}
     if (activeArticleExtractionCache) return callback();
     activeArticleExtractionCache = {
       visible: /* @__PURE__ */ new WeakMap(),
-      text: /* @__PURE__ */ new WeakMap()
+      text: /* @__PURE__ */ new WeakMap(),
+      readableCompactDescendantWithNoise: /* @__PURE__ */ new WeakMap(),
+      readableCompactDescendantWithoutNoise: /* @__PURE__ */ new WeakMap()
     };
     try {
       return callback();
@@ -22533,7 +22579,9 @@ ${index}. ${content.trim()}
     if (activeArticleExtractionCache) return callback();
     activeArticleExtractionCache = {
       visible: /* @__PURE__ */ new WeakMap(),
-      text: /* @__PURE__ */ new WeakMap()
+      text: /* @__PURE__ */ new WeakMap(),
+      readableCompactDescendantWithNoise: /* @__PURE__ */ new WeakMap(),
+      readableCompactDescendantWithoutNoise: /* @__PURE__ */ new WeakMap()
     };
     try {
       return await callback();
@@ -22907,11 +22955,17 @@ ${index}. ${content.trim()}
     return null;
   }
   var SELECTED_ARTICLE_BLOCK_OPTIONS = {
-    includeArticleNoise: true
+    includeArticleNoise: true,
+    includeMarkdown: true
   };
   var SCORING_ARTICLE_BLOCK_OPTIONS = {
-    includeArticleNoise: false
+    includeArticleNoise: false,
+    includeMarkdown: false
   };
+  function readableCompactDescendantCache(options) {
+    if (!activeArticleExtractionCache) return null;
+    return options.includeArticleNoise ? activeArticleExtractionCache.readableCompactDescendantWithNoise : activeArticleExtractionCache.readableCompactDescendantWithoutNoise;
+  }
   function isCompactArticleBlock(element) {
     return element.matches(ARTICLE_BLOCK_SELECTOR);
   }
@@ -22921,9 +22975,14 @@ ${index}. ${content.trim()}
     return !options.includeArticleNoise && isArticleNoiseElement(element);
   }
   function hasReadableCompactDescendant(element, options) {
-    return Array.from(element.querySelectorAll(ARTICLE_BLOCK_SELECTOR)).filter((child) => child !== element).some(
+    const cache = readableCompactDescendantCache(options);
+    const cached = cache?.get(element);
+    if (typeof cached === "boolean") return cached;
+    const result = Array.from(element.querySelectorAll(ARTICLE_BLOCK_SELECTOR)).filter((child) => child !== element).some(
       (child) => !shouldSkipArticleBlockElement(child, options) && textLength(visibleTextFromElement(child)) > 0
     );
+    cache?.set(element, result);
+    return result;
   }
   function shouldUseWholeElementAsBlock(element, root, options) {
     const text2 = visibleTextFromElement(element);
@@ -22934,23 +22993,23 @@ ${index}. ${content.trim()}
     if (element === root && !hasCompactDescendant) return true;
     return element.matches(ARTICLE_CONTAINER_FALLBACK_SELECTOR) && !hasCompactDescendant;
   }
-  function sourceBlockFromElement(element) {
+  function sourceBlockFromElement(element, options) {
     const text2 = preserveArticleBlockText(visibleTextFromElement(element));
     if (textLength(text2) === 0) return null;
     const block = {
       text: text2,
-      markdown: markdownFromElement(element),
+      markdown: options.includeMarkdown ? markdownFromElement(element) : void 0,
       element,
       exclusionElement: element
     };
     return isArticleTextBlockExcluded(block) ? null : block;
   }
-  function inlineSourceBlock(text2, element) {
+  function inlineSourceBlock(text2, element, options) {
     const normalized = preserveArticleBlockText(text2);
     if (textLength(normalized) === 0) return null;
     const block = {
       text: normalized,
-      markdown: markdownFromElement(element),
+      markdown: options.includeMarkdown ? markdownFromElement(element) : void 0,
       element
     };
     return isArticleTextBlockExcluded(block) ? null : block;
@@ -22958,7 +23017,7 @@ ${index}. ${content.trim()}
   function articleSourceBlocks(root, options = SELECTED_ARTICLE_BLOCK_OPTIONS) {
     if (shouldSkipArticleBlockElement(root, options)) return [];
     if (shouldUseWholeElementAsBlock(root, root, options)) {
-      const rootBlock = sourceBlockFromElement(root);
+      const rootBlock = sourceBlockFromElement(root, options);
       return rootBlock ? [rootBlock] : [];
     }
     const blocks = [];
@@ -22970,7 +23029,7 @@ ${index}. ${content.trim()}
       let inlineParts = [];
       let inlineElement = element;
       const flushInline = () => {
-        appendBlock(inlineSourceBlock(inlineParts.join(""), inlineElement));
+        appendBlock(inlineSourceBlock(inlineParts.join(""), inlineElement, options));
         inlineParts = [];
         inlineElement = element;
       };
@@ -22990,7 +23049,7 @@ ${index}. ${content.trim()}
         if (shouldSkipArticleBlockElement(node, options)) return;
         if (shouldUseWholeElementAsBlock(node, root, options)) {
           flushInline();
-          appendBlock(sourceBlockFromElement(node));
+          appendBlock(sourceBlockFromElement(node, options));
           return;
         }
         if (hasReadableCompactDescendant(node, options)) {
@@ -23010,6 +23069,9 @@ ${index}. ${content.trim()}
     return blocks;
   }
   async function hasReadableCompactDescendantAsync(element, options, checkpoint) {
+    const cache = readableCompactDescendantCache(options);
+    const cached = cache?.get(element);
+    if (typeof cached === "boolean") return cached;
     const descendants = Array.from(
       element.querySelectorAll(ARTICLE_BLOCK_SELECTOR)
     );
@@ -23019,9 +23081,11 @@ ${index}. ${content.trim()}
         continue;
       }
       if (textLength(await visibleTextFromElementAsync(child, checkpoint)) > 0) {
+        cache?.set(element, true);
         return true;
       }
     }
+    cache?.set(element, false);
     return false;
   }
   async function shouldUseWholeElementAsBlockAsync(element, root, options, checkpoint) {
@@ -23037,7 +23101,7 @@ ${index}. ${content.trim()}
     if (element === root && !hasCompactDescendant) return true;
     return element.matches(ARTICLE_CONTAINER_FALLBACK_SELECTOR) && !hasCompactDescendant;
   }
-  async function sourceBlockFromElementAsync(element, checkpoint) {
+  async function sourceBlockFromElementAsync(element, options, checkpoint) {
     const text2 = preserveArticleBlockText(
       await visibleTextFromElementAsync(element, checkpoint)
     );
@@ -23045,7 +23109,7 @@ ${index}. ${content.trim()}
     await checkpoint();
     const block = {
       text: text2,
-      markdown: markdownFromElement(element),
+      markdown: options.includeMarkdown ? markdownFromElement(element) : void 0,
       element,
       exclusionElement: element
     };
@@ -23055,7 +23119,7 @@ ${index}. ${content.trim()}
   async function articleSourceBlocksAsync(root, options, checkpoint) {
     if (shouldSkipArticleBlockElement(root, options)) return [];
     if (await shouldUseWholeElementAsBlockAsync(root, root, options, checkpoint)) {
-      const rootBlock = await sourceBlockFromElementAsync(root, checkpoint);
+      const rootBlock = await sourceBlockFromElementAsync(root, options, checkpoint);
       return rootBlock ? [rootBlock] : [];
     }
     const blocks = [];
@@ -23069,7 +23133,7 @@ ${index}. ${content.trim()}
           await checkpoint();
           const block = {
             text: text2,
-            markdown: markdownFromElement(inlineElement),
+            markdown: options.includeMarkdown ? markdownFromElement(inlineElement) : void 0,
             element: inlineElement
           };
           if (!isArticleTextBlockExcluded(block)) blocks.push(block);
@@ -23101,7 +23165,7 @@ ${index}. ${content.trim()}
           checkpoint
         )) {
           await flushInline();
-          const block = await sourceBlockFromElementAsync(node, checkpoint);
+          const block = await sourceBlockFromElementAsync(node, options, checkpoint);
           if (block) blocks.push(block);
           continue;
         }
@@ -23408,7 +23472,7 @@ ${index}. ${content.trim()}
     }
     return promoted;
   }
-  async function selectArticleRootAsync(articleExtractionRules, checkpoint) {
+  async function selectArticleRootAsync(articleExtractionRules, checkpoint, performance2) {
     invalidateDisconnectedArticleState();
     if (manualArticleRoot?.isConnected) {
       return {
@@ -23428,7 +23492,9 @@ ${index}. ${content.trim()}
       articleExtractionRules,
       checkpoint
     );
-    if (configured) return configured;
+    if (configured) {
+      return configured;
+    }
     const rootScopes = [document, ...sameOriginIframeBodies()];
     const candidateElements = [];
     for (const rootScope of rootScopes) {
@@ -23440,6 +23506,7 @@ ${index}. ${content.trim()}
       await checkpoint(true);
     }
     const uniqueCandidates = Array.from(new Set(candidateElements));
+    if (performance2) performance2.candidateCount = uniqueCandidates.length;
     const candidates = [];
     for (let order = 0; order < uniqueCandidates.length; order += 1) {
       const element = uniqueCandidates[order];
@@ -23581,67 +23648,85 @@ ${index}. ${content.trim()}
       };
     });
   }
-  async function readableArticleTextAsync(articleExtractionRules = []) {
-    return withArticleExtractionCacheAsync(async () => {
-      const checkpoint = createArticleExtractionCheckpoint();
-      articlePreviewTargets.clear();
-      articlePreviewExclusionTargets.clear();
-      articlePreviewIdCounter = 0;
-      await checkpoint(true);
-      const selection = await selectArticleRootAsync(
-        articleExtractionRules,
-        checkpoint
-      );
-      if (!selection) {
+  async function readableArticleTextAsync(articleExtractionRules = [], options = {}) {
+    return articleExtractionRunner.run(async (signal) => {
+      const startedAt = performance.now();
+      const selectionPerformance = {
+        candidateCount: 0
+      };
+      return withArticleExtractionCacheAsync(async () => {
+        const checkpoint = createArticleExtractionCheckpoint(signal);
+        articlePreviewTargets.clear();
+        articlePreviewExclusionTargets.clear();
+        articlePreviewIdCounter = 0;
+        await checkpoint(true);
+        const selectionStartedAt = performance.now();
+        const selection = await selectArticleRootAsync(
+          articleExtractionRules,
+          checkpoint,
+          selectionPerformance
+        );
+        const selectionMs = performance.now() - selectionStartedAt;
+        if (!selection) {
+          return {
+            title: document.title || location.hostname,
+            text: "",
+            markdown: "",
+            description: "",
+            preview: [],
+            summary: {
+              source: "dom",
+              blockCount: 0,
+              charCount: 0
+            }
+          };
+        }
+        const blocksStartedAt = performance.now();
+        const blocks = await articleSourceBlocksAsync(
+          selection.element,
+          SELECTED_ARTICLE_BLOCK_OPTIONS,
+          checkpoint
+        );
+        const text2 = articleTextFromBlocks(blocks);
+        await checkpoint(true);
+        const markdownParts = [];
+        for (const block of blocks) {
+          markdownParts.push(block.markdown || block.text);
+          await checkpoint();
+        }
+        const blocksMs = performance.now() - blocksStartedAt;
+        const source = articleSourceAfterEdits(selection.source);
+        const selector = selection.selector ?? selectorHint(selection.element) ?? void 0;
+        const score = scoreArticleRoot(
+          selection.element,
+          SELECTED_ARTICLE_BLOCK_OPTIONS,
+          blocks,
+          text2
+        );
+        options.onPerformance?.(
+          `[performance] article extraction totalMs=${Math.round(
+            performance.now() - startedAt
+          )} selectionMs=${Math.round(selectionMs)} blocksMs=${Math.round(
+            blocksMs
+          )} candidates=${selectionPerformance.candidateCount} blocks=${blocks.length} chars=${textLength(text2)} source=${source}`
+        );
         return {
           title: document.title || location.hostname,
-          text: "",
-          markdown: "",
+          text: text2,
+          markdown: markdownParts.filter(Boolean).join("\n\n"),
           description: "",
-          preview: [],
+          preview: articlePreview(blocks),
           summary: {
-            source: "dom",
-            blockCount: 0,
-            charCount: 0
+            source,
+            selector,
+            blockCount: blocks.length,
+            charCount: textLength(text2),
+            score: score.score,
+            scoreMetrics: score.metrics
           }
         };
-      }
-      const blocks = await articleSourceBlocksAsync(
-        selection.element,
-        SELECTED_ARTICLE_BLOCK_OPTIONS,
-        checkpoint
-      );
-      const text2 = articleTextFromBlocks(blocks);
-      await checkpoint(true);
-      const markdownParts = [];
-      for (const block of blocks) {
-        markdownParts.push(block.markdown || block.text);
-        await checkpoint();
-      }
-      const source = articleSourceAfterEdits(selection.source);
-      const selector = selection.selector ?? selectorHint(selection.element) ?? void 0;
-      const score = scoreArticleRoot(
-        selection.element,
-        SELECTED_ARTICLE_BLOCK_OPTIONS,
-        blocks,
-        text2
-      );
-      return {
-        title: document.title || location.hostname,
-        text: text2,
-        markdown: markdownParts.filter(Boolean).join("\n\n"),
-        description: "",
-        preview: articlePreview(blocks),
-        summary: {
-          source,
-          selector,
-          blockCount: blocks.length,
-          charCount: textLength(text2),
-          score: score.score,
-          scoreMetrics: score.metrics
-        }
-      };
-    });
+      });
+    }, options);
   }
   function articlePreviewMatchCandidates(root) {
     const base = root ?? document.body;
@@ -23732,11 +23817,13 @@ ${index}. ${content.trim()}
       editedArticleRoot = current;
       return current;
     }
-    const root = await withArticleExtractionCacheAsync(
-      async () => (await selectArticleRootAsync(
-        articleExtractionRules,
-        createArticleExtractionCheckpoint()
-      ))?.element ?? null
+    const root = await articleExtractionRunner.run(
+      (signal) => withArticleExtractionCacheAsync(
+        async () => (await selectArticleRootAsync(
+          articleExtractionRules,
+          createArticleExtractionCheckpoint(signal)
+        ))?.element ?? null
+      )
     );
     if (root?.isConnected) editedArticleRoot = root;
     return root;
@@ -24051,7 +24138,7 @@ ${index}. ${content.trim()}
       siteName
     };
   }
-  async function extractPageContextAsync(ignoreSelection = false, language, scope = "page", articleExtractionRules = []) {
+  async function extractPageContextAsync(ignoreSelection = false, language, scope = "page", articleExtractionRules = [], articleExtractionOptions = {}) {
     const selection = ignoreSelection ? void 0 : pageSelectionText() || retainedPageSelectionText();
     if (selection) {
       return extractPageContext(
@@ -24063,7 +24150,10 @@ ${index}. ${content.trim()}
     }
     await waitForPageIdle();
     if (scope === "article") {
-      const article = await readableArticleTextAsync(articleExtractionRules);
+      const article = await readableArticleTextAsync(
+        articleExtractionRules,
+        articleExtractionOptions
+      );
       const description = document.querySelector('meta[name="description"]')?.content ?? document.querySelector('meta[property="og:description"]')?.content;
       return {
         kind: "article",
@@ -32468,7 +32558,11 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           Boolean(message.ignoreSelection),
           settings?.interfaceLanguage,
           message.scope === "article" ? "article" : "page",
-          settings?.articleExtractionRules ?? []
+          settings?.articleExtractionRules ?? [],
+          {
+            replaceable: Boolean(message.replaceableArticleExtraction),
+            onPerformance: emitDebugLog
+          }
         );
       }
       if (message.type === "page.article.pick") {

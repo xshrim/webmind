@@ -18,6 +18,10 @@ import {
   textFromElement
 } from "./selection";
 import { urlMatchesWhitelist } from "./urlRules";
+import {
+  createArticleExtractionRunner,
+  throwIfArticleExtractionAborted
+} from "./articleExtractionRunner";
 
 export function searchQuery(): string | null {
   return searchQueryFromUrl(location.href);
@@ -91,9 +95,20 @@ interface ArticleSnapshot {
   preview?: ArticlePreviewBlock[];
 }
 
+interface ArticleSelectionPerformance {
+  candidateCount: number;
+}
+
 interface ArticleExtractionCache {
   visible: WeakMap<HTMLElement, boolean>;
   text: WeakMap<HTMLElement, string>;
+  readableCompactDescendantWithNoise: WeakMap<HTMLElement, boolean>;
+  readableCompactDescendantWithoutNoise: WeakMap<HTMLElement, boolean>;
+}
+
+export interface ArticleExtractionOptions {
+  replaceable?: boolean;
+  onPerformance?: (message: string) => void;
 }
 
 let manualArticleRoot: HTMLElement | null = null;
@@ -103,6 +118,7 @@ let cancelArticlePickerSession: (() => void) | null = null;
 let articlePreviewIdCounter = 0;
 let activeArticleExtractionCache: ArticleExtractionCache | null = null;
 let retainedPageSelectionTextValue = "";
+const articleExtractionRunner = createArticleExtractionRunner();
 
 const articlePreviewTargets = new Map<string, HTMLElement>();
 const articlePreviewExclusionTargets = new Map<string, HTMLElement>();
@@ -190,10 +206,12 @@ function waitForPageIdle(timeout = 140): Promise<void> {
 type ArticleExtractionCheckpoint = (force?: boolean) => Promise<void>;
 
 function createArticleExtractionCheckpoint(
+  signal?: AbortSignal,
   budgetMs = 6
 ): ArticleExtractionCheckpoint {
   let sliceStarted = performance.now();
   return async (force = false) => {
+    if (signal) throwIfArticleExtractionAborted(signal);
     if (!force && performance.now() - sliceStarted < budgetMs) return;
     const scheduler = (
       globalThis as typeof globalThis & {
@@ -205,6 +223,7 @@ function createArticleExtractionCheckpoint(
     } else {
       await new Promise<void>((resolve) => window.setTimeout(resolve, 0));
     }
+    if (signal) throwIfArticleExtractionAborted(signal);
     sliceStarted = performance.now();
   };
 }
@@ -246,7 +265,9 @@ function withArticleExtractionCache<T>(callback: () => T): T {
   if (activeArticleExtractionCache) return callback();
   activeArticleExtractionCache = {
     visible: new WeakMap(),
-    text: new WeakMap()
+    text: new WeakMap(),
+    readableCompactDescendantWithNoise: new WeakMap(),
+    readableCompactDescendantWithoutNoise: new WeakMap()
   };
   try {
     return callback();
@@ -261,7 +282,9 @@ async function withArticleExtractionCacheAsync<T>(
   if (activeArticleExtractionCache) return callback();
   activeArticleExtractionCache = {
     visible: new WeakMap(),
-    text: new WeakMap()
+    text: new WeakMap(),
+    readableCompactDescendantWithNoise: new WeakMap(),
+    readableCompactDescendantWithoutNoise: new WeakMap()
   };
   try {
     return await callback();
@@ -755,14 +778,26 @@ async function configuredArticleRootAsync(
 
 interface ArticleBlockCollectionOptions {
   includeArticleNoise: boolean;
+  includeMarkdown: boolean;
 }
 
 const SELECTED_ARTICLE_BLOCK_OPTIONS: ArticleBlockCollectionOptions = {
-  includeArticleNoise: true
+  includeArticleNoise: true,
+  includeMarkdown: true
 };
 const SCORING_ARTICLE_BLOCK_OPTIONS: ArticleBlockCollectionOptions = {
-  includeArticleNoise: false
+  includeArticleNoise: false,
+  includeMarkdown: false
 };
+
+function readableCompactDescendantCache(
+  options: ArticleBlockCollectionOptions
+): WeakMap<HTMLElement, boolean> | null {
+  if (!activeArticleExtractionCache) return null;
+  return options.includeArticleNoise
+    ? activeArticleExtractionCache.readableCompactDescendantWithNoise
+    : activeArticleExtractionCache.readableCompactDescendantWithoutNoise;
+}
 
 function isCompactArticleBlock(element: HTMLElement): boolean {
   return element.matches(ARTICLE_BLOCK_SELECTOR);
@@ -781,13 +816,18 @@ function hasReadableCompactDescendant(
   element: HTMLElement,
   options: ArticleBlockCollectionOptions
 ): boolean {
-  return Array.from(element.querySelectorAll<HTMLElement>(ARTICLE_BLOCK_SELECTOR))
+  const cache = readableCompactDescendantCache(options);
+  const cached = cache?.get(element);
+  if (typeof cached === "boolean") return cached;
+  const result = Array.from(element.querySelectorAll<HTMLElement>(ARTICLE_BLOCK_SELECTOR))
     .filter((child) => child !== element)
     .some(
       (child) =>
         !shouldSkipArticleBlockElement(child, options) &&
         textLength(visibleTextFromElement(child)) > 0
     );
+  cache?.set(element, result);
+  return result;
 }
 
 function shouldUseWholeElementAsBlock(
@@ -808,13 +848,14 @@ function shouldUseWholeElementAsBlock(
 }
 
 function sourceBlockFromElement(
-  element: HTMLElement
+  element: HTMLElement,
+  options: ArticleBlockCollectionOptions
 ): ArticlePreviewSourceBlock | null {
   const text = preserveArticleBlockText(visibleTextFromElement(element));
   if (textLength(text) === 0) return null;
   const block = {
     text,
-    markdown: markdownFromElement(element),
+    markdown: options.includeMarkdown ? markdownFromElement(element) : undefined,
     element,
     exclusionElement: element
   };
@@ -823,13 +864,14 @@ function sourceBlockFromElement(
 
 function inlineSourceBlock(
   text: string,
-  element: HTMLElement
+  element: HTMLElement,
+  options: ArticleBlockCollectionOptions
 ): ArticlePreviewSourceBlock | null {
   const normalized = preserveArticleBlockText(text);
   if (textLength(normalized) === 0) return null;
   const block = {
     text: normalized,
-    markdown: markdownFromElement(element),
+    markdown: options.includeMarkdown ? markdownFromElement(element) : undefined,
     element
   };
   return isArticleTextBlockExcluded(block) ? null : block;
@@ -841,7 +883,7 @@ function articleSourceBlocks(
 ): ArticlePreviewSourceBlock[] {
   if (shouldSkipArticleBlockElement(root, options)) return [];
   if (shouldUseWholeElementAsBlock(root, root, options)) {
-    const rootBlock = sourceBlockFromElement(root);
+    const rootBlock = sourceBlockFromElement(root, options);
     return rootBlock ? [rootBlock] : [];
   }
 
@@ -856,7 +898,7 @@ function articleSourceBlocks(
     let inlineParts: string[] = [];
     let inlineElement: HTMLElement = element;
     const flushInline = () => {
-      appendBlock(inlineSourceBlock(inlineParts.join(""), inlineElement));
+      appendBlock(inlineSourceBlock(inlineParts.join(""), inlineElement, options));
       inlineParts = [];
       inlineElement = element;
     };
@@ -877,7 +919,7 @@ function articleSourceBlocks(
       if (shouldSkipArticleBlockElement(node, options)) return;
       if (shouldUseWholeElementAsBlock(node, root, options)) {
         flushInline();
-        appendBlock(sourceBlockFromElement(node));
+        appendBlock(sourceBlockFromElement(node, options));
         return;
       }
       if (hasReadableCompactDescendant(node, options)) {
@@ -903,6 +945,9 @@ async function hasReadableCompactDescendantAsync(
   options: ArticleBlockCollectionOptions,
   checkpoint: ArticleExtractionCheckpoint
 ): Promise<boolean> {
+  const cache = readableCompactDescendantCache(options);
+  const cached = cache?.get(element);
+  if (typeof cached === "boolean") return cached;
   const descendants = Array.from(
     element.querySelectorAll<HTMLElement>(ARTICLE_BLOCK_SELECTOR)
   );
@@ -912,9 +957,11 @@ async function hasReadableCompactDescendantAsync(
       continue;
     }
     if (textLength(await visibleTextFromElementAsync(child, checkpoint)) > 0) {
+      cache?.set(element, true);
       return true;
     }
   }
+  cache?.set(element, false);
   return false;
 }
 
@@ -942,6 +989,7 @@ async function shouldUseWholeElementAsBlockAsync(
 
 async function sourceBlockFromElementAsync(
   element: HTMLElement,
+  options: ArticleBlockCollectionOptions,
   checkpoint: ArticleExtractionCheckpoint
 ): Promise<ArticlePreviewSourceBlock | null> {
   const text = preserveArticleBlockText(
@@ -951,7 +999,7 @@ async function sourceBlockFromElementAsync(
   await checkpoint();
   const block = {
     text,
-    markdown: markdownFromElement(element),
+    markdown: options.includeMarkdown ? markdownFromElement(element) : undefined,
     element,
     exclusionElement: element
   };
@@ -968,7 +1016,7 @@ async function articleSourceBlocksAsync(
   if (
     await shouldUseWholeElementAsBlockAsync(root, root, options, checkpoint)
   ) {
-    const rootBlock = await sourceBlockFromElementAsync(root, checkpoint);
+    const rootBlock = await sourceBlockFromElementAsync(root, options, checkpoint);
     return rootBlock ? [rootBlock] : [];
   }
 
@@ -983,7 +1031,9 @@ async function articleSourceBlocksAsync(
         await checkpoint();
         const block = {
           text,
-          markdown: markdownFromElement(inlineElement),
+          markdown: options.includeMarkdown
+            ? markdownFromElement(inlineElement)
+            : undefined,
           element: inlineElement
         };
         if (!isArticleTextBlockExcluded(block)) blocks.push(block);
@@ -1018,7 +1068,7 @@ async function articleSourceBlocksAsync(
         )
       ) {
         await flushInline();
-        const block = await sourceBlockFromElementAsync(node, checkpoint);
+        const block = await sourceBlockFromElementAsync(node, options, checkpoint);
         if (block) blocks.push(block);
         continue;
       }
@@ -1473,7 +1523,8 @@ async function promoteRootToIncludeTitleAsync(
 
 async function selectArticleRootAsync(
   articleExtractionRules: ArticleExtractionRule[],
-  checkpoint: ArticleExtractionCheckpoint
+  checkpoint: ArticleExtractionCheckpoint,
+  performance?: ArticleSelectionPerformance
 ): Promise<ArticleRootSelection | null> {
   invalidateDisconnectedArticleState();
   if (manualArticleRoot?.isConnected) {
@@ -1494,7 +1545,9 @@ async function selectArticleRootAsync(
     articleExtractionRules,
     checkpoint
   );
-  if (configured) return configured;
+  if (configured) {
+    return configured;
+  }
 
   const rootScopes: ParentNode[] = [document, ...sameOriginIframeBodies()];
   const candidateElements: HTMLElement[] = [];
@@ -1507,6 +1560,7 @@ async function selectArticleRootAsync(
     await checkpoint(true);
   }
   const uniqueCandidates = Array.from(new Set(candidateElements));
+  if (performance) performance.candidateCount = uniqueCandidates.length;
   const candidates: Array<{
     element: HTMLElement;
     order: number;
@@ -1693,70 +1747,91 @@ function readableArticleText(
 }
 
 async function readableArticleTextAsync(
-  articleExtractionRules: ArticleExtractionRule[] = []
+  articleExtractionRules: ArticleExtractionRule[] = [],
+  options: ArticleExtractionOptions = {}
 ): Promise<ArticleSnapshot> {
-  return withArticleExtractionCacheAsync(async () => {
-    const checkpoint = createArticleExtractionCheckpoint();
-    articlePreviewTargets.clear();
-    articlePreviewExclusionTargets.clear();
-    articlePreviewIdCounter = 0;
-    await checkpoint(true);
+  return articleExtractionRunner.run(async (signal) => {
+    const startedAt = performance.now();
+    const selectionPerformance: ArticleSelectionPerformance = {
+      candidateCount: 0
+    };
+    return withArticleExtractionCacheAsync(async () => {
+      const checkpoint = createArticleExtractionCheckpoint(signal);
+      articlePreviewTargets.clear();
+      articlePreviewExclusionTargets.clear();
+      articlePreviewIdCounter = 0;
+      await checkpoint(true);
 
-    const selection = await selectArticleRootAsync(
-      articleExtractionRules,
-      checkpoint
-    );
-    if (!selection) {
+      const selectionStartedAt = performance.now();
+      const selection = await selectArticleRootAsync(
+        articleExtractionRules,
+        checkpoint,
+        selectionPerformance
+      );
+      const selectionMs = performance.now() - selectionStartedAt;
+      if (!selection) {
+        return {
+          title: document.title || location.hostname,
+          text: "",
+          markdown: "",
+          description: "",
+          preview: [],
+          summary: {
+            source: "dom",
+            blockCount: 0,
+            charCount: 0
+          }
+        };
+      }
+      const blocksStartedAt = performance.now();
+      const blocks = await articleSourceBlocksAsync(
+        selection.element,
+        SELECTED_ARTICLE_BLOCK_OPTIONS,
+        checkpoint
+      );
+      const text = articleTextFromBlocks(blocks);
+      await checkpoint(true);
+      const markdownParts: string[] = [];
+      for (const block of blocks) {
+        markdownParts.push(block.markdown || block.text);
+        await checkpoint();
+      }
+      const blocksMs = performance.now() - blocksStartedAt;
+      const source = articleSourceAfterEdits(selection.source);
+      const selector =
+        selection.selector ?? selectorHint(selection.element) ?? undefined;
+      const score = scoreArticleRoot(
+        selection.element,
+        SELECTED_ARTICLE_BLOCK_OPTIONS,
+        blocks,
+        text
+      );
+      options.onPerformance?.(
+        `[performance] article extraction totalMs=${Math.round(
+          performance.now() - startedAt
+        )} selectionMs=${Math.round(selectionMs)} blocksMs=${Math.round(
+          blocksMs
+        )} candidates=${selectionPerformance.candidateCount} blocks=${
+          blocks.length
+        } chars=${textLength(text)} source=${source}`
+      );
       return {
         title: document.title || location.hostname,
-        text: "",
-        markdown: "",
+        text,
+        markdown: markdownParts.filter(Boolean).join("\n\n"),
         description: "",
-        preview: [],
+        preview: articlePreview(blocks),
         summary: {
-          source: "dom",
-          blockCount: 0,
-          charCount: 0
+          source,
+          selector,
+          blockCount: blocks.length,
+          charCount: textLength(text),
+          score: score.score,
+          scoreMetrics: score.metrics
         }
       };
-    }
-    const blocks = await articleSourceBlocksAsync(
-      selection.element,
-      SELECTED_ARTICLE_BLOCK_OPTIONS,
-      checkpoint
-    );
-    const text = articleTextFromBlocks(blocks);
-    await checkpoint(true);
-    const markdownParts: string[] = [];
-    for (const block of blocks) {
-      markdownParts.push(block.markdown || block.text);
-      await checkpoint();
-    }
-    const source = articleSourceAfterEdits(selection.source);
-    const selector =
-      selection.selector ?? selectorHint(selection.element) ?? undefined;
-    const score = scoreArticleRoot(
-      selection.element,
-      SELECTED_ARTICLE_BLOCK_OPTIONS,
-      blocks,
-      text
-    );
-    return {
-      title: document.title || location.hostname,
-      text,
-      markdown: markdownParts.filter(Boolean).join("\n\n"),
-      description: "",
-      preview: articlePreview(blocks),
-      summary: {
-        source,
-        selector,
-        blockCount: blocks.length,
-        charCount: textLength(text),
-        score: score.score,
-        scoreMetrics: score.metrics
-      }
-    };
-  });
+    });
+  }, options);
 }
 
 function articlePreviewMatchCandidates(root: HTMLElement | null): HTMLElement[] {
@@ -1871,13 +1946,15 @@ async function setEditedArticleRootFromCurrentAsync(
     editedArticleRoot = current;
     return current;
   }
-  const root = await withArticleExtractionCacheAsync(async () =>
-    (
-      await selectArticleRootAsync(
-        articleExtractionRules,
-        createArticleExtractionCheckpoint()
-      )
-    )?.element ?? null
+  const root = await articleExtractionRunner.run((signal) =>
+    withArticleExtractionCacheAsync(async () =>
+      (
+        await selectArticleRootAsync(
+          articleExtractionRules,
+          createArticleExtractionCheckpoint(signal)
+        )
+      )?.element ?? null
+    )
   );
   if (root?.isConnected) editedArticleRoot = root;
   return root;
@@ -2278,7 +2355,8 @@ export async function extractPageContextAsync(
   ignoreSelection = false,
   language?: AppSettings["interfaceLanguage"],
   scope: "page" | "article" = "page",
-  articleExtractionRules: ArticleExtractionRule[] = []
+  articleExtractionRules: ArticleExtractionRule[] = [],
+  articleExtractionOptions: ArticleExtractionOptions = {}
 ): Promise<PageContext> {
   const selection =
     ignoreSelection
@@ -2294,7 +2372,10 @@ export async function extractPageContextAsync(
   }
   await waitForPageIdle();
   if (scope === "article") {
-    const article = await readableArticleTextAsync(articleExtractionRules);
+    const article = await readableArticleTextAsync(
+      articleExtractionRules,
+      articleExtractionOptions
+    );
     const description =
       document.querySelector<HTMLMetaElement>('meta[name="description"]')?.content ??
       document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.content;

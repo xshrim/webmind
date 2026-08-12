@@ -704,7 +704,8 @@ export function App() {
     async (
       reason: string,
       showLoading = true,
-      policy: "default" | "preserve" = "default"
+      policy: "default" | "preserve" = "default",
+      replaceableArticleExtraction = false
     ) => {
       const version = ++activeTabContextVersionRef.current;
       selectionContextVersionRef.current += 1;
@@ -719,7 +720,9 @@ export function App() {
         ) =>
           getActivePageContext(settingsRef.current?.interfaceLanguage, {
             ignoreSelection,
-            scope
+            scope,
+            replaceableArticleExtraction:
+              scope === "article" && replaceableArticleExtraction
           });
         const requestedMode: ContextMode =
           policy === "preserve" ? currentMode : defaultMode;
@@ -873,7 +876,7 @@ export function App() {
       document.documentElement.dataset.theme = loadedSettings.theme;
       setHistory(loadedHistory);
       setCustomTools(tools);
-      await refreshActivePageContext("sidepanel-init", true);
+      await refreshActivePageContext("sidepanel-init", true, "default", true);
       appendOperationLog(
         uiText(loadedSettings.interfaceLanguage, "logSidepanelReady"),
         "success"
@@ -904,7 +907,12 @@ export function App() {
               contextModeRef.current === "article")
           ) {
             setIncludePage(true);
-            void refreshActivePageContext("default-context-updated", true);
+            void refreshActivePageContext(
+              "default-context-updated",
+              true,
+              "default",
+              true
+            );
           }
         });
       }
@@ -943,7 +951,7 @@ export function App() {
       if (refreshTimer !== null) window.clearTimeout(refreshTimer);
       refreshTimer = window.setTimeout(() => {
         refreshTimer = null;
-        void refreshActivePageContext(reason, true, "preserve");
+        void refreshActivePageContext(reason, true, "preserve", true);
       }, 120);
     };
     const handleActivated = () => scheduleRefresh("tab-activated");

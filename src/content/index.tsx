@@ -4124,7 +4124,11 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         Boolean(message.ignoreSelection),
         settings?.interfaceLanguage,
         message.scope === "article" ? "article" : "page",
-        settings?.articleExtractionRules ?? []
+        settings?.articleExtractionRules ?? [],
+        {
+          replaceable: Boolean(message.replaceableArticleExtraction),
+          onPerformance: emitDebugLog
+        }
       );
     }
     if (message.type === "page.article.pick") {

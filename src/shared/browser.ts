@@ -129,7 +129,11 @@ export async function sendToTab<T>(
 
 export async function getActivePageContext(
   language?: AppLanguage,
-  options: { ignoreSelection?: boolean; scope?: "page" | "article" } = {}
+  options: {
+    ignoreSelection?: boolean;
+    scope?: "page" | "article";
+    replaceableArticleExtraction?: boolean;
+  } = {}
 ): Promise<{
   tab: chrome.tabs.Tab | null;
   context: PageContext | null;
@@ -143,7 +147,10 @@ export async function getActivePageContext(
       {
         type: "page.context",
         ignoreSelection: Boolean(options.ignoreSelection),
-        scope: options.scope ?? "page"
+        scope: options.scope ?? "page",
+        replaceableArticleExtraction: Boolean(
+          options.replaceableArticleExtraction
+        )
       },
       language
     );
