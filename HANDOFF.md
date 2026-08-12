@@ -8,7 +8,7 @@
 - 项目类型：Manifest V3 Chrome 扩展。
 - 最终制品：未打包扩展目录 `dist/`，不要打包成 `.crx`。
 - 核心目标：实现一个浏览器 AI 助手，功能工作流参考 MaxAI 一类产品的公开能力，但不包含登录、订阅、购买方案；用户自行添加模型引擎和凭证。
-- 本交接文档日期：2026-08-11。
+- 本交接文档日期：2026-08-12。
 
 ## 如何继续开发
 
@@ -45,26 +45,28 @@ npm run check
 - `src/shared/tools.ts`：内置/自定义工具合并、模板填充、上下文注入，以及仅对工具生效的回答语言约束。
 - `src/shared/utils.ts`：共享工具函数、正文 citation 说明清洗、翻译占位符保护与还原、消息辅助函数。
 - `src/shared/i18n.ts`：语言候选、浏览器语言解析、Prompt 指令语言解析和九种语言的类型完整性组装；`src/shared/locales/{es,fr,de,it}.ts` 分别维护西班牙语、法语、德语、意大利语的完整静态界面词条。
-- `src/shared/storage.ts`：设置、工具、历史、本地存储和 Chrome 同步存储。
+- `src/shared/storage.ts`：设置、工具、历史、本地存储和 Chrome 同步存储；负责将缺失或非法的 `mcpToolApprovalMode` 归一化为 `ask`。
 - `src/shared/models.ts`：默认、翻译、视觉三类模型用途的路由逻辑。
-- `src/background/index.ts`：扩展消息路由、工具执行、快捷动作、搜索、图片获取/截图、打开侧边栏。
+- `src/background/index.ts`：扩展消息路由、工具执行、快捷动作、搜索、图片获取/截图、打开侧边栏；维护 MCP 审批 Promise、30 秒超时和 `mcp.tool.status` Port 事件。
 - `src/background/providers.ts`：各模型接口的流式请求和兼容处理。
 - `src/background/mcpClient.ts`：基于官方 MCP SDK 的 SSE/Streamable HTTP 连接、工具发现和调用结果格式化。
-- `src/background/mcpAgent.ts`：普通对话的原生模型 tool-calling 循环、工具选择校验、逐次审批和步数/数量限制。
+- `src/background/mcpAgent.ts`：普通对话的原生模型 tool-calling 循环、工具选择校验、逐次审批和步数/数量限制；每次调用前强制执行全局 MCP 授权模式，并回传结构化工具状态。
 - `src/content/index.tsx`：网页注入能力，包括划词浮层、快捷工具、沉浸翻译、沉浸阅读、悬停释义、自动回复、图文提取、搜索页回答窗口。
 - `src/content/pageContext.ts`：当前页面/当前正文提取、正文识别规则、父容器选择、block 划分、手动框选、逐段删除、智能剔除、预览定位。
 - `src/content/translationPreparation.ts`：页面/当前正文/选区翻译和沉浸阅读的 block 收集；当前正文 scope 使用侧边栏传入的 `articlePreview` block 作为 canonical 处理对象。
-- `src/sidepanel/App.tsx`：侧边栏聊天、工具、历史、日志、上下文处理、工具调用气泡、模型流式回答。
+- `src/sidepanel/App.tsx`：侧边栏聊天、工具、历史、日志、上下文处理、工具调用气泡、模型流式回答；将 `mcp.tool.status` 挂到对应助手消息并在回答下方渲染记录。
 - `src/sidepanel/toolIcons.tsx`：侧边栏内置工具和自定义工具图标渲染；新版 lucide 动态图标通过 `lucide-react/dynamic` 懒加载。
 - `src/sidepanel/customIcons.tsx`：沉浸翻译、沉浸阅读等非 lucide 内联图标。
-- `src/options/SettingsApp.tsx`：设置页面。
+- `src/options/SettingsApp.tsx`：设置页面，包括通用配置中的 MCP 工具执行授权模式。
 - `vite.config.ts`：生产构建入口和手动 chunk 拆分；lucide 动态图标按首字母拆成 `lucide-icons-*` chunk。
 - `scripts/build-extension.mjs`：将构建产物整理到最终扩展目录 `dist/`。
 
 ## 当前产品能力
 
 - 侧边栏聊天支持当前页面、选中内容、无上下文、附件、URL/文档附件、网页搜索、Markdown 流式回答、停止生成、历史和日志。
-- MCP 选项卡支持本地添加 SSE/Streamable HTTP Server、刷新 Tools、编辑/删除 Server；聊天输入区可多选 Server 和工具。工具调用使用原生模型协议并逐次弹窗确认，固定翻译/视觉/内部工作流不会携带 MCP。
+- MCP 选项卡支持本地添加 SSE/Streamable HTTP Server、刷新 Tools、编辑/删除 Server；聊天输入区可多选 Server 和工具。固定翻译/视觉/内部工作流不会携带 MCP。
+- MCP 全局授权模式为 `deny | ask | allow`，默认 `ask`。`deny` 禁止每一次调用，`allow` 跳过交互审批，二者都只能作用于用户当前显式启用且后台再次校验通过的工具；`ask` 保留本次、本轮、会话三种授权范围。
+- MCP 执行记录不依赖模型自然语言：助手回答下方会显示成功调用、全局拒绝、用户拒绝、审批超时或调用失败，以及对应 Server / Tool。阻止与失败结果仍会传回模型，模型应继续完成回答。
 - 上下文下拉框只有：无上下文、当前页面、当前正文、当前选中；默认上下文来自 `defaultContextScope`，当前真实默认值是当前正文。
 - 用户自行配置模型引擎；没有账号、登录、购买或订阅代码。
 - 模型预设包括 OpenAI 兼容、Grok、DeepSeek、Kimi、Qwen、智谱 GLM、MiMo、LongCat、MiniMax、Doubao Seed、OpenRouter、硅基流动、Anthropic、Gemini、Ollama。
@@ -130,6 +132,7 @@ npm run check
 - `chromeSyncEnabled`：`false`
 - `autoScrollDuringStreaming`：`true`
 - `modelThinkingTimeoutSeconds`：`0`，表示不限制
+- `mcpToolApprovalMode`：`ask`，即始终询问
 - `historyLimit`：`60`
 
 上下文下拉框只有四项：无上下文、当前页面、当前正文、当前选中。“框选正文”不是上下文类型，而是自定义当前正文的操作；手动框选后可使用“还原正文”恢复自动识别结果。
@@ -160,9 +163,13 @@ npm run check
 - 当前正文段落不再在鼠标悬停时跟踪页面正文，只有点击段落或键盘确认时才跳转/高亮。
 - 手动框选正文时 selector 应是可定位的 CSS selector，不应退化成 `manual` 或单个标签名；tooltip 两行显示“元素位置/selector”和操作提示；`Esc` 或切换 Chrome 标签页会取消框选，不弹出取消提示菜单。
 - 侧边栏统一 tooltip 会接管侧栏控件原有的 `title` 文案，避免浏览器原生 tooltip 与项目样式不一致；工具调用气泡继续使用其专用 tooltip 样式。
+- MCP 授权必须在后台 `runMcpAgent()` 的每次工具调用前读取 `loadSettings()` 后执行，不能只依赖侧边栏状态。`allow` 只绕过审批，不得绕过 `mcpTools` 的已启用/已发现校验。
+- Port 协议中 `mcp.approval.required` 请求用户决定；`mcp.tool.status` 回传 `McpToolEvent`。事件状态为 `called`、`blocked`、`failed`；阻止原因只能是 `global-deny`、`user-deny` 或 `approval-timeout`。事件必须以 `requestId` 绑定助手消息，审批关联使用 `approvalId`。
+- 审批超时为 `30_000ms`。`pendingMcpApprovals` 删除条目后才解析为 `deny-timeout`，因此超时与用户迟到点击按先到者生效；超时不得中止整轮聊天。取消或 Port 断开仍通过 `AbortController` 拒绝等待中的审批。
 
 ## 最近完成的功能与修复
 
+- `bd092f3 feat: add MCP authorization modes and tool status`：新增 `mcpToolApprovalMode` 设置及多语言文案；后台在每次调用前强制执行全局授权；审批 30 秒超时后继续让模型回答；通过 `mcp.tool.status` 将调用、拒绝、超时和失败状态绑定并渲染到助手回答。测试补充了授权模式归一化。
 - 已完成核心模块的第一轮拆分，正文识别、翻译 DOM、选择处理、快捷键、附件和侧边栏展示等能力已移出部分核心文件；当前仍需继续拆分大文件。
 - 新增 `src/shared/immersiveWorkflow.ts`，内容脚本和侧边栏的沉浸翻译/沉浸阅读模型流程共用分批、重试、校验、顺序化应用和进度协议。
 - 当前正文已重构为“一个父容器 + 一组预览 block”的单一路径：规则、手动框选和自动 DOM 识别都只负责确定父容器；自动识别会把正文标题纳入正文，并允许 GitHub README、项目主页、长博客等长正文容器胜出，但会限制向外提升范围并惩罚评论、回复、推荐、导航等混入噪声；父容器下的段落、列表、表格、代码块等紧凑整体会生成可定位、可删除、可翻译写回的 block。
@@ -227,7 +234,7 @@ npm run check
 - 沉浸翻译和沉浸阅读仍需要避开脚本、隐藏内容、导航、页脚、侧栏和已有 WebMind 注入元素；当前正文 scope 则以选定父容器的可见 block 为准。
 - PDF worker chunk 较大。当前 Vite 构建能通过并输出较大的 `vendor-pdf`/worker chunk，这是预期现象，除非后续重新设计 PDF 处理方式。
 - MCP 当前只覆盖 Tools，不支持 Resources、Prompts、Sampling、Roots 或 Elicitation；图片/音频/资源结果以文本标记传回模型。MCP Server 配置和自定义请求头只保存在 local storage，不参与 Chrome Sync；每次操作会重新建立连接，并受 15 秒发现、60 秒调用和 60000 字符结果上限约束。
-- MCP 工具调用依赖实际模型的原生 tool-calling 能力。未启用工具时继续使用原有流式路径；启用后模型决策轮次是非流式的，可能增加请求次数和延迟。工具执行默认需要用户审批，Server 本身仍可能访问本机或内网资源，使用者应只添加可信 Server。
+- MCP 工具调用依赖实际模型的原生 tool-calling 能力。未启用工具时继续使用原有流式路径；启用后模型决策轮次是非流式的，可能增加请求次数和延迟。全局模式默认询问，也可直接拒绝或直接允许；始终允许会跳过审批，Server 本身仍可能访问本机或内网资源，使用者应只添加可信 Server。
 
 ## 未完成问题
 
@@ -257,7 +264,7 @@ npm run build
 git diff --check
 ```
 
-测试结果：`20` 个测试文件、`170` 个测试通过；TypeScript 类型检查和构建均成功，已生成未打包扩展目录 `dist/`。以上是代码级验证，尚未替代真实 Chrome 手工验证。
+测试结果：`21` 个测试文件、`182` 个测试通过；TypeScript 类型检查和构建均成功，已生成未打包扩展目录 `dist/`。以上是代码级验证，尚未替代真实 Chrome 手工验证。
 
 ## 最近手工验证重点
 
@@ -292,3 +299,6 @@ git diff --check
 - 检查正文原文中 `**4 citations from multiple sources**[1-4]`、`**Citation N from source**[N]` 只保留引用标记；检查翻译结果不会出现“这是一个翻译任务...”和损坏的 `WEBMIND_*` 占位符。
 - 在扩展重载后保留一个不刷新的普通网页标签页，直接打开侧边栏并使用当前正文工具，验证自动补注入不会再出现“不能建立连接”。
 - 在禁止复制/右键的网站上分别测试当前页面、当前正文、自动翻译、沉浸翻译和沉浸阅读；另测 `user-select: none` 页面上的当前选中功能。
+- MCP 回归：分别将“通用配置 -> MCP 工具执行授权模式”设置为始终拒绝、始终询问、始终允许；确认始终拒绝不执行工具且回答下方说明原因，始终允许只执行当前勾选工具且不弹窗。
+- MCP 回归：在始终询问模式分别选择本次、本轮、会话允许和拒绝；确认授权范围正确。对审批弹窗等待超过 30 秒，确认弹窗关闭、工具不执行、回答下方显示“等待授权超时”，模型仍会继续给出回答；超时后点击旧弹窗不得影响后续调用。
+- MCP 回归：制造 Server 调用错误，确认回答下方显示调用失败及精简错误；成功调用时确认显示实际的 Server / Tool，而非仅依赖模型文本声明。
