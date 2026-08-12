@@ -98,6 +98,13 @@ import {
   restoreAutomaticArticleSelection,
   startManualArticleSelection
 } from "./pageContext";
+import {
+  cancelLatestAnimationFrame,
+  scheduleLatestAnimationFrame,
+  textRectAtPoint,
+  type LatestFrameState
+} from "./hoverDefinition";
+import { shouldCloseFloatingResult } from "./floatingResult";
 import { ToolIcon } from "./toolIcons";
 import type {
   AppSettings,
@@ -146,7 +153,6 @@ import {
 } from "../shared/immersiveWorkflow";
 import { Markdown } from "../ui/Markdown";
 import { PAGE_STYLES, SHADOW_STYLES } from "./styles";
-import { textRectAtPoint } from "./hoverDefinition";
 
 const IMMERSIVE_READING_BATCH_SIZE = 20;
 const IMMERSIVE_TRANSLATION_BATCH_SIZE = 10;
@@ -1091,6 +1097,9 @@ function SelectionAssistant({ query }: { query: string | null }) {
     null
   );
   const hoverDefinitionPointerRef = useRef<HoverPointerPosition | null>(null);
+  const hoverDefinitionFrameRef = useRef<
+    LatestFrameState<HoverPointerPosition>
+  >({ frameId: null, value: null });
   const hoverDefinitionShortcutPressedRef = useRef(false);
   const imageHoverTimeoutRef = useRef<number | null>(null);
   const imageHoverHideTimeoutRef = useRef<number | null>(null);
@@ -1339,6 +1348,12 @@ function SelectionAssistant({ query }: { query: string | null }) {
   );
 
   useEffect(() => {
+    const cancelScheduledPointer = () => {
+      cancelLatestAnimationFrame(
+        hoverDefinitionFrameRef.current,
+        window.cancelAnimationFrame
+      );
+    };
     const clearTimer = () => {
       if (hoverDefinitionTimerRef.current !== null) {
         window.clearTimeout(hoverDefinitionTimerRef.current);
@@ -1346,6 +1361,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
       }
     };
     const hide = () => {
+      cancelScheduledPointer();
       clearTimer();
       hoverDefinitionCandidateRef.current = null;
       setHoverDefinition(null);
@@ -1370,7 +1386,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
         top: Math.max(8, Math.round(rect.top - 35))
       };
     };
-	    const schedule = ({ clientX, clientY }: HoverPointerPosition) => {
+    const processPointer = ({ clientX, clientY }: HoverPointerPosition) => {
 	      const candidate = definitionCandidateAtPoint(clientX, clientY);
 	      if (
 	        !candidate ||
@@ -1445,41 +1461,49 @@ function SelectionAssistant({ query }: { query: string | null }) {
           });
       }, 560);
     };
-	    const handlePointerMove = (event: PointerEvent) => {
-	      if (isAssistantEvent(event)) {
-	        hide();
-	        return;
-	      }
-	      if (hoverDefinitionShortcut !== "off") {
-	        hoverDefinitionShortcutPressedRef.current =
-	          modifierShortcutFromEvent(event) === hoverDefinitionShortcut;
-	      }
-	      const pointer = { clientX: event.clientX, clientY: event.clientY };
-	      hoverDefinitionPointerRef.current = pointer;
-	      schedule(pointer);
-	    };
-	    const handleKeyDown = (event: KeyboardEvent) => {
-	      if (hoverDefinitionShortcut === "off" || !isModifierShortcutKey(event)) {
-	        return;
-	      }
-	      hoverDefinitionShortcutPressedRef.current =
-	        modifierShortcutFromEvent(event) === hoverDefinitionShortcut;
-	      if (!hoverDefinitionShortcutPressedRef.current) {
-	        hide();
-	        return;
-	      }
-	      if (hoverDefinitionPointerRef.current) {
-	        schedule(hoverDefinitionPointerRef.current);
-	      }
-	    };
-	    const handleKeyUp = (event: KeyboardEvent) => {
-	      if (hoverDefinitionShortcut === "off" || !isModifierShortcutKey(event)) {
-	        return;
-	      }
-	      hoverDefinitionShortcutPressedRef.current =
-	        modifierShortcutFromEvent(event) === hoverDefinitionShortcut;
-	      if (!hoverDefinitionShortcutPressedRef.current) hide();
-	    };
+    const schedule = (pointer: HoverPointerPosition) => {
+      scheduleLatestAnimationFrame(
+        hoverDefinitionFrameRef.current,
+        pointer,
+        window.requestAnimationFrame,
+        processPointer
+      );
+    };
+    const handlePointerMove = (event: PointerEvent) => {
+      if (isAssistantEvent(event)) {
+        hide();
+        return;
+      }
+      if (hoverDefinitionShortcut !== "off") {
+        hoverDefinitionShortcutPressedRef.current =
+          modifierShortcutFromEvent(event) === hoverDefinitionShortcut;
+      }
+      const pointer = { clientX: event.clientX, clientY: event.clientY };
+      hoverDefinitionPointerRef.current = pointer;
+      schedule(pointer);
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (hoverDefinitionShortcut === "off" || !isModifierShortcutKey(event)) {
+        return;
+      }
+      hoverDefinitionShortcutPressedRef.current =
+        modifierShortcutFromEvent(event) === hoverDefinitionShortcut;
+      if (!hoverDefinitionShortcutPressedRef.current) {
+        hide();
+        return;
+      }
+      if (hoverDefinitionPointerRef.current) {
+        schedule(hoverDefinitionPointerRef.current);
+      }
+    };
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (hoverDefinitionShortcut === "off" || !isModifierShortcutKey(event)) {
+        return;
+      }
+      hoverDefinitionShortcutPressedRef.current =
+        modifierShortcutFromEvent(event) === hoverDefinitionShortcut;
+      if (!hoverDefinitionShortcutPressedRef.current) hide();
+    };
     const handleBlur = () => {
       hoverDefinitionShortcutPressedRef.current = false;
       hide();
@@ -1493,6 +1517,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
       window.removeEventListener("keydown", handleKeyDown, true);
       window.removeEventListener("keyup", handleKeyUp, true);
       window.removeEventListener("blur", handleBlur);
+      cancelScheduledPointer();
       hide();
     };
   }, [
@@ -3379,6 +3404,17 @@ function SelectionAssistant({ query }: { query: string | null }) {
     setResultPositionOverride(null);
     setSnapshot(null);
   };
+
+  useEffect(() => {
+    if (!activeTool || !snapshot) return;
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!shouldCloseFloatingResult(event, isAssistantEvent(event))) return;
+      closeResult();
+    };
+    document.addEventListener("pointerdown", handlePointerDown, true);
+    return () =>
+      document.removeEventListener("pointerdown", handlePointerDown, true);
+  }, [activeTool, snapshot]);
 
   const visibleToolbar =
     snapshot &&

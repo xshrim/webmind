@@ -24,3 +24,33 @@ export function textRectAtPoint<T extends TextRect>(
     ) ?? null
   );
 }
+
+export interface LatestFrameState<T> {
+  frameId: number | null;
+  value: T | null;
+}
+
+export function scheduleLatestAnimationFrame<T>(
+  state: LatestFrameState<T>,
+  value: T,
+  requestFrame: (callback: FrameRequestCallback) => number,
+  run: (value: T) => void
+): void {
+  state.value = value;
+  if (state.frameId !== null) return;
+  state.frameId = requestFrame(() => {
+    state.frameId = null;
+    const next = state.value;
+    state.value = null;
+    if (next !== null) run(next);
+  });
+}
+
+export function cancelLatestAnimationFrame<T>(
+  state: LatestFrameState<T>,
+  cancelFrame: (frameId: number) => void
+): void {
+  if (state.frameId !== null) cancelFrame(state.frameId);
+  state.frameId = null;
+  state.value = null;
+}

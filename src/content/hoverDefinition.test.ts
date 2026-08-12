@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { textRectAtPoint, type TextRect } from "./hoverDefinition";
+import {
+  cancelLatestAnimationFrame,
+  scheduleLatestAnimationFrame,
+  textRectAtPoint,
+  type LatestFrameState,
+  type TextRect
+} from "./hoverDefinition";
 
 const rect = (
   left: number,
@@ -38,5 +44,50 @@ describe("textRectAtPoint", () => {
     const secondLine = rect(20, 30, 60, 46);
     expect(textRectAtPoint([firstLine, secondLine], 42, 38)).toBe(secondLine);
     expect(textRectAtPoint([firstLine, secondLine], 82, 38)).toBeNull();
+  });
+});
+
+describe("latest animation-frame scheduling", () => {
+  it("uses the latest pointer value once the frame runs", () => {
+    const state: LatestFrameState<string> = { frameId: null, value: null };
+    const frame: { callback: FrameRequestCallback | null } = {
+      callback: null
+    };
+    const values: string[] = [];
+
+    scheduleLatestAnimationFrame(
+      state,
+      "first",
+      (next) => {
+        frame.callback = next;
+        return 7;
+      },
+      (value) => values.push(value)
+    );
+    scheduleLatestAnimationFrame(
+      state,
+      "latest",
+      () => {
+        throw new Error("a second frame must not be scheduled");
+      },
+      (value) => values.push(value)
+    );
+
+    if (!frame.callback) throw new Error("animation frame was not scheduled");
+    frame.callback(0);
+    expect(values).toEqual(["latest"]);
+    expect(state).toEqual({ frameId: null, value: null });
+  });
+
+  it("cancels a queued frame and drops its value", () => {
+    const state: LatestFrameState<string> = { frameId: 5, value: "word" };
+    let cancelled: number | null = null;
+
+    cancelLatestAnimationFrame(state, (frameId) => {
+      cancelled = frameId;
+    });
+
+    expect(cancelled).toBe(5);
+    expect(state).toEqual({ frameId: null, value: null });
   });
 });

@@ -25389,6 +25389,33 @@ ${index}. ${content.trim()}
     throw fetchError;
   }
 
+  // src/content/hoverDefinition.ts
+  function textRectAtPoint(rects, clientX, clientY) {
+    return rects.find(
+      (rect) => rect.width > 0 && rect.height > 0 && clientX >= rect.left && clientX < rect.right && clientY >= rect.top && clientY < rect.bottom
+    ) ?? null;
+  }
+  function scheduleLatestAnimationFrame(state, value, requestFrame, run) {
+    state.value = value;
+    if (state.frameId !== null) return;
+    state.frameId = requestFrame(() => {
+      state.frameId = null;
+      const next = state.value;
+      state.value = null;
+      if (next !== null) run(next);
+    });
+  }
+  function cancelLatestAnimationFrame(state, cancelFrame) {
+    if (state.frameId !== null) cancelFrame(state.frameId);
+    state.frameId = null;
+    state.value = null;
+  }
+
+  // src/content/floatingResult.ts
+  function shouldCloseFloatingResult(event, startedInsideResult) {
+    return event.isPrimary && event.button === 0 && !startedInsideResult;
+  }
+
   // src/content/toolIcons.tsx
   var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
   function extensionAssetUrl(path) {
@@ -29538,13 +29565,6 @@ Please report this to https://github.com/markedjs/marked.`, e) {
   }
 	`;
 
-  // src/content/hoverDefinition.ts
-  function textRectAtPoint(rects, clientX, clientY) {
-    return rects.find(
-      (rect) => rect.width > 0 && rect.height > 0 && clientX >= rect.left && clientX < rect.right && clientY >= rect.top && clientY < rect.bottom
-    ) ?? null;
-  }
-
   // src/content/index.tsx
   var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   var IMMERSIVE_TRANSLATION_BATCH_SIZE = 10;
@@ -30216,6 +30236,7 @@ ${text2}`;
       null
     );
     const hoverDefinitionPointerRef = (0, import_react5.useRef)(null);
+    const hoverDefinitionFrameRef = (0, import_react5.useRef)({ frameId: null, value: null });
     const hoverDefinitionShortcutPressedRef = (0, import_react5.useRef)(false);
     const imageHoverTimeoutRef = (0, import_react5.useRef)(null);
     const imageHoverHideTimeoutRef = (0, import_react5.useRef)(null);
@@ -30413,6 +30434,12 @@ ${text2}`;
       activeSettings?.hoverDefinitionUrlBlacklist ?? []
     );
     (0, import_react5.useEffect)(() => {
+      const cancelScheduledPointer = () => {
+        cancelLatestAnimationFrame(
+          hoverDefinitionFrameRef.current,
+          window.cancelAnimationFrame
+        );
+      };
       const clearTimer = () => {
         if (hoverDefinitionTimerRef.current !== null) {
           window.clearTimeout(hoverDefinitionTimerRef.current);
@@ -30420,6 +30447,7 @@ ${text2}`;
         }
       };
       const hide = () => {
+        cancelScheduledPointer();
         clearTimer();
         hoverDefinitionCandidateRef.current = null;
         setHoverDefinition(null);
@@ -30442,7 +30470,7 @@ ${text2}`;
           top: Math.max(8, Math.round(rect.top - 35))
         };
       };
-      const schedule = ({ clientX, clientY }) => {
+      const processPointer = ({ clientX, clientY }) => {
         const candidate = definitionCandidateAtPoint(clientX, clientY);
         if (!candidate || !modeAllows(candidate.language) || hoverDefinitionShortcut !== "off" && !hoverDefinitionShortcutPressedRef.current) {
           hide();
@@ -30492,6 +30520,14 @@ ${text2}`;
           });
         }, 560);
       };
+      const schedule = (pointer) => {
+        scheduleLatestAnimationFrame(
+          hoverDefinitionFrameRef.current,
+          pointer,
+          window.requestAnimationFrame,
+          processPointer
+        );
+      };
       const handlePointerMove = (event) => {
         if (isAssistantEvent(event)) {
           hide();
@@ -30537,6 +30573,7 @@ ${text2}`;
         window.removeEventListener("keydown", handleKeyDown, true);
         window.removeEventListener("keyup", handleKeyUp, true);
         window.removeEventListener("blur", handleBlur);
+        cancelScheduledPointer();
         hide();
       };
     }, [
@@ -32227,6 +32264,15 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       setResultPositionOverride(null);
       setSnapshot(null);
     };
+    (0, import_react5.useEffect)(() => {
+      if (!activeTool || !snapshot) return;
+      const handlePointerDown = (event) => {
+        if (!shouldCloseFloatingResult(event, isAssistantEvent(event))) return;
+        closeResult();
+      };
+      document.addEventListener("pointerdown", handlePointerDown, true);
+      return () => document.removeEventListener("pointerdown", handlePointerDown, true);
+    }, [activeTool, snapshot]);
     const visibleToolbar = snapshot && !selectionOverlayBlocked && activeSettings?.selectionOverlayMode !== "off" && !activeTool && (activeSettings?.selectionOverlayMode === "always" || hoverOpen);
     const selectionToolButton = (tool) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
       "button",
