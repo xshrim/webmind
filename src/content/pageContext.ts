@@ -22,6 +22,11 @@ import {
   createArticleExtractionRunner,
   throwIfArticleExtractionAborted
 } from "./articleExtractionRunner";
+import {
+  ArticleRootCache,
+  type ArticleRootCacheStatus,
+  articleExtractionRuleSignature
+} from "./articleRootCache";
 
 export function searchQuery(): string | null {
   return searchQueryFromUrl(location.href);
@@ -97,6 +102,7 @@ interface ArticleSnapshot {
 
 interface ArticleSelectionPerformance {
   candidateCount: number;
+  rootCache: ArticleRootCacheStatus;
 }
 
 interface ArticleExtractionCache {
@@ -119,6 +125,13 @@ let articlePreviewIdCounter = 0;
 let activeArticleExtractionCache: ArticleExtractionCache | null = null;
 let retainedPageSelectionTextValue = "";
 const articleExtractionRunner = createArticleExtractionRunner();
+let automaticArticleRootObserver: MutationObserver | null = null;
+const automaticArticleRootCache = new ArticleRootCache<ArticleRootSelection>(
+  () => {
+    automaticArticleRootObserver?.disconnect();
+    automaticArticleRootObserver = null;
+  }
+);
 
 const articlePreviewTargets = new Map<string, HTMLElement>();
 const articlePreviewExclusionTargets = new Map<string, HTMLElement>();
@@ -500,6 +513,84 @@ function collectOpenShadowElements(root: ParentNode): HTMLElement[] {
       elements.push(...collectOpenShadowElements(element.shadowRoot));
     });
   return elements;
+}
+
+function hasOpenShadowRoot(): boolean {
+  const walker = document.createTreeWalker(document, NodeFilter.SHOW_ELEMENT);
+  let scanned = 0;
+  let node = walker.nextNode();
+  while (node && scanned < SHADOW_HOST_SCAN_LIMIT) {
+    if (node instanceof HTMLElement && node.shadowRoot) return true;
+    scanned += 1;
+    node = walker.nextNode();
+  }
+  return false;
+}
+
+function isWebMindOwnedElement(element: Element): boolean {
+  return Boolean(
+    element.closest(
+      "#webmind-root, .webmind-root, .webmind-translation, .webmind-reading, .webmind-immersive-reading-token, .webmind-article-picker-ui"
+    )
+  );
+}
+
+function isWebMindOwnedNode(node: Node): boolean {
+  if (node instanceof Element) return isWebMindOwnedElement(node);
+  return Boolean(node.parentElement && isWebMindOwnedElement(node.parentElement));
+}
+
+function classNamesWithoutWebMind(value: string | null): string[] {
+  return (value ?? "")
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter((name) => !name.startsWith("webmind-"))
+    .sort();
+}
+
+function isRelevantArticleRootMutation(mutation: MutationRecord): boolean {
+  if (isWebMindOwnedNode(mutation.target)) return false;
+  if (mutation.type === "attributes") {
+    if (mutation.attributeName?.startsWith("data-webmind-")) return false;
+    if (mutation.attributeName === "class") {
+      const before = classNamesWithoutWebMind(mutation.oldValue);
+      const after = classNamesWithoutWebMind(
+        (mutation.target as Element).getAttribute("class")
+      );
+      return before.join("\n") !== after.join("\n");
+    }
+    return true;
+  }
+  if (mutation.type === "childList") {
+    return [...mutation.addedNodes, ...mutation.removedNodes].some(
+      (node) => !isWebMindOwnedNode(node)
+    );
+  }
+  return true;
+}
+
+function observeAutomaticArticleRoot(): void {
+  automaticArticleRootObserver?.disconnect();
+  const body = document.body;
+  if (!body) return;
+  automaticArticleRootObserver = new MutationObserver((mutations) => {
+    if (!mutations.some(isRelevantArticleRootMutation)) return;
+    automaticArticleRootCache.invalidate();
+  });
+  automaticArticleRootObserver.observe(body, {
+    subtree: true,
+    childList: true,
+    characterData: true,
+    attributes: true,
+    attributeOldValue: true
+  });
+}
+
+function invalidateAutomaticArticleRootForPendingMutations(): void {
+  const mutations = automaticArticleRootObserver?.takeRecords() ?? [];
+  if (mutations.some(isRelevantArticleRootMutation)) {
+    automaticArticleRootCache.invalidate();
+  }
 }
 
 function elementForArticleRuleSelector(selector: string): HTMLElement | null {
@@ -1527,6 +1618,9 @@ async function selectArticleRootAsync(
   performance?: ArticleSelectionPerformance
 ): Promise<ArticleRootSelection | null> {
   invalidateDisconnectedArticleState();
+  const url = location.href;
+  const ruleSignature = articleExtractionRuleSignature(articleExtractionRules);
+  automaticArticleRootCache.synchronizeContext(url, ruleSignature);
   if (manualArticleRoot?.isConnected) {
     return {
       element: manualArticleRoot,
@@ -1549,7 +1643,21 @@ async function selectArticleRootAsync(
     return configured;
   }
 
-  const rootScopes: ParentNode[] = [document, ...sameOriginIframeBodies()];
+  invalidateAutomaticArticleRootForPendingMutations();
+  const cached = automaticArticleRootCache.lookup({
+    url,
+    ruleSignature,
+    bypass: false,
+    isConnected: (selection) => selection.element.isConnected
+  });
+  if (performance) performance.rootCache = cached.status;
+  const iframeBodies = sameOriginIframeBodies();
+  const bypassCache = iframeBodies.length > 0 || hasOpenShadowRoot();
+  if (cached.value && !bypassCache) return cached.value;
+  if (cached.value && bypassCache) automaticArticleRootCache.invalidate();
+  if (bypassCache && performance) performance.rootCache = "bypass";
+
+  const rootScopes: ParentNode[] = [document, ...iframeBodies];
   const candidateElements: HTMLElement[] = [];
   for (const rootScope of rootScopes) {
     if (rootScope instanceof HTMLElement) candidateElements.push(rootScope);
@@ -1595,20 +1703,33 @@ async function selectArticleRootAsync(
   )?.element;
   if (best) {
     const promoted = await promoteRootToIncludeTitleAsync(best, checkpoint);
-    return {
+    const selection: ArticleRootSelection = {
       element: promoted,
       source: "dom",
       selector: selectorHint(promoted)
     };
+    if (!bypassCache && location.href === url) {
+      automaticArticleRootCache.store(selection, url, ruleSignature);
+      observeAutomaticArticleRoot();
+    }
+    return selection;
   }
   const fallback =
     document.querySelector<HTMLElement>("article") ??
     document.querySelector<HTMLElement>("main") ??
     document.querySelector<HTMLElement>("[role='main']") ??
     document.body;
-  return fallback
-    ? { element: fallback, source: "dom", selector: selectorHint(fallback) }
-    : null;
+  if (!fallback) return null;
+  const selection: ArticleRootSelection = {
+    element: fallback,
+    source: "dom",
+    selector: selectorHint(fallback)
+  };
+  if (!bypassCache && location.href === url) {
+    automaticArticleRootCache.store(selection, url, ruleSignature);
+    observeAutomaticArticleRoot();
+  }
+  return selection;
 }
 
 export function findBestArticleRoot(
@@ -1753,7 +1874,8 @@ async function readableArticleTextAsync(
   return articleExtractionRunner.run(async (signal) => {
     const startedAt = performance.now();
     const selectionPerformance: ArticleSelectionPerformance = {
-      candidateCount: 0
+      candidateCount: 0,
+      rootCache: "bypass"
     };
     return withArticleExtractionCacheAsync(async () => {
       const checkpoint = createArticleExtractionCheckpoint(signal);
@@ -1813,7 +1935,9 @@ async function readableArticleTextAsync(
           blocksMs
         )} candidates=${selectionPerformance.candidateCount} blocks=${
           blocks.length
-        } chars=${textLength(text)} source=${source}`
+        } chars=${textLength(text)} source=${source} rootCache=${
+          selectionPerformance.rootCache
+        }`
       );
       return {
         title: document.title || location.hostname,
@@ -2266,6 +2390,7 @@ export async function restoreAutomaticArticleSelection(
   language?: AppSettings["interfaceLanguage"],
   articleExtractionRules: ArticleExtractionRule[] = []
 ): Promise<PageContext> {
+  automaticArticleRootCache.invalidate();
   if (manualArticleRoot) {
     delete manualArticleRoot.dataset.webmindManualArticle;
   }

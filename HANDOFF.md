@@ -203,6 +203,7 @@ npm run check
 - 已有标签页如果没有 content script，`src/shared/browser.ts` 的 `sendToTab` 会在首次连接失败时使用 `chrome.scripting.executeScript` 注入 `content.js` 并重试一次；`public/manifest.json` 已声明 `scripting` 权限。用户不需要为了侧边栏连接而刷新普通网页。
 - `page.context` 当前通过 `extractPageContextAsync` 执行协作式正文识别；可见文本遍历、候选收集、评分和最终 block 收集按约 `6ms` 时间片调用 `scheduler.yield()` 或 `setTimeout(0)` 主动让出页面主线程。识别期间有可见性/文本缓存，不修改原始网页 DOM，预览定位只记录正文 block 对应元素。
 - 自动触发的异步正文刷新通过 `src/content/articleExtractionRunner.ts` 串行执行；标签切换、页面更新和窗口聚焦产生的新刷新会取消旧的可替换刷新，取消检查复用现有 checkpoint。用户主动正文读取和编辑不可被自动刷新取消。候选评分使用 `includeMarkdown: false` 的相同 block 划分路径，只跳过未选中候选的 Markdown 构造；最终选中父容器仍生成完整 Markdown。单次扫描还按含噪/去噪规则分别缓存紧凑后代判断，避免跨规则错误复用。content script 的 debug 日志会输出各阶段耗时和候选/block/字符计数。
+- 第二阶段正文优化在 `src/content/articleRootCache.ts` 中缓存自动选择的根元素、当前 URL 和正文规则签名；命中时只跳过全页面候选收集/评分，最终 block、Markdown、文本、预览和八项评分仍完整重建。缓存根节点断开、URL/规则变化、还原自动识别或真实页面 DOM 变化时失效；一次失效后 `MutationObserver` 立即断开。包含同源 iframe 或开放 Shadow DOM 时旁路缓存并继续完整识别，手动/编辑正文优先级不变。debug 日志增加 `rootCache=hit|miss|bypass`。
 - 侧边栏日志图标使用 `notepad-text`，沉浸翻译使用内联 `translate-ai` 风格图标，沉浸阅读使用内联 `book-ai-line` 风格图标，学习笔记工具使用 `book-open`，当前正文使用 `text-align-start`。
 - Vite 已通过 `manualChunks` 拆分 lucide 动态图标，构建输出会出现多个 `lucide-icons-*` chunk；这是预期状态，用于避免单个 `vendor-icons` chunk 过大。
 
@@ -251,7 +252,7 @@ npm run build
 git diff --check
 ```
 
-测试结果：`17` 个测试文件、`151` 个测试通过；TypeScript 类型检查和构建均成功，已生成未打包扩展目录 `dist/`。以上是代码级验证，尚未替代真实 Chrome 手工验证。
+测试结果：`18` 个测试文件、`157` 个测试通过；TypeScript 类型检查和构建均成功，已生成未打包扩展目录 `dist/`。以上是代码级验证，尚未替代真实 Chrome 手工验证。
 
 ## 最近手工验证重点
 

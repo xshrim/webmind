@@ -22419,6 +22419,46 @@ ${index}. ${content.trim()}
     };
   }
 
+  // src/content/articleRootCache.ts
+  function articleExtractionRuleSignature(rules) {
+    return JSON.stringify(
+      rules.map(({ id, urlPattern, selector }) => [id, urlPattern, selector])
+    );
+  }
+  var ArticleRootCache = class {
+    constructor(onInvalidate) {
+      this.onInvalidate = onInvalidate;
+    }
+    entry = null;
+    synchronizeContext(url, ruleSignature) {
+      if (this.entry && (this.entry.url !== url || this.entry.ruleSignature !== ruleSignature)) {
+        this.invalidate();
+      }
+    }
+    lookup(options) {
+      this.synchronizeContext(options.url, options.ruleSignature);
+      if (options.bypass) {
+        this.invalidate();
+        return { status: "bypass" };
+      }
+      if (!this.entry) return { status: "miss" };
+      if (!options.isConnected(this.entry.value)) {
+        this.invalidate();
+        return { status: "miss" };
+      }
+      return { status: "hit", value: this.entry.value };
+    }
+    store(value, url, ruleSignature) {
+      this.invalidate();
+      this.entry = { value, url, ruleSignature };
+    }
+    invalidate() {
+      if (!this.entry) return;
+      this.entry = null;
+      this.onInvalidate?.();
+    }
+  };
+
   // src/content/pageContext.ts
   function searchQuery() {
     return searchQueryFromUrl(location.href);
@@ -22455,6 +22495,13 @@ ${index}. ${content.trim()}
   var activeArticleExtractionCache = null;
   var retainedPageSelectionTextValue = "";
   var articleExtractionRunner = createArticleExtractionRunner();
+  var automaticArticleRootObserver = null;
+  var automaticArticleRootCache = new ArticleRootCache(
+    () => {
+      automaticArticleRootObserver?.disconnect();
+      automaticArticleRootObserver = null;
+    }
+  );
   var articlePreviewTargets = /* @__PURE__ */ new Map();
   var articlePreviewExclusionTargets = /* @__PURE__ */ new Map();
   var removedArticleBlockTextKeys = /* @__PURE__ */ new Set();
@@ -22762,6 +22809,73 @@ ${index}. ${content.trim()}
       elements.push(...collectOpenShadowElements(element.shadowRoot));
     });
     return elements;
+  }
+  function hasOpenShadowRoot() {
+    const walker = document.createTreeWalker(document, NodeFilter.SHOW_ELEMENT);
+    let scanned = 0;
+    let node = walker.nextNode();
+    while (node && scanned < SHADOW_HOST_SCAN_LIMIT) {
+      if (node instanceof HTMLElement && node.shadowRoot) return true;
+      scanned += 1;
+      node = walker.nextNode();
+    }
+    return false;
+  }
+  function isWebMindOwnedElement(element) {
+    return Boolean(
+      element.closest(
+        "#webmind-root, .webmind-root, .webmind-translation, .webmind-reading, .webmind-immersive-reading-token, .webmind-article-picker-ui"
+      )
+    );
+  }
+  function isWebMindOwnedNode(node) {
+    if (node instanceof Element) return isWebMindOwnedElement(node);
+    return Boolean(node.parentElement && isWebMindOwnedElement(node.parentElement));
+  }
+  function classNamesWithoutWebMind(value) {
+    return (value ?? "").split(/\s+/).filter(Boolean).filter((name) => !name.startsWith("webmind-")).sort();
+  }
+  function isRelevantArticleRootMutation(mutation) {
+    if (isWebMindOwnedNode(mutation.target)) return false;
+    if (mutation.type === "attributes") {
+      if (mutation.attributeName?.startsWith("data-webmind-")) return false;
+      if (mutation.attributeName === "class") {
+        const before = classNamesWithoutWebMind(mutation.oldValue);
+        const after = classNamesWithoutWebMind(
+          mutation.target.getAttribute("class")
+        );
+        return before.join("\n") !== after.join("\n");
+      }
+      return true;
+    }
+    if (mutation.type === "childList") {
+      return [...mutation.addedNodes, ...mutation.removedNodes].some(
+        (node) => !isWebMindOwnedNode(node)
+      );
+    }
+    return true;
+  }
+  function observeAutomaticArticleRoot() {
+    automaticArticleRootObserver?.disconnect();
+    const body = document.body;
+    if (!body) return;
+    automaticArticleRootObserver = new MutationObserver((mutations) => {
+      if (!mutations.some(isRelevantArticleRootMutation)) return;
+      automaticArticleRootCache.invalidate();
+    });
+    automaticArticleRootObserver.observe(body, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+      attributes: true,
+      attributeOldValue: true
+    });
+  }
+  function invalidateAutomaticArticleRootForPendingMutations() {
+    const mutations = automaticArticleRootObserver?.takeRecords() ?? [];
+    if (mutations.some(isRelevantArticleRootMutation)) {
+      automaticArticleRootCache.invalidate();
+    }
   }
   function elementForArticleRuleSelector(selector) {
     try {
@@ -23474,6 +23588,9 @@ ${index}. ${content.trim()}
   }
   async function selectArticleRootAsync(articleExtractionRules, checkpoint, performance2) {
     invalidateDisconnectedArticleState();
+    const url = location.href;
+    const ruleSignature = articleExtractionRuleSignature(articleExtractionRules);
+    automaticArticleRootCache.synchronizeContext(url, ruleSignature);
     if (manualArticleRoot?.isConnected) {
       return {
         element: manualArticleRoot,
@@ -23495,7 +23612,20 @@ ${index}. ${content.trim()}
     if (configured) {
       return configured;
     }
-    const rootScopes = [document, ...sameOriginIframeBodies()];
+    invalidateAutomaticArticleRootForPendingMutations();
+    const cached = automaticArticleRootCache.lookup({
+      url,
+      ruleSignature,
+      bypass: false,
+      isConnected: (selection2) => selection2.element.isConnected
+    });
+    if (performance2) performance2.rootCache = cached.status;
+    const iframeBodies = sameOriginIframeBodies();
+    const bypassCache = iframeBodies.length > 0 || hasOpenShadowRoot();
+    if (cached.value && !bypassCache) return cached.value;
+    if (cached.value && bypassCache) automaticArticleRootCache.invalidate();
+    if (bypassCache && performance2) performance2.rootCache = "bypass";
+    const rootScopes = [document, ...iframeBodies];
     const candidateElements = [];
     for (const rootScope of rootScopes) {
       if (rootScope instanceof HTMLElement) candidateElements.push(rootScope);
@@ -23537,14 +23667,29 @@ ${index}. ${content.trim()}
     )?.element;
     if (best) {
       const promoted = await promoteRootToIncludeTitleAsync(best, checkpoint);
-      return {
+      const selection2 = {
         element: promoted,
         source: "dom",
         selector: selectorHint(promoted)
       };
+      if (!bypassCache && location.href === url) {
+        automaticArticleRootCache.store(selection2, url, ruleSignature);
+        observeAutomaticArticleRoot();
+      }
+      return selection2;
     }
     const fallback = document.querySelector("article") ?? document.querySelector("main") ?? document.querySelector("[role='main']") ?? document.body;
-    return fallback ? { element: fallback, source: "dom", selector: selectorHint(fallback) } : null;
+    if (!fallback) return null;
+    const selection = {
+      element: fallback,
+      source: "dom",
+      selector: selectorHint(fallback)
+    };
+    if (!bypassCache && location.href === url) {
+      automaticArticleRootCache.store(selection, url, ruleSignature);
+      observeAutomaticArticleRoot();
+    }
+    return selection;
   }
   function findBestArticleRoot(articleExtractionRules = []) {
     return withArticleExtractionCache(
@@ -23652,7 +23797,8 @@ ${index}. ${content.trim()}
     return articleExtractionRunner.run(async (signal) => {
       const startedAt = performance.now();
       const selectionPerformance = {
-        candidateCount: 0
+        candidateCount: 0,
+        rootCache: "bypass"
       };
       return withArticleExtractionCacheAsync(async () => {
         const checkpoint = createArticleExtractionCheckpoint(signal);
@@ -23708,7 +23854,7 @@ ${index}. ${content.trim()}
             performance.now() - startedAt
           )} selectionMs=${Math.round(selectionMs)} blocksMs=${Math.round(
             blocksMs
-          )} candidates=${selectionPerformance.candidateCount} blocks=${blocks.length} chars=${textLength(text2)} source=${source}`
+          )} candidates=${selectionPerformance.candidateCount} blocks=${blocks.length} chars=${textLength(text2)} source=${source} rootCache=${selectionPerformance.rootCache}`
         );
         return {
           title: document.title || location.hostname,
@@ -24076,6 +24222,7 @@ ${index}. ${content.trim()}
     return { ok: true };
   }
   async function restoreAutomaticArticleSelection(language, articleExtractionRules = []) {
+    automaticArticleRootCache.invalidate();
     if (manualArticleRoot) {
       delete manualArticleRoot.dataset.webmindManualArticle;
     }
