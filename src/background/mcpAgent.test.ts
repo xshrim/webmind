@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { McpServerConfig } from "../shared/types";
-import { resolveEnabledMcpTools } from "./mcpAgent";
+import {
+  mcpPermissionKey,
+  resolveEnabledMcpTools,
+  resolveSessionAllowedMcpTools
+} from "./mcpAgent";
 
 function server(id: string, names: string[]): McpServerConfig {
   return {
@@ -54,5 +58,19 @@ describe("MCP enabled tool resolution", () => {
 
     expect(result).toHaveLength(32);
     expect(result.at(-1)?.name).toBe("tool-31");
+  });
+
+  it("only honors session authorization for currently enabled tools", () => {
+    const enabled = resolveEnabledMcpTools(
+      [server("known", ["read", "write"])],
+      [{ serverId: "known", toolNames: ["read"] }]
+    );
+
+    expect(
+      resolveSessionAllowedMcpTools(enabled, [
+        { serverId: "known", toolNames: ["read", "write"] },
+        { serverId: "unknown", toolNames: ["injected"] }
+      ])
+    ).toEqual(new Set([mcpPermissionKey("known", "read")]));
   });
 });

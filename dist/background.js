@@ -7089,8 +7089,9 @@ var deUiText = {
   approveMcpTool: "MCP-Tool ausf\xFChren?",
   mcpDestructiveWarning: "Dieses Tool kann externe Daten \xE4ndern oder l\xF6schen.",
   deny: "Ablehnen",
-  allowOnce: "Einmal erlauben",
-  allowSession: "F\xFCr diese Anfrage erlauben",
+  allowOnce: "Diesen Aufruf erlauben",
+  allowRound: "Diesen Zug erlauben",
+  allowSession: "Diese Sitzung erlauben",
   navTools: "Tools",
   navHistory: "Verlauf",
   navLogs: "Protokolle",
@@ -7659,8 +7660,9 @@ var esUiText = {
   approveMcpTool: "\xBFPermitir la ejecuci\xF3n de la herramienta MCP?",
   mcpDestructiveWarning: "Esta herramienta puede modificar o eliminar datos externos.",
   deny: "Denegar",
-  allowOnce: "Permitir una vez",
-  allowSession: "Permitir en esta solicitud",
+  allowOnce: "Permitir esta llamada",
+  allowRound: "Permitir este turno",
+  allowSession: "Permitir esta sesi\xF3n",
   navTools: "Herramientas",
   navHistory: "Historial",
   navLogs: "Registros",
@@ -8229,8 +8231,9 @@ var frUiText = {
   approveMcpTool: "Autoriser l'ex\xE9cution de l'outil MCP ?",
   mcpDestructiveWarning: "Cet outil peut modifier ou supprimer des donn\xE9es externes.",
   deny: "Refuser",
-  allowOnce: "Autoriser une fois",
-  allowSession: "Autoriser pour cette requ\xEAte",
+  allowOnce: "Autoriser cet appel",
+  allowRound: "Autoriser ce tour",
+  allowSession: "Autoriser cette session",
   navTools: "Outils",
   navHistory: "Historique",
   navLogs: "Journaux",
@@ -8799,8 +8802,9 @@ var itUiText = {
   approveMcpTool: "Consentire l'esecuzione dello strumento MCP?",
   mcpDestructiveWarning: "Questo strumento pu\xF2 modificare o eliminare dati esterni.",
   deny: "Nega",
-  allowOnce: "Consenti una volta",
-  allowSession: "Consenti per questa richiesta",
+  allowOnce: "Consenti questa chiamata",
+  allowRound: "Consenti questo turno",
+  allowSession: "Consenti questa sessione",
   navTools: "Strumenti",
   navHistory: "Cronologia",
   navLogs: "Log",
@@ -9400,8 +9404,9 @@ var CORE_UI_TEXT = {
     approveMcpTool: "\u5141\u8BB8\u6267\u884C MCP \u5DE5\u5177\uFF1F",
     mcpDestructiveWarning: "\u6B64\u5DE5\u5177\u58F0\u660E\u53EF\u80FD\u4FEE\u6539\u6216\u5220\u9664\u5916\u90E8\u6570\u636E\u3002",
     deny: "\u62D2\u7EDD",
-    allowOnce: "\u5141\u8BB8\u4E00\u6B21",
-    allowSession: "\u672C\u6B21\u8BF7\u6C42\u5141\u8BB8",
+    allowOnce: "\u672C\u6B21\u5141\u8BB8",
+    allowRound: "\u672C\u8F6E\u5141\u8BB8",
+    allowSession: "\u4F1A\u8BDD\u5141\u8BB8",
     navTools: "\u5DE5\u5177",
     navHistory: "\u5386\u53F2",
     navLogs: "\u65E5\u5FD7",
@@ -9968,8 +9973,9 @@ var CORE_UI_TEXT = {
     approveMcpTool: "\u5141\u8A31\u57F7\u884C MCP \u5DE5\u5177\uFF1F",
     mcpDestructiveWarning: "\u6B64\u5DE5\u5177\u8072\u660E\u53EF\u80FD\u4FEE\u6539\u6216\u522A\u9664\u5916\u90E8\u8CC7\u6599\u3002",
     deny: "\u62D2\u7D55",
-    allowOnce: "\u5141\u8A31\u4E00\u6B21",
-    allowSession: "\u672C\u6B21\u8ACB\u6C42\u5141\u8A31",
+    allowOnce: "\u672C\u6B21\u5141\u8A31",
+    allowRound: "\u672C\u8F2A\u5141\u8A31",
+    allowSession: "\u6703\u8A71\u5141\u8A31",
     navTools: "\u5DE5\u5177",
     navHistory: "\u6B77\u53F2",
     navLogs: "\u65E5\u8A8C",
@@ -10536,8 +10542,9 @@ var CORE_UI_TEXT = {
     approveMcpTool: "Allow MCP tool execution?",
     mcpDestructiveWarning: "This tool declares that it may modify or delete external data.",
     deny: "Deny",
-    allowOnce: "Allow Once",
-    allowSession: "Allow for Request",
+    allowOnce: "Allow This Call",
+    allowRound: "Allow This Turn",
+    allowSession: "Allow This Session",
     navTools: "Tools",
     navHistory: "History",
     navLogs: "Logs",
@@ -11104,8 +11111,9 @@ var CORE_UI_TEXT = {
     approveMcpTool: "MCP \u30C4\u30FC\u30EB\u306E\u5B9F\u884C\u3092\u8A31\u53EF\u3057\u307E\u3059\u304B\uFF1F",
     mcpDestructiveWarning: "\u3053\u306E\u30C4\u30FC\u30EB\u306F\u5916\u90E8\u30C7\u30FC\u30BF\u3092\u5909\u66F4\u307E\u305F\u306F\u524A\u9664\u3059\u308B\u53EF\u80FD\u6027\u304C\u3042\u308A\u307E\u3059\u3002",
     deny: "\u62D2\u5426",
-    allowOnce: "\u4E00\u5EA6\u3060\u3051\u8A31\u53EF",
-    allowSession: "\u3053\u306E\u30EA\u30AF\u30A8\u30B9\u30C8\u3067\u8A31\u53EF",
+    allowOnce: "\u4ECA\u56DE\u306E\u307F\u8A31\u53EF",
+    allowRound: "\u3053\u306E\u30BF\u30FC\u30F3\u3067\u8A31\u53EF",
+    allowSession: "\u30BB\u30C3\u30B7\u30E7\u30F3\u3067\u8A31\u53EF",
     navTools: "\u30C4\u30FC\u30EB",
     navHistory: "\u5C65\u6B74",
     navLogs: "\u30ED\u30B0",
@@ -11672,8 +11680,9 @@ var CORE_UI_TEXT = {
     approveMcpTool: "MCP \uB3C4\uAD6C \uC2E4\uD589\uC744 \uD5C8\uC6A9\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?",
     mcpDestructiveWarning: "\uC774 \uB3C4\uAD6C\uB294 \uC678\uBD80 \uB370\uC774\uD130\uB97C \uBCC0\uACBD\uD558\uAC70\uB098 \uC0AD\uC81C\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
     deny: "\uAC70\uBD80",
-    allowOnce: "\uD55C \uBC88 \uD5C8\uC6A9",
-    allowSession: "\uC774 \uC694\uCCAD\uC5D0\uC11C \uD5C8\uC6A9",
+    allowOnce: "\uC774\uBC88 \uD638\uCD9C \uD5C8\uC6A9",
+    allowRound: "\uC774\uBC88 \uD134 \uD5C8\uC6A9",
+    allowSession: "\uC138\uC158 \uD5C8\uC6A9",
     navTools: "\uB3C4\uAD6C",
     navHistory: "\uAE30\uB85D",
     navLogs: "\uB85C\uADF8",
@@ -26067,6 +26076,17 @@ async function callMcpTool(server, name, args, signal) {
 // src/background/mcpAgent.ts
 var MCP_MAX_ENABLED_TOOLS = 32;
 var MCP_MAX_AGENT_STEPS = 6;
+function mcpPermissionKey(serverId, toolName) {
+  return `${serverId}:${toolName}`;
+}
+function resolveSessionAllowedMcpTools(enabled, requestedTools) {
+  const requested = new Map(
+    (requestedTools ?? []).map((item) => [item.serverId, new Set(item.toolNames)])
+  );
+  return new Set(
+    enabled.filter((tool) => requested.get(tool.server.id)?.has(tool.name)).map((tool) => mcpPermissionKey(tool.server.id, tool.name))
+  );
+}
 function toolAlias(serverIndex, toolIndex, name) {
   const suffix = name.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 38) || "tool";
   return `mcp_${serverIndex}_${toolIndex}_${suffix}`;
@@ -26126,7 +26146,11 @@ async function runMcpAgent(request, signal, requestApproval) {
     },
     ...agentMessages(request)
   ];
-  const sessionAllowed = /* @__PURE__ */ new Set();
+  const roundAllowed = /* @__PURE__ */ new Set();
+  const sessionAllowed = resolveSessionAllowedMcpTools(
+    enabled,
+    request.mcpSessionTools
+  );
   for (let step = 0; step < MCP_MAX_AGENT_STEPS; step += 1) {
     const turn = await completeModelToolTurn(
       {
@@ -26160,9 +26184,9 @@ async function runMcpAgent(request, signal, requestApproval) {
         });
         continue;
       }
-      const permissionKey = `${tool.server.id}:${tool.name}`;
-      let decision = "allow-session";
-      if (!sessionAllowed.has(permissionKey)) {
+      const permissionKey = mcpPermissionKey(tool.server.id, tool.name);
+      let decision = "allow-once";
+      if (!roundAllowed.has(permissionKey) && !sessionAllowed.has(permissionKey)) {
         decision = await requestApproval({
           approvalId: crypto.randomUUID(),
           serverId: tool.server.id,
@@ -26173,7 +26197,9 @@ async function runMcpAgent(request, signal, requestApproval) {
           destructive: tool.destructive
         });
       }
-      if (decision === "allow-session") sessionAllowed.add(permissionKey);
+      if (decision === "allow-round" || decision === "allow-session") {
+        roundAllowed.add(permissionKey);
+      }
       const content = decision === "deny" ? "The user denied this tool call. Continue without it." : await callMcpTool(
         tool.server,
         tool.name,

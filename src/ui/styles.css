@@ -578,6 +578,10 @@ svg {
   background: var(--surface-2);
 }
 
+.mcp-approval-actions {
+  flex-wrap: wrap;
+}
+
 .prompt-editor {
   width: min(520px, 100%);
 }

@@ -322,6 +322,7 @@ export interface ChatRunRequest {
   temperature?: number;
   maxTokens?: number;
   mcpTools?: McpToolSelection[];
+  mcpSessionTools?: McpToolSelection[];
 }
 
 export interface ModelCompleteRequest {
@@ -402,7 +403,11 @@ export interface McpToolApprovalRequest {
   destructive?: boolean;
 }
 
-export type McpToolApprovalDecision = "allow-once" | "allow-session" | "deny";
+export type McpToolApprovalDecision =
+  | "allow-once"
+  | "allow-round"
+  | "allow-session"
+  | "deny";
 
 export interface ProviderTestResult {
   ok: boolean;

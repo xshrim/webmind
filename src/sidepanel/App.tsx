@@ -322,6 +322,9 @@ export function App() {
   const [customTools, setCustomTools] = useState<CustomTool[]>([]);
   const [mcpServers, setMcpServers] = useState<McpServerConfig[]>([]);
   const [selectedMcpTools, setSelectedMcpTools] = useState<McpToolSelection[]>([]);
+  const [sessionAllowedMcpTools, setSessionAllowedMcpTools] = useState<
+    McpToolSelection[]
+  >([]);
   const [mcpMenuOpen, setMcpMenuOpen] = useState(false);
   const [mcpEditorOpen, setMcpEditorOpen] = useState(false);
   const [mcpBusy, setMcpBusy] = useState(false);
@@ -2460,7 +2463,11 @@ export function App() {
           mcpTools:
             options.disableMcp || options.toolInvocation
               ? []
-              : selectedMcpTools
+              : selectedMcpTools,
+          mcpSessionTools:
+            options.disableMcp || options.toolInvocation
+              ? []
+              : sessionAllowedMcpTools
         }
       });
       if (!posted) {
@@ -2493,6 +2500,7 @@ export function App() {
       pageContext,
       postStreamMessage,
       selectedMcpTools,
+      sessionAllowedMcpTools,
       selectionContext,
       streamingId,
       updateMessages,
@@ -2539,6 +2547,18 @@ export function App() {
 
   const decideMcpApproval = (decision: McpToolApprovalDecision) => {
     if (!mcpApproval) return;
+    if (decision === "allow-session") {
+      const { serverId, toolName } = mcpApproval.approval;
+      setSessionAllowedMcpTools((current) => {
+        const existing = current.find((item) => item.serverId === serverId);
+        const names = new Set(existing?.toolNames ?? []);
+        names.add(toolName);
+        return [
+          ...current.filter((item) => item.serverId !== serverId),
+          { serverId, toolNames: Array.from(names) }
+        ];
+      });
+    }
     postStreamMessage({
       type: "mcp.approval",
       requestId: mcpApproval.requestId,
@@ -2622,6 +2642,20 @@ export function App() {
           )
           .filter((selection) => selection.toolNames.length)
       );
+      setSessionAllowedMcpTools((current) =>
+        current
+          .map((selection) =>
+            selection.serverId === saved.id
+              ? {
+                  ...selection,
+                  toolNames: selection.toolNames.filter((name) =>
+                    tools.some((tool) => tool.name === name)
+                  )
+                }
+              : selection
+          )
+          .filter((selection) => selection.toolNames.length)
+      );
       setMcpEditorOpen(false);
       setNotice(t("mcpServerSaved"));
     } catch (error) {
@@ -2662,6 +2696,20 @@ export function App() {
           )
           .filter((selection) => selection.toolNames.length)
       );
+      setSessionAllowedMcpTools((current) =>
+        current
+          .map((selection) =>
+            selection.serverId === server.id
+              ? {
+                  ...selection,
+                  toolNames: selection.toolNames.filter((name) =>
+                    tools.some((tool) => tool.name === name)
+                  )
+                }
+              : selection
+          )
+          .filter((selection) => selection.toolNames.length)
+      );
     } catch (error) {
       const message = errorMessage(error);
       setNotice(message);
@@ -2678,6 +2726,9 @@ export function App() {
     setSelectedMcpTools((current) =>
       current.filter((selection) => selection.serverId !== serverId)
     );
+    setSessionAllowedMcpTools((current) =>
+      current.filter((selection) => selection.serverId !== serverId)
+    );
   };
 
   const selectedMcpToolNames = (serverId: string) =>
@@ -2685,6 +2736,7 @@ export function App() {
       ?.toolNames ?? [];
 
   const toggleMcpTool = (serverId: string, toolName: string) => {
+    const wasSelected = selectedMcpToolNames(serverId).includes(toolName);
     setSelectedMcpTools((current) => {
       const selected = current.find((item) => item.serverId === serverId);
       const names = new Set(selected?.toolNames ?? []);
@@ -2694,16 +2746,36 @@ export function App() {
         ? [...remaining, { serverId, toolNames: Array.from(names) }]
         : remaining;
     });
+    if (wasSelected) {
+      setSessionAllowedMcpTools((current) =>
+        current
+          .map((selection) =>
+            selection.serverId === serverId
+              ? {
+                  ...selection,
+                  toolNames: selection.toolNames.filter((name) => name !== toolName)
+                }
+              : selection
+          )
+          .filter((selection) => selection.toolNames.length)
+      );
+    }
   };
 
   const toggleMcpServer = (server: McpServerConfig) => {
     const selected = selectedMcpToolNames(server.id);
+    const removesServerSelection = selected.length === server.tools.length;
     setSelectedMcpTools((current) => {
       const remaining = current.filter((item) => item.serverId !== server.id);
       return selected.length === server.tools.length
         ? remaining
         : [...remaining, { serverId: server.id, toolNames: server.tools.map((tool) => tool.name) }];
     });
+    if (removesServerSelection) {
+      setSessionAllowedMcpTools((current) =>
+        current.filter((selection) => selection.serverId !== server.id)
+      );
+    }
   };
 
   useEffect(() => {
@@ -2883,7 +2955,10 @@ export function App() {
         profileId: profile.id,
         purpose,
         messages: modelMessages,
-        mcpTools: userMessage.toolInvocation ? [] : selectedMcpTools
+        mcpTools: userMessage.toolInvocation ? [] : selectedMcpTools,
+        mcpSessionTools: userMessage.toolInvocation
+          ? []
+          : sessionAllowedMcpTools
       }
     });
     if (!posted) {
@@ -2957,6 +3032,7 @@ export function App() {
     setComposer("");
     setAttachments([]);
     setSelectedMcpTools([]);
+    setSessionAllowedMcpTools([]);
     setMcpApproval(null);
     setMcpMenuOpen(false);
     setEditingMessageId(null);
@@ -2975,6 +3051,7 @@ export function App() {
     setComposer("");
     setAttachments([]);
     setSelectedMcpTools([]);
+    setSessionAllowedMcpTools([]);
     setMcpApproval(null);
     setMcpMenuOpen(false);
     setEditingMessageId(null);
@@ -3829,6 +3906,7 @@ export function App() {
     setEditingMessageId(null);
     setEditingMessageText("");
     setSelectedMcpTools([]);
+    setSessionAllowedMcpTools([]);
     setMcpApproval(null);
     setMcpMenuOpen(false);
     if (
@@ -5493,10 +5571,11 @@ export function App() {
               {mcpApproval.approval.destructive && <p className="mcp-danger">{t("mcpDestructiveWarning")}</p>}
               <pre>{JSON.stringify(mcpApproval.approval.arguments, null, 2)}</pre>
             </div>
-            <footer className="modal-actions">
+            <footer className="modal-footer mcp-approval-actions">
               <button className="secondary-button" type="button" onClick={() => decideMcpApproval("deny")}>{t("deny")}</button>
-              <button className="secondary-button" type="button" onClick={() => decideMcpApproval("allow-session")}>{t("allowSession")}</button>
-              <button className="primary-button" type="button" onClick={() => decideMcpApproval("allow-once")}>{t("allowOnce")}</button>
+              <button className="secondary-button" type="button" onClick={() => decideMcpApproval("allow-once")}>{t("allowOnce")}</button>
+              <button className="secondary-button" type="button" onClick={() => decideMcpApproval("allow-round")}>{t("allowRound")}</button>
+              <button className="primary-button" type="button" onClick={() => decideMcpApproval("allow-session")}>{t("allowSession")}</button>
             </footer>
           </section>
         </div>

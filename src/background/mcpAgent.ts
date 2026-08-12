@@ -26,6 +26,24 @@ export type RequestMcpApproval = (
   request: McpToolApprovalRequest
 ) => Promise<McpToolApprovalDecision>;
 
+export function mcpPermissionKey(serverId: string, toolName: string): string {
+  return `${serverId}:${toolName}`;
+}
+
+export function resolveSessionAllowedMcpTools(
+  enabled: EnabledMcpTool[],
+  requestedTools: ChatRunRequest["mcpSessionTools"]
+): Set<string> {
+  const requested = new Map(
+    (requestedTools ?? []).map((item) => [item.serverId, new Set(item.toolNames)])
+  );
+  return new Set(
+    enabled
+      .filter((tool) => requested.get(tool.server.id)?.has(tool.name))
+      .map((tool) => mcpPermissionKey(tool.server.id, tool.name))
+  );
+}
+
 function toolAlias(serverIndex: number, toolIndex: number, name: string): string {
   const suffix = name.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 38) || "tool";
   return `mcp_${serverIndex}_${toolIndex}_${suffix}`;
@@ -99,7 +117,11 @@ export async function runMcpAgent(
     },
     ...agentMessages(request)
   ];
-  const sessionAllowed = new Set<string>();
+  const roundAllowed = new Set<string>();
+  const sessionAllowed = resolveSessionAllowedMcpTools(
+    enabled,
+    request.mcpSessionTools
+  );
 
   for (let step = 0; step < MCP_MAX_AGENT_STEPS; step += 1) {
     const turn = await completeModelToolTurn(
@@ -134,9 +156,9 @@ export async function runMcpAgent(
         });
         continue;
       }
-      const permissionKey = `${tool.server.id}:${tool.name}`;
-      let decision: McpToolApprovalDecision = "allow-session";
-      if (!sessionAllowed.has(permissionKey)) {
+      const permissionKey = mcpPermissionKey(tool.server.id, tool.name);
+      let decision: McpToolApprovalDecision = "allow-once";
+      if (!roundAllowed.has(permissionKey) && !sessionAllowed.has(permissionKey)) {
         decision = await requestApproval({
           approvalId: crypto.randomUUID(),
           serverId: tool.server.id,
@@ -147,7 +169,9 @@ export async function runMcpAgent(
           destructive: tool.destructive
         });
       }
-      if (decision === "allow-session") sessionAllowed.add(permissionKey);
+      if (decision === "allow-round" || decision === "allow-session") {
+        roundAllowed.add(permissionKey);
+      }
       const content =
         decision === "deny"
           ? "The user denied this tool call. Continue without it."
