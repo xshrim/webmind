@@ -10,6 +10,39 @@ const MCP_CALL_TIMEOUT_MS = 60_000;
 const MCP_MAX_TOOLS = 80;
 const MCP_MAX_RESULT_CHARS = 60_000;
 
+export function describeMcpConnectionError(
+  error: unknown,
+  server: Pick<McpServerConfig, "url" | "transport">
+): Error {
+  const message = error instanceof Error ? error.message : String(error ?? "");
+  const normalized = message.toLowerCase();
+  const endpoint = `${server.transport} endpoint ${server.url}`;
+  if (error instanceof DOMException && error.name === "TimeoutError") {
+    return new Error(
+      `MCP connection timed out after 15 seconds for ${endpoint}. Check the URL, server availability, and selected transport.`
+    );
+  }
+  if (
+    normalized.includes("unauthorized") ||
+    normalized.includes("forbidden") ||
+    /\b(401|403)\b/u.test(message)
+  ) {
+    return new Error(
+      `MCP server rejected authentication for ${endpoint}. Check the custom headers and credentials. ${message}`
+    );
+  }
+  if (
+    normalized.includes("failed to fetch") ||
+    normalized.includes("networkerror") ||
+    normalized.includes("cors")
+  ) {
+    return new Error(
+      `Unable to reach ${endpoint}. Check that the server is online and accepts Chrome extension requests; a server-side origin policy cannot be bypassed by the extension. ${message}`
+    );
+  }
+  return new Error(`MCP connection failed for ${endpoint}. ${message}`.trim());
+}
+
 export function timeoutSignal(parent: AbortSignal | undefined, timeoutMs: number) {
   const controller = new AbortController();
   const timeout = setTimeout(
@@ -59,6 +92,8 @@ async function withClient<T>(
   try {
     await client.connect(transportForServer(server), { signal: timeout.signal });
     return await task(client, timeout.signal);
+  } catch (error) {
+    throw describeMcpConnectionError(error, server);
   } finally {
     timeout.dispose();
     await client.close().catch(() => undefined);

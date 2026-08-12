@@ -325,6 +325,7 @@ export function App() {
   const [mcpMenuOpen, setMcpMenuOpen] = useState(false);
   const [mcpEditorOpen, setMcpEditorOpen] = useState(false);
   const [mcpBusy, setMcpBusy] = useState(false);
+  const [mcpEditorError, setMcpEditorError] = useState("");
   const [editingMcpServerId, setEditingMcpServerId] = useState<string | null>(null);
   const [mcpApproval, setMcpApproval] = useState<PendingMcpApproval | null>(null);
   const [mcpDraft, setMcpDraft] = useState({
@@ -2555,6 +2556,7 @@ export function App() {
       transport: "streamable-http",
       customHeaders: ""
     });
+    setMcpEditorError("");
     setMcpEditorOpen(true);
   };
 
@@ -2566,6 +2568,7 @@ export function App() {
       transport: server.transport,
       customHeaders: server.customHeaders
     });
+    setMcpEditorError("");
     setMcpEditorOpen(true);
   };
 
@@ -2573,6 +2576,7 @@ export function App() {
     const name = mcpDraft.name.trim();
     const url = mcpDraft.url.trim();
     if (!name || !url) return;
+    setMcpEditorError("");
     setMcpBusy(true);
     try {
       const parsedUrl = new URL(url);
@@ -2621,7 +2625,10 @@ export function App() {
       setMcpEditorOpen(false);
       setNotice(t("mcpServerSaved"));
     } catch (error) {
-      setNotice(errorMessage(error));
+      const message = errorMessage(error);
+      setMcpEditorError(message);
+      setNotice(message);
+      appendOperationLog(message, "error");
     } finally {
       setMcpBusy(false);
     }
@@ -2656,7 +2663,9 @@ export function App() {
           .filter((selection) => selection.toolNames.length)
       );
     } catch (error) {
-      setNotice(errorMessage(error));
+      const message = errorMessage(error);
+      setNotice(message);
+      appendOperationLog(message, "error");
     } finally {
       setMcpBusy(false);
     }
@@ -5495,25 +5504,26 @@ export function App() {
 
       {mcpEditorOpen && (
         <div className="modal-backdrop">
-          <section className="modal mcp-editor" role="dialog" aria-modal="true">
+          <section className="modal prompt-editor mcp-editor" role="dialog" aria-modal="true">
             <header className="modal-header">
               <div>
                 <p className="eyebrow">MCP</p>
                 <h2>{editingMcpServerId ? t("editMcpServer") : t("addMcpServer")}</h2>
               </div>
-              <button className="icon-button" type="button" title={t("close")} onClick={() => setMcpEditorOpen(false)}><X /></button>
+              <button className="icon-button" type="button" title={t("close")} onClick={() => { setMcpEditorOpen(false); setMcpEditorError(""); }}><X /></button>
             </header>
-            <div className="form-stack">
+            <div className="modal-body form-stack">
               <label className="field">
                 <span className="field-label">{t("mcpServerName")}</span>
                 <input
                   value={mcpDraft.name}
-                  onChange={(event) =>
+                  onChange={(event) => {
                     setMcpDraft((current) => ({
                       ...current,
                       name: event.target.value
-                    }))
-                  }
+                    }));
+                    setMcpEditorError("");
+                  }}
                 />
               </label>
               <label className="field">
@@ -5522,25 +5532,27 @@ export function App() {
                   type="url"
                   value={mcpDraft.url}
                   placeholder="https://example.com/mcp"
-                  onChange={(event) =>
+                  onChange={(event) => {
                     setMcpDraft((current) => ({
                       ...current,
                       url: event.target.value
-                    }))
-                  }
+                    }));
+                    setMcpEditorError("");
+                  }}
                 />
               </label>
               <label className="field">
                 <span className="field-label">{t("mcpTransport")}</span>
                 <select
                   value={mcpDraft.transport}
-                  onChange={(event) =>
+                  onChange={(event) => {
                     setMcpDraft((current) => ({
                       ...current,
                       transport: event.target
                         .value as McpServerConfig["transport"]
-                    }))
-                  }
+                    }));
+                    setMcpEditorError("");
+                  }}
                 >
                   <option value="streamable-http">Streamable HTTP</option>
                   <option value="sse">SSE</option>
@@ -5552,17 +5564,28 @@ export function App() {
                   rows={4}
                   value={mcpDraft.customHeaders}
                   placeholder={'{"Authorization":"Bearer ..."}'}
-                  onChange={(event) =>
+                  onChange={(event) => {
                     setMcpDraft((current) => ({
                       ...current,
                       customHeaders: event.target.value
-                    }))
-                  }
+                    }));
+                    setMcpEditorError("");
+                  }}
                 />
               </label>
+              {(mcpBusy || mcpEditorError) && (
+                <div
+                  className={`mcp-connection-feedback ${mcpEditorError ? "error" : ""}`}
+                  role={mcpEditorError ? "alert" : "status"}
+                  aria-live="polite"
+                >
+                  {mcpBusy ? <LoaderCircle className="spin" /> : <Network />}
+                  <span>{mcpBusy ? t("loading") : mcpEditorError}</span>
+                </div>
+              )}
             </div>
-            <footer className="modal-actions">
-              <button className="secondary-button" type="button" onClick={() => setMcpEditorOpen(false)}>{t("cancel")}</button>
+            <footer className="modal-footer">
+              <button className="secondary-button" type="button" disabled={mcpBusy} onClick={() => { setMcpEditorOpen(false); setMcpEditorError(""); }}>{t("cancel")}</button>
               <button className="primary-button" type="button" disabled={mcpBusy || !mcpDraft.name.trim() || !mcpDraft.url.trim()} onClick={() => void saveMcpServer()}>{mcpBusy ? <LoaderCircle className="spin" /> : <Check />}{t("saveAndConnect")}</button>
             </footer>
           </section>

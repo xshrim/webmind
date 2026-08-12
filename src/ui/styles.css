@@ -3735,6 +3735,32 @@ button.prompt-row:hover {
   gap: 8px;
 }
 
+.mcp-connection-feedback {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 11px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  background: var(--surface-2);
+  font-size: 12px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.mcp-connection-feedback.error {
+  border-color: color-mix(in srgb, var(--danger) 38%, var(--border));
+  color: var(--danger);
+}
+
+.mcp-connection-feedback svg {
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  margin-top: 1px;
+}
+
 .mcp-server-row {
   display: grid;
   gap: 10px;

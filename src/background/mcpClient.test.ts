@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { formatMcpToolResult, timeoutSignal } from "./mcpClient";
+import {
+  describeMcpConnectionError,
+  formatMcpToolResult,
+  timeoutSignal
+} from "./mcpClient";
 
 describe("MCP tool result formatting", () => {
   it("combines text and structured content", () => {
@@ -39,5 +43,24 @@ describe("MCP timeout signal", () => {
     expect(child.signal.aborted).toBe(true);
     expect(child.signal.reason).toBe(parent.signal.reason);
     child.dispose();
+  });
+});
+
+describe("MCP connection errors", () => {
+  const server = {
+    url: "https://mcp.example.test/tools",
+    transport: "streamable-http" as const
+  };
+
+  it("identifies failed cross-origin network requests without claiming to bypass them", () => {
+    expect(
+      describeMcpConnectionError(new TypeError("Failed to fetch"), server).message
+    ).toContain("server-side origin policy cannot be bypassed");
+  });
+
+  it("identifies authentication errors and preserves the original detail", () => {
+    expect(
+      describeMcpConnectionError(new Error("HTTP 401 Unauthorized"), server).message
+    ).toContain("custom headers and credentials");
   });
 });
