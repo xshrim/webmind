@@ -107,6 +107,8 @@ import {
   type LatestFrameState
 } from "./hoverDefinition";
 import { shouldCloseFloatingResult } from "./floatingResult";
+import { setLinkTextSelectionEnabled } from "./linkTextSelection";
+import { setSelectionMatchHighlightMode } from "./selectionHighlighter";
 import { ToolIcon } from "./toolIcons";
 import type {
   AppSettings,
@@ -4055,6 +4057,29 @@ function SelectionAssistant({ query }: { query: string | null }) {
 
 async function initialize(): Promise<void> {
   settings = await loadSettings();
+  const linkTextSelectionEnabled = () =>
+    Boolean(
+      settings?.linkTextSelectionEnabled &&
+        !urlMatchesBlacklist(
+          location.href,
+          settings.edgeQuickToolUrlBlacklist ?? []
+        )
+    );
+  setLinkTextSelectionEnabled(linkTextSelectionEnabled());
+  const selectionMatchHighlightMode = () => {
+    const mode = settings?.selectionMatchHighlightMode ?? "off";
+    return mode !== "off" &&
+      !urlMatchesBlacklist(
+        location.href,
+        settings?.selectionOverlayUrlBlacklist ?? []
+      )
+      ? mode
+      : "off";
+  };
+  setSelectionMatchHighlightMode(
+    selectionMatchHighlightMode(),
+    settings.selectionOverlayMinChars
+  );
   const host = document.createElement("div");
   host.id = "webmind-root";
   assistantHost = host;
@@ -4192,6 +4217,11 @@ async function initialize(): Promise<void> {
       ...settings,
       ...(changes["webmind.settings"].newValue as AppSettings)
     } as AppSettings;
+    setLinkTextSelectionEnabled(linkTextSelectionEnabled());
+    setSelectionMatchHighlightMode(
+      selectionMatchHighlightMode(),
+      settings.selectionOverlayMinChars
+    );
     if (!selectionOverlayEnabled() || !selectionOverlayShortcutActive()) {
       showSelection?.(null);
     } else {

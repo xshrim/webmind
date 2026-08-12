@@ -414,7 +414,11 @@ chrome.runtime.onMessage.addListener(
         );
         return { ok: true };
       }
-      if (message.type && message.type !== "webmind.operationLog") {
+      if (
+        message.type &&
+        message.type !== "webmind.operationLog" &&
+        message.type !== "cookies.current"
+      ) {
         void loadSettings()
           .then((settings) => {
             broadcastOperationLog(
@@ -616,6 +620,27 @@ chrome.runtime.onMessage.addListener(
         return {
           dataUrl: await chrome.tabs.captureVisibleTab(sender.tab.windowId, {
             format: "png"
+          })
+        };
+      }
+      if (message.type === "cookies.current") {
+        const [tab] = await chrome.tabs.query({
+          active: true,
+          currentWindow: true
+        });
+        if (!tab?.url || !/^https?:/i.test(tab.url)) {
+          const settings = await loadSettings();
+          throw new Error(uiText(settings.interfaceLanguage, "currentPageUnavailable"));
+        }
+        const cookieStores = await chrome.cookies.getAllCookieStores();
+        const cookieStore = cookieStores.find((store) =>
+          store.tabIds.includes(tab.id ?? -1)
+        );
+        return {
+          url: tab.url,
+          cookies: await chrome.cookies.getAll({
+            url: tab.url,
+            ...(cookieStore ? { storeId: cookieStore.id } : {})
           })
         };
       }

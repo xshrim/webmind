@@ -10,6 +10,11 @@ const MCP_CALL_TIMEOUT_MS = 60_000;
 const MCP_MAX_TOOLS = 80;
 const MCP_MAX_RESULT_CHARS = 60_000;
 
+export interface McpToolCallResult {
+  content: string;
+  isError: boolean;
+}
+
 export function describeMcpConnectionError(
   error: unknown,
   server: Pick<McpServerConfig, "url" | "transport">
@@ -159,14 +164,20 @@ export async function callMcpTool(
   name: string,
   args: Record<string, unknown>,
   signal?: AbortSignal
-): Promise<string> {
-  return withClient(server, signal, MCP_CALL_TIMEOUT_MS, async (client, requestSignal) =>
-    formatMcpToolResult(
-      await client.callTool(
-        { name, arguments: args },
-        undefined,
-        { signal: requestSignal }
-      )
-    )
-  );
+): Promise<McpToolCallResult> {
+  return withClient(server, signal, MCP_CALL_TIMEOUT_MS, async (client, requestSignal) => {
+    const result = await client.callTool(
+      { name, arguments: args },
+      undefined,
+      { signal: requestSignal }
+    );
+    return {
+      content: formatMcpToolResult(result),
+      isError:
+        typeof result === "object" &&
+        result !== null &&
+        "isError" in result &&
+        result.isError === true
+    };
+  });
 }

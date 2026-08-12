@@ -29,6 +29,10 @@ export type AppLanguage =
   | "it";
 export type AppLogLevel = "debug" | "info" | "success" | "warning" | "error";
 export type SelectionOverlayMode = "off" | "always" | "hover";
+export type SelectionMatchHighlightMode =
+  | "off"
+  | "ignore-case"
+  | "case-sensitive";
 export type ImmersiveTranslationStyle = "translation-only" | "bilingual";
 export type ImmersiveTranslationDisplayStyle =
   | "default"
@@ -119,6 +123,8 @@ export interface AppSettings {
   selectionOverlayMode: SelectionOverlayMode;
   selectionOverlayShortcut: SelectionOverlayShortcut;
   selectionOverlayMinChars: number;
+  selectionMatchHighlightMode: SelectionMatchHighlightMode;
+  linkTextSelectionEnabled: boolean;
   immersiveTranslationStyle: ImmersiveTranslationStyle;
   immersiveTranslationDisplayStyle: ImmersiveTranslationDisplayStyle;
   immersiveTranslationTextEffects: ImmersiveTranslationTextEffect[];
@@ -418,6 +424,8 @@ export interface McpToolEvent {
   serverName: string;
   toolName: string;
   status: McpToolEventStatus;
+  /** The untrusted, plain-text result returned by the MCP tool. */
+  result?: string;
   reason?: McpToolBlockReason;
   error?: string;
 }

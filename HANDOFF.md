@@ -8,7 +8,7 @@
 - 项目类型：Manifest V3 Chrome 扩展。
 - 最终制品：未打包扩展目录 `dist/`，不要打包成 `.crx`。
 - 核心目标：实现一个浏览器 AI 助手，功能工作流参考 MaxAI 一类产品的公开能力，但不包含登录、订阅、购买方案；用户自行添加模型引擎和凭证。
-- 本交接文档日期：2026-08-12。
+- 本交接文档日期：2026-08-13。
 
 ## 如何继续开发
 
@@ -34,7 +34,7 @@ npm run build
 npm run check
 ```
 
-- `npm run build` 会生成最终未打包扩展目录 `dist/`。
+- `npm run build` 会生成最终未打包扩展目录 `dist/`。用户通过“加载已解压的扩展程序”直接使用该目录；每次源码修改后必须重新构建并保留最新 `dist/` 产物，不能手工恢复或清理其中的 hash 资源。
 - `npm run check` 会依次执行类型检查、测试和构建。
 - 真实扩展行为、content script、侧边栏 API、Chrome 权限等，需要加载 `dist/` 到 Chrome 后验证。
 
@@ -45,28 +45,35 @@ npm run check
 - `src/shared/tools.ts`：内置/自定义工具合并、模板填充、上下文注入，以及仅对工具生效的回答语言约束。
 - `src/shared/utils.ts`：共享工具函数、正文 citation 说明清洗、翻译占位符保护与还原、消息辅助函数。
 - `src/shared/i18n.ts`：语言候选、浏览器语言解析、Prompt 指令语言解析和九种语言的类型完整性组装；`src/shared/locales/{es,fr,de,it}.ts` 分别维护西班牙语、法语、德语、意大利语的完整静态界面词条。
-- `src/shared/storage.ts`：设置、工具、历史、本地存储和 Chrome 同步存储；负责将缺失或非法的 `mcpToolApprovalMode` 归一化为 `ask`。
+- `src/shared/storage.ts`：设置、工具、历史、本地存储和 Chrome 同步存储；负责将缺失或非法的 `mcpToolApprovalMode` 归一化为 `ask`，并使同文高亮和链接选择在缺失配置时分别回退到 `off` 与 `false`。
 - `src/shared/models.ts`：默认、翻译、视觉三类模型用途的路由逻辑。
 - `src/background/index.ts`：扩展消息路由、工具执行、快捷动作、搜索、图片获取/截图、打开侧边栏；维护 MCP 审批 Promise、30 秒超时和 `mcp.tool.status` Port 事件。
 - `src/background/providers.ts`：各模型接口的流式请求和兼容处理。
 - `src/background/mcpClient.ts`：基于官方 MCP SDK 的 SSE/Streamable HTTP 连接、工具发现和调用结果格式化。
 - `src/background/mcpAgent.ts`：普通对话的原生模型 tool-calling 循环、工具选择校验、逐次审批和步数/数量限制；每次调用前强制执行全局 MCP 授权模式，并回传结构化工具状态。
-- `src/content/index.tsx`：网页注入能力，包括划词浮层、快捷工具、沉浸翻译、沉浸阅读、悬停释义、自动回复、图文提取、搜索页回答窗口。
+- `src/content/index.tsx`：网页注入能力，包括划词浮层、快捷工具、沉浸翻译、沉浸阅读、悬停释义、自动回复、图文提取、搜索页回答窗口；初始化时按设置启动链接文字选择和同文高亮。
+- `src/content/linkTextSelection.ts`：链接内文字的横向拖动选择、纵向拖动保持原行为，以及选择后阻止误导航；不再兼容 Google News 一类空链接覆盖层。
+- `src/content/selectionHighlighter.ts`：同文高亮的 CSS Highlight API 匹配与右侧滚动条定位短标记；不包裹或修改网页原始文本节点。
+- `src/shared/cookiePreview.ts`：当前页面 Cookie 的 JSON、Netscape、HTTP、cURL 预览格式化。
 - `src/content/pageContext.ts`：当前页面/当前正文提取、正文识别规则、父容器选择、block 划分、手动框选、逐段删除、智能剔除、预览定位。
 - `src/content/translationPreparation.ts`：页面/当前正文/选区翻译和沉浸阅读的 block 收集；当前正文 scope 使用侧边栏传入的 `articlePreview` block 作为 canonical 处理对象。
-- `src/sidepanel/App.tsx`：侧边栏聊天、工具、历史、日志、上下文处理、工具调用气泡、模型流式回答；将 `mcp.tool.status` 挂到对应助手消息并在回答下方渲染记录。
+- `src/sidepanel/App.tsx`：侧边栏聊天、工具、历史、日志、上下文处理、工具调用气泡、模型流式回答；将 `mcp.tool.status` 挂到对应助手消息，在模型正文前渲染默认折叠的 MCP 结果色带，并记录 MCP 授权、调用状态和 Server 生命周期日志。
 - `src/sidepanel/toolIcons.tsx`：侧边栏内置工具和自定义工具图标渲染；新版 lucide 动态图标通过 `lucide-react/dynamic` 懒加载。
 - `src/sidepanel/customIcons.tsx`：沉浸翻译、沉浸阅读等非 lucide 内联图标。
-- `src/options/SettingsApp.tsx`：设置页面，包括通用配置中的 MCP 工具执行授权模式。
+- `src/options/SettingsApp.tsx`：设置页面，包括主题下方的 MCP 工具执行授权模式、划词浮层内的同文高亮，以及快捷工具配置块中的链接选择。
 - `vite.config.ts`：生产构建入口和手动 chunk 拆分；lucide 动态图标按首字母拆成 `lucide-icons-*` chunk。
 - `scripts/build-extension.mjs`：将构建产物整理到最终扩展目录 `dist/`。
 
 ## 当前产品能力
 
 - 侧边栏聊天支持当前页面、选中内容、无上下文、附件、URL/文档附件、网页搜索、Markdown 流式回答、停止生成、历史和日志。
-- MCP 选项卡支持本地添加 SSE/Streamable HTTP Server、刷新 Tools、编辑/删除 Server；聊天输入区可多选 Server 和工具。固定翻译/视觉/内部工作流不会携带 MCP。
+- MCP 选项卡支持本地添加 SSE/Streamable HTTP Server、刷新 Tools、编辑/删除 Server；Server -> Tool 均为默认折叠的层级展示。聊天输入区的 MCP 选择框同样默认折叠 Server，名称/箭头展开工具，复选框可全选 Server 或选取单个工具，且选择框紧邻网络图标正上方居中显示。固定翻译/视觉/内部工作流不会携带 MCP。
 - MCP 全局授权模式为 `deny | ask | allow`，默认 `ask`。`deny` 禁止每一次调用，`allow` 跳过交互审批，二者都只能作用于用户当前显式启用且后台再次校验通过的工具；`ask` 保留本次、本轮、会话三种授权范围。
-- MCP 执行记录不依赖模型自然语言：助手回答下方会显示成功调用、全局拒绝、用户拒绝、审批超时或调用失败，以及对应 Server / Tool。阻止与失败结果仍会传回模型，模型应继续完成回答。
+- MCP 执行记录不依赖模型自然语言：作为同一助手消息、模型正文前的默认折叠色带显示成功调用、全局拒绝、用户拒绝、审批超时或调用失败，以及对应 Server / Tool。展开后才显示返回详情；阻止与失败结果仍会传回模型，模型应继续完成回答。
+- MCP 操作日志记录授权范围、调用成功/失败/未执行、Server 保存/刷新/删除；仅记录 Server/工具名称、状态和数量，不得记录工具参数、返回正文、Cookie、请求头、模型上下文或附件内容。
+- Cookie 查看器位于侧边栏右上角设置图标左侧；后台 `cookies.current` 用 Chrome `cookies` API 获取当前标签 URL 对应 Cookie，格式化与复制均在侧边栏完成。
+- 链接选择默认关闭（`linkTextSelectionEnabled: false`），位于“快捷工具 -> 链接选择”，并复用快捷工具 URL 黑名单。横向拖动链接文字走选择并防止松开后的导航；普通点击和纵向拖动保持页面原行为。
+- 同文高亮默认关闭（`selectionMatchHighlightMode: "off"`），位于“划词浮层”，与划词浮层共用最少触发字符数和 URL 黑名单。匹配项用 Logo 珊瑚红 `#e8533f`，右侧定位标记用青绿色 `#178f7c`；为性能和原生选区兼容性，不要求当前浏览器选区与其他匹配项样式一致。
 - 上下文下拉框只有：无上下文、当前页面、当前正文、当前选中；默认上下文来自 `defaultContextScope`，当前真实默认值是当前正文。
 - 用户自行配置模型引擎；没有账号、登录、购买或订阅代码。
 - 模型预设包括 OpenAI 兼容、Grok、DeepSeek、Kimi、Qwen、智谱 GLM、MiMo、LongCat、MiniMax、Doubao Seed、OpenRouter、硅基流动、Anthropic、Gemini、Ollama。
@@ -101,6 +108,8 @@ npm run check
 - `selectionOverlayMode`：`off`
 - `selectionOverlayShortcut`：`off`
 - `selectionOverlayMinChars`：`2`
+- `selectionMatchHighlightMode`：`off`
+- `linkTextSelectionEnabled`：`false`
 - `edgeQuickToolsEnabled`：`false`
 - `inputAutoReplyEnabled`：`false`
 - `inputAutoReplyDisableSingleLine`：`true`
@@ -169,6 +178,9 @@ npm run check
 
 ## 最近完成的功能与修复
 
+- 2026-08-13：MCP 选择器新增 Server 折叠层级、加大复选框和可点击区域；已选时网络图标 tooltip 显示 Server 与工具总数。MCP 授权弹窗改为拒绝按钮与三种允许范围的分组布局，并增加销毁性工具风险提示。
+- 2026-08-13：MCP 返回结果由单独状态展示改为嵌入同一助手消息的结果色带，成功、失败、拒绝和超时均携带详情，默认折叠；协议 `isError` 也归类为失败。日志补齐授权决定、调用状态与 Server 生命周期事件，且不记录敏感内容。
+- 2026-08-13：添加 Cookie 查看器；添加链接文字横向拖动选择；添加同文高亮与右侧定位标记。链接选择和同文高亮默认均不启用。
 - `bd092f3 feat: add MCP authorization modes and tool status`：新增 `mcpToolApprovalMode` 设置及多语言文案；后台在每次调用前强制执行全局授权；审批 30 秒超时后继续让模型回答；通过 `mcp.tool.status` 将调用、拒绝、超时和失败状态绑定并渲染到助手回答。测试补充了授权模式归一化。
 - 已完成核心模块的第一轮拆分，正文识别、翻译 DOM、选择处理、快捷键、附件和侧边栏展示等能力已移出部分核心文件；当前仍需继续拆分大文件。
 - 新增 `src/shared/immersiveWorkflow.ts`，内容脚本和侧边栏的沉浸翻译/沉浸阅读模型流程共用分批、重试、校验、顺序化应用和进度协议。
@@ -235,6 +247,7 @@ npm run check
 - PDF worker chunk 较大。当前 Vite 构建能通过并输出较大的 `vendor-pdf`/worker chunk，这是预期现象，除非后续重新设计 PDF 处理方式。
 - MCP 当前只覆盖 Tools，不支持 Resources、Prompts、Sampling、Roots 或 Elicitation；图片/音频/资源结果以文本标记传回模型。MCP Server 配置和自定义请求头只保存在 local storage，不参与 Chrome Sync；每次操作会重新建立连接，并受 15 秒发现、60 秒调用和 60000 字符结果上限约束。
 - MCP 工具调用依赖实际模型的原生 tool-calling 能力。未启用工具时继续使用原有流式路径；启用后模型决策轮次是非流式的，可能增加请求次数和延迟。全局模式默认询问，也可直接拒绝或直接允许；始终允许会跳过审批，Server 本身仍可能访问本机或内网资源，使用者应只添加可信 Server。
+- 同文高亮不匹配当前原生 Selection 的浏览器绘制样式；当前选区仍由浏览器控制。此处已放弃通过 `::selection` 强行统一样式，以避免性能和兼容性问题。
 
 ## 未完成问题
 
@@ -255,7 +268,7 @@ npm run check
 
 ## 最后一次验证结果
 
-2026-08-12，以下命令均通过：
+2026-08-13，以下命令均通过：
 
 ```bash
 npm run typecheck
@@ -264,7 +277,7 @@ npm run build
 git diff --check
 ```
 
-测试结果：`21` 个测试文件、`182` 个测试通过；TypeScript 类型检查和构建均成功，已生成未打包扩展目录 `dist/`。以上是代码级验证，尚未替代真实 Chrome 手工验证。
+测试结果：`24` 个测试文件、`194` 个测试通过；TypeScript 类型检查和构建均成功，已生成未打包扩展目录 `dist/`。以上是代码级验证，尚未替代真实 Chrome 手工验证。
 
 ## 最近手工验证重点
 
@@ -299,6 +312,8 @@ git diff --check
 - 检查正文原文中 `**4 citations from multiple sources**[1-4]`、`**Citation N from source**[N]` 只保留引用标记；检查翻译结果不会出现“这是一个翻译任务...”和损坏的 `WEBMIND_*` 占位符。
 - 在扩展重载后保留一个不刷新的普通网页标签页，直接打开侧边栏并使用当前正文工具，验证自动补注入不会再出现“不能建立连接”。
 - 在禁止复制/右键的网站上分别测试当前页面、当前正文、自动翻译、沉浸翻译和沉浸阅读；另测 `user-select: none` 页面上的当前选中功能。
-- MCP 回归：分别将“通用配置 -> MCP 工具执行授权模式”设置为始终拒绝、始终询问、始终允许；确认始终拒绝不执行工具且回答下方说明原因，始终允许只执行当前勾选工具且不弹窗。
-- MCP 回归：在始终询问模式分别选择本次、本轮、会话允许和拒绝；确认授权范围正确。对审批弹窗等待超过 30 秒，确认弹窗关闭、工具不执行、回答下方显示“等待授权超时”，模型仍会继续给出回答；超时后点击旧弹窗不得影响后续调用。
-- MCP 回归：制造 Server 调用错误，确认回答下方显示调用失败及精简错误；成功调用时确认显示实际的 Server / Tool，而非仅依赖模型文本声明。
+- MCP 回归：检查 MCP 页签及输入框选择器的 Server 默认折叠、名称/箭头展开、全选与单选复选框，以及已选工具时网络图标 tooltip 的 Server/工具总数。
+- MCP 回归：分别将“通用配置 -> MCP 工具执行授权模式”设置为始终拒绝、始终询问、始终允许；确认始终拒绝不执行工具且同一助手消息的折叠色带说明原因，始终允许只执行当前勾选工具且不弹窗。
+- MCP 回归：在始终询问模式分别选择本次、本轮、会话允许和拒绝；确认授权范围正确。对审批弹窗等待超过 30 秒，确认弹窗关闭、工具不执行、折叠色带显示“等待授权超时”，模型仍会继续给出回答；超时后点击旧弹窗不得影响后续调用。
+- MCP 回归：制造 Server 调用错误及协议 `isError`，确认同一助手消息中的默认折叠色带显示失败；成功时展开后确认真实返回内容。检查日志分别包含授权决定、成功、失败、拒绝/超时以及 Server 保存/刷新/删除，且不含参数或返回正文。
+- 页面增强回归：确认 Cookie 查看器只读取当前 URL Cookie，四种格式可复制；确认链接选择默认关闭，启用后横向拖动可选择文字而普通点击/纵向拖动不变；确认同文高亮默认关闭，启用后分别验证大小写敏感/忽略大小写、珊瑚红匹配项和青绿色定位标记。

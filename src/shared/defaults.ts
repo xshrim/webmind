@@ -197,6 +197,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   selectionOverlayMode: "off",
   selectionOverlayShortcut: "off",
   selectionOverlayMinChars: 2,
+  selectionMatchHighlightMode: "off",
+  linkTextSelectionEnabled: false,
   immersiveTranslationStyle: "bilingual",
   immersiveTranslationDisplayStyle: "default",
   immersiveTranslationTextEffects: ["light"],

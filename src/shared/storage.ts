@@ -12,7 +12,8 @@ import type {
   PendingAction,
   ProviderProfile,
   McpServerConfig,
-  McpToolApprovalMode
+  McpToolApprovalMode,
+  SelectionMatchHighlightMode
 } from "./types";
 
 const APP_LANGUAGES = new Set<AppLanguage>([
@@ -77,6 +78,12 @@ const MCP_TOOL_APPROVAL_MODES = new Set<McpToolApprovalMode>([
   "deny",
   "ask",
   "allow"
+]);
+
+const SELECTION_MATCH_HIGHLIGHT_MODES = new Set<SelectionMatchHighlightMode>([
+  "off",
+  "ignore-case",
+  "case-sensitive"
 ]);
 
 function normalizeImmersiveShortcut(
@@ -259,6 +266,14 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
       1,
       Math.round(Number(stored.selectionOverlayMinChars ?? 2) || 2)
     ),
+    selectionMatchHighlightMode: SELECTION_MATCH_HIGHLIGHT_MODES.has(
+      stored.selectionMatchHighlightMode as SelectionMatchHighlightMode
+    )
+      ? (stored.selectionMatchHighlightMode as SelectionMatchHighlightMode)
+      : DEFAULT_SETTINGS.selectionMatchHighlightMode,
+    linkTextSelectionEnabled:
+      stored.linkTextSelectionEnabled ??
+      DEFAULT_SETTINGS.linkTextSelectionEnabled,
     immersiveTranslationStyle:
       stored.immersiveTranslationStyle ??
       DEFAULT_SETTINGS.immersiveTranslationStyle,

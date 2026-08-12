@@ -58,6 +58,7 @@ import type {
   ImmersiveReadingStrategy,
   ProviderKind,
   ProviderProfile,
+  SelectionMatchHighlightMode,
   SelectionOverlayMode,
   ToolDefinition,
   ToolSurface
@@ -268,6 +269,18 @@ const PROVIDER_KIND_LABEL_KEYS: Partial<Record<ProviderKind, UiTextKey>> = {
   gemini: "providerKindGemini",
   ollama: "providerKindOllama"
 };
+
+const SELECTION_MATCH_HIGHLIGHT_MODES: Array<{
+  id: SelectionMatchHighlightMode;
+  titleKey: UiTextKey;
+}> = [
+  { id: "off", titleKey: "selectionMatchHighlightOff" },
+  {
+    id: "case-sensitive",
+    titleKey: "selectionMatchHighlightCaseSensitive"
+  },
+  { id: "ignore-case", titleKey: "selectionMatchHighlightIgnoreCase" }
+];
 
 function providerKindLabel(kind: ProviderKind, language: AppLanguage): string {
   const key = PROVIDER_KIND_LABEL_KEYS[kind];
@@ -1536,6 +1549,33 @@ export function SettingsApp() {
                   "selectionOverlayShortcutHelp",
                   { holdPrefix: true }
                 )}
+                <div className="field">
+                  <span className="field-label">
+                    {t("selectionMatchHighlight")}
+                  </span>
+                  <div className="segmented segmented-wrap">
+                    {SELECTION_MATCH_HIGHLIGHT_MODES.map((mode) => (
+                      <button
+                        key={mode.id}
+                        className={
+                          settings.selectionMatchHighlightMode === mode.id
+                            ? "active"
+                            : ""
+                        }
+                        type="button"
+                        onClick={() =>
+                          void updatePreference(
+                            "selectionMatchHighlightMode",
+                            mode.id
+                          )
+                        }
+                      >
+                        {t(mode.titleKey)}
+                      </button>
+                    ))}
+                  </div>
+                  <small>{t("selectionMatchHighlightHelp")}</small>
+                </div>
                 <label className="field">
                   <span className="field-label">
                     {t("selectionOverlayMinChars")}
@@ -1657,6 +1697,25 @@ export function SettingsApp() {
                 <span>{t("edgeQuickToolsHelp")}</span>
               </header>
               <div className="card-body">
+                <div className="field">
+                  <span className="field-label">{t("linkSelection")}</span>
+                  <label className="toggle-row">
+                    <input
+                      type="checkbox"
+                      checked={settings.linkTextSelectionEnabled}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "linkTextSelectionEnabled",
+                          event.target.checked
+                        )
+                      }
+                    />
+                    <span>
+                      <strong>{t("linkTextSelection")}</strong>
+                      <small>{t("linkTextSelectionHelp")}</small>
+                    </span>
+                  </label>
+                </div>
                 <div className="field">
                   <span className="field-label">{t("edgeDockMenu")}</span>
                   <label className="toggle-row">
@@ -2169,6 +2228,25 @@ export function SettingsApp() {
                   </small>
                 </div>
                 <div className="field">
+                  <span className="field-label">{t("appearanceTheme")}</span>
+                  <div className="segmented">
+                    {(["system", "light", "dark"] as const).map((theme) => (
+                      <button
+                        key={theme}
+                        className={settings.theme === theme ? "active" : ""}
+                        type="button"
+                        onClick={() => void updatePreference("theme", theme)}
+                      >
+                        {theme === "system"
+                          ? t("themeSystem")
+                          : theme === "light"
+                            ? t("themeLight")
+                            : t("themeDark")}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="field">
                   <span className="field-label">{t("mcpToolApprovalMode")}</span>
                   <div className="segmented segmented-wrap">
                     {([
@@ -2191,25 +2269,6 @@ export function SettingsApp() {
                     ))}
                   </div>
                   <small>{t("mcpToolApprovalModeHelp")}</small>
-                </div>
-                <div className="field">
-                  <span className="field-label">{t("appearanceTheme")}</span>
-                  <div className="segmented">
-                    {(["system", "light", "dark"] as const).map((theme) => (
-                      <button
-                        key={theme}
-                        className={settings.theme === theme ? "active" : ""}
-                        type="button"
-                        onClick={() => void updatePreference("theme", theme)}
-                      >
-                        {theme === "system"
-                          ? t("themeSystem")
-                          : theme === "light"
-                            ? t("themeLight")
-                            : t("themeDark")}
-                      </button>
-                    ))}
-                  </div>
                 </div>
                 <label className="toggle-row">
                   <input

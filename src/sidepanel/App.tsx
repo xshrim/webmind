@@ -3,9 +3,11 @@ import {
   Bot,
   Check,
   ChevronDown,
+  ChevronRight,
   ChevronUp,
   CirclePlus,
   Clock3,
+  Cookie,
   Copy,
   Eraser,
   FileText,
@@ -90,6 +92,10 @@ import {
   type ReadingFallbackTranslation,
   type ReadingLocalPlan
 } from "../shared/immersiveReading";
+import {
+  formatCookiePreview,
+  type CookiePreviewFormat
+} from "../shared/cookiePreview";
 import type {
   AppSettings,
   AppLogLevel,
@@ -199,6 +205,11 @@ import {
 
 type ViewId = "chat" | "tools" | "mcp" | "history" | "logs";
 
+interface CurrentPageCookies {
+  url: string;
+  cookies: chrome.cookies.Cookie[];
+}
+
 const LazyToolIconPicker = lazy(() =>
   import("./ToolIconPicker").then((module) => ({
     default: module.ToolIconPicker
@@ -249,6 +260,14 @@ const PINNED_MESSAGE_TOOL_IDS = new Set([
   "summary",
   "explain-code"
 ]);
+
+const MCP_APPROVAL_DECISION_TEXT_KEYS = {
+  deny: "deny",
+  "allow-once": "allowOnce",
+  "allow-round": "allowRound",
+  "allow-session": "allowSession",
+  "deny-timeout": "mcpToolBlockedApprovalTimeout"
+} satisfies Record<McpToolApprovalDecision, UiTextKey>;
 
 function isFocusOutside(
   container: HTMLElement,
@@ -328,6 +347,12 @@ export function App() {
   const [sessionAllowedMcpTools, setSessionAllowedMcpTools] = useState<
     McpToolSelection[]
   >([]);
+  const [expandedMcpServerIds, setExpandedMcpServerIds] = useState<Set<string>>(
+    () => new Set()
+  );
+  const [expandedMcpPickerServerIds, setExpandedMcpPickerServerIds] = useState<
+    Set<string>
+  >(() => new Set());
   const [mcpMenuOpen, setMcpMenuOpen] = useState(false);
   const [mcpEditorOpen, setMcpEditorOpen] = useState(false);
   const [mcpBusy, setMcpBusy] = useState(false);
@@ -340,6 +365,14 @@ export function App() {
     transport: "streamable-http" as McpServerConfig["transport"],
     customHeaders: ""
   });
+  const [cookieViewerOpen, setCookieViewerOpen] = useState(false);
+  const [cookieViewerLoading, setCookieViewerLoading] = useState(false);
+  const [cookieViewerError, setCookieViewerError] = useState("");
+  const [currentCookieUrl, setCurrentCookieUrl] = useState("");
+  const [currentCookies, setCurrentCookies] = useState<chrome.cookies.Cookie[]>([]);
+  const [cookiePreviewFormat, setCookiePreviewFormat] =
+    useState<CookiePreviewFormat>("json");
+  const [cookiePreviewCopied, setCookiePreviewCopied] = useState(false);
   const [toolEditorOpen, setToolEditorOpen] = useState(false);
   const [toolIconPickerOpen, setToolIconPickerOpen] = useState(false);
   const [editingToolId, setEditingToolId] = useState<string | null>(null);
@@ -480,6 +513,18 @@ export function App() {
     [customTools, settings]
   );
   const t = (key: UiTextKey) => uiText(settings?.interfaceLanguage, key);
+  const selectedMcpServerCount = selectedMcpTools.filter(
+    (selection) => selection.toolNames.length
+  ).length;
+  const selectedMcpToolCount = selectedMcpTools.reduce(
+    (count, selection) => count + selection.toolNames.length,
+    0
+  );
+  const mcpPickerTitle = selectedMcpToolCount
+    ? t("mcpSelectionSummary")
+        .replace("{servers}", String(selectedMcpServerCount))
+        .replace("{tools}", String(selectedMcpToolCount))
+    : t("enableMcp");
 
   const appendOperationLog = useCallback(
     (message: string, level: AppLogLevel = "info") => {
@@ -1050,6 +1095,23 @@ export function App() {
                     "mcpToolBlockedApprovalTimeout"
                   )
                 : "";
+        const logKey =
+          toolEvent.status === "called"
+            ? "logMcpToolCalled"
+            : toolEvent.status === "failed"
+              ? "logMcpToolFailed"
+              : "logMcpToolBlocked";
+        const logMessage = t(logKey)
+            .replace("{server}", toolEvent.serverName)
+            .replace("{tool}", toolEvent.toolName);
+        appendOperationLog(
+          reasonText ? `${logMessage} (${reasonText})` : logMessage,
+          toolEvent.status === "called"
+            ? "success"
+            : toolEvent.status === "failed"
+              ? "error"
+              : "warning"
+        );
         if (reasonText) setNotice(reasonText);
         setMcpApproval((current) =>
           current?.approval.approvalId === toolEvent.approvalId
@@ -1968,6 +2030,39 @@ export function App() {
     }
   };
 
+  const openCookieViewer = async () => {
+    setCookieViewerOpen(true);
+    setCookieViewerLoading(true);
+    setCookieViewerError("");
+    setCurrentCookieUrl("");
+    setCurrentCookies([]);
+    setCookiePreviewCopied(false);
+    try {
+      const result = await runtimeRequest<CurrentPageCookies>("cookies.current");
+      setCurrentCookieUrl(result.url);
+      setCurrentCookies(result.cookies);
+    } catch (error) {
+      setCookieViewerError(errorMessage(error));
+    } finally {
+      setCookieViewerLoading(false);
+    }
+  };
+
+  const copyCookiePreview = async () => {
+    const preview = formatCookiePreview(
+      currentCookieUrl,
+      currentCookies,
+      cookiePreviewFormat
+    );
+    try {
+      await navigator.clipboard.writeText(preview);
+      setCookiePreviewCopied(true);
+      window.setTimeout(() => setCookiePreviewCopied(false), 1400);
+    } catch (error) {
+      setCookieViewerError(errorMessage(error));
+    }
+  };
+
   const openArticleRuleEditor = () => {
     const url = pageContext?.url || activeTab?.url || "";
     setArticleRuleDraft({
@@ -2583,8 +2678,16 @@ export function App() {
 
   const decideMcpApproval = (decision: McpToolApprovalDecision) => {
     if (!mcpApproval) return;
+    const { serverName, toolName } = mcpApproval.approval;
+    appendOperationLog(
+      t("logMcpApproval")
+        .replace("{decision}", t(MCP_APPROVAL_DECISION_TEXT_KEYS[decision]))
+        .replace("{server}", serverName)
+        .replace("{tool}", toolName),
+      decision === "deny" ? "warning" : "info"
+    );
     if (decision === "allow-session") {
-      const { serverId, toolName } = mcpApproval.approval;
+      const { serverId } = mcpApproval.approval;
       setSessionAllowedMcpTools((current) => {
         const existing = current.find((item) => item.serverId === serverId);
         const names = new Set(existing?.toolNames ?? []);
@@ -2694,6 +2797,12 @@ export function App() {
       );
       setMcpEditorOpen(false);
       setNotice(t("mcpServerSaved"));
+      appendOperationLog(
+        t("logMcpServerSaved")
+          .replace("{server}", saved.name)
+          .replace("{count}", String(tools.length)),
+        "success"
+      );
     } catch (error) {
       const message = errorMessage(error);
       setMcpEditorError(message);
@@ -2746,6 +2855,12 @@ export function App() {
           )
           .filter((selection) => selection.toolNames.length)
       );
+      appendOperationLog(
+        t("logMcpToolsRefreshed")
+          .replace("{server}", server.name)
+          .replace("{count}", String(tools.length)),
+        "success"
+      );
     } catch (error) {
       const message = errorMessage(error);
       setNotice(message);
@@ -2756,20 +2871,56 @@ export function App() {
   };
 
   const deleteMcpServer = async (serverId: string) => {
-    const next = mcpServers.filter((server) => server.id !== serverId);
-    await saveMcpServers(next);
-    setMcpServers(next);
-    setSelectedMcpTools((current) =>
-      current.filter((selection) => selection.serverId !== serverId)
-    );
-    setSessionAllowedMcpTools((current) =>
-      current.filter((selection) => selection.serverId !== serverId)
-    );
+    const server = mcpServers.find((item) => item.id === serverId);
+    if (!server) return;
+    try {
+      const next = mcpServers.filter((item) => item.id !== serverId);
+      await saveMcpServers(next);
+      setMcpServers(next);
+      setSelectedMcpTools((current) =>
+        current.filter((selection) => selection.serverId !== serverId)
+      );
+      setSessionAllowedMcpTools((current) =>
+        current.filter((selection) => selection.serverId !== serverId)
+      );
+      appendOperationLog(
+        t("logMcpServerDeleted").replace("{server}", server.name),
+        "warning"
+      );
+    } catch (error) {
+      const message = errorMessage(error);
+      setNotice(message);
+      appendOperationLog(message, "error");
+    }
   };
 
   const selectedMcpToolNames = (serverId: string) =>
     selectedMcpTools.find((selection) => selection.serverId === serverId)
       ?.toolNames ?? [];
+
+  const toggleMcpServerExpanded = (serverId: string) => {
+    setExpandedMcpServerIds((current) => {
+      const next = new Set(current);
+      if (next.has(serverId)) {
+        next.delete(serverId);
+      } else {
+        next.add(serverId);
+      }
+      return next;
+    });
+  };
+
+  const toggleMcpPickerServerExpanded = (serverId: string) => {
+    setExpandedMcpPickerServerIds((current) => {
+      const next = new Set(current);
+      if (next.has(serverId)) {
+        next.delete(serverId);
+      } else {
+        next.add(serverId);
+      }
+      return next;
+    });
+  };
 
   const toggleMcpTool = (serverId: string, toolName: string) => {
     const wasSelected = selectedMcpToolNames(serverId).includes(toolName);
@@ -4325,6 +4476,14 @@ export function App() {
           <button
             className="icon-button"
             type="button"
+            title={t("cookieViewer")}
+            onClick={() => void openCookieViewer()}
+          >
+            <Cookie />
+          </button>
+          <button
+            className="icon-button"
+            type="button"
             title={t("settings")}
             onClick={() => void openOptions()}
           >
@@ -4471,6 +4630,44 @@ export function App() {
                           )
                         ))}
                       </div>
+                    ) : null}
+                    {message.role === "assistant" && message.mcpToolEvents?.length ? (
+                      <section
+                        className="mcp-tool-events"
+                        aria-label={t("mcpToolUsed")}
+                      >
+                        {message.mcpToolEvents.map((event, index) => {
+                          const label =
+                            event.status === "called"
+                              ? t("mcpToolUsed")
+                              : event.status === "failed"
+                                ? t("mcpToolFailed")
+                                : t("mcpToolNotCalled");
+                          const detail =
+                            event.result ??
+                            (event.status === "failed"
+                              ? event.error
+                              : event.reason === "global-deny"
+                                ? t("mcpToolBlockedGlobalDeny")
+                                : event.reason === "user-deny"
+                                  ? t("mcpToolBlockedUserDeny")
+                                  : event.reason === "approval-timeout"
+                                    ? t("mcpToolBlockedApprovalTimeout")
+                                    : undefined);
+                          return (
+                            <details
+                              className={`mcp-tool-event ${event.status}`}
+                              key={`${event.serverId}:${event.toolName}:${index}`}
+                            >
+                              <summary>
+                                <strong>{label}</strong>
+                                <span>{event.serverName} / {event.toolName}</span>
+                              </summary>
+                              {detail && <pre>{detail}</pre>}
+                            </details>
+                          );
+                        })}
+                      </section>
                     ) : null}
                     {message.content ? (
                       message.role === "assistant" ? (
@@ -4705,35 +4902,6 @@ export function App() {
                         <span />
                       </div>
                     ) : null}
-                    {message.role === "assistant" && message.mcpToolEvents?.length ? (
-                      <div className="mcp-tool-events" role="status">
-                        {message.mcpToolEvents.map((event, index) => {
-                          const label =
-                            event.status === "called"
-                              ? t("mcpToolUsed")
-                              : event.status === "failed"
-                                ? t("mcpToolFailed")
-                                : t("mcpToolNotCalled");
-                          const detail =
-                            event.status === "failed"
-                              ? event.error
-                              : event.reason === "global-deny"
-                                ? t("mcpToolBlockedGlobalDeny")
-                                : event.reason === "user-deny"
-                                  ? t("mcpToolBlockedUserDeny")
-                                  : event.reason === "approval-timeout"
-                                    ? t("mcpToolBlockedApprovalTimeout")
-                                    : undefined;
-                          return (
-                            <div className={`mcp-tool-event ${event.status}`} key={`${event.serverId}:${event.toolName}:${index}`}>
-                              <strong>{label}</strong>
-                              <span>{event.serverName} / {event.toolName}</span>
-                              {detail && <small>{detail}</small>}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ) : null}
                     {message.interruptionNotice && (
                       <div className="message-interruption" role="status">
                         {message.interruptionNotice}
@@ -4893,40 +5061,54 @@ export function App() {
               </div>
             ) : (
               <div className="mcp-server-list">
-                {mcpServers.map((server) => (
-                  <article className="mcp-server-row" key={server.id}>
-                    <header>
-                      <div>
-                        <strong>{server.name}</strong>
-                        <small>
-                          {server.transport === "sse"
-                            ? "SSE"
-                            : "Streamable HTTP"} · {server.url}
-                        </small>
-                      </div>
-                      <div className="view-heading-actions">
-                        <button className="icon-button mini" type="button" title={t("refreshMcpTools")} disabled={mcpBusy} onClick={() => void refreshMcpServer(server)}>
-                          <RefreshCcw className={mcpBusy ? "spin" : ""} />
+                {mcpServers.map((server) => {
+                  const expanded = expandedMcpServerIds.has(server.id);
+                  return (
+                    <article className="mcp-server-row" key={server.id}>
+                      <header>
+                        <button
+                          className="mcp-server-toggle"
+                          type="button"
+                          aria-expanded={expanded}
+                          aria-controls={`mcp-tools-${server.id}`}
+                          onClick={() => toggleMcpServerExpanded(server.id)}
+                        >
+                          {expanded ? <ChevronDown /> : <ChevronRight />}
+                          <span>
+                            <strong>{server.name}</strong>
+                            <small>
+                              {server.transport === "sse"
+                                ? "SSE"
+                                : "Streamable HTTP"} · {server.url}
+                            </small>
+                          </span>
                         </button>
-                        <button className="icon-button mini" type="button" title={t("edit")} onClick={() => openMcpServerEditor(server)}>
-                          <PenLine />
-                        </button>
-                        <button className="icon-button mini danger" type="button" title={t("delete")} onClick={() => void deleteMcpServer(server.id)}>
-                          <Trash2 />
-                        </button>
-                      </div>
-                    </header>
-                    <div className="mcp-tool-list">
-                      {server.tools.map((tool) => (
-                        <div className="mcp-tool-row" key={tool.name}>
-                          <code>{tool.name}</code>
-                          <span>{tool.description || t("mcpNoDescription")}</span>
+                        <div className="view-heading-actions">
+                          <button className="icon-button mini" type="button" title={t("refreshMcpTools")} disabled={mcpBusy} onClick={() => void refreshMcpServer(server)}>
+                            <RefreshCcw className={mcpBusy ? "spin" : ""} />
+                          </button>
+                          <button className="icon-button mini" type="button" title={t("edit")} onClick={() => openMcpServerEditor(server)}>
+                            <PenLine />
+                          </button>
+                          <button className="icon-button mini danger" type="button" title={t("delete")} onClick={() => void deleteMcpServer(server.id)}>
+                            <Trash2 />
+                          </button>
                         </div>
-                      ))}
-                      {!server.tools.length && <small>{t("noMcpTools")}</small>}
-                    </div>
-                  </article>
-                ))}
+                      </header>
+                      {expanded && (
+                        <div className="mcp-tool-list" id={`mcp-tools-${server.id}`}>
+                          {server.tools.map((tool) => (
+                            <div className="mcp-tool-row" key={tool.name}>
+                              <code>{tool.name}</code>
+                              <span>{tool.description || t("mcpNoDescription")}</span>
+                            </div>
+                          ))}
+                          {!server.tools.length && <small>{t("noMcpTools")}</small>}
+                        </div>
+                      )}
+                    </article>
+                  );
+                })}
               </div>
             )}
           </section>
@@ -5475,7 +5657,7 @@ export function App() {
                   <button
                     className={`icon-button mini ${selectedMcpTools.length ? "active" : ""}`}
                     type="button"
-                    title={t("enableMcp")}
+                    title={mcpPickerTitle}
                     aria-haspopup="menu"
                     aria-expanded={mcpMenuOpen}
                     disabled={Boolean(streamingId)}
@@ -5492,27 +5674,46 @@ export function App() {
                         </button>
                       ) : mcpServers.map((server) => {
                         const selected = selectedMcpToolNames(server.id);
+                        const expanded = expandedMcpPickerServerIds.has(server.id);
                         return (
                           <div className="mcp-picker-server" key={server.id}>
-                            <label>
-                              <input
-                                type="checkbox"
-                                checked={Boolean(server.tools.length && selected.length === server.tools.length)}
-                                ref={(element) => { if (element) element.indeterminate = selected.length > 0 && selected.length < server.tools.length; }}
-                                onChange={() => toggleMcpServer(server)}
-                              />
-                              <strong>{server.name}</strong>
-                            </label>
-                            {server.tools.map((tool) => (
-                              <label key={tool.name} title={tool.description}>
+                            <div className="mcp-picker-server-header">
+                              <label className="mcp-picker-server-select">
                                 <input
                                   type="checkbox"
-                                  checked={selected.includes(tool.name)}
-                                  onChange={() => toggleMcpTool(server.id, tool.name)}
+                                  checked={Boolean(server.tools.length && selected.length === server.tools.length)}
+                                  ref={(element) => { if (element) element.indeterminate = selected.length > 0 && selected.length < server.tools.length; }}
+                                  onChange={() => toggleMcpServer(server)}
                                 />
-                                <span>{tool.name}</span>
                               </label>
-                            ))}
+                              <button
+                                className="mcp-picker-server-toggle"
+                                type="button"
+                                aria-expanded={expanded}
+                                aria-controls={`mcp-picker-tools-${server.id}`}
+                                onClick={() => toggleMcpPickerServerExpanded(server.id)}
+                              >
+                                {expanded ? <ChevronDown /> : <ChevronRight />}
+                                <strong>{server.name}</strong>
+                              </button>
+                            </div>
+                            {expanded && (
+                              <div
+                                className="mcp-picker-tools"
+                                id={`mcp-picker-tools-${server.id}`}
+                              >
+                                {server.tools.map((tool) => (
+                                  <label key={tool.name} title={tool.description}>
+                                    <input
+                                      type="checkbox"
+                                      checked={selected.includes(tool.name)}
+                                      onChange={() => toggleMcpTool(server.id, tool.name)}
+                                    />
+                                    <span>{tool.name}</span>
+                                  </label>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         );
                       })}
@@ -5621,6 +5822,77 @@ export function App() {
         })}
       </nav>
 
+      {cookieViewerOpen && (
+        <div className="modal-backdrop">
+          <section className="modal cookie-viewer" role="dialog" aria-modal="true">
+            <header className="modal-header">
+              <div>
+                <h2>{t("cookieViewer")}</h2>
+              </div>
+              <button
+                className="icon-button"
+                type="button"
+                title={t("close")}
+                onClick={() => setCookieViewerOpen(false)}
+              >
+                <X />
+              </button>
+            </header>
+            <div className="modal-body form-stack">
+              <label className="field">
+                <span className="field-label">{t("url")}</span>
+                <input readOnly value={currentCookieUrl} />
+              </label>
+              <label className="field">
+                <span className="field-label">{t("cookieFormat")}</span>
+                <select
+                  value={cookiePreviewFormat}
+                  onChange={(event) => {
+                    setCookiePreviewFormat(event.target.value as CookiePreviewFormat);
+                    setCookiePreviewCopied(false);
+                  }}
+                >
+                  <option value="json">JSON</option>
+                  <option value="netscape">Netscape</option>
+                  <option value="http">HTTP</option>
+                  <option value="curl">cURL</option>
+                </select>
+              </label>
+              <div className="cookie-preview-heading">
+                <strong>
+                  {t("cookiePreview").replace(
+                    "{count}",
+                    String(currentCookies.length)
+                  )}
+                </strong>
+                <button
+                  className="secondary-button compact"
+                  type="button"
+                  title={cookiePreviewCopied ? t("copied") : t("copy")}
+                  disabled={cookieViewerLoading || Boolean(cookieViewerError)}
+                  onClick={() => void copyCookiePreview()}
+                >
+                  {cookiePreviewCopied ? <Check /> : <Copy />}
+                  {cookiePreviewCopied ? t("copied") : t("copy")}
+                </button>
+              </div>
+              <pre
+                className={`cookie-preview ${cookieViewerError ? "error" : ""}`}
+              >
+                {cookieViewerLoading
+                  ? t("loading")
+                  : cookieViewerError ||
+                    formatCookiePreview(
+                      currentCookieUrl,
+                      currentCookies,
+                      cookiePreviewFormat
+                    )}
+              </pre>
+            </div>
+          </section>
+        </div>
+      )}
+
       {mcpApproval && (
         <div className="modal-backdrop">
           <section className="modal mcp-approval-modal" role="dialog" aria-modal="true">
@@ -5637,10 +5909,36 @@ export function App() {
               <pre>{JSON.stringify(mcpApproval.approval.arguments, null, 2)}</pre>
             </div>
             <footer className="modal-footer mcp-approval-actions">
-              <button className="secondary-button" type="button" onClick={() => decideMcpApproval("deny")}>{t("deny")}</button>
-              <button className="secondary-button" type="button" onClick={() => decideMcpApproval("allow-once")}>{t("allowOnce")}</button>
-              <button className="secondary-button" type="button" onClick={() => decideMcpApproval("allow-round")}>{t("allowRound")}</button>
-              <button className="primary-button" type="button" onClick={() => decideMcpApproval("allow-session")}>{t("allowSession")}</button>
+              <button
+                className="secondary-button mcp-approval-deny"
+                type="button"
+                onClick={() => decideMcpApproval("deny")}
+              >
+                {t("deny")}
+              </button>
+              <div className="mcp-approval-allow-actions">
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={() => decideMcpApproval("allow-once")}
+                >
+                  {t("allowOnce")}
+                </button>
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={() => decideMcpApproval("allow-round")}
+                >
+                  {t("allowRound")}
+                </button>
+                <button
+                  className="primary-button"
+                  type="button"
+                  onClick={() => decideMcpApproval("allow-session")}
+                >
+                  {t("allowSession")}
+                </button>
+              </div>
             </footer>
           </section>
         </div>

@@ -170,6 +170,8 @@ export async function runMcpAgent(
           serverName: tool.server.name,
           toolName: tool.name,
           status: "blocked",
+          result:
+            "This MCP tool call was not executed because the global authorization mode always denies tool execution.",
           reason: "global-deny"
         });
         messages.push({
@@ -208,6 +210,9 @@ export async function runMcpAgent(
           serverName: tool.server.name,
           toolName: tool.name,
           status: "blocked",
+          result: timeout
+            ? "This MCP tool call was not executed because the authorization request timed out."
+            : "The user denied this MCP tool call.",
           reason: timeout ? "approval-timeout" : "user-deny"
         });
         messages.push({
@@ -222,18 +227,21 @@ export async function runMcpAgent(
       }
       let content: string;
       try {
-        content = await callMcpTool(
+        const toolResult = await callMcpTool(
           tool.server,
           tool.name,
           toolCall.arguments,
           signal
         );
+        content = toolResult.content;
         reportToolEvent({
           approvalId,
           serverId: tool.server.id,
           serverName: tool.server.name,
           toolName: tool.name,
-          status: "called"
+          status: toolResult.isError ? "failed" : "called",
+          result: content,
+          error: toolResult.isError ? content : undefined
         });
       } catch (error) {
         if (signal.aborted) throw error;
@@ -244,6 +252,7 @@ export async function runMcpAgent(
           serverName: tool.server.name,
           toolName: tool.name,
           status: "failed",
+          result: detail,
           error: detail
         });
         content = `This MCP tool call failed: ${detail}. Continue without it.`;

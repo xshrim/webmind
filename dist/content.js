@@ -13256,6 +13256,7 @@
     mcpPermissionDenied: "Netzwerkberechtigung wurde nicht erteilt",
     mcpHttpOnly: "Der MCP-Server ben\xF6tigt eine HTTP- oder HTTPS-URL",
     enableMcp: "MCP-Tools ausw\xE4hlen",
+    mcpSelectionSummary: "{tools} Tools von {servers} MCP-Servern",
     approveMcpTool: "MCP-Tool ausf\xFChren?",
     mcpDestructiveWarning: "Dieses Tool kann externe Daten \xE4ndern oder l\xF6schen.",
     deny: "Ablehnen",
@@ -13267,6 +13268,9 @@
     mcpToolApprovalDeny: "Immer ablehnen",
     mcpToolApprovalAsk: "Immer nachfragen",
     mcpToolApprovalAllow: "Immer erlauben",
+    cookieViewer: "Cookies anzeigen",
+    cookieFormat: "Format",
+    cookiePreview: "Vorschau ({count} Cookies)",
     mcpToolUsed: "Verwendetes MCP-Tool",
     mcpToolNotCalled: "MCP-Tool nicht aufgerufen",
     mcpToolFailed: "MCP-Tool-Aufruf fehlgeschlagen",
@@ -13300,6 +13304,13 @@
     logNewChat: "Neuer Chat gestartet",
     logAttachmentAdded: "Anhang hinzugef\xFCgt",
     logConversationLoaded: "Gespeicherten Chat geladen",
+    logMcpApproval: "MCP-Tool-Berechtigung: {decision} - {server} / {tool}",
+    logMcpToolCalled: "MCP-Tool-Aufruf erfolgreich: {server} / {tool}",
+    logMcpToolFailed: "MCP-Tool-Aufruf fehlgeschlagen: {server} / {tool}",
+    logMcpToolBlocked: "MCP-Tool wurde nicht ausgef\xFChrt: {server} / {tool}",
+    logMcpServerSaved: "MCP-Server gespeichert: {server} ({count} Tools)",
+    logMcpToolsRefreshed: "MCP-Tools aktualisiert: {server} ({count} Tools)",
+    logMcpServerDeleted: "MCP-Server gel\xF6scht: {server}",
     logEnabled: "Aktiviert",
     logDisabled: "Deaktiviert",
     logRuntimeRequest: "Laufzeitanfrage",
@@ -13428,26 +13439,34 @@
     pageFeaturesHelp: "Jedes Modul verwaltet seine Einstellungen separat, damit Sie sehen k\xF6nnen, worauf es sich auswirkt.",
     selectionOverlay: "Auswahl-Overlay",
     selectionOverlayHelp: "Steuert die schwebende Symbolleiste nach der Textauswahl.",
-    selectionOverlayMode: "Ausl\xF6semodus",
+    selectionOverlayMode: "Auswahl-Overlay",
     selectionOverlayShortcut: "Tastenkombination f\xFCr das Auswahl-Overlay",
     selectionOverlayShortcutHelp: "Wenn aktiviert, erscheint das Auswahl-Overlay nur, w\xE4hrend die gew\xE4hlte Tastenkombination gedr\xFCckt gehalten wird, w\xE4hrend Sie Text markieren oder eine bestehende Auswahl \xFCberpr\xFCfen.",
-    selectionOverlayMinChars: "Mindestanzahl markierter Zeichen",
-    selectionOverlayMinCharsHelp: "Das Auswahl-Overlay erst anzeigen, wenn diese Anzahl an Zeichen markiert ist. Minimum: 1.",
-    selectionOverlayOff: "Overlay deaktivieren",
+    selectionOverlayMinChars: "Mindestanzahl ausl\xF6sender Zeichen",
+    selectionOverlayMinCharsHelp: "Auswahl-Overlay und Hervorhebung gleicher Texte erst ab dieser Anzahl markierter Zeichen ausl\xF6sen. Minimum: 1.",
+    selectionMatchHighlight: "Gleichen Text hervorheben",
+    selectionMatchHighlightHelp: "Hebt nach einer Textauswahl alle gleichen Inhalte hervor und zeigt neben der Bildlaufleiste anklickbare Positionsmarken.",
+    selectionMatchHighlightOff: "Deaktiviert",
+    selectionMatchHighlightIgnoreCase: "Gro\xDF-/Kleinschreibung ignorieren",
+    selectionMatchHighlightCaseSensitive: "Gro\xDF-/Kleinschreibung beachten",
+    linkTextSelection: "Auswahl von Linktext auf Seiten erlauben",
+    linkTextSelectionHelp: "Beim horizontalen Ziehen wird Linktext wie normaler Text markiert. Vertikales Ziehen beh\xE4lt das urspr\xFCngliche Verhalten des Links bei; ein normaler Klick \xF6ffnet ihn weiterhin.",
+    linkSelection: "Linkauswahl",
+    selectionOverlayOff: "Deaktiviert",
     selectionOverlayOffHelp: "Keine Schnellaktionen nach der Textmarkierung anzeigen.",
-    selectionOverlayAlways: "Symbolleiste direkt anzeigen",
+    selectionOverlayAlways: "Direkt anzeigen",
     selectionOverlayAlwaysHelp: "Verf\xFCgbare Werkzeuge sofort nach der Textmarkierung anzeigen.",
     selectionOverlayHover: "Zuerst Punkt anzeigen",
     selectionOverlayHoverHelp: "Nach der Textmarkierung einen kleinen Punkt anzeigen und die Symbolleiste beim Dar\xFCberfahren (Hover) erweitern.",
     urlBlacklist: "URL-Blacklist",
     selectionOverlayBlacklistHelp: "Eine Regel pro Zeile; unterst\xFCtzt Domains, Platzhalter und URL-Fragmente.",
     edgeQuickTools: "Schnellwerkzeuge",
-    edgeQuickToolsHelp: "Steuert gemeinsam das Randmen\xFC, die Textextraktion aus Bildern und die automatische Antwort.",
+    edgeQuickToolsHelp: "Steuert gemeinsam die Linkauswahl, das Randmen\xFC, die Textextraktion aus Bildern und die automatische Antwort.",
     edgeDockMenu: "Randmen\xFC",
     edgeQuickToolsEnable: "Randmen\xFC aktivieren",
     edgeQuickToolsEnableHelp: "Deaktivieren Sie diese Option, um das Men\xFC am rechten Rand auf Webseiten auszublenden.",
     edgeQuickToolsBlacklistHelp: "Bei \xDCbereinstimmung erscheinen die Schnellwerkzeuge am rechten Rand nicht.",
-    quickToolsBlacklistHelp: "Bei \xDCbereinstimmung werden das Randmen\xFC, die Textextraktion aus Bildern und die automatische Antwort auf der Seite deaktiviert.",
+    quickToolsBlacklistHelp: "Bei \xDCbereinstimmung werden die Linkauswahl, das Randmen\xFC, die Textextraktion aus Bildern und die automatische Antwort auf der Seite deaktiviert.",
     immersiveTranslation: "Immersive \xDCbersetzung",
     immersiveTranslationHelp: "Steuert, wie \xFCbersetzter Text in die Seite zur\xFCckgeschrieben wird.",
     immersiveTranslationAutoWhitelist: "Whitelist f\xFCr automatische \xDCbersetzung",
@@ -13838,6 +13857,7 @@
     mcpPermissionDenied: "No se concedi\xF3 permiso de red al servidor MCP",
     mcpHttpOnly: "El servidor MCP requiere una URL HTTP o HTTPS",
     enableMcp: "Seleccionar herramientas MCP",
+    mcpSelectionSummary: "{tools} herramientas de {servers} servidores MCP",
     approveMcpTool: "\xBFPermitir la ejecuci\xF3n de la herramienta MCP?",
     mcpDestructiveWarning: "Esta herramienta puede modificar o eliminar datos externos.",
     deny: "Denegar",
@@ -13849,6 +13869,9 @@
     mcpToolApprovalDeny: "Denegar siempre",
     mcpToolApprovalAsk: "Preguntar siempre",
     mcpToolApprovalAllow: "Permitir siempre",
+    cookieViewer: "Ver cookies",
+    cookieFormat: "Formato",
+    cookiePreview: "Vista previa ({count} cookies)",
     mcpToolUsed: "Herramienta MCP utilizada",
     mcpToolNotCalled: "Herramienta MCP no llamada",
     mcpToolFailed: "Fall\xF3 la llamada a la herramienta MCP",
@@ -13882,6 +13905,13 @@
     logNewChat: "Nuevo chat iniciado",
     logAttachmentAdded: "Adjunto a\xF1adido",
     logConversationLoaded: "Chat guardado cargado",
+    logMcpApproval: "Autorizaci\xF3n de herramienta MCP: {decision} - {server} / {tool}",
+    logMcpToolCalled: "Llamada MCP completada: {server} / {tool}",
+    logMcpToolFailed: "Fall\xF3 la llamada MCP: {server} / {tool}",
+    logMcpToolBlocked: "La herramienta MCP no se ejecut\xF3: {server} / {tool}",
+    logMcpServerSaved: "Servidor MCP guardado: {server} ({count} herramientas)",
+    logMcpToolsRefreshed: "Herramientas MCP actualizadas: {server} ({count} herramientas)",
+    logMcpServerDeleted: "Servidor MCP eliminado: {server}",
     logEnabled: "Habilitado",
     logDisabled: "Deshabilitado",
     logRuntimeRequest: "Solicitud en tiempo de ejecuci\xF3n",
@@ -14010,26 +14040,34 @@
     pageFeaturesHelp: "Cada m\xF3dulo mantiene su configuraci\xF3n por separado para que puedas ver qu\xE9 elementos afecta.",
     selectionOverlay: "Superposici\xF3n de selecci\xF3n",
     selectionOverlayHelp: "Controla la barra de herramientas flotante tras seleccionar texto.",
-    selectionOverlayMode: "Modo de activaci\xF3n",
+    selectionOverlayMode: "Superposici\xF3n de selecci\xF3n",
     selectionOverlayShortcut: "Atajo para la superposici\xF3n de selecci\xF3n",
     selectionOverlayShortcutHelp: "Si est\xE1 activado, la superposici\xF3n de selecci\xF3n aparece solo mientras se mantiene pulsado el atajo elegido al seleccionar texto o inspeccionar una selecci\xF3n existente.",
-    selectionOverlayMinChars: "M\xEDnimo de caracteres seleccionados",
-    selectionOverlayMinCharsHelp: "Mostrar la superposici\xF3n de selecci\xF3n solo despu\xE9s de seleccionar esta cantidad de caracteres. M\xEDnimo: 1.",
-    selectionOverlayOff: "Desactivar superposici\xF3n",
+    selectionOverlayMinChars: "M\xEDnimo de caracteres para activar",
+    selectionOverlayMinCharsHelp: "Activa la superposici\xF3n de selecci\xF3n y el resaltado de texto coincidente solo despu\xE9s de seleccionar esta cantidad de caracteres. M\xEDnimo: 1.",
+    selectionMatchHighlight: "Resaltar texto coincidente",
+    selectionMatchHighlightHelp: "Tras seleccionar texto, resalta todo el contenido coincidente y muestra marcadores de posici\xF3n seleccionables junto a la barra de desplazamiento.",
+    selectionMatchHighlightOff: "Desactivado",
+    selectionMatchHighlightIgnoreCase: "Ignorar may\xFAsculas",
+    selectionMatchHighlightCaseSensitive: "Distinguir may\xFAsculas",
+    linkTextSelection: "Permitir seleccionar texto de enlaces en la p\xE1gina",
+    linkTextSelectionHelp: "Al arrastrar horizontalmente, selecciona el texto del enlace como texto normal. El arrastre vertical conserva el comportamiento original del enlace y un clic normal sigue abri\xE9ndolo.",
+    linkSelection: "Selecci\xF3n de enlaces",
+    selectionOverlayOff: "Desactivado",
     selectionOverlayOffHelp: "No mostrar acciones r\xE1pidas tras seleccionar texto.",
-    selectionOverlayAlways: "Mostrar barra de herramientas directamente",
+    selectionOverlayAlways: "Mostrar directamente",
     selectionOverlayAlwaysHelp: "Mostrar las herramientas disponibles inmediatamente despu\xE9s de seleccionar texto.",
     selectionOverlayHover: "Mostrar punto primero",
     selectionOverlayHoverHelp: "Mostrar un peque\xF1o punto tras seleccionar texto y expandir la barra de herramientas al pasar el cursor por encima.",
     urlBlacklist: "URL Lista negra",
     selectionOverlayBlacklistHelp: "Una regla por l\xEDnea; admite dominios, comodines y fragmentos URL.",
     edgeQuickTools: "Herramientas r\xE1pidas",
-    edgeQuickToolsHelp: "Controla conjuntamente el men\xFA lateral, la extracci\xF3n de texto de im\xE1genes y la respuesta autom\xE1tica.",
+    edgeQuickToolsHelp: "Controla conjuntamente la selecci\xF3n de enlaces, el men\xFA lateral, la extracci\xF3n de texto de im\xE1genes y la respuesta autom\xE1tica.",
     edgeDockMenu: "Men\xFA lateral",
     edgeQuickToolsEnable: "Activar men\xFA lateral",
     edgeQuickToolsEnableHelp: "Desactiva esta opci\xF3n para ocultar el men\xFA del borde derecho en las p\xE1ginas web.",
     edgeQuickToolsBlacklistHelp: "Si se cumple la regla, no aparecer\xE1n las herramientas r\xE1pidas del borde derecho.",
-    quickToolsBlacklistHelp: "Si se cumple la regla, el men\xFA lateral, la extracci\xF3n de texto de im\xE1genes y la respuesta autom\xE1tica se desactivar\xE1n en la p\xE1gina.",
+    quickToolsBlacklistHelp: "Si se cumple la regla, la selecci\xF3n de enlaces, el men\xFA lateral, la extracci\xF3n de texto de im\xE1genes y la respuesta autom\xE1tica se desactivar\xE1n en la p\xE1gina.",
     immersiveTranslation: "Traducci\xF3n inmersiva",
     immersiveTranslationHelp: "Controla c\xF3mo se escribe el texto traducido en la p\xE1gina.",
     immersiveTranslationAutoWhitelist: "Lista blanca de traducci\xF3n autom\xE1tica",
@@ -14420,6 +14458,7 @@
     mcpPermissionDenied: "L'autorisation r\xE9seau du serveur MCP n'a pas \xE9t\xE9 accord\xE9e",
     mcpHttpOnly: "Le serveur MCP n\xE9cessite une URL HTTP ou HTTPS",
     enableMcp: "S\xE9lectionner les outils MCP",
+    mcpSelectionSummary: "{tools} outils de {servers} serveurs MCP",
     approveMcpTool: "Autoriser l'ex\xE9cution de l'outil MCP ?",
     mcpDestructiveWarning: "Cet outil peut modifier ou supprimer des donn\xE9es externes.",
     deny: "Refuser",
@@ -14431,6 +14470,9 @@
     mcpToolApprovalDeny: "Toujours refuser",
     mcpToolApprovalAsk: "Toujours demander",
     mcpToolApprovalAllow: "Toujours autoriser",
+    cookieViewer: "Afficher les cookies",
+    cookieFormat: "Format",
+    cookiePreview: "Aper\xE7u ({count} cookies)",
     mcpToolUsed: "Outil MCP utilis\xE9",
     mcpToolNotCalled: "Outil MCP non appel\xE9",
     mcpToolFailed: "\xC9chec de l'appel de l'outil MCP",
@@ -14464,6 +14506,13 @@
     logNewChat: "Nouvelle discussion d\xE9marr\xE9e",
     logAttachmentAdded: "Pi\xE8ce jointe ajout\xE9e",
     logConversationLoaded: "Discussion enregistr\xE9e charg\xE9e",
+    logMcpApproval: "Autorisation de l'outil MCP : {decision} - {server} / {tool}",
+    logMcpToolCalled: "Appel d'outil MCP r\xE9ussi : {server} / {tool}",
+    logMcpToolFailed: "\xC9chec de l'appel d'outil MCP : {server} / {tool}",
+    logMcpToolBlocked: "L'outil MCP n'a pas \xE9t\xE9 ex\xE9cut\xE9 : {server} / {tool}",
+    logMcpServerSaved: "Serveur MCP enregistr\xE9 : {server} ({count} outils)",
+    logMcpToolsRefreshed: "Outils MCP actualis\xE9s : {server} ({count} outils)",
+    logMcpServerDeleted: "Serveur MCP supprim\xE9 : {server}",
     logEnabled: "Activ\xE9",
     logDisabled: "D\xE9sactiv\xE9",
     logRuntimeRequest: "Requ\xEAte d'ex\xE9cution",
@@ -14592,26 +14641,34 @@
     pageFeaturesHelp: "Chaque module conserve ses propres param\xE8tres afin que vous puissiez voir ce qu'il affecte.",
     selectionOverlay: "Superposition de s\xE9lection",
     selectionOverlayHelp: "Contr\xF4le la barre d'outils flottante apr\xE8s la s\xE9lection de texte.",
-    selectionOverlayMode: "Mode de d\xE9clenchement",
+    selectionOverlayMode: "Superposition de s\xE9lection",
     selectionOverlayShortcut: "Raccourci pour la superposition de s\xE9lection",
     selectionOverlayShortcutHelp: "Si cette option est activ\xE9e, la superposition de s\xE9lection n'appara\xEEt que lorsque vous maintenez le raccourci choisi tout en s\xE9lectionnant du texte ou en examinant une s\xE9lection existante.",
-    selectionOverlayMinChars: "Nombre minimal de caract\xE8res s\xE9lectionn\xE9s",
-    selectionOverlayMinCharsHelp: "Afficher la superposition de s\xE9lection uniquement apr\xE8s avoir s\xE9lectionn\xE9 ce nombre de caract\xE8res. Minimum : 1.",
-    selectionOverlayOff: "D\xE9sactiver la superposition",
+    selectionOverlayMinChars: "Nombre minimal de caract\xE8res d\xE9clencheurs",
+    selectionOverlayMinCharsHelp: "D\xE9clenche la superposition de s\xE9lection et le surlignage de texte identique seulement apr\xE8s avoir s\xE9lectionn\xE9 ce nombre de caract\xE8res. Minimum : 1.",
+    selectionMatchHighlight: "Surligner le texte identique",
+    selectionMatchHighlightHelp: "Apr\xE8s une s\xE9lection, surligne tous les contenus identiques et affiche des marqueurs de position cliquables \xE0 c\xF4t\xE9 de la barre de d\xE9filement.",
+    selectionMatchHighlightOff: "D\xE9sactiv\xE9",
+    selectionMatchHighlightIgnoreCase: "Ignorer la casse",
+    selectionMatchHighlightCaseSensitive: "Respecter la casse",
+    linkTextSelection: "Autoriser la s\xE9lection du texte des liens dans la page",
+    linkTextSelectionHelp: "Un glissement horizontal s\xE9lectionne le texte du lien comme du texte ordinaire. Un glissement vertical conserve le comportement initial du lien et un clic normal l'ouvre toujours.",
+    linkSelection: "S\xE9lection des liens",
+    selectionOverlayOff: "D\xE9sactiv\xE9e",
     selectionOverlayOffHelp: "Ne pas afficher les actions rapides apr\xE8s la s\xE9lection de texte.",
-    selectionOverlayAlways: "Afficher directement la barre d'outils",
+    selectionOverlayAlways: "Afficher directement",
     selectionOverlayAlwaysHelp: "Afficher les outils disponibles imm\xE9diatement apr\xE8s la s\xE9lection de texte.",
     selectionOverlayHover: "Afficher d'abord un point",
     selectionOverlayHoverHelp: "Afficher un petit point apr\xE8s la s\xE9lection de texte, puis d\xE9velopper la barre d'outils au survol.",
     urlBlacklist: "URL Liste noire",
     selectionOverlayBlacklistHelp: "Une r\xE8gle par ligne ; prend en charge les domaines, les caract\xE8res g\xE9n\xE9riques et les fragments URL.",
     edgeQuickTools: "Outils rapides",
-    edgeQuickToolsHelp: "Contr\xF4le simultan\xE9ment le menu lat\xE9ral, l'extraction de texte des images et la r\xE9ponse automatique.",
+    edgeQuickToolsHelp: "Contr\xF4le simultan\xE9ment la s\xE9lection des liens, le menu lat\xE9ral, l'extraction de texte des images et la r\xE9ponse automatique.",
     edgeDockMenu: "Menu lat\xE9ral",
     edgeQuickToolsEnable: "Activer le menu lat\xE9ral",
     edgeQuickToolsEnableHelp: "D\xE9sactivez cette option pour masquer le menu du bord droit sur les pages web.",
     edgeQuickToolsBlacklistHelp: "En cas de correspondance, les outils rapides du bord droit ne s'afficheront pas.",
-    quickToolsBlacklistHelp: "En cas de correspondance, le menu lat\xE9ral, l'extraction de texte des images et la r\xE9ponse automatique seront tous d\xE9sactiv\xE9s sur la page.",
+    quickToolsBlacklistHelp: "En cas de correspondance, la s\xE9lection des liens, le menu lat\xE9ral, l'extraction de texte des images et la r\xE9ponse automatique seront tous d\xE9sactiv\xE9s sur la page.",
     immersiveTranslation: "Traduction immersive",
     immersiveTranslationHelp: "Contr\xF4le la mani\xE8re dont le texte traduit est r\xE9ins\xE9r\xE9 dans la page.",
     immersiveTranslationAutoWhitelist: "Liste blanche de traduction automatique",
@@ -15002,6 +15059,7 @@
     mcpPermissionDenied: "Permesso di rete non concesso",
     mcpHttpOnly: "Il server MCP richiede un URL HTTP o HTTPS",
     enableMcp: "Seleziona strumenti MCP",
+    mcpSelectionSummary: "{tools} strumenti da {servers} server MCP",
     approveMcpTool: "Consentire l'esecuzione dello strumento MCP?",
     mcpDestructiveWarning: "Questo strumento pu\xF2 modificare o eliminare dati esterni.",
     deny: "Nega",
@@ -15013,6 +15071,9 @@
     mcpToolApprovalDeny: "Rifiuta sempre",
     mcpToolApprovalAsk: "Chiedi sempre",
     mcpToolApprovalAllow: "Consenti sempre",
+    cookieViewer: "Visualizza cookie",
+    cookieFormat: "Formato",
+    cookiePreview: "Anteprima ({count} cookie)",
     mcpToolUsed: "Strumento MCP utilizzato",
     mcpToolNotCalled: "Strumento MCP non chiamato",
     mcpToolFailed: "Chiamata allo strumento MCP non riuscita",
@@ -15046,6 +15107,13 @@
     logNewChat: "Nuova chat avviata",
     logAttachmentAdded: "Allegato aggiunto",
     logConversationLoaded: "Chat salvata caricata",
+    logMcpApproval: "Autorizzazione strumento MCP: {decision} - {server} / {tool}",
+    logMcpToolCalled: "Chiamata strumento MCP riuscita: {server} / {tool}",
+    logMcpToolFailed: "Chiamata strumento MCP non riuscita: {server} / {tool}",
+    logMcpToolBlocked: "Lo strumento MCP non \xE8 stato eseguito: {server} / {tool}",
+    logMcpServerSaved: "Server MCP salvato: {server} ({count} strumenti)",
+    logMcpToolsRefreshed: "Strumenti MCP aggiornati: {server} ({count} strumenti)",
+    logMcpServerDeleted: "Server MCP eliminato: {server}",
     logEnabled: "Abilitato",
     logDisabled: "Disabilitato",
     logRuntimeRequest: "Richiesta in fase di esecuzione",
@@ -15174,26 +15242,34 @@
     pageFeaturesHelp: "Ogni modulo mantiene separate le proprie impostazioni, cos\xEC puoi vedere su cosa agisce.",
     selectionOverlay: "Sovrapposizione selezione",
     selectionOverlayHelp: "Controlla la barra degli strumenti mobile che appare dopo aver selezionato del testo.",
-    selectionOverlayMode: "Modalit\xE0 di attivazione",
+    selectionOverlayMode: "Overlay di selezione",
     selectionOverlayShortcut: "Scorciatoia per l'overlay di selezione",
     selectionOverlayShortcutHelp: "Se abilitato, l'overlay di selezione appare solo tenendo premuta la scorciatoia scelta mentre si seleziona del testo o si esamina una selezione esistente.",
-    selectionOverlayMinChars: "Numero minimo di caratteri selezionati",
-    selectionOverlayMinCharsHelp: "Mostra l'overlay di selezione solo dopo aver selezionato questo numero di caratteri. Minimo: 1.",
-    selectionOverlayOff: "Disabilita overlay",
+    selectionOverlayMinChars: "Numero minimo di caratteri di attivazione",
+    selectionOverlayMinCharsHelp: "Attiva l'overlay di selezione e l'evidenziazione del testo corrispondente solo dopo aver selezionato questo numero di caratteri. Minimo: 1.",
+    selectionMatchHighlight: "Evidenzia testo corrispondente",
+    selectionMatchHighlightHelp: "Dopo la selezione, evidenzia tutti i contenuti uguali e mostra indicatori di posizione selezionabili accanto alla barra di scorrimento.",
+    selectionMatchHighlightOff: "Disabilitato",
+    selectionMatchHighlightIgnoreCase: "Ignora maiuscole/minuscole",
+    selectionMatchHighlightCaseSensitive: "Distingui maiuscole/minuscole",
+    linkTextSelection: "Consenti la selezione del testo dei link nella pagina",
+    linkTextSelectionHelp: "Trascinando orizzontalmente seleziona il testo del link come testo normale. Il trascinamento verticale conserva il comportamento originale del link e un clic normale lo apre ancora.",
+    linkSelection: "Selezione dei link",
+    selectionOverlayOff: "Disabilitato",
     selectionOverlayOffHelp: "Non mostrare le azioni rapide dopo aver selezionato del testo.",
-    selectionOverlayAlways: "Mostra subito la barra degli strumenti",
+    selectionOverlayAlways: "Mostra direttamente",
     selectionOverlayAlwaysHelp: "Mostra gli strumenti disponibili immediatamente dopo aver selezionato del testo.",
     selectionOverlayHover: "Mostra prima un punto",
     selectionOverlayHoverHelp: "Mostra un piccolo punto dopo aver selezionato del testo, quindi espandi la barra degli strumenti al passaggio del mouse.",
     urlBlacklist: "URL Lista nera",
     selectionOverlayBlacklistHelp: "Una regola per riga; supporta domini, caratteri jolly e frammenti URL.",
     edgeQuickTools: "Strumenti rapidi",
-    edgeQuickToolsHelp: "Controlla congiuntamente il menu laterale, l'estrazione di testo dalle immagini e la risposta automatica.",
+    edgeQuickToolsHelp: "Controlla congiuntamente la selezione dei link, il menu laterale, l'estrazione di testo dalle immagini e la risposta automatica.",
     edgeDockMenu: "Menu laterale",
     edgeQuickToolsEnable: "Abilita menu laterale",
     edgeQuickToolsEnableHelp: "Disattiva questa opzione per nascondere il menu sul bordo destro delle pagine web.",
     edgeQuickToolsBlacklistHelp: "In caso di corrispondenza, gli strumenti rapidi sul bordo destro non verranno visualizzati.",
-    quickToolsBlacklistHelp: "In caso di corrispondenza, il menu laterale, l'estrazione di testo dalle immagini e la risposta automatica verranno disabilitati nella pagina.",
+    quickToolsBlacklistHelp: "In caso di corrispondenza, la selezione dei link, il menu laterale, l'estrazione di testo dalle immagini e la risposta automatica verranno disabilitati nella pagina.",
     immersiveTranslation: "Traduzione immersiva",
     immersiveTranslationHelp: "Controlla la modalit\xE0 di inserimento del testo tradotto nella pagina.",
     immersiveTranslationAutoWhitelist: "Lista consentiti per la traduzione automatica",
@@ -15615,6 +15691,7 @@
       mcpPermissionDenied: "\u672A\u6388\u4E88 MCP Server \u7F51\u7EDC\u6743\u9650",
       mcpHttpOnly: "MCP Server \u53EA\u652F\u6301 HTTP \u6216 HTTPS \u5730\u5740",
       enableMcp: "\u9009\u62E9 MCP \u5DE5\u5177",
+      mcpSelectionSummary: "{servers} \u4E2A MCP \u7684 {tools} \u4E2A\u5DE5\u5177",
       approveMcpTool: "\u5141\u8BB8\u6267\u884C MCP \u5DE5\u5177\uFF1F",
       mcpDestructiveWarning: "\u6B64\u5DE5\u5177\u58F0\u660E\u53EF\u80FD\u4FEE\u6539\u6216\u5220\u9664\u5916\u90E8\u6570\u636E\u3002",
       deny: "\u62D2\u7EDD",
@@ -15626,6 +15703,9 @@
       mcpToolApprovalDeny: "\u59CB\u7EC8\u62D2\u7EDD",
       mcpToolApprovalAsk: "\u59CB\u7EC8\u8BE2\u95EE",
       mcpToolApprovalAllow: "\u59CB\u7EC8\u5141\u8BB8",
+      cookieViewer: "\u67E5\u770B Cookie",
+      cookieFormat: "\u67E5\u770B\u683C\u5F0F",
+      cookiePreview: "\u9884\u89C8\uFF08{count} \u4E2A Cookie\uFF09",
       mcpToolUsed: "\u5DF2\u4F7F\u7528 MCP \u5DE5\u5177",
       mcpToolNotCalled: "\u672A\u8C03\u7528 MCP \u5DE5\u5177",
       mcpToolFailed: "MCP \u5DE5\u5177\u8C03\u7528\u5931\u8D25",
@@ -15659,6 +15739,13 @@
       logNewChat: "\u65B0\u5EFA\u5BF9\u8BDD",
       logAttachmentAdded: "\u6DFB\u52A0\u9644\u4EF6",
       logConversationLoaded: "\u8F7D\u5165\u5386\u53F2\u5BF9\u8BDD",
+      logMcpApproval: "MCP \u5DE5\u5177\u6388\u6743\uFF1A{decision} - {server} / {tool}",
+      logMcpToolCalled: "MCP \u5DE5\u5177\u8C03\u7528\u6210\u529F\uFF1A{server} / {tool}",
+      logMcpToolFailed: "MCP \u5DE5\u5177\u8C03\u7528\u5931\u8D25\uFF1A{server} / {tool}",
+      logMcpToolBlocked: "MCP \u5DE5\u5177\u672A\u6267\u884C\uFF1A{server} / {tool}",
+      logMcpServerSaved: "MCP Server \u5DF2\u4FDD\u5B58\uFF1A{server}\uFF08{count} \u4E2A\u5DE5\u5177\uFF09",
+      logMcpToolsRefreshed: "MCP \u5DE5\u5177\u5DF2\u5237\u65B0\uFF1A{server}\uFF08{count} \u4E2A\u5DE5\u5177\uFF09",
+      logMcpServerDeleted: "MCP Server \u5DF2\u5220\u9664\uFF1A{server}",
       logEnabled: "\u5DF2\u542F\u7528",
       logDisabled: "\u5DF2\u5173\u95ED",
       logRuntimeRequest: "\u8FD0\u884C\u8BF7\u6C42",
@@ -15787,26 +15874,34 @@
       pageFeaturesHelp: "\u6BCF\u4E2A\u6A21\u5757\u7684\u8BBE\u7F6E\u72EC\u7ACB\u6536\u7EB3\uFF0C\u4FBF\u4E8E\u786E\u8BA4\u5F71\u54CD\u8303\u56F4\u3002",
       selectionOverlay: "\u5212\u8BCD\u6D6E\u5C42",
       selectionOverlayHelp: "\u63A7\u5236\u9009\u62E9\u6587\u5B57\u540E\u7684\u60AC\u6D6E\u5DE5\u5177\u680F\u3002",
-      selectionOverlayMode: "\u89E6\u53D1\u65B9\u5F0F",
+      selectionOverlayMode: "\u5212\u8BCD\u6D6E\u5C42",
       selectionOverlayShortcut: "\u5212\u8BCD\u6D6E\u5C42\u5FEB\u6377\u952E",
       selectionOverlayShortcutHelp: "\u542F\u7528\u540E\uFF0C\u53EA\u6709\u6309\u4F4F\u6240\u9009\u5FEB\u6377\u952E\u9009\u62E9\u6587\u5B57\u6216\u67E5\u770B\u5DF2\u6709\u9009\u533A\u65F6\u624D\u663E\u793A\u5212\u8BCD\u6D6E\u5C42\u3002",
-      selectionOverlayMinChars: "\u6700\u5C11\u9009\u4E2D\u5B57\u7B26\u6570",
-      selectionOverlayMinCharsHelp: "\u9009\u4E2D\u6587\u5B57\u8FBE\u5230\u8BE5\u5B57\u7B26\u6570\u65F6\u624D\u89E6\u53D1\u5212\u8BCD\u6D6E\u5C42\uFF0C\u6700\u4F4E\u4E3A 1\u3002",
-      selectionOverlayOff: "\u5173\u95ED\u5212\u8BCD\u6D6E\u5C42",
+      selectionOverlayMinChars: "\u6700\u5C11\u89E6\u53D1\u5B57\u7B26\u6570",
+      selectionOverlayMinCharsHelp: "\u9009\u4E2D\u6587\u5B57\u8FBE\u5230\u8BE5\u5B57\u7B26\u6570\u65F6\u624D\u89E6\u53D1\u5212\u8BCD\u6D6E\u5C42\u548C\u540C\u6587\u9AD8\u4EAE\uFF0C\u6700\u4F4E\u4E3A 1\u3002",
+      selectionMatchHighlight: "\u540C\u6587\u9AD8\u4EAE",
+      selectionMatchHighlightHelp: "\u9009\u4E2D\u9875\u9762\u6587\u5B57\u540E\uFF0C\u9AD8\u4EAE\u6240\u6709\u76F8\u540C\u5185\u5BB9\uFF0C\u5E76\u5728\u53F3\u4FA7\u6EDA\u52A8\u4F4D\u7F6E\u663E\u793A\u53EF\u70B9\u51FB\u7684\u5B9A\u4F4D\u6807\u8BB0\u3002",
+      selectionMatchHighlightOff: "\u4E0D\u542F\u7528",
+      selectionMatchHighlightIgnoreCase: "\u5FFD\u7565\u5927\u5C0F\u5199",
+      selectionMatchHighlightCaseSensitive: "\u5927\u5C0F\u5199\u654F\u611F",
+      linkTextSelection: "\u5141\u8BB8\u9009\u62E9\u9875\u9762\u5185\u94FE\u63A5\u6587\u5B57",
+      linkTextSelectionHelp: "\u6A2A\u5411\u62D6\u62FD\u94FE\u63A5\u6587\u5B57\u65F6\u6309\u666E\u901A\u6587\u672C\u9009\u62E9\uFF1B\u7EB5\u5411\u62D6\u62FD\u4FDD\u6301\u94FE\u63A5\u539F\u6709\u884C\u4E3A\u3002\u666E\u901A\u5355\u51FB\u4ECD\u4F1A\u6253\u5F00\u94FE\u63A5\u3002",
+      linkSelection: "\u94FE\u63A5\u9009\u62E9",
+      selectionOverlayOff: "\u4E0D\u542F\u7528",
       selectionOverlayOffHelp: "\u9009\u62E9\u6587\u5B57\u540E\u4E0D\u663E\u793A\u4EFB\u4F55\u5FEB\u6377\u5165\u53E3\u3002",
-      selectionOverlayAlways: "\u76F4\u63A5\u663E\u793A\u5DE5\u5177\u680F",
+      selectionOverlayAlways: "\u76F4\u63A5\u663E\u793A",
       selectionOverlayAlwaysHelp: "\u9009\u62E9\u6587\u5B57\u540E\u7ACB\u5373\u663E\u793A\u53EF\u7528\u5DE5\u5177\u3002",
       selectionOverlayHover: "\u5148\u663E\u793A\u6D6E\u70B9",
       selectionOverlayHoverHelp: "\u9009\u62E9\u6587\u5B57\u540E\u663E\u793A\u5C0F\u5706\u70B9\uFF0C\u60AC\u505C\u540E\u5C55\u5F00\u5DE5\u5177\u680F\u3002",
       urlBlacklist: "\u7F51\u5740\u9ED1\u540D\u5355",
       selectionOverlayBlacklistHelp: "\u6BCF\u884C\u4E00\u6761\u89C4\u5219\uFF1B\u652F\u6301\u57DF\u540D\u3001\u901A\u914D\u7B26\u548C URL \u7247\u6BB5\u3002",
       edgeQuickTools: "\u5FEB\u6377\u5DE5\u5177",
-      edgeQuickToolsHelp: "\u7EDF\u4E00\u63A7\u5236\u8D34\u8FB9\u83DC\u5355\u3001\u56FE\u6587\u63D0\u53D6\u548C\u81EA\u52A8\u56DE\u590D\u3002",
+      edgeQuickToolsHelp: "\u7EDF\u4E00\u63A7\u5236\u94FE\u63A5\u9009\u62E9\u3001\u8D34\u8FB9\u83DC\u5355\u3001\u56FE\u6587\u63D0\u53D6\u548C\u81EA\u52A8\u56DE\u590D\u3002",
       edgeDockMenu: "\u8D34\u8FB9\u83DC\u5355",
       edgeQuickToolsEnable: "\u542F\u7528\u8D34\u8FB9\u83DC\u5355",
       edgeQuickToolsEnableHelp: "\u5173\u95ED\u540E\u7F51\u9875\u53F3\u4FA7\u4E0D\u4F1A\u663E\u793A\u8D34\u8FB9\u83DC\u5355\u3002",
       edgeQuickToolsBlacklistHelp: "\u547D\u4E2D\u540E\u9875\u9762\u53F3\u4FA7\u5FEB\u6377\u5DE5\u5177\u4E0D\u4F1A\u663E\u793A\u3002",
-      quickToolsBlacklistHelp: "\u547D\u4E2D\u540E\u8D34\u8FB9\u83DC\u5355\u3001\u56FE\u6587\u63D0\u53D6\u548C\u81EA\u52A8\u56DE\u590D\u90FD\u4E0D\u4F1A\u5728\u9875\u9762\u4E2D\u751F\u6548\u3002",
+      quickToolsBlacklistHelp: "\u547D\u4E2D\u540E\u94FE\u63A5\u9009\u62E9\u3001\u8D34\u8FB9\u83DC\u5355\u3001\u56FE\u6587\u63D0\u53D6\u548C\u81EA\u52A8\u56DE\u590D\u90FD\u4E0D\u4F1A\u5728\u9875\u9762\u4E2D\u751F\u6548\u3002",
       immersiveTranslation: "\u6C89\u6D78\u7FFB\u8BD1",
       immersiveTranslationHelp: "\u63A7\u5236\u8BD1\u6587\u5199\u56DE\u9875\u9762\u540E\u7684\u5448\u73B0\u65B9\u5F0F\u3002",
       immersiveTranslationAutoWhitelist: "\u81EA\u52A8\u6C89\u6D78\u7FFB\u8BD1\u767D\u540D\u5355",
@@ -16195,6 +16290,7 @@
       mcpPermissionDenied: "\u672A\u6388\u4E88 MCP Server \u7DB2\u8DEF\u6B0A\u9650",
       mcpHttpOnly: "MCP Server \u50C5\u652F\u63F4 HTTP \u6216 HTTPS \u4F4D\u5740",
       enableMcp: "\u9078\u64C7 MCP \u5DE5\u5177",
+      mcpSelectionSummary: "{servers} \u500B MCP \u7684 {tools} \u500B\u5DE5\u5177",
       approveMcpTool: "\u5141\u8A31\u57F7\u884C MCP \u5DE5\u5177\uFF1F",
       mcpDestructiveWarning: "\u6B64\u5DE5\u5177\u8072\u660E\u53EF\u80FD\u4FEE\u6539\u6216\u522A\u9664\u5916\u90E8\u8CC7\u6599\u3002",
       deny: "\u62D2\u7D55",
@@ -16206,6 +16302,9 @@
       mcpToolApprovalDeny: "\u59CB\u7D42\u62D2\u7D55",
       mcpToolApprovalAsk: "\u59CB\u7D42\u8A62\u554F",
       mcpToolApprovalAllow: "\u59CB\u7D42\u5141\u8A31",
+      cookieViewer: "\u67E5\u770B Cookie",
+      cookieFormat: "\u67E5\u770B\u683C\u5F0F",
+      cookiePreview: "\u9810\u89BD\uFF08{count} \u500B Cookie\uFF09",
       mcpToolUsed: "\u5DF2\u4F7F\u7528 MCP \u5DE5\u5177",
       mcpToolNotCalled: "\u672A\u547C\u53EB MCP \u5DE5\u5177",
       mcpToolFailed: "MCP \u5DE5\u5177\u547C\u53EB\u5931\u6557",
@@ -16239,6 +16338,13 @@
       logNewChat: "\u65B0\u589E\u5C0D\u8A71",
       logAttachmentAdded: "\u65B0\u589E\u9644\u4EF6",
       logConversationLoaded: "\u8F09\u5165\u6B77\u53F2\u5C0D\u8A71",
+      logMcpApproval: "MCP \u5DE5\u5177\u6388\u6B0A\uFF1A{decision} - {server} / {tool}",
+      logMcpToolCalled: "MCP \u5DE5\u5177\u547C\u53EB\u6210\u529F\uFF1A{server} / {tool}",
+      logMcpToolFailed: "MCP \u5DE5\u5177\u547C\u53EB\u5931\u6557\uFF1A{server} / {tool}",
+      logMcpToolBlocked: "MCP \u5DE5\u5177\u672A\u57F7\u884C\uFF1A{server} / {tool}",
+      logMcpServerSaved: "MCP Server \u5DF2\u5132\u5B58\uFF1A{server}\uFF08{count} \u500B\u5DE5\u5177\uFF09",
+      logMcpToolsRefreshed: "MCP \u5DE5\u5177\u5DF2\u91CD\u65B0\u6574\u7406\uFF1A{server}\uFF08{count} \u500B\u5DE5\u5177\uFF09",
+      logMcpServerDeleted: "MCP Server \u5DF2\u522A\u9664\uFF1A{server}",
       logEnabled: "\u5DF2\u555F\u7528",
       logDisabled: "\u5DF2\u95DC\u9589",
       logRuntimeRequest: "\u57F7\u884C\u8ACB\u6C42",
@@ -16367,26 +16473,34 @@
       pageFeaturesHelp: "\u6BCF\u500B\u6A21\u7D44\u7684\u8A2D\u5B9A\u7368\u7ACB\u6536\u7D0D\uFF0C\u65B9\u4FBF\u78BA\u8A8D\u5F71\u97FF\u7BC4\u570D\u3002",
       selectionOverlay: "\u5283\u8A5E\u6D6E\u5C64",
       selectionOverlayHelp: "\u63A7\u5236\u9078\u53D6\u6587\u5B57\u5F8C\u7684\u61F8\u6D6E\u5DE5\u5177\u5217\u3002",
-      selectionOverlayMode: "\u89F8\u767C\u65B9\u5F0F",
+      selectionOverlayMode: "\u5283\u8A5E\u6D6E\u5C64",
       selectionOverlayShortcut: "\u5283\u8A5E\u6D6E\u5C64\u5FEB\u6377\u9375",
       selectionOverlayShortcutHelp: "\u555F\u7528\u5F8C\uFF0C\u53EA\u6709\u6309\u4F4F\u6240\u9078\u5FEB\u6377\u9375\u9078\u53D6\u6587\u5B57\u6216\u67E5\u770B\u65E2\u6709\u9078\u5340\u6642\u624D\u986F\u793A\u5283\u8A5E\u6D6E\u5C64\u3002",
-      selectionOverlayMinChars: "\u6700\u5C11\u9078\u53D6\u5B57\u5143\u6578",
-      selectionOverlayMinCharsHelp: "\u9078\u53D6\u6587\u5B57\u9054\u5230\u6B64\u5B57\u5143\u6578\u6642\u624D\u89F8\u767C\u5283\u8A5E\u6D6E\u5C64\uFF0C\u6700\u4F4E\u70BA 1\u3002",
-      selectionOverlayOff: "\u95DC\u9589\u5283\u8A5E\u6D6E\u5C64",
+      selectionOverlayMinChars: "\u6700\u5C11\u89F8\u767C\u5B57\u5143\u6578",
+      selectionOverlayMinCharsHelp: "\u9078\u53D6\u6587\u5B57\u9054\u5230\u6B64\u5B57\u5143\u6578\u6642\u624D\u89F8\u767C\u5283\u8A5E\u6D6E\u5C64\u548C\u540C\u6587\u9AD8\u4EAE\uFF0C\u6700\u4F4E\u70BA 1\u3002",
+      selectionMatchHighlight: "\u540C\u6587\u9AD8\u4EAE",
+      selectionMatchHighlightHelp: "\u9078\u53D6\u9801\u9762\u6587\u5B57\u5F8C\uFF0C\u6703\u9AD8\u4EAE\u6240\u6709\u76F8\u540C\u5167\u5BB9\uFF0C\u4E26\u5728\u53F3\u5074\u6372\u52D5\u4F4D\u7F6E\u986F\u793A\u53EF\u9EDE\u64CA\u7684\u5B9A\u4F4D\u6A19\u8A18\u3002",
+      selectionMatchHighlightOff: "\u4E0D\u555F\u7528",
+      selectionMatchHighlightIgnoreCase: "\u5FFD\u7565\u5927\u5C0F\u5BEB",
+      selectionMatchHighlightCaseSensitive: "\u5340\u5206\u5927\u5C0F\u5BEB",
+      linkTextSelection: "\u5141\u8A31\u9078\u53D6\u9801\u9762\u5167\u9023\u7D50\u6587\u5B57",
+      linkTextSelectionHelp: "\u6A6B\u5411\u62D6\u66F3\u9023\u7D50\u6587\u5B57\u6642\u6703\u6309\u4E00\u822C\u6587\u5B57\u9078\u53D6\uFF1B\u7E31\u5411\u62D6\u66F3\u4FDD\u6301\u9023\u7D50\u539F\u6709\u884C\u70BA\u3002\u4E00\u822C\u9EDE\u64CA\u4ECD\u6703\u958B\u555F\u9023\u7D50\u3002",
+      linkSelection: "\u9023\u7D50\u9078\u53D6",
+      selectionOverlayOff: "\u4E0D\u555F\u7528",
       selectionOverlayOffHelp: "\u9078\u53D6\u6587\u5B57\u5F8C\u4E0D\u986F\u793A\u4EFB\u4F55\u5FEB\u6377\u5165\u53E3\u3002",
-      selectionOverlayAlways: "\u76F4\u63A5\u986F\u793A\u5DE5\u5177\u5217",
+      selectionOverlayAlways: "\u76F4\u63A5\u986F\u793A",
       selectionOverlayAlwaysHelp: "\u9078\u53D6\u6587\u5B57\u5F8C\u7ACB\u5373\u986F\u793A\u53EF\u7528\u5DE5\u5177\u3002",
       selectionOverlayHover: "\u5148\u986F\u793A\u6D6E\u9EDE",
       selectionOverlayHoverHelp: "\u9078\u53D6\u6587\u5B57\u5F8C\u986F\u793A\u5C0F\u5713\u9EDE\uFF0C\u6ED1\u9F20\u61F8\u505C\u5F8C\u5C55\u958B\u5DE5\u5177\u5217\u3002",
       urlBlacklist: "\u7DB2\u5740\u9ED1\u540D\u55AE",
       selectionOverlayBlacklistHelp: "\u6BCF\u884C\u4E00\u689D\u898F\u5247\uFF1B\u652F\u63F4\u7DB2\u57DF\u3001\u842C\u7528\u5B57\u5143\u548C URL \u7247\u6BB5\u3002",
       edgeQuickTools: "\u5FEB\u6377\u5DE5\u5177",
-      edgeQuickToolsHelp: "\u7D71\u4E00\u63A7\u5236\u8CBC\u908A\u9078\u55AE\u3001\u5716\u6587\u63D0\u53D6\u548C\u81EA\u52D5\u56DE\u8986\u3002",
+      edgeQuickToolsHelp: "\u7D71\u4E00\u63A7\u5236\u9023\u7D50\u9078\u53D6\u3001\u8CBC\u908A\u9078\u55AE\u3001\u5716\u6587\u63D0\u53D6\u548C\u81EA\u52D5\u56DE\u8986\u3002",
       edgeDockMenu: "\u8CBC\u908A\u9078\u55AE",
       edgeQuickToolsEnable: "\u555F\u7528\u8CBC\u908A\u9078\u55AE",
       edgeQuickToolsEnableHelp: "\u95DC\u9589\u5F8C\u7DB2\u9801\u53F3\u5074\u4E0D\u6703\u986F\u793A\u8CBC\u908A\u9078\u55AE\u3002",
       edgeQuickToolsBlacklistHelp: "\u547D\u4E2D\u5F8C\u9801\u9762\u53F3\u5074\u5FEB\u6377\u5DE5\u5177\u4E0D\u6703\u986F\u793A\u3002",
-      quickToolsBlacklistHelp: "\u547D\u4E2D\u5F8C\u8CBC\u908A\u9078\u55AE\u3001\u5716\u6587\u63D0\u53D6\u548C\u81EA\u52D5\u56DE\u8986\u90FD\u4E0D\u6703\u5728\u9801\u9762\u4E2D\u751F\u6548\u3002",
+      quickToolsBlacklistHelp: "\u547D\u4E2D\u5F8C\u9023\u7D50\u9078\u53D6\u3001\u8CBC\u908A\u9078\u55AE\u3001\u5716\u6587\u63D0\u53D6\u548C\u81EA\u52D5\u56DE\u8986\u90FD\u4E0D\u6703\u5728\u9801\u9762\u4E2D\u751F\u6548\u3002",
       immersiveTranslation: "\u6C89\u6D78\u7FFB\u8B6F",
       immersiveTranslationHelp: "\u63A7\u5236\u8B6F\u6587\u5BEB\u56DE\u9801\u9762\u5F8C\u7684\u5448\u73FE\u65B9\u5F0F\u3002",
       immersiveTranslationAutoWhitelist: "\u81EA\u52D5\u6C89\u6D78\u7FFB\u8B6F\u767D\u540D\u55AE",
@@ -16775,6 +16889,7 @@
       mcpPermissionDenied: "MCP server network permission was not granted",
       mcpHttpOnly: "MCP servers require an HTTP or HTTPS URL",
       enableMcp: "Select MCP tools",
+      mcpSelectionSummary: "{tools} tools from {servers} MCP servers",
       approveMcpTool: "Allow MCP tool execution?",
       mcpDestructiveWarning: "This tool declares that it may modify or delete external data.",
       deny: "Deny",
@@ -16786,6 +16901,9 @@
       mcpToolApprovalDeny: "Always Deny",
       mcpToolApprovalAsk: "Always Ask",
       mcpToolApprovalAllow: "Always Allow",
+      cookieViewer: "View Cookies",
+      cookieFormat: "Format",
+      cookiePreview: "Preview ({count} cookies)",
       mcpToolUsed: "MCP tool used",
       mcpToolNotCalled: "MCP tool not called",
       mcpToolFailed: "MCP tool call failed",
@@ -16819,6 +16937,13 @@
       logNewChat: "Started new chat",
       logAttachmentAdded: "Added attachment",
       logConversationLoaded: "Loaded saved chat",
+      logMcpApproval: "MCP tool authorization: {decision} - {server} / {tool}",
+      logMcpToolCalled: "MCP tool call succeeded: {server} / {tool}",
+      logMcpToolFailed: "MCP tool call failed: {server} / {tool}",
+      logMcpToolBlocked: "MCP tool was not executed: {server} / {tool}",
+      logMcpServerSaved: "MCP server saved: {server} ({count} tools)",
+      logMcpToolsRefreshed: "MCP tools refreshed: {server} ({count} tools)",
+      logMcpServerDeleted: "MCP server deleted: {server}",
       logEnabled: "Enabled",
       logDisabled: "Disabled",
       logRuntimeRequest: "Runtime request",
@@ -16947,26 +17072,34 @@
       pageFeaturesHelp: "Each module keeps its settings separate so you can see what it affects.",
       selectionOverlay: "Selection Overlay",
       selectionOverlayHelp: "Controls the floating toolbar after selecting text.",
-      selectionOverlayMode: "Trigger Mode",
+      selectionOverlayMode: "Selection Overlay",
       selectionOverlayShortcut: "Selection Overlay Shortcut",
       selectionOverlayShortcutHelp: "When enabled, the selection overlay appears only while holding the chosen shortcut as you select text or inspect an existing selection.",
-      selectionOverlayMinChars: "Minimum Selected Characters",
-      selectionOverlayMinCharsHelp: "Show the selection overlay only after this many characters are selected. Minimum: 1.",
-      selectionOverlayOff: "Disable Overlay",
+      selectionOverlayMinChars: "Minimum Trigger Characters",
+      selectionOverlayMinCharsHelp: "Trigger the selection overlay and matching-text highlights only after this many characters are selected. Minimum: 1.",
+      selectionMatchHighlight: "Highlight Matching Text",
+      selectionMatchHighlightHelp: "Highlight every matching page phrase after selection and show clickable location markers beside the scrollbar.",
+      selectionMatchHighlightOff: "Disabled",
+      selectionMatchHighlightIgnoreCase: "Ignore Case",
+      selectionMatchHighlightCaseSensitive: "Case Sensitive",
+      linkTextSelection: "Allow In-page Link Text Selection",
+      linkTextSelectionHelp: "Drag link text horizontally to select it. Vertical dragging keeps the link's original behavior, and a normal click still opens the link.",
+      linkSelection: "Link Selection",
+      selectionOverlayOff: "Disabled",
       selectionOverlayOffHelp: "Do not show quick actions after selecting text.",
-      selectionOverlayAlways: "Show Toolbar Directly",
+      selectionOverlayAlways: "Show Directly",
       selectionOverlayAlwaysHelp: "Show available tools immediately after selecting text.",
       selectionOverlayHover: "Show Dot First",
       selectionOverlayHoverHelp: "Show a small dot after selecting text, then expand the toolbar on hover.",
       urlBlacklist: "URL Blacklist",
       selectionOverlayBlacklistHelp: "One rule per line; supports domains, wildcards, and URL fragments.",
       edgeQuickTools: "Quick Tools",
-      edgeQuickToolsHelp: "Controls the edge menu, image text extraction, and auto reply together.",
+      edgeQuickToolsHelp: "Controls link selection, the edge menu, image text extraction, and auto reply together.",
       edgeDockMenu: "Edge Menu",
       edgeQuickToolsEnable: "Enable Edge Menu",
       edgeQuickToolsEnableHelp: "Turn this off to hide the right-edge menu on webpages.",
       edgeQuickToolsBlacklistHelp: "When matched, the right-edge quick tools will not appear.",
-      quickToolsBlacklistHelp: "When matched, the edge menu, image text extraction, and auto reply will all be disabled on the page.",
+      quickToolsBlacklistHelp: "When matched, link selection, the edge menu, image text extraction, and auto reply will all be disabled on the page.",
       immersiveTranslation: "Immersive Translation",
       immersiveTranslationHelp: "Controls how translated text is written back into the page.",
       immersiveTranslationAutoWhitelist: "Auto-translate Whitelist",
@@ -17355,6 +17488,7 @@
       mcpPermissionDenied: "\u30CD\u30C3\u30C8\u30EF\u30FC\u30AF\u6A29\u9650\u304C\u8A31\u53EF\u3055\u308C\u3066\u3044\u307E\u305B\u3093",
       mcpHttpOnly: "MCP \u30B5\u30FC\u30D0\u30FC\u306B\u306F HTTP \u307E\u305F\u306F HTTPS URL \u304C\u5FC5\u8981\u3067\u3059",
       enableMcp: "MCP \u30C4\u30FC\u30EB\u3092\u9078\u629E",
+      mcpSelectionSummary: "{servers} \u500B\u306E MCP \u306E {tools} \u500B\u306E\u30C4\u30FC\u30EB",
       approveMcpTool: "MCP \u30C4\u30FC\u30EB\u306E\u5B9F\u884C\u3092\u8A31\u53EF\u3057\u307E\u3059\u304B\uFF1F",
       mcpDestructiveWarning: "\u3053\u306E\u30C4\u30FC\u30EB\u306F\u5916\u90E8\u30C7\u30FC\u30BF\u3092\u5909\u66F4\u307E\u305F\u306F\u524A\u9664\u3059\u308B\u53EF\u80FD\u6027\u304C\u3042\u308A\u307E\u3059\u3002",
       deny: "\u62D2\u5426",
@@ -17366,6 +17500,9 @@
       mcpToolApprovalDeny: "\u5E38\u306B\u62D2\u5426",
       mcpToolApprovalAsk: "\u5E38\u306B\u78BA\u8A8D",
       mcpToolApprovalAllow: "\u5E38\u306B\u8A31\u53EF",
+      cookieViewer: "Cookie \u3092\u8868\u793A",
+      cookieFormat: "\u8868\u793A\u5F62\u5F0F",
+      cookiePreview: "\u30D7\u30EC\u30D3\u30E5\u30FC\uFF08{count} \u500B\u306E Cookie\uFF09",
       mcpToolUsed: "\u4F7F\u7528\u3057\u305F MCP \u30C4\u30FC\u30EB",
       mcpToolNotCalled: "MCP \u30C4\u30FC\u30EB\u306F\u672A\u5B9F\u884C",
       mcpToolFailed: "MCP \u30C4\u30FC\u30EB\u306E\u547C\u3073\u51FA\u3057\u306B\u5931\u6557",
@@ -17399,6 +17536,13 @@
       logNewChat: "\u65B0\u3057\u3044\u30C1\u30E3\u30C3\u30C8\u3092\u958B\u59CB",
       logAttachmentAdded: "\u6DFB\u4ED8\u3092\u8FFD\u52A0",
       logConversationLoaded: "\u4FDD\u5B58\u6E08\u307F\u30C1\u30E3\u30C3\u30C8\u3092\u8AAD\u307F\u8FBC\u307F",
+      logMcpApproval: "MCP \u30C4\u30FC\u30EB\u306E\u8A31\u53EF\uFF1A{decision} - {server} / {tool}",
+      logMcpToolCalled: "MCP \u30C4\u30FC\u30EB\u547C\u3073\u51FA\u3057\u6210\u529F\uFF1A{server} / {tool}",
+      logMcpToolFailed: "MCP \u30C4\u30FC\u30EB\u547C\u3073\u51FA\u3057\u5931\u6557\uFF1A{server} / {tool}",
+      logMcpToolBlocked: "MCP \u30C4\u30FC\u30EB\u306F\u5B9F\u884C\u3055\u308C\u307E\u305B\u3093\u3067\u3057\u305F\uFF1A{server} / {tool}",
+      logMcpServerSaved: "MCP \u30B5\u30FC\u30D0\u30FC\u3092\u4FDD\u5B58\uFF1A{server}\uFF08{count} \u30C4\u30FC\u30EB\uFF09",
+      logMcpToolsRefreshed: "MCP \u30C4\u30FC\u30EB\u3092\u66F4\u65B0\uFF1A{server}\uFF08{count} \u30C4\u30FC\u30EB\uFF09",
+      logMcpServerDeleted: "MCP \u30B5\u30FC\u30D0\u30FC\u3092\u524A\u9664\uFF1A{server}",
       logEnabled: "\u6709\u52B9",
       logDisabled: "\u7121\u52B9",
       logRuntimeRequest: "\u5B9F\u884C\u30EA\u30AF\u30A8\u30B9\u30C8",
@@ -17527,26 +17671,34 @@
       pageFeaturesHelp: "\u5404\u30E2\u30B8\u30E5\u30FC\u30EB\u306E\u8A2D\u5B9A\u3092\u5206\u3051\u3066\u7BA1\u7406\u3057\u3001\u5F71\u97FF\u7BC4\u56F2\u3092\u78BA\u8A8D\u3057\u3084\u3059\u304F\u3057\u307E\u3059\u3002",
       selectionOverlay: "\u9078\u629E\u30AA\u30FC\u30D0\u30FC\u30EC\u30A4",
       selectionOverlayHelp: "\u30C6\u30AD\u30B9\u30C8\u9078\u629E\u5F8C\u306B\u8868\u793A\u3055\u308C\u308B\u30D5\u30ED\u30FC\u30C6\u30A3\u30F3\u30B0\u30C4\u30FC\u30EB\u30D0\u30FC\u3092\u5236\u5FA1\u3057\u307E\u3059\u3002",
-      selectionOverlayMode: "\u8D77\u52D5\u65B9\u5F0F",
+      selectionOverlayMode: "\u9078\u629E\u30AA\u30FC\u30D0\u30FC\u30EC\u30A4",
       selectionOverlayShortcut: "\u9078\u629E\u30AA\u30FC\u30D0\u30FC\u30EC\u30A4\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8",
       selectionOverlayShortcutHelp: "\u6709\u52B9\u306B\u3059\u308B\u3068\u3001\u9078\u629E\u3057\u305F\u30B7\u30E7\u30FC\u30C8\u30AB\u30C3\u30C8\u3092\u62BC\u3057\u306A\u304C\u3089\u30C6\u30AD\u30B9\u30C8\u3092\u9078\u629E\u3059\u308B\u5834\u5408\u3001\u307E\u305F\u306F\u65E2\u5B58\u306E\u9078\u629E\u7BC4\u56F2\u3092\u898B\u308B\u5834\u5408\u306B\u3060\u3051\u30AA\u30FC\u30D0\u30FC\u30EC\u30A4\u3092\u8868\u793A\u3057\u307E\u3059\u3002",
-      selectionOverlayMinChars: "\u6700\u5C0F\u9078\u629E\u6587\u5B57\u6570",
-      selectionOverlayMinCharsHelp: "\u9078\u629E\u6587\u5B57\u6570\u304C\u3053\u306E\u5024\u4EE5\u4E0A\u306E\u5834\u5408\u306B\u30AA\u30FC\u30D0\u30FC\u30EC\u30A4\u3092\u8868\u793A\u3057\u307E\u3059\u3002\u6700\u5C0F\u5024\u306F 1 \u3067\u3059\u3002",
-      selectionOverlayOff: "\u9078\u629E\u30AA\u30FC\u30D0\u30FC\u30EC\u30A4\u3092\u7121\u52B9\u5316",
+      selectionOverlayMinChars: "\u6700\u5C0F\u30C8\u30EA\u30AC\u30FC\u6587\u5B57\u6570",
+      selectionOverlayMinCharsHelp: "\u3053\u306E\u6587\u5B57\u6570\u4EE5\u4E0A\u3092\u9078\u629E\u3057\u305F\u5834\u5408\u306B\u306E\u307F\u3001\u9078\u629E\u30AA\u30FC\u30D0\u30FC\u30EC\u30A4\u3068\u540C\u3058\u30C6\u30AD\u30B9\u30C8\u306E\u30CF\u30A4\u30E9\u30A4\u30C8\u3092\u8868\u793A\u3057\u307E\u3059\u3002\u6700\u5C0F\u5024\u306F 1 \u3067\u3059\u3002",
+      selectionMatchHighlight: "\u540C\u3058\u30C6\u30AD\u30B9\u30C8\u3092\u30CF\u30A4\u30E9\u30A4\u30C8",
+      selectionMatchHighlightHelp: "\u30DA\u30FC\u30B8\u4E0A\u306E\u6587\u5B57\u3092\u9078\u629E\u3059\u308B\u3068\u540C\u3058\u5185\u5BB9\u3092\u3059\u3079\u3066\u30CF\u30A4\u30E9\u30A4\u30C8\u3057\u3001\u30B9\u30AF\u30ED\u30FC\u30EB\u30D0\u30FC\u6A2A\u306B\u30AF\u30EA\u30C3\u30AF\u53EF\u80FD\u306A\u4F4D\u7F6E\u30DE\u30FC\u30AB\u30FC\u3092\u8868\u793A\u3057\u307E\u3059\u3002",
+      selectionMatchHighlightOff: "\u7121\u52B9",
+      selectionMatchHighlightIgnoreCase: "\u5927\u6587\u5B57\u3068\u5C0F\u6587\u5B57\u3092\u533A\u5225\u3057\u306A\u3044",
+      selectionMatchHighlightCaseSensitive: "\u5927\u6587\u5B57\u3068\u5C0F\u6587\u5B57\u3092\u533A\u5225",
+      linkTextSelection: "\u30DA\u30FC\u30B8\u5185\u30EA\u30F3\u30AF\u6587\u5B57\u306E\u9078\u629E\u3092\u8A31\u53EF",
+      linkTextSelectionHelp: "\u30EA\u30F3\u30AF\u6587\u5B57\u3092\u6A2A\u65B9\u5411\u306B\u30C9\u30E9\u30C3\u30B0\u3059\u308B\u3068\u901A\u5E38\u306E\u30C6\u30AD\u30B9\u30C8\u3068\u3057\u3066\u9078\u629E\u3067\u304D\u307E\u3059\u3002\u7E26\u65B9\u5411\u306E\u30C9\u30E9\u30C3\u30B0\u306F\u30EA\u30F3\u30AF\u672C\u6765\u306E\u52D5\u4F5C\u3092\u7DAD\u6301\u3057\u3001\u901A\u5E38\u306E\u30AF\u30EA\u30C3\u30AF\u3067\u306F\u5F15\u304D\u7D9A\u304D\u30EA\u30F3\u30AF\u3092\u958B\u304D\u307E\u3059\u3002",
+      linkSelection: "\u30EA\u30F3\u30AF\u9078\u629E",
+      selectionOverlayOff: "\u7121\u52B9",
       selectionOverlayOffHelp: "\u30C6\u30AD\u30B9\u30C8\u9078\u629E\u5F8C\u306B\u30AF\u30A4\u30C3\u30AF\u5165\u53E3\u3092\u8868\u793A\u3057\u307E\u305B\u3093\u3002",
-      selectionOverlayAlways: "\u30C4\u30FC\u30EB\u30D0\u30FC\u3092\u76F4\u63A5\u8868\u793A",
+      selectionOverlayAlways: "\u76F4\u63A5\u8868\u793A",
       selectionOverlayAlwaysHelp: "\u30C6\u30AD\u30B9\u30C8\u9078\u629E\u5F8C\u3059\u3050\u306B\u5229\u7528\u53EF\u80FD\u306A\u30C4\u30FC\u30EB\u3092\u8868\u793A\u3057\u307E\u3059\u3002",
       selectionOverlayHover: "\u5148\u306B\u30C9\u30C3\u30C8\u3092\u8868\u793A",
       selectionOverlayHoverHelp: "\u30C6\u30AD\u30B9\u30C8\u9078\u629E\u5F8C\u306B\u5C0F\u3055\u306A\u30C9\u30C3\u30C8\u3092\u8868\u793A\u3057\u3001\u30DB\u30D0\u30FC\u3067\u30C4\u30FC\u30EB\u30D0\u30FC\u3092\u5C55\u958B\u3057\u307E\u3059\u3002",
       urlBlacklist: "URL \u30D6\u30E9\u30C3\u30AF\u30EA\u30B9\u30C8",
       selectionOverlayBlacklistHelp: "1 \u884C\u306B 1 \u30EB\u30FC\u30EB\u3002\u30C9\u30E1\u30A4\u30F3\u3001\u30EF\u30A4\u30EB\u30C9\u30AB\u30FC\u30C9\u3001URL \u65AD\u7247\u306B\u5BFE\u5FDC\u3057\u307E\u3059\u3002",
       edgeQuickTools: "\u30AF\u30A4\u30C3\u30AF\u30C4\u30FC\u30EB",
-      edgeQuickToolsHelp: "\u7AEF\u306E\u30E1\u30CB\u30E5\u30FC\u3001\u753B\u50CF\u30C6\u30AD\u30B9\u30C8\u62BD\u51FA\u3001\u81EA\u52D5\u8FD4\u4FE1\u3092\u307E\u3068\u3081\u3066\u5236\u5FA1\u3057\u307E\u3059\u3002",
+      edgeQuickToolsHelp: "\u30EA\u30F3\u30AF\u9078\u629E\u3001\u7AEF\u306E\u30E1\u30CB\u30E5\u30FC\u3001\u753B\u50CF\u30C6\u30AD\u30B9\u30C8\u62BD\u51FA\u3001\u81EA\u52D5\u8FD4\u4FE1\u3092\u307E\u3068\u3081\u3066\u5236\u5FA1\u3057\u307E\u3059\u3002",
       edgeDockMenu: "\u7AEF\u306E\u30E1\u30CB\u30E5\u30FC",
       edgeQuickToolsEnable: "\u7AEF\u306E\u30E1\u30CB\u30E5\u30FC\u3092\u6709\u52B9\u5316",
       edgeQuickToolsEnableHelp: "\u30AA\u30D5\u306B\u3059\u308B\u3068\u30DA\u30FC\u30B8\u53F3\u7AEF\u306E\u30E1\u30CB\u30E5\u30FC\u306F\u8868\u793A\u3055\u308C\u307E\u305B\u3093\u3002",
       edgeQuickToolsBlacklistHelp: "\u4E00\u81F4\u3057\u305F\u30DA\u30FC\u30B8\u3067\u306F\u53F3\u7AEF\u306E\u30AF\u30A4\u30C3\u30AF\u30C4\u30FC\u30EB\u3092\u8868\u793A\u3057\u307E\u305B\u3093\u3002",
-      quickToolsBlacklistHelp: "\u4E00\u81F4\u3057\u305F\u30DA\u30FC\u30B8\u3067\u306F\u3001\u7AEF\u306E\u30E1\u30CB\u30E5\u30FC\u3001\u753B\u50CF\u30C6\u30AD\u30B9\u30C8\u62BD\u51FA\u3001\u81EA\u52D5\u8FD4\u4FE1\u304C\u3059\u3079\u3066\u7121\u52B9\u306B\u306A\u308A\u307E\u3059\u3002",
+      quickToolsBlacklistHelp: "\u4E00\u81F4\u3057\u305F\u30DA\u30FC\u30B8\u3067\u306F\u3001\u30EA\u30F3\u30AF\u9078\u629E\u3001\u7AEF\u306E\u30E1\u30CB\u30E5\u30FC\u3001\u753B\u50CF\u30C6\u30AD\u30B9\u30C8\u62BD\u51FA\u3001\u81EA\u52D5\u8FD4\u4FE1\u304C\u3059\u3079\u3066\u7121\u52B9\u306B\u306A\u308A\u307E\u3059\u3002",
       immersiveTranslation: "\u30A4\u30DE\u30FC\u30B7\u30D6\u7FFB\u8A33",
       immersiveTranslationHelp: "\u7FFB\u8A33\u6587\u3092\u30DA\u30FC\u30B8\u3078\u66F8\u304D\u623B\u3057\u305F\u5F8C\u306E\u8868\u793A\u65B9\u6CD5\u3092\u5236\u5FA1\u3057\u307E\u3059\u3002",
       immersiveTranslationAutoWhitelist: "\u81EA\u52D5\u30A4\u30DE\u30FC\u30B7\u30D6\u7FFB\u8A33\u30DB\u30EF\u30A4\u30C8\u30EA\u30B9\u30C8",
@@ -17935,6 +18087,7 @@
       mcpPermissionDenied: "\uB124\uD2B8\uC6CC\uD06C \uAD8C\uD55C\uC774 \uD5C8\uC6A9\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4",
       mcpHttpOnly: "MCP \uC11C\uBC84\uC5D0\uB294 HTTP \uB610\uB294 HTTPS URL\uC774 \uD544\uC694\uD569\uB2C8\uB2E4",
       enableMcp: "MCP \uB3C4\uAD6C \uC120\uD0DD",
+      mcpSelectionSummary: "{servers}\uAC1C MCP\uC758 {tools}\uAC1C \uB3C4\uAD6C",
       approveMcpTool: "MCP \uB3C4\uAD6C \uC2E4\uD589\uC744 \uD5C8\uC6A9\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?",
       mcpDestructiveWarning: "\uC774 \uB3C4\uAD6C\uB294 \uC678\uBD80 \uB370\uC774\uD130\uB97C \uBCC0\uACBD\uD558\uAC70\uB098 \uC0AD\uC81C\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
       deny: "\uAC70\uBD80",
@@ -17946,6 +18099,9 @@
       mcpToolApprovalDeny: "\uD56D\uC0C1 \uAC70\uBD80",
       mcpToolApprovalAsk: "\uD56D\uC0C1 \uBB3B\uAE30",
       mcpToolApprovalAllow: "\uD56D\uC0C1 \uD5C8\uC6A9",
+      cookieViewer: "Cookie \uBCF4\uAE30",
+      cookieFormat: "\uD45C\uC2DC \uD615\uC2DD",
+      cookiePreview: "\uBBF8\uB9AC\uBCF4\uAE30 ({count}\uAC1C Cookie)",
       mcpToolUsed: "\uC0AC\uC6A9\uD55C MCP \uB3C4\uAD6C",
       mcpToolNotCalled: "MCP \uB3C4\uAD6C\uB97C \uD638\uCD9C\uD558\uC9C0 \uC54A\uC74C",
       mcpToolFailed: "MCP \uB3C4\uAD6C \uD638\uCD9C \uC2E4\uD328",
@@ -17979,6 +18135,13 @@
       logNewChat: "\uC0C8 \uB300\uD654 \uC2DC\uC791",
       logAttachmentAdded: "\uCCA8\uBD80 \uCD94\uAC00",
       logConversationLoaded: "\uC800\uC7A5\uB41C \uB300\uD654 \uBD88\uB7EC\uC624\uAE30",
+      logMcpApproval: "MCP \uB3C4\uAD6C \uAD8C\uD55C: {decision} - {server} / {tool}",
+      logMcpToolCalled: "MCP \uB3C4\uAD6C \uD638\uCD9C \uC131\uACF5: {server} / {tool}",
+      logMcpToolFailed: "MCP \uB3C4\uAD6C \uD638\uCD9C \uC2E4\uD328: {server} / {tool}",
+      logMcpToolBlocked: "MCP \uB3C4\uAD6C\uAC00 \uC2E4\uD589\uB418\uC9C0 \uC54A\uC74C: {server} / {tool}",
+      logMcpServerSaved: "MCP \uC11C\uBC84 \uC800\uC7A5\uB428: {server} ({count}\uAC1C \uB3C4\uAD6C)",
+      logMcpToolsRefreshed: "MCP \uB3C4\uAD6C \uC0C8\uB85C\uACE0\uCE68: {server} ({count}\uAC1C \uB3C4\uAD6C)",
+      logMcpServerDeleted: "MCP \uC11C\uBC84 \uC0AD\uC81C\uB428: {server}",
       logEnabled: "\uCF1C\uC9D0",
       logDisabled: "\uAEBC\uC9D0",
       logRuntimeRequest: "\uC2E4\uD589 \uC694\uCCAD",
@@ -18107,26 +18270,34 @@
       pageFeaturesHelp: "\uAC01 \uBAA8\uB4C8 \uC124\uC815\uC744 \uBD84\uB9AC\uD574 \uC601\uD5A5 \uBC94\uC704\uB97C \uC27D\uAC8C \uD655\uC778\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
       selectionOverlay: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 \uD50C\uB85C\uD305",
       selectionOverlayHelp: "\uD14D\uC2A4\uD2B8 \uC120\uD0DD \uD6C4 \uD45C\uC2DC\uB418\uB294 \uD50C\uB85C\uD305 \uB3C4\uAD6C \uBAA8\uC74C\uC744 \uC81C\uC5B4\uD569\uB2C8\uB2E4.",
-      selectionOverlayMode: "\uC2E4\uD589 \uBC29\uC2DD",
+      selectionOverlayMode: "\uC120\uD0DD \uD50C\uB85C\uD305",
       selectionOverlayShortcut: "\uC120\uD0DD \uD50C\uB85C\uD305 \uB2E8\uCD95\uD0A4",
       selectionOverlayShortcutHelp: "\uCF1C\uBA74 \uC120\uD0DD\uD55C \uB2E8\uCD95\uD0A4\uB97C \uB204\uB978 \uCC44 \uD14D\uC2A4\uD2B8\uB97C \uC120\uD0DD\uD558\uAC70\uB098 \uAE30\uC874 \uC120\uD0DD \uC601\uC5ED\uC744 \uD655\uC778\uD560 \uB54C\uB9CC \uD50C\uB85C\uD305 \uB3C4\uAD6C\uB97C \uD45C\uC2DC\uD569\uB2C8\uB2E4.",
-      selectionOverlayMinChars: "\uCD5C\uC18C \uC120\uD0DD \uAE00\uC790 \uC218",
-      selectionOverlayMinCharsHelp: "\uC120\uD0DD\uD55C \uAE00\uC790 \uC218\uAC00 \uC774 \uAC12 \uC774\uC0C1\uC77C \uB54C \uD50C\uB85C\uD305 \uB3C4\uAD6C\uB97C \uD45C\uC2DC\uD569\uB2C8\uB2E4. \uCD5C\uC19F\uAC12\uC740 1\uC785\uB2C8\uB2E4.",
-      selectionOverlayOff: "\uC120\uD0DD \uD50C\uB85C\uD305 \uB044\uAE30",
+      selectionOverlayMinChars: "\uCD5C\uC18C \uD2B8\uB9AC\uAC70 \uAE00\uC790 \uC218",
+      selectionOverlayMinCharsHelp: "\uC120\uD0DD\uD55C \uAE00\uC790 \uC218\uAC00 \uC774 \uAC12 \uC774\uC0C1\uC77C \uB54C \uC120\uD0DD \uD50C\uB85C\uD305\uACFC \uAC19\uC740 \uD14D\uC2A4\uD2B8 \uAC15\uC870\uB97C \uD45C\uC2DC\uD569\uB2C8\uB2E4. \uCD5C\uC19F\uAC12\uC740 1\uC785\uB2C8\uB2E4.",
+      selectionMatchHighlight: "\uAC19\uC740 \uD14D\uC2A4\uD2B8 \uAC15\uC870",
+      selectionMatchHighlightHelp: "\uD398\uC774\uC9C0 \uD14D\uC2A4\uD2B8\uB97C \uC120\uD0DD\uD558\uBA74 \uAC19\uC740 \uB0B4\uC6A9\uC744 \uBAA8\uB450 \uAC15\uC870\uD558\uACE0 \uC2A4\uD06C\uB864\uBC14 \uC606\uC5D0 \uD074\uB9AD \uAC00\uB2A5\uD55C \uC704\uCE58 \uD45C\uC2DC\uB97C \uBCF4\uC5EC \uC90D\uB2C8\uB2E4.",
+      selectionMatchHighlightOff: "\uC0AC\uC6A9 \uC548 \uD568",
+      selectionMatchHighlightIgnoreCase: "\uB300\uC18C\uBB38\uC790 \uBB34\uC2DC",
+      selectionMatchHighlightCaseSensitive: "\uB300\uC18C\uBB38\uC790 \uAD6C\uBD84",
+      linkTextSelection: "\uD398\uC774\uC9C0 \uB0B4 \uB9C1\uD06C \uD14D\uC2A4\uD2B8 \uC120\uD0DD \uD5C8\uC6A9",
+      linkTextSelectionHelp: "\uB9C1\uD06C \uD14D\uC2A4\uD2B8\uB97C \uAC00\uB85C\uB85C \uB4DC\uB798\uADF8\uD558\uBA74 \uC77C\uBC18 \uD14D\uC2A4\uD2B8\uCC98\uB7FC \uC120\uD0DD\uD569\uB2C8\uB2E4. \uC138\uB85C \uB4DC\uB798\uADF8\uB294 \uB9C1\uD06C\uC758 \uC6D0\uB798 \uB3D9\uC791\uC744 \uC720\uC9C0\uD558\uBA70, \uC77C\uBC18 \uD074\uB9AD\uC740 \uACC4\uC18D \uB9C1\uD06C\uB97C \uC5FD\uB2C8\uB2E4.",
+      linkSelection: "\uB9C1\uD06C \uC120\uD0DD",
+      selectionOverlayOff: "\uC0AC\uC6A9 \uC548 \uD568",
       selectionOverlayOffHelp: "\uD14D\uC2A4\uD2B8 \uC120\uD0DD \uD6C4 \uBE60\uB978 \uC9C4\uC785\uC810\uC744 \uD45C\uC2DC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
-      selectionOverlayAlways: "\uB3C4\uAD6C \uBAA8\uC74C \uBC14\uB85C \uD45C\uC2DC",
+      selectionOverlayAlways: "\uBC14\uB85C \uD45C\uC2DC",
       selectionOverlayAlwaysHelp: "\uD14D\uC2A4\uD2B8 \uC120\uD0DD \uD6C4 \uC0AC\uC6A9 \uAC00\uB2A5\uD55C \uB3C4\uAD6C\uB97C \uC989\uC2DC \uD45C\uC2DC\uD569\uB2C8\uB2E4.",
       selectionOverlayHover: "\uC810 \uBA3C\uC800 \uD45C\uC2DC",
       selectionOverlayHoverHelp: "\uD14D\uC2A4\uD2B8 \uC120\uD0DD \uD6C4 \uC791\uC740 \uC810\uC744 \uD45C\uC2DC\uD558\uACE0, \uB9C8\uC6B0\uC2A4\uB97C \uC62C\uB9AC\uBA74 \uB3C4\uAD6C \uBAA8\uC74C\uC744 \uD3BC\uCE69\uB2C8\uB2E4.",
       urlBlacklist: "URL \uBE14\uB799\uB9AC\uC2A4\uD2B8",
       selectionOverlayBlacklistHelp: "\uD55C \uC904\uC5D0 \uADDC\uCE59 \uD558\uB098. \uB3C4\uBA54\uC778, \uC640\uC77C\uB4DC\uCE74\uB4DC, URL \uC870\uAC01\uC744 \uC9C0\uC6D0\uD569\uB2C8\uB2E4.",
       edgeQuickTools: "\uBE60\uB978 \uB3C4\uAD6C",
-      edgeQuickToolsHelp: "\uAC00\uC7A5\uC790\uB9AC \uBA54\uB274, \uC774\uBBF8\uC9C0 \uD14D\uC2A4\uD2B8 \uCD94\uCD9C, \uC790\uB3D9 \uB2F5\uC7A5\uC744 \uD568\uAED8 \uC81C\uC5B4\uD569\uB2C8\uB2E4.",
+      edgeQuickToolsHelp: "\uB9C1\uD06C \uC120\uD0DD, \uAC00\uC7A5\uC790\uB9AC \uBA54\uB274, \uC774\uBBF8\uC9C0 \uD14D\uC2A4\uD2B8 \uCD94\uCD9C, \uC790\uB3D9 \uB2F5\uC7A5\uC744 \uD568\uAED8 \uC81C\uC5B4\uD569\uB2C8\uB2E4.",
       edgeDockMenu: "\uAC00\uC7A5\uC790\uB9AC \uBA54\uB274",
       edgeQuickToolsEnable: "\uAC00\uC7A5\uC790\uB9AC \uBA54\uB274 \uC0AC\uC6A9",
       edgeQuickToolsEnableHelp: "\uB044\uBA74 \uC6F9\uD398\uC774\uC9C0 \uC624\uB978\uCABD \uAC00\uC7A5\uC790\uB9AC \uBA54\uB274\uAC00 \uD45C\uC2DC\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
       edgeQuickToolsBlacklistHelp: "\uC77C\uCE58\uD558\uB294 \uD398\uC774\uC9C0\uC5D0\uC11C\uB294 \uC624\uB978\uCABD \uBE60\uB978 \uB3C4\uAD6C\uAC00 \uD45C\uC2DC\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
-      quickToolsBlacklistHelp: "\uC77C\uCE58\uD558\uB294 \uD398\uC774\uC9C0\uC5D0\uC11C\uB294 \uAC00\uC7A5\uC790\uB9AC \uBA54\uB274, \uC774\uBBF8\uC9C0 \uD14D\uC2A4\uD2B8 \uCD94\uCD9C, \uC790\uB3D9 \uB2F5\uC7A5\uC774 \uBAA8\uB450 \uBE44\uD65C\uC131\uD654\uB429\uB2C8\uB2E4.",
+      quickToolsBlacklistHelp: "\uC77C\uCE58\uD558\uB294 \uD398\uC774\uC9C0\uC5D0\uC11C\uB294 \uB9C1\uD06C \uC120\uD0DD, \uAC00\uC7A5\uC790\uB9AC \uBA54\uB274, \uC774\uBBF8\uC9C0 \uD14D\uC2A4\uD2B8 \uCD94\uCD9C, \uC790\uB3D9 \uB2F5\uC7A5\uC774 \uBAA8\uB450 \uBE44\uD65C\uC131\uD654\uB429\uB2C8\uB2E4.",
       immersiveTranslation: "\uBAB0\uC785 \uBC88\uC5ED",
       immersiveTranslationHelp: "\uBC88\uC5ED\uBB38\uC744 \uD398\uC774\uC9C0\uC5D0 \uB2E4\uC2DC \uC4F4 \uB4A4\uC758 \uD45C\uC2DC \uBC29\uC2DD\uC744 \uC81C\uC5B4\uD569\uB2C8\uB2E4.",
       immersiveTranslationAutoWhitelist: "\uC790\uB3D9 \uBAB0\uC785 \uBC88\uC5ED \uD654\uC774\uD2B8\uB9AC\uC2A4\uD2B8",
@@ -20371,6 +20542,8 @@
     selectionOverlayMode: "off",
     selectionOverlayShortcut: "off",
     selectionOverlayMinChars: 2,
+    selectionMatchHighlightMode: "off",
+    linkTextSelectionEnabled: false,
     immersiveTranslationStyle: "bilingual",
     immersiveTranslationDisplayStyle: "default",
     immersiveTranslationTextEffects: ["light"],
@@ -20464,6 +20637,11 @@
     "ask",
     "allow"
   ]);
+  var SELECTION_MATCH_HIGHLIGHT_MODES = /* @__PURE__ */ new Set([
+    "off",
+    "ignore-case",
+    "case-sensitive"
+  ]);
   function normalizeImmersiveShortcut(value, fallback) {
     return IMMERSIVE_SHORTCUTS.has(value) ? value : fallback;
   }
@@ -20555,6 +20733,10 @@
         1,
         Math.round(Number(stored.selectionOverlayMinChars ?? 2) || 2)
       ),
+      selectionMatchHighlightMode: SELECTION_MATCH_HIGHLIGHT_MODES.has(
+        stored.selectionMatchHighlightMode
+      ) ? stored.selectionMatchHighlightMode : DEFAULT_SETTINGS.selectionMatchHighlightMode,
+      linkTextSelectionEnabled: stored.linkTextSelectionEnabled ?? DEFAULT_SETTINGS.linkTextSelectionEnabled,
       immersiveTranslationStyle: stored.immersiveTranslationStyle ?? DEFAULT_SETTINGS.immersiveTranslationStyle,
       immersiveTranslationDisplayStyle: stored.immersiveTranslationDisplayStyle ?? DEFAULT_SETTINGS.immersiveTranslationDisplayStyle,
       immersiveTranslationTextEffects: stored.immersiveTranslationTextEffects ?? DEFAULT_SETTINGS.immersiveTranslationTextEffects,
@@ -25541,6 +25723,371 @@ ${index}. ${content.trim()}
   // src/content/floatingResult.ts
   function shouldCloseFloatingResult(event, startedInsideResult) {
     return event.isPrimary && event.button === 0 && !startedInsideResult;
+  }
+
+  // src/content/linkTextSelection.ts
+  var LINK_TEXT_SELECTION_STYLE_ID = "webmind-link-text-selection";
+  var LINK_TEXT_SELECTING_ATTRIBUTE = "data-webmind-link-text-selecting";
+  var LINK_TEXT_SELECTION_CSS = `
+a[href],
+a[href] * {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+
+a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}],
+a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
+  -webkit-user-drag: none !important;
+}
+`;
+  var LINK_SELECTION_DRAG_THRESHOLD = 4;
+  var listenersAttached = false;
+  var pointerState = null;
+  function clearLinkTextSelectingMarker(activationTarget = pointerState?.activationTarget ?? null) {
+    activationTarget?.removeAttribute(LINK_TEXT_SELECTING_ATTRIBUTE);
+  }
+  function shouldBlockLinkDragTarget(target) {
+    const candidate = target;
+    return typeof candidate?.closest === "function" && Boolean(
+      candidate.closest("a[href]")
+    );
+  }
+  function selectionActivationTarget(target) {
+    if (!(target instanceof Element)) return null;
+    return target.closest("a[href]");
+  }
+  function isSelectionActivationTarget(activationTarget, eventTarget) {
+    return eventTarget instanceof Node && activationTarget.contains(eventTarget);
+  }
+  function hasMovedBeyondLinkSelectionThreshold(startX, startY, currentX, currentY) {
+    return Math.hypot(currentX - startX, currentY - startY) >= LINK_SELECTION_DRAG_THRESHOLD;
+  }
+  function isHorizontalLinkSelectionDrag(startX, startY, currentX, currentY) {
+    return Math.abs(currentX - startX) > Math.abs(currentY - startY);
+  }
+  function blockLinkDrag(event) {
+    if (pointerState?.intent !== "horizontal" || !isSelectionActivationTarget(pointerState.activationTarget, event.target) || !shouldBlockLinkDragTarget(event.target)) {
+      return;
+    }
+    event.preventDefault();
+  }
+  function trackLinkSelectionStart(event) {
+    clearLinkTextSelectingMarker();
+    const activationTarget = selectionActivationTarget(event.target);
+    if (event.button !== 0 || !activationTarget) {
+      pointerState = null;
+      return;
+    }
+    pointerState = {
+      activationTarget,
+      intent: "pending",
+      startX: event.clientX,
+      startY: event.clientY
+    };
+  }
+  function trackLinkSelectionMove(event) {
+    if (!pointerState || pointerState.intent !== "pending") return;
+    if (!hasMovedBeyondLinkSelectionThreshold(
+      pointerState.startX,
+      pointerState.startY,
+      event.clientX,
+      event.clientY
+    )) {
+      return;
+    }
+    pointerState.intent = isHorizontalLinkSelectionDrag(
+      pointerState.startX,
+      pointerState.startY,
+      event.clientX,
+      event.clientY
+    ) ? "horizontal" : "vertical";
+    if (pointerState.intent === "horizontal") {
+      pointerState.activationTarget.setAttribute(
+        LINK_TEXT_SELECTING_ATTRIBUTE,
+        ""
+      );
+    }
+  }
+  function clearLinkSelectionPointerState() {
+    window.setTimeout(() => {
+      clearLinkTextSelectingMarker();
+      pointerState = null;
+    }, 0);
+  }
+  function suppressLinkClickAfterSelection(event) {
+    if (pointerState?.intent !== "horizontal" || !isSelectionActivationTarget(pointerState.activationTarget, event.target)) {
+      return;
+    }
+    const selection = window.getSelection();
+    if (!selection || selection.isCollapsed || !selection.toString().trim()) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    pointerState = null;
+  }
+  function setLinkTextSelectionEnabled(enabled2) {
+    const existing = document.getElementById(LINK_TEXT_SELECTION_STYLE_ID);
+    if (!enabled2) {
+      existing?.remove();
+      clearLinkTextSelectingMarker();
+      pointerState = null;
+      if (listenersAttached) {
+        document.removeEventListener("dragstart", blockLinkDrag, true);
+        document.removeEventListener("mousedown", trackLinkSelectionStart, true);
+        document.removeEventListener("mousemove", trackLinkSelectionMove, true);
+        document.removeEventListener("mouseup", clearLinkSelectionPointerState, true);
+        document.removeEventListener("dragend", clearLinkSelectionPointerState, true);
+        document.removeEventListener("click", suppressLinkClickAfterSelection, true);
+        listenersAttached = false;
+      }
+      return;
+    }
+    if (!existing) {
+      const style = document.createElement("style");
+      style.id = LINK_TEXT_SELECTION_STYLE_ID;
+      style.textContent = LINK_TEXT_SELECTION_CSS;
+      (document.head ?? document.documentElement).append(style);
+    }
+    if (!listenersAttached) {
+      document.addEventListener("dragstart", blockLinkDrag, true);
+      document.addEventListener("mousedown", trackLinkSelectionStart, true);
+      document.addEventListener("mousemove", trackLinkSelectionMove, true);
+      document.addEventListener("mouseup", clearLinkSelectionPointerState, true);
+      document.addEventListener("dragend", clearLinkSelectionPointerState, true);
+      document.addEventListener("click", suppressLinkClickAfterSelection, true);
+      listenersAttached = true;
+    }
+  }
+
+  // src/content/selectionHighlighter.ts
+  var HIGHLIGHT_NAME = "webmind-selection-match";
+  var STYLE_ID = "webmind-selection-match-style";
+  var MARKER_HOST_ID = "webmind-selection-match-markers";
+  var enabled = false;
+  var listenersAttached2 = false;
+  var frameId = null;
+  var activeRanges = [];
+  var minTriggerChars = 1;
+  var matchMode = "off";
+  var SELECTION_MATCH_HIGHLIGHT_CSS = `
+::highlight(${HIGHLIGHT_NAME}) {
+  background-color: #e8533f;
+  color: #fff;
+}
+#${MARKER_HOST_ID} {
+  position: fixed;
+  z-index: 2147483645;
+  top: 0;
+  right: 0;
+  width: 9px;
+  height: 100vh;
+  pointer-events: none;
+}
+#${MARKER_HOST_ID} button {
+  position: absolute;
+  right: 1px;
+  width: 7px;
+  height: 3px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 1px;
+  background: #178f7c;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .72);
+  cursor: pointer;
+  pointer-events: auto;
+}
+#${MARKER_HOST_ID} button:hover,
+#${MARKER_HOST_ID} button:focus-visible {
+  width: 9px;
+  height: 5px;
+  outline: 1px solid #0f6a5a;
+  outline-offset: 1px;
+}
+`;
+  function normalizedSelectionMatchText(value) {
+    return value.replace(/\s+/g, " ").trim();
+  }
+  function canHighlightSelectionText(value, minimumChars = minTriggerChars) {
+    return normalizedSelectionMatchText(value).length >= minimumChars;
+  }
+  function highlightRegistry() {
+    return CSS.highlights;
+  }
+  function highlightConstructor() {
+    return globalThis.Highlight;
+  }
+  function isIgnoredTextNode(node) {
+    const parent = node.parentElement;
+    return Boolean(
+      !parent || parent.closest(
+        "#webmind-root, script, style, noscript, textarea, input, select, option, [contenteditable='true'], [aria-hidden='true']"
+      )
+    );
+  }
+  function pageTextIndex() {
+    const nodes = [];
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let text2 = "";
+    let node = walker.nextNode();
+    while (node instanceof Text) {
+      if (!isIgnoredTextNode(node) && node.data) {
+        const start = text2.length;
+        text2 += node.data;
+        nodes.push({ node, start, end: text2.length });
+      }
+      node = walker.nextNode();
+    }
+    return { text: text2, nodes };
+  }
+  function textOffsetAt(nodes, offset, isEnd) {
+    const index = nodes.findIndex(
+      ({ end }) => isEnd ? offset <= end : offset < end
+    );
+    const entry = nodes[index] ?? (isEnd ? nodes[nodes.length - 1] : void 0);
+    if (!entry) return null;
+    return {
+      node: entry.node,
+      offset: Math.max(0, Math.min(entry.node.data.length, offset - entry.start))
+    };
+  }
+  function selectionMatchOffsets(pageText, selectedText, caseSensitive = true) {
+    if (!canHighlightSelectionText(selectedText)) return [];
+    const searchablePageText = caseSensitive ? pageText : pageText.toLowerCase();
+    const searchableSelectedText = caseSensitive ? selectedText : selectedText.toLowerCase();
+    const matches = [];
+    let fromIndex = 0;
+    while (true) {
+      const start = searchablePageText.indexOf(searchableSelectedText, fromIndex);
+      if (start < 0) break;
+      matches.push({ start, end: start + selectedText.length });
+      fromIndex = start + selectedText.length;
+    }
+    return matches;
+  }
+  function matchingRanges(selectedText) {
+    const { text: text2, nodes } = pageTextIndex();
+    return selectionMatchOffsets(
+      text2,
+      selectedText,
+      matchMode === "case-sensitive"
+    ).flatMap(({ start, end }) => {
+      const rangeStart = textOffsetAt(nodes, start, false);
+      const rangeEnd = textOffsetAt(nodes, end, true);
+      if (!rangeStart || !rangeEnd) return [];
+      const range = document.createRange();
+      range.setStart(rangeStart.node, rangeStart.offset);
+      range.setEnd(rangeEnd.node, rangeEnd.offset);
+      return range.collapsed ? [] : [range];
+    });
+  }
+  function ensureStyles() {
+    if (document.getElementById(STYLE_ID)) return;
+    const style = document.createElement("style");
+    style.id = STYLE_ID;
+    style.textContent = SELECTION_MATCH_HIGHLIGHT_CSS;
+    (document.head ?? document.documentElement).append(style);
+  }
+  function markerHost() {
+    const existing = document.getElementById(MARKER_HOST_ID);
+    if (existing) return existing;
+    const host = document.createElement("div");
+    host.id = MARKER_HOST_ID;
+    document.documentElement.append(host);
+    return host;
+  }
+  function clearMarkers() {
+    document.getElementById(MARKER_HOST_ID)?.replaceChildren();
+  }
+  function renderMarkers(ranges) {
+    const host = markerHost();
+    host.replaceChildren();
+    const documentHeight = Math.max(
+      document.documentElement.scrollHeight,
+      document.body?.scrollHeight ?? 0,
+      window.innerHeight
+    );
+    const fragment = document.createDocumentFragment();
+    for (const range of ranges) {
+      const rect = range.getBoundingClientRect();
+      if (rect.height <= 0) continue;
+      const marker = document.createElement("button");
+      marker.type = "button";
+      marker.title = "Go to matching text";
+      marker.style.top = `${Math.min(
+        window.innerHeight - 5,
+        Math.max(0, (rect.top + window.scrollY) / documentHeight * window.innerHeight)
+      )}px`;
+      marker.addEventListener("click", () => {
+        const targetTop = Math.max(
+          0,
+          range.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.32
+        );
+        window.scrollTo({ top: targetTop, behavior: "smooth" });
+      });
+      fragment.append(marker);
+    }
+    host.append(fragment);
+  }
+  function clearHighlights() {
+    activeRanges = [];
+    highlightRegistry()?.delete(HIGHLIGHT_NAME);
+    clearMarkers();
+  }
+  function refreshHighlights() {
+    frameId = null;
+    if (!enabled) return;
+    const selection = window.getSelection();
+    const selectedText = selection?.toString() ?? "";
+    if (!canHighlightSelectionText(selectedText)) {
+      clearHighlights();
+      return;
+    }
+    const registry = highlightRegistry();
+    const Highlight = highlightConstructor();
+    if (!registry || !Highlight) return;
+    const ranges = matchingRanges(selectedText);
+    registry.delete(HIGHLIGHT_NAME);
+    activeRanges = ranges;
+    if (!ranges.length) {
+      clearMarkers();
+      return;
+    }
+    registry.set(HIGHLIGHT_NAME, new Highlight(...ranges));
+    renderMarkers(ranges);
+  }
+  function scheduleRefresh() {
+    if (!enabled || frameId !== null) return;
+    frameId = window.requestAnimationFrame(refreshHighlights);
+  }
+  function refreshMarkerPositions() {
+    if (activeRanges.length) renderMarkers(activeRanges);
+  }
+  function setSelectionMatchHighlightMode(nextMode, nextMinTriggerChars = 1) {
+    matchMode = nextMode;
+    enabled = matchMode !== "off";
+    minTriggerChars = Math.max(1, Math.round(nextMinTriggerChars) || 1);
+    if (!enabled) {
+      if (frameId !== null) window.cancelAnimationFrame(frameId);
+      frameId = null;
+      clearHighlights();
+      document.getElementById(STYLE_ID)?.remove();
+      document.getElementById(MARKER_HOST_ID)?.remove();
+      if (listenersAttached2) {
+        document.removeEventListener("selectionchange", scheduleRefresh);
+        window.removeEventListener("scroll", refreshMarkerPositions, true);
+        window.removeEventListener("resize", refreshMarkerPositions);
+        listenersAttached2 = false;
+      }
+      return;
+    }
+    ensureStyles();
+    if (!listenersAttached2) {
+      document.addEventListener("selectionchange", scheduleRefresh);
+      window.addEventListener("scroll", refreshMarkerPositions, true);
+      window.addEventListener("resize", refreshMarkerPositions);
+      listenersAttached2 = true;
+    }
+    scheduleRefresh();
   }
 
   // src/content/toolIcons.tsx
@@ -33005,6 +33552,24 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
   }
   async function initialize() {
     settings = await loadSettings();
+    const linkTextSelectionEnabled = () => Boolean(
+      settings?.linkTextSelectionEnabled && !urlMatchesBlacklist(
+        location.href,
+        settings.edgeQuickToolUrlBlacklist ?? []
+      )
+    );
+    setLinkTextSelectionEnabled(linkTextSelectionEnabled());
+    const selectionMatchHighlightMode = () => {
+      const mode = settings?.selectionMatchHighlightMode ?? "off";
+      return mode !== "off" && !urlMatchesBlacklist(
+        location.href,
+        settings?.selectionOverlayUrlBlacklist ?? []
+      ) ? mode : "off";
+    };
+    setSelectionMatchHighlightMode(
+      selectionMatchHighlightMode(),
+      settings.selectionOverlayMinChars
+    );
     const host = document.createElement("div");
     host.id = "webmind-root";
     assistantHost = host;
@@ -33112,6 +33677,11 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
         ...settings,
         ...changes["webmind.settings"].newValue
       };
+      setLinkTextSelectionEnabled(linkTextSelectionEnabled());
+      setSelectionMatchHighlightMode(
+        selectionMatchHighlightMode(),
+        settings.selectionOverlayMinChars
+      );
       if (!selectionOverlayEnabled() || !selectionOverlayShortcutActive()) {
         showSelection?.(null);
       } else {
