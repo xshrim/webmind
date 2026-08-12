@@ -1,12 +1,13 @@
 import type {
   ChatRunRequest,
+  McpToolEvent,
   McpServerConfig,
   McpToolApprovalDecision,
   McpToolApprovalRequest,
   ModelAgentMessage,
   ModelToolDefinition
 } from "../shared/types";
-import { loadMcpServers } from "../shared/storage";
+import { loadMcpServers, loadSettings } from "../shared/storage";
 import { completeModelToolTurn } from "./providers";
 import { callMcpTool } from "./mcpClient";
 
@@ -25,6 +26,8 @@ export interface EnabledMcpTool {
 export type RequestMcpApproval = (
   request: McpToolApprovalRequest
 ) => Promise<McpToolApprovalDecision>;
+
+export type ReportMcpToolEvent = (event: McpToolEvent) => void;
 
 export function mcpPermissionKey(serverId: string, toolName: string): string {
   return `${serverId}:${toolName}`;
@@ -95,7 +98,8 @@ function agentMessages(request: ChatRunRequest): ModelAgentMessage[] {
 export async function runMcpAgent(
   request: ChatRunRequest,
   signal: AbortSignal,
-  requestApproval: RequestMcpApproval
+  requestApproval: RequestMcpApproval,
+  reportToolEvent: ReportMcpToolEvent = () => undefined
 ): Promise<string> {
   const enabled = await enabledMcpTools(request);
   if (!enabled.length) {
@@ -158,9 +162,33 @@ export async function runMcpAgent(
       }
       const permissionKey = mcpPermissionKey(tool.server.id, tool.name);
       let decision: McpToolApprovalDecision = "allow-once";
-      if (!roundAllowed.has(permissionKey) && !sessionAllowed.has(permissionKey)) {
+      let approvalId: string | undefined;
+      const approvalMode = (await loadSettings()).mcpToolApprovalMode;
+      if (approvalMode === "deny") {
+        reportToolEvent({
+          serverId: tool.server.id,
+          serverName: tool.server.name,
+          toolName: tool.name,
+          status: "blocked",
+          reason: "global-deny"
+        });
+        messages.push({
+          role: "tool",
+          toolCallId: toolCall.id,
+          toolName: tool.name,
+          content:
+            "This MCP tool call was not executed because the global authorization mode always denies tool execution. Continue without it."
+        });
+        continue;
+      }
+      if (
+        approvalMode === "ask" &&
+        !roundAllowed.has(permissionKey) &&
+        !sessionAllowed.has(permissionKey)
+      ) {
+        approvalId = crypto.randomUUID();
         decision = await requestApproval({
-          approvalId: crypto.randomUUID(),
+          approvalId,
           serverId: tool.server.id,
           serverName: tool.server.name,
           toolName: tool.name,
@@ -172,15 +200,54 @@ export async function runMcpAgent(
       if (decision === "allow-round" || decision === "allow-session") {
         roundAllowed.add(permissionKey);
       }
-      const content =
-        decision === "deny"
-          ? "The user denied this tool call. Continue without it."
-          : await callMcpTool(
-              tool.server,
-              tool.name,
-              toolCall.arguments,
-              signal
-            );
+      if (decision === "deny" || decision === "deny-timeout") {
+        const timeout = decision === "deny-timeout";
+        reportToolEvent({
+          approvalId,
+          serverId: tool.server.id,
+          serverName: tool.server.name,
+          toolName: tool.name,
+          status: "blocked",
+          reason: timeout ? "approval-timeout" : "user-deny"
+        });
+        messages.push({
+          role: "tool",
+          toolCallId: toolCall.id,
+          toolName: tool.name,
+          content: timeout
+            ? "This MCP tool call was not executed because the authorization request timed out. Continue without it."
+            : "The user denied this tool call. Continue without it."
+        });
+        continue;
+      }
+      let content: string;
+      try {
+        content = await callMcpTool(
+          tool.server,
+          tool.name,
+          toolCall.arguments,
+          signal
+        );
+        reportToolEvent({
+          approvalId,
+          serverId: tool.server.id,
+          serverName: tool.server.name,
+          toolName: tool.name,
+          status: "called"
+        });
+      } catch (error) {
+        if (signal.aborted) throw error;
+        const detail = error instanceof Error ? error.message : String(error);
+        reportToolEvent({
+          approvalId,
+          serverId: tool.server.id,
+          serverName: tool.server.name,
+          toolName: tool.name,
+          status: "failed",
+          error: detail
+        });
+        content = `This MCP tool call failed: ${detail}. Continue without it.`;
+      }
       messages.push({
         role: "tool",
         toolCallId: toolCall.id,

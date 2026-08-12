@@ -1827,6 +1827,45 @@ svg {
   line-height: 1.45;
 }
 
+.mcp-tool-events {
+  display: grid;
+  gap: 6px;
+  max-width: 100%;
+  margin-top: 10px;
+}
+
+.mcp-tool-event {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 7px;
+  max-width: 100%;
+  padding: 7px 9px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.mcp-tool-event strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.mcp-tool-event small {
+  flex-basis: 100%;
+  color: var(--muted);
+  font-size: inherit;
+}
+
+.mcp-tool-event.blocked,
+.mcp-tool-event.failed {
+  border-color: color-mix(in srgb, var(--danger) 32%, var(--border));
+}
+
 .message-meta {
   display: flex;
   min-height: 22px;

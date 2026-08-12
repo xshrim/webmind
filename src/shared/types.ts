@@ -70,6 +70,7 @@ export type SelectionOverlayShortcut = HoverDefinitionShortcut;
 export type ToolSurface = "selection" | "home" | "tools" | "edge";
 export type ModelPurpose = "default" | "translation" | "vision";
 export type DefaultContextScope = "article" | "page";
+export type McpToolApprovalMode = "deny" | "ask" | "allow";
 
 export interface ToolDefinition {
   id: string;
@@ -111,6 +112,7 @@ export interface AppSettings {
   logLevel: AppLogLevel;
   autoScrollDuringStreaming: boolean;
   modelThinkingTimeoutSeconds: number;
+  mcpToolApprovalMode: McpToolApprovalMode;
   interfaceLanguage: AppLanguage;
   translationLanguage: AppLanguage;
   defaultContextScope: DefaultContextScope;
@@ -202,6 +204,7 @@ export interface ChatMessage {
   attachments?: ImageAttachment[];
   error?: boolean;
   interruptionNotice?: string;
+  mcpToolEvents?: McpToolEvent[];
 }
 
 export interface Conversation {
@@ -403,11 +406,28 @@ export interface McpToolApprovalRequest {
   destructive?: boolean;
 }
 
+export type McpToolEventStatus = "called" | "blocked" | "failed";
+export type McpToolBlockReason =
+  | "global-deny"
+  | "user-deny"
+  | "approval-timeout";
+
+export interface McpToolEvent {
+  approvalId?: string;
+  serverId: string;
+  serverName: string;
+  toolName: string;
+  status: McpToolEventStatus;
+  reason?: McpToolBlockReason;
+  error?: string;
+}
+
 export type McpToolApprovalDecision =
   | "allow-once"
   | "allow-round"
   | "allow-session"
-  | "deny";
+  | "deny"
+  | "deny-timeout";
 
 export interface ProviderTestResult {
   ok: boolean;

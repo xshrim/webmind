@@ -120,6 +120,7 @@ const menuActions = new Map(
   MENU_ITEMS.map((item) => [item.id, item.action])
 );
 const activeControllers = new Map<string, AbortController>();
+const MCP_APPROVAL_TIMEOUT_MS = 30_000;
 const pendingMcpApprovals = new Map<
   string,
   {
@@ -287,18 +288,33 @@ chrome.runtime.onConnect.addListener((port) => {
                 reject(controller.signal.reason);
                 return;
               }
+              let settled = false;
+              let timeout: ReturnType<typeof setTimeout> | undefined;
+              const settle = (decision: McpToolApprovalDecision) => {
+                if (settled) return;
+                settled = true;
+                if (timeout !== undefined) clearTimeout(timeout);
+                controller.signal.removeEventListener("abort", abort);
+                resolve(decision);
+              };
               const abort = () => {
                 pendingMcpApprovals.delete(approval.approvalId);
+                if (timeout !== undefined) clearTimeout(timeout);
                 reject(controller.signal.reason);
               };
               controller.signal.addEventListener("abort", abort, { once: true });
               pendingMcpApprovals.set(approval.approvalId, {
                 requestId: request.requestId,
                 resolve: (decision) => {
-                  controller.signal.removeEventListener("abort", abort);
-                  resolve(decision);
+                  settle(decision);
                 }
               });
+              timeout = setTimeout(() => {
+                const pending = pendingMcpApprovals.get(approval.approvalId);
+                if (!pending || pending.requestId !== request.requestId) return;
+                pendingMcpApprovals.delete(approval.approvalId);
+                pending.resolve("deny-timeout");
+              }, MCP_APPROVAL_TIMEOUT_MS);
               const posted = postToPort({
                 type: "mcp.approval.required",
                 requestId: request.requestId,
@@ -307,7 +323,14 @@ chrome.runtime.onConnect.addListener((port) => {
               if (!posted) {
                 controller.abort(new Error("MCP approval channel closed"));
               }
-            })
+            }),
+          (event) => {
+            postToPort({
+              type: "mcp.tool.status",
+              requestId: request.requestId,
+              event
+            });
+          }
         );
         if (text) {
           postToPort({

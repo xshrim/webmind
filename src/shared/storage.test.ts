@@ -54,6 +54,17 @@ describe("settings normalization", () => {
     expect(normalizeSettings().modelThinkingTimeoutSeconds).toBe(0);
   });
 
+  it("defaults invalid MCP tool authorization modes to ask", () => {
+    expect(normalizeSettings().mcpToolApprovalMode).toBe("ask");
+    expect(normalizeSettings({ mcpToolApprovalMode: "allow" }).mcpToolApprovalMode).toBe(
+      "allow"
+    );
+    expect(
+      normalizeSettings({ mcpToolApprovalMode: "invalid" as "ask" })
+        .mcpToolApprovalMode
+    ).toBe("ask");
+  });
+
   it("defaults tool answers to the interface language", () => {
     expect(normalizeSettings().toolResponseUseContextLanguage).toBe(false);
     expect(

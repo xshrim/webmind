@@ -7092,6 +7092,17 @@ var deUiText = {
   allowOnce: "Diesen Aufruf erlauben",
   allowRound: "Diesen Zug erlauben",
   allowSession: "Diese Sitzung erlauben",
+  mcpToolApprovalMode: "MCP-Tool-Berechtigung",
+  mcpToolApprovalModeHelp: "Steuert die globale Berechtigung f\xFCr aktivierte MCP-Tools. Bei Nachfragen kann die Freigabe f\xFCr diesen Aufruf, diesen Zug oder diese Sitzung gelten.",
+  mcpToolApprovalDeny: "Immer ablehnen",
+  mcpToolApprovalAsk: "Immer nachfragen",
+  mcpToolApprovalAllow: "Immer erlauben",
+  mcpToolUsed: "Verwendetes MCP-Tool",
+  mcpToolNotCalled: "MCP-Tool nicht aufgerufen",
+  mcpToolFailed: "MCP-Tool-Aufruf fehlgeschlagen",
+  mcpToolBlockedGlobalDeny: "Durch globale Einstellung abgelehnt",
+  mcpToolBlockedUserDeny: "Nutzer hat die Berechtigung abgelehnt",
+  mcpToolBlockedApprovalTimeout: "Zeitlimit f\xFCr Berechtigung abgelaufen",
   navTools: "Tools",
   navHistory: "Verlauf",
   navLogs: "Protokolle",
@@ -7663,6 +7674,17 @@ var esUiText = {
   allowOnce: "Permitir esta llamada",
   allowRound: "Permitir este turno",
   allowSession: "Permitir esta sesi\xF3n",
+  mcpToolApprovalMode: "Autorizaci\xF3n de herramientas MCP",
+  mcpToolApprovalModeHelp: "Controla la autorizaci\xF3n global de las herramientas MCP activadas. Al preguntar, la autorizaci\xF3n puede aplicarse a esta llamada, este turno o esta sesi\xF3n.",
+  mcpToolApprovalDeny: "Denegar siempre",
+  mcpToolApprovalAsk: "Preguntar siempre",
+  mcpToolApprovalAllow: "Permitir siempre",
+  mcpToolUsed: "Herramienta MCP utilizada",
+  mcpToolNotCalled: "Herramienta MCP no llamada",
+  mcpToolFailed: "Fall\xF3 la llamada a la herramienta MCP",
+  mcpToolBlockedGlobalDeny: "Denegada por la configuraci\xF3n global",
+  mcpToolBlockedUserDeny: "El usuario deneg\xF3 la autorizaci\xF3n",
+  mcpToolBlockedApprovalTimeout: "Tiempo de autorizaci\xF3n agotado",
   navTools: "Herramientas",
   navHistory: "Historial",
   navLogs: "Registros",
@@ -8234,6 +8256,17 @@ var frUiText = {
   allowOnce: "Autoriser cet appel",
   allowRound: "Autoriser ce tour",
   allowSession: "Autoriser cette session",
+  mcpToolApprovalMode: "Autorisation des outils MCP",
+  mcpToolApprovalModeHelp: "Contr\xF4le l'autorisation globale des outils MCP activ\xE9s. En mode demande, l'autorisation peut s'appliquer \xE0 cet appel, ce tour ou cette session.",
+  mcpToolApprovalDeny: "Toujours refuser",
+  mcpToolApprovalAsk: "Toujours demander",
+  mcpToolApprovalAllow: "Toujours autoriser",
+  mcpToolUsed: "Outil MCP utilis\xE9",
+  mcpToolNotCalled: "Outil MCP non appel\xE9",
+  mcpToolFailed: "\xC9chec de l'appel de l'outil MCP",
+  mcpToolBlockedGlobalDeny: "Refus\xE9 par le r\xE9glage global",
+  mcpToolBlockedUserDeny: "L'utilisateur a refus\xE9 l'autorisation",
+  mcpToolBlockedApprovalTimeout: "D\xE9lai d'autorisation expir\xE9",
   navTools: "Outils",
   navHistory: "Historique",
   navLogs: "Journaux",
@@ -8805,6 +8838,17 @@ var itUiText = {
   allowOnce: "Consenti questa chiamata",
   allowRound: "Consenti questo turno",
   allowSession: "Consenti questa sessione",
+  mcpToolApprovalMode: "Autorizzazione strumenti MCP",
+  mcpToolApprovalModeHelp: "Controlla l'autorizzazione globale degli strumenti MCP abilitati. Quando viene chiesto, l'autorizzazione pu\xF2 valere per questa chiamata, questo turno o questa sessione.",
+  mcpToolApprovalDeny: "Rifiuta sempre",
+  mcpToolApprovalAsk: "Chiedi sempre",
+  mcpToolApprovalAllow: "Consenti sempre",
+  mcpToolUsed: "Strumento MCP utilizzato",
+  mcpToolNotCalled: "Strumento MCP non chiamato",
+  mcpToolFailed: "Chiamata allo strumento MCP non riuscita",
+  mcpToolBlockedGlobalDeny: "Rifiutata dalle impostazioni globali",
+  mcpToolBlockedUserDeny: "L'utente ha rifiutato l'autorizzazione",
+  mcpToolBlockedApprovalTimeout: "Tempo di autorizzazione scaduto",
   navTools: "Strumenti",
   navHistory: "Cronologia",
   navLogs: "Log",
@@ -9407,6 +9451,17 @@ var CORE_UI_TEXT = {
     allowOnce: "\u672C\u6B21\u5141\u8BB8",
     allowRound: "\u672C\u8F6E\u5141\u8BB8",
     allowSession: "\u4F1A\u8BDD\u5141\u8BB8",
+    mcpToolApprovalMode: "MCP \u5DE5\u5177\u6267\u884C\u6388\u6743\u6A21\u5F0F",
+    mcpToolApprovalModeHelp: "\u63A7\u5236\u5DF2\u542F\u7528 MCP \u5DE5\u5177\u7684\u5168\u5C40\u6267\u884C\u6388\u6743\uFF1B\u59CB\u7EC8\u8BE2\u95EE\u65F6\u53EF\u5728\u5BF9\u8BDD\u4E2D\u6309\u672C\u6B21\u3001\u672C\u8F6E\u6216\u4F1A\u8BDD\u6388\u6743\u3002",
+    mcpToolApprovalDeny: "\u59CB\u7EC8\u62D2\u7EDD",
+    mcpToolApprovalAsk: "\u59CB\u7EC8\u8BE2\u95EE",
+    mcpToolApprovalAllow: "\u59CB\u7EC8\u5141\u8BB8",
+    mcpToolUsed: "\u5DF2\u4F7F\u7528 MCP \u5DE5\u5177",
+    mcpToolNotCalled: "\u672A\u8C03\u7528 MCP \u5DE5\u5177",
+    mcpToolFailed: "MCP \u5DE5\u5177\u8C03\u7528\u5931\u8D25",
+    mcpToolBlockedGlobalDeny: "\u5DF2\u6309\u5168\u5C40\u8BBE\u7F6E\u62D2\u7EDD",
+    mcpToolBlockedUserDeny: "\u7528\u6237\u62D2\u7EDD\u6388\u6743",
+    mcpToolBlockedApprovalTimeout: "\u7B49\u5F85\u6388\u6743\u8D85\u65F6",
     navTools: "\u5DE5\u5177",
     navHistory: "\u5386\u53F2",
     navLogs: "\u65E5\u5FD7",
@@ -9976,6 +10031,17 @@ var CORE_UI_TEXT = {
     allowOnce: "\u672C\u6B21\u5141\u8A31",
     allowRound: "\u672C\u8F2A\u5141\u8A31",
     allowSession: "\u6703\u8A71\u5141\u8A31",
+    mcpToolApprovalMode: "MCP \u5DE5\u5177\u57F7\u884C\u6388\u6B0A\u6A21\u5F0F",
+    mcpToolApprovalModeHelp: "\u63A7\u5236\u5DF2\u555F\u7528 MCP \u5DE5\u5177\u7684\u5168\u57DF\u57F7\u884C\u6388\u6B0A\uFF1B\u59CB\u7D42\u8A62\u554F\u6642\u53EF\u5728\u5C0D\u8A71\u4E2D\u6309\u672C\u6B21\u3001\u672C\u8F2A\u6216\u6703\u8A71\u6388\u6B0A\u3002",
+    mcpToolApprovalDeny: "\u59CB\u7D42\u62D2\u7D55",
+    mcpToolApprovalAsk: "\u59CB\u7D42\u8A62\u554F",
+    mcpToolApprovalAllow: "\u59CB\u7D42\u5141\u8A31",
+    mcpToolUsed: "\u5DF2\u4F7F\u7528 MCP \u5DE5\u5177",
+    mcpToolNotCalled: "\u672A\u547C\u53EB MCP \u5DE5\u5177",
+    mcpToolFailed: "MCP \u5DE5\u5177\u547C\u53EB\u5931\u6557",
+    mcpToolBlockedGlobalDeny: "\u5DF2\u4F9D\u5168\u57DF\u8A2D\u5B9A\u62D2\u7D55",
+    mcpToolBlockedUserDeny: "\u4F7F\u7528\u8005\u62D2\u7D55\u6388\u6B0A",
+    mcpToolBlockedApprovalTimeout: "\u7B49\u5F85\u6388\u6B0A\u903E\u6642",
     navTools: "\u5DE5\u5177",
     navHistory: "\u6B77\u53F2",
     navLogs: "\u65E5\u8A8C",
@@ -10545,6 +10611,17 @@ var CORE_UI_TEXT = {
     allowOnce: "Allow This Call",
     allowRound: "Allow This Turn",
     allowSession: "Allow This Session",
+    mcpToolApprovalMode: "MCP Tool Authorization",
+    mcpToolApprovalModeHelp: "Controls global authorization for enabled MCP tools. When set to ask, chat approvals may apply to one call, one turn, or this session.",
+    mcpToolApprovalDeny: "Always Deny",
+    mcpToolApprovalAsk: "Always Ask",
+    mcpToolApprovalAllow: "Always Allow",
+    mcpToolUsed: "MCP tool used",
+    mcpToolNotCalled: "MCP tool not called",
+    mcpToolFailed: "MCP tool call failed",
+    mcpToolBlockedGlobalDeny: "Denied by global setting",
+    mcpToolBlockedUserDeny: "User denied authorization",
+    mcpToolBlockedApprovalTimeout: "Authorization timed out",
     navTools: "Tools",
     navHistory: "History",
     navLogs: "Logs",
@@ -11114,6 +11191,17 @@ var CORE_UI_TEXT = {
     allowOnce: "\u4ECA\u56DE\u306E\u307F\u8A31\u53EF",
     allowRound: "\u3053\u306E\u30BF\u30FC\u30F3\u3067\u8A31\u53EF",
     allowSession: "\u30BB\u30C3\u30B7\u30E7\u30F3\u3067\u8A31\u53EF",
+    mcpToolApprovalMode: "MCP \u30C4\u30FC\u30EB\u5B9F\u884C\u306E\u8A31\u53EF\u30E2\u30FC\u30C9",
+    mcpToolApprovalModeHelp: "\u6709\u52B9\u306A MCP \u30C4\u30FC\u30EB\u306B\u5BFE\u3059\u308B\u30B0\u30ED\u30FC\u30D0\u30EB\u306A\u5B9F\u884C\u8A31\u53EF\u3092\u5236\u5FA1\u3057\u307E\u3059\u3002\u78BA\u8A8D\u3059\u308B\u5834\u5408\u306F\u3001\u4ECA\u56DE\u3001\u3053\u306E\u30BF\u30FC\u30F3\u3001\u307E\u305F\u306F\u30BB\u30C3\u30B7\u30E7\u30F3\u306B\u8A31\u53EF\u3067\u304D\u307E\u3059\u3002",
+    mcpToolApprovalDeny: "\u5E38\u306B\u62D2\u5426",
+    mcpToolApprovalAsk: "\u5E38\u306B\u78BA\u8A8D",
+    mcpToolApprovalAllow: "\u5E38\u306B\u8A31\u53EF",
+    mcpToolUsed: "\u4F7F\u7528\u3057\u305F MCP \u30C4\u30FC\u30EB",
+    mcpToolNotCalled: "MCP \u30C4\u30FC\u30EB\u306F\u672A\u5B9F\u884C",
+    mcpToolFailed: "MCP \u30C4\u30FC\u30EB\u306E\u547C\u3073\u51FA\u3057\u306B\u5931\u6557",
+    mcpToolBlockedGlobalDeny: "\u30B0\u30ED\u30FC\u30D0\u30EB\u8A2D\u5B9A\u306B\u3088\u308A\u62D2\u5426",
+    mcpToolBlockedUserDeny: "\u30E6\u30FC\u30B6\u30FC\u304C\u8A31\u53EF\u3092\u62D2\u5426",
+    mcpToolBlockedApprovalTimeout: "\u8A31\u53EF\u5F85\u3061\u304C\u30BF\u30A4\u30E0\u30A2\u30A6\u30C8",
     navTools: "\u30C4\u30FC\u30EB",
     navHistory: "\u5C65\u6B74",
     navLogs: "\u30ED\u30B0",
@@ -11683,6 +11771,17 @@ var CORE_UI_TEXT = {
     allowOnce: "\uC774\uBC88 \uD638\uCD9C \uD5C8\uC6A9",
     allowRound: "\uC774\uBC88 \uD134 \uD5C8\uC6A9",
     allowSession: "\uC138\uC158 \uD5C8\uC6A9",
+    mcpToolApprovalMode: "MCP \uB3C4\uAD6C \uC2E4\uD589 \uAD8C\uD55C \uBAA8\uB4DC",
+    mcpToolApprovalModeHelp: "\uD65C\uC131\uD654\uB41C MCP \uB3C4\uAD6C\uC758 \uC804\uC5ED \uC2E4\uD589 \uAD8C\uD55C\uC744 \uC81C\uC5B4\uD569\uB2C8\uB2E4. \uD56D\uC0C1 \uBB3B\uAE30\uC5D0\uC11C\uB294 \uC774\uBC88 \uD638\uCD9C, \uC774\uBC88 \uD134 \uB610\uB294 \uC138\uC158 \uB2E8\uC704\uB85C \uD5C8\uC6A9\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
+    mcpToolApprovalDeny: "\uD56D\uC0C1 \uAC70\uBD80",
+    mcpToolApprovalAsk: "\uD56D\uC0C1 \uBB3B\uAE30",
+    mcpToolApprovalAllow: "\uD56D\uC0C1 \uD5C8\uC6A9",
+    mcpToolUsed: "\uC0AC\uC6A9\uD55C MCP \uB3C4\uAD6C",
+    mcpToolNotCalled: "MCP \uB3C4\uAD6C\uB97C \uD638\uCD9C\uD558\uC9C0 \uC54A\uC74C",
+    mcpToolFailed: "MCP \uB3C4\uAD6C \uD638\uCD9C \uC2E4\uD328",
+    mcpToolBlockedGlobalDeny: "\uC804\uC5ED \uC124\uC815\uC5D0 \uB530\uB77C \uAC70\uBD80\uB428",
+    mcpToolBlockedUserDeny: "\uC0AC\uC6A9\uC790\uAC00 \uAD8C\uD55C\uC744 \uAC70\uBD80\uD568",
+    mcpToolBlockedApprovalTimeout: "\uAD8C\uD55C \uB300\uAE30 \uC2DC\uAC04\uC774 \uCD08\uACFC\uB428",
     navTools: "\uB3C4\uAD6C",
     navHistory: "\uAE30\uB85D",
     navLogs: "\uB85C\uADF8",
@@ -14101,6 +14200,7 @@ var DEFAULT_SETTINGS = {
   logLevel: "info",
   autoScrollDuringStreaming: true,
   modelThinkingTimeoutSeconds: 0,
+  mcpToolApprovalMode: "ask",
   interfaceLanguage: "auto",
   translationLanguage: "auto",
   defaultContextScope: "article",
@@ -14195,6 +14295,11 @@ var HOVER_DEFINITION_SHORTCUTS = /* @__PURE__ */ new Set([
   "alt-shift",
   "ctrl-alt-shift"
 ]);
+var MCP_TOOL_APPROVAL_MODES = /* @__PURE__ */ new Set([
+  "deny",
+  "ask",
+  "allow"
+]);
 function normalizeImmersiveShortcut(value, fallback) {
   return IMMERSIVE_SHORTCUTS.has(value) ? value : fallback;
 }
@@ -14255,6 +14360,9 @@ function normalizeSettings(stored = {}) {
     logLevel: APP_LOG_LEVELS.has(stored.logLevel) ? stored.logLevel : DEFAULT_SETTINGS.logLevel,
     autoScrollDuringStreaming: stored.autoScrollDuringStreaming ?? true,
     modelThinkingTimeoutSeconds: storedTimeoutSeconds,
+    mcpToolApprovalMode: MCP_TOOL_APPROVAL_MODES.has(
+      stored.mcpToolApprovalMode
+    ) ? stored.mcpToolApprovalMode : DEFAULT_SETTINGS.mcpToolApprovalMode,
     interfaceLanguage: stored.interfaceLanguage && APP_LANGUAGES.has(stored.interfaceLanguage) ? stored.interfaceLanguage : DEFAULT_SETTINGS.interfaceLanguage,
     translationLanguage: stored.translationLanguage && APP_LANGUAGES.has(stored.translationLanguage) ? stored.translationLanguage : DEFAULT_SETTINGS.translationLanguage,
     defaultContextScope: stored.defaultContextScope === "page" ? "page" : "article",
@@ -26126,7 +26234,7 @@ function agentMessages(request) {
     attachments: message.attachments
   }));
 }
-async function runMcpAgent(request, signal, requestApproval) {
+async function runMcpAgent(request, signal, requestApproval, reportToolEvent = () => void 0) {
   const enabled = await enabledMcpTools(request);
   if (!enabled.length) {
     throw new Error(
@@ -26186,9 +26294,28 @@ async function runMcpAgent(request, signal, requestApproval) {
       }
       const permissionKey = mcpPermissionKey(tool.server.id, tool.name);
       let decision = "allow-once";
-      if (!roundAllowed.has(permissionKey) && !sessionAllowed.has(permissionKey)) {
+      let approvalId;
+      const approvalMode = (await loadSettings()).mcpToolApprovalMode;
+      if (approvalMode === "deny") {
+        reportToolEvent({
+          serverId: tool.server.id,
+          serverName: tool.server.name,
+          toolName: tool.name,
+          status: "blocked",
+          reason: "global-deny"
+        });
+        messages.push({
+          role: "tool",
+          toolCallId: toolCall.id,
+          toolName: tool.name,
+          content: "This MCP tool call was not executed because the global authorization mode always denies tool execution. Continue without it."
+        });
+        continue;
+      }
+      if (approvalMode === "ask" && !roundAllowed.has(permissionKey) && !sessionAllowed.has(permissionKey)) {
+        approvalId = crypto.randomUUID();
         decision = await requestApproval({
-          approvalId: crypto.randomUUID(),
+          approvalId,
           serverId: tool.server.id,
           serverName: tool.server.name,
           toolName: tool.name,
@@ -26200,12 +26327,52 @@ async function runMcpAgent(request, signal, requestApproval) {
       if (decision === "allow-round" || decision === "allow-session") {
         roundAllowed.add(permissionKey);
       }
-      const content = decision === "deny" ? "The user denied this tool call. Continue without it." : await callMcpTool(
-        tool.server,
-        tool.name,
-        toolCall.arguments,
-        signal
-      );
+      if (decision === "deny" || decision === "deny-timeout") {
+        const timeout = decision === "deny-timeout";
+        reportToolEvent({
+          approvalId,
+          serverId: tool.server.id,
+          serverName: tool.server.name,
+          toolName: tool.name,
+          status: "blocked",
+          reason: timeout ? "approval-timeout" : "user-deny"
+        });
+        messages.push({
+          role: "tool",
+          toolCallId: toolCall.id,
+          toolName: tool.name,
+          content: timeout ? "This MCP tool call was not executed because the authorization request timed out. Continue without it." : "The user denied this tool call. Continue without it."
+        });
+        continue;
+      }
+      let content;
+      try {
+        content = await callMcpTool(
+          tool.server,
+          tool.name,
+          toolCall.arguments,
+          signal
+        );
+        reportToolEvent({
+          approvalId,
+          serverId: tool.server.id,
+          serverName: tool.server.name,
+          toolName: tool.name,
+          status: "called"
+        });
+      } catch (error2) {
+        if (signal.aborted) throw error2;
+        const detail = error2 instanceof Error ? error2.message : String(error2);
+        reportToolEvent({
+          approvalId,
+          serverId: tool.server.id,
+          serverName: tool.server.name,
+          toolName: tool.name,
+          status: "failed",
+          error: detail
+        });
+        content = `This MCP tool call failed: ${detail}. Continue without it.`;
+      }
       messages.push({
         role: "tool",
         toolCallId: toolCall.id,
@@ -26450,6 +26617,7 @@ var menuActions = new Map(
   MENU_ITEMS.map((item) => [item.id, item.action])
 );
 var activeControllers = /* @__PURE__ */ new Map();
+var MCP_APPROVAL_TIMEOUT_MS = 3e4;
 var pendingMcpApprovals = /* @__PURE__ */ new Map();
 function arrayBufferToBase64(buffer) {
   const bytes = new Uint8Array(buffer);
@@ -26579,18 +26747,33 @@ chrome.runtime.onConnect.addListener((port) => {
               reject(controller.signal.reason);
               return;
             }
+            let settled = false;
+            let timeout;
+            const settle = (decision) => {
+              if (settled) return;
+              settled = true;
+              if (timeout !== void 0) clearTimeout(timeout);
+              controller.signal.removeEventListener("abort", abort);
+              resolve(decision);
+            };
             const abort = () => {
               pendingMcpApprovals.delete(approval.approvalId);
+              if (timeout !== void 0) clearTimeout(timeout);
               reject(controller.signal.reason);
             };
             controller.signal.addEventListener("abort", abort, { once: true });
             pendingMcpApprovals.set(approval.approvalId, {
               requestId: request.requestId,
               resolve: (decision) => {
-                controller.signal.removeEventListener("abort", abort);
-                resolve(decision);
+                settle(decision);
               }
             });
+            timeout = setTimeout(() => {
+              const pending = pendingMcpApprovals.get(approval.approvalId);
+              if (!pending || pending.requestId !== request.requestId) return;
+              pendingMcpApprovals.delete(approval.approvalId);
+              pending.resolve("deny-timeout");
+            }, MCP_APPROVAL_TIMEOUT_MS);
             const posted = postToPort({
               type: "mcp.approval.required",
               requestId: request.requestId,
@@ -26599,7 +26782,14 @@ chrome.runtime.onConnect.addListener((port) => {
             if (!posted) {
               controller.abort(new Error("MCP approval channel closed"));
             }
-          })
+          }),
+          (event) => {
+            postToPort({
+              type: "mcp.tool.status",
+              requestId: request.requestId,
+              event
+            });
+          }
         );
         if (text) {
           postToPort({

@@ -11,7 +11,8 @@ import type {
   ImmersiveShortcut,
   PendingAction,
   ProviderProfile,
-  McpServerConfig
+  McpServerConfig,
+  McpToolApprovalMode
 } from "./types";
 
 const APP_LANGUAGES = new Set<AppLanguage>([
@@ -70,6 +71,12 @@ const HOVER_DEFINITION_SHORTCUTS = new Set<HoverDefinitionShortcut>([
   "ctrl-shift",
   "alt-shift",
   "ctrl-alt-shift"
+]);
+
+const MCP_TOOL_APPROVAL_MODES = new Set<McpToolApprovalMode>([
+  "deny",
+  "ask",
+  "allow"
 ]);
 
 function normalizeImmersiveShortcut(
@@ -226,6 +233,11 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
       : DEFAULT_SETTINGS.logLevel,
     autoScrollDuringStreaming: stored.autoScrollDuringStreaming ?? true,
     modelThinkingTimeoutSeconds: storedTimeoutSeconds,
+    mcpToolApprovalMode: MCP_TOOL_APPROVAL_MODES.has(
+      stored.mcpToolApprovalMode as McpToolApprovalMode
+    )
+      ? (stored.mcpToolApprovalMode as McpToolApprovalMode)
+      : DEFAULT_SETTINGS.mcpToolApprovalMode,
     interfaceLanguage:
       stored.interfaceLanguage && APP_LANGUAGES.has(stored.interfaceLanguage)
         ? stored.interfaceLanguage

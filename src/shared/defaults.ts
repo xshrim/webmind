@@ -190,6 +190,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   logLevel: "info",
   autoScrollDuringStreaming: true,
   modelThinkingTimeoutSeconds: 0,
+  mcpToolApprovalMode: "ask",
   interfaceLanguage: "auto",
   translationLanguage: "auto",
   defaultContextScope: "article",

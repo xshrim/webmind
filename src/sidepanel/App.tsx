@@ -101,6 +101,7 @@ import type {
   CustomTool,
   ImageAttachment,
   McpServerConfig,
+  McpToolEvent,
   McpToolApprovalDecision,
   McpToolApprovalRequest,
   McpToolSelection,
@@ -217,11 +218,13 @@ interface StreamMessage {
     | "chat.done"
     | "chat.error"
     | "chat.cancelled"
-    | "mcp.approval.required";
+    | "mcp.approval.required"
+    | "mcp.tool.status";
   requestId: string;
   delta?: string;
   error?: string;
   approval?: McpToolApprovalRequest;
+  event?: McpToolEvent;
 }
 
 interface PendingMcpApproval {
@@ -1030,6 +1033,39 @@ export function App() {
           requestId: message.requestId,
           approval: message.approval
         });
+        return;
+      }
+      if (message.type === "mcp.tool.status" && message.event) {
+        const toolEvent = message.event;
+        const assistantId = requestMapRef.current.get(message.requestId);
+        if (!assistantId) return;
+        const reasonText =
+          toolEvent.reason === "global-deny"
+            ? uiText(settingsRef.current?.interfaceLanguage, "mcpToolBlockedGlobalDeny")
+            : toolEvent.reason === "user-deny"
+              ? uiText(settingsRef.current?.interfaceLanguage, "mcpToolBlockedUserDeny")
+              : toolEvent.reason === "approval-timeout"
+                ? uiText(
+                    settingsRef.current?.interfaceLanguage,
+                    "mcpToolBlockedApprovalTimeout"
+                  )
+                : "";
+        if (reasonText) setNotice(reasonText);
+        setMcpApproval((current) =>
+          current?.approval.approvalId === toolEvent.approvalId
+            ? null
+            : current
+        );
+        updateMessages((current) =>
+          current.map((item) =>
+            item.id === assistantId
+              ? {
+                  ...item,
+                  mcpToolEvents: [...(item.mcpToolEvents ?? []), toolEvent]
+                }
+              : item
+          )
+        );
         return;
       }
       if (message.type === "chat.cancelled") {
@@ -4667,6 +4703,35 @@ export function App() {
                         <span />
                         <span />
                         <span />
+                      </div>
+                    ) : null}
+                    {message.role === "assistant" && message.mcpToolEvents?.length ? (
+                      <div className="mcp-tool-events" role="status">
+                        {message.mcpToolEvents.map((event, index) => {
+                          const label =
+                            event.status === "called"
+                              ? t("mcpToolUsed")
+                              : event.status === "failed"
+                                ? t("mcpToolFailed")
+                                : t("mcpToolNotCalled");
+                          const detail =
+                            event.status === "failed"
+                              ? event.error
+                              : event.reason === "global-deny"
+                                ? t("mcpToolBlockedGlobalDeny")
+                                : event.reason === "user-deny"
+                                  ? t("mcpToolBlockedUserDeny")
+                                  : event.reason === "approval-timeout"
+                                    ? t("mcpToolBlockedApprovalTimeout")
+                                    : undefined;
+                          return (
+                            <div className={`mcp-tool-event ${event.status}`} key={`${event.serverId}:${event.toolName}:${index}`}>
+                              <strong>{label}</strong>
+                              <span>{event.serverName} / {event.toolName}</span>
+                              {detail && <small>{detail}</small>}
+                            </div>
+                          );
+                        })}
                       </div>
                     ) : null}
                     {message.interruptionNotice && (

@@ -2169,6 +2169,30 @@ export function SettingsApp() {
                   </small>
                 </div>
                 <div className="field">
+                  <span className="field-label">{t("mcpToolApprovalMode")}</span>
+                  <div className="segmented segmented-wrap">
+                    {([
+                      ["deny", "mcpToolApprovalDeny"],
+                      ["ask", "mcpToolApprovalAsk"],
+                      ["allow", "mcpToolApprovalAllow"]
+                    ] as const).map(([mode, label]) => (
+                      <button
+                        key={mode}
+                        className={
+                          settings.mcpToolApprovalMode === mode ? "active" : ""
+                        }
+                        type="button"
+                        onClick={() =>
+                          void updatePreference("mcpToolApprovalMode", mode)
+                        }
+                      >
+                        {t(label)}
+                      </button>
+                    ))}
+                  </div>
+                  <small>{t("mcpToolApprovalModeHelp")}</small>
+                </div>
+                <div className="field">
                   <span className="field-label">{t("appearanceTheme")}</span>
                   <div className="segmented">
                     {(["system", "light", "dark"] as const).map((theme) => (
