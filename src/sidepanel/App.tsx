@@ -5322,7 +5322,7 @@ export function App() {
                   <Search />
                 </button>
                 <div
-                  className="icon-menu-shell"
+                  className="icon-menu-shell mcp-menu-shell"
                   onBlur={(event) => {
                     if (isFocusOutside(event.currentTarget, event.relatedTarget)) {
                       setMcpMenuOpen(false);
