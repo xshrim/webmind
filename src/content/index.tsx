@@ -100,7 +100,9 @@ import {
 } from "./pageContext";
 import {
   cancelLatestAnimationFrame,
+  boundedTextLength,
   scheduleLatestAnimationFrame,
+  textOffsetAtPoint,
   textRectAtPoint,
   type LatestFrameState
 } from "./hoverDefinition";
@@ -446,6 +448,61 @@ function textNodeAtPoint(
   if (position) {
     const point = caretTextPoint(position.offsetNode, position.offset);
     if (point) return point;
+  }
+  return textNodeFromHitElements(clientX, clientY);
+}
+
+const MAX_HOVER_FALLBACK_ELEMENTS = 8;
+const MAX_HOVER_FALLBACK_TEXT_NODES = 24;
+const MAX_HOVER_FALLBACK_CHARACTERS = 640;
+
+function textNodeFromHitElements(
+  clientX: number,
+  clientY: number
+): { node: Text; offset: number } | null {
+  const hitElements = document.elementsFromPoint(clientX, clientY);
+  const scannedRoots: Element[] = [];
+  const visitedTextNodes = new Set<Text>();
+  let textNodeCount = 0;
+  let characterBudget = MAX_HOVER_FALLBACK_CHARACTERS;
+
+  for (const element of hitElements.slice(0, MAX_HOVER_FALLBACK_ELEMENTS)) {
+    if (scannedRoots.some((root) => element.contains(root))) continue;
+    scannedRoots.push(element);
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    let current: Node | null;
+    while ((current = walker.nextNode())) {
+      if (
+        !(current instanceof Text) ||
+        visitedTextNodes.has(current) ||
+        !current.data.trim()
+      ) {
+        continue;
+      }
+      visitedTextNodes.add(current);
+      const textNode = current;
+      textNodeCount += 1;
+      if (textNodeCount > MAX_HOVER_FALLBACK_TEXT_NODES || characterBudget <= 0) {
+        return null;
+      }
+      const length = boundedTextLength(current.data.length, characterBudget);
+      characterBudget -= length;
+      const offset = textOffsetAtPoint(
+        textNode.data.length,
+        length,
+        clientX,
+        clientY,
+        (characterOffset) => {
+          const range = document.createRange();
+          range.setStart(textNode, characterOffset);
+          range.setEnd(textNode, characterOffset + 1);
+          return Array.from(range.getClientRects());
+        }
+      );
+      if (offset !== null) {
+        return { node: textNode, offset };
+      }
+    }
   }
   return null;
 }

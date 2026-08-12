@@ -25395,6 +25395,16 @@ ${index}. ${content.trim()}
       (rect) => rect.width > 0 && rect.height > 0 && clientX >= rect.left && clientX < rect.right && clientY >= rect.top && clientY < rect.bottom
     ) ?? null;
   }
+  function boundedTextLength(textLength2, remainingBudget) {
+    return Math.max(0, Math.min(textLength2, remainingBudget));
+  }
+  function textOffsetAtPoint(textLength2, characterBudget, clientX, clientY, rectsAtOffset) {
+    const length = boundedTextLength(textLength2, characterBudget);
+    for (let offset = 0; offset < length; offset += 1) {
+      if (textRectAtPoint(rectsAtOffset(offset), clientX, clientY)) return offset;
+    }
+    return null;
+  }
   function scheduleLatestAnimationFrame(state, value, requestFrame, run) {
     state.value = value;
     if (state.frameId !== null) return;
@@ -29752,6 +29762,51 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     if (position) {
       const point = caretTextPoint(position.offsetNode, position.offset);
       if (point) return point;
+    }
+    return textNodeFromHitElements(clientX, clientY);
+  }
+  var MAX_HOVER_FALLBACK_ELEMENTS = 8;
+  var MAX_HOVER_FALLBACK_TEXT_NODES = 24;
+  var MAX_HOVER_FALLBACK_CHARACTERS = 640;
+  function textNodeFromHitElements(clientX, clientY) {
+    const hitElements = document.elementsFromPoint(clientX, clientY);
+    const scannedRoots = [];
+    const visitedTextNodes = /* @__PURE__ */ new Set();
+    let textNodeCount = 0;
+    let characterBudget = MAX_HOVER_FALLBACK_CHARACTERS;
+    for (const element of hitElements.slice(0, MAX_HOVER_FALLBACK_ELEMENTS)) {
+      if (scannedRoots.some((root) => element.contains(root))) continue;
+      scannedRoots.push(element);
+      const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+      let current;
+      while (current = walker.nextNode()) {
+        if (!(current instanceof Text) || visitedTextNodes.has(current) || !current.data.trim()) {
+          continue;
+        }
+        visitedTextNodes.add(current);
+        const textNode = current;
+        textNodeCount += 1;
+        if (textNodeCount > MAX_HOVER_FALLBACK_TEXT_NODES || characterBudget <= 0) {
+          return null;
+        }
+        const length = boundedTextLength(current.data.length, characterBudget);
+        characterBudget -= length;
+        const offset = textOffsetAtPoint(
+          textNode.data.length,
+          length,
+          clientX,
+          clientY,
+          (characterOffset) => {
+            const range = document.createRange();
+            range.setStart(textNode, characterOffset);
+            range.setEnd(textNode, characterOffset + 1);
+            return Array.from(range.getClientRects());
+          }
+        );
+        if (offset !== null) {
+          return { node: textNode, offset };
+        }
+      }
     }
     return null;
   }

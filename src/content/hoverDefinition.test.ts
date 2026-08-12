@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   cancelLatestAnimationFrame,
+  boundedTextLength,
   scheduleLatestAnimationFrame,
+  textOffsetAtPoint,
   textRectAtPoint,
   type LatestFrameState,
   type TextRect
@@ -89,5 +91,28 @@ describe("latest animation-frame scheduling", () => {
 
     expect(cancelled).toBe(5);
     expect(state).toEqual({ frameId: null, value: null });
+  });
+});
+
+describe("boundedTextLength", () => {
+  it("keeps fallback text scanning within its remaining character budget", () => {
+    expect(boundedTextLength(18, 40)).toBe(18);
+    expect(boundedTextLength(240, 40)).toBe(40);
+    expect(boundedTextLength(240, 0)).toBe(0);
+  });
+});
+
+describe("textOffsetAtPoint", () => {
+  it("finds only the rendered character under the pointer", () => {
+    const characterRects = [rect(10, 10, 20, 24), rect(20, 10, 30, 24)];
+    expect(
+      textOffsetAtPoint(2, 20, 24, 18, (offset) => [characterRects[offset]])
+    ).toBe(1);
+  });
+
+  it("does not scan beyond the configured character budget", () => {
+    expect(
+      textOffsetAtPoint(3, 2, 34, 18, (offset) => [rect(10 + offset * 12, 10, 22 + offset * 12, 24)])
+    ).toBeNull();
   });
 });

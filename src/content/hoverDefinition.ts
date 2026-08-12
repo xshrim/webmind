@@ -30,6 +30,27 @@ export interface LatestFrameState<T> {
   value: T | null;
 }
 
+export function boundedTextLength(
+  textLength: number,
+  remainingBudget: number
+): number {
+  return Math.max(0, Math.min(textLength, remainingBudget));
+}
+
+export function textOffsetAtPoint<T extends TextRect>(
+  textLength: number,
+  characterBudget: number,
+  clientX: number,
+  clientY: number,
+  rectsAtOffset: (offset: number) => readonly T[]
+): number | null {
+  const length = boundedTextLength(textLength, characterBudget);
+  for (let offset = 0; offset < length; offset += 1) {
+    if (textRectAtPoint(rectsAtOffset(offset), clientX, clientY)) return offset;
+  }
+  return null;
+}
+
 export function scheduleLatestAnimationFrame<T>(
   state: LatestFrameState<T>,
   value: T,
