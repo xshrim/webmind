@@ -8,7 +8,11 @@ import type {
   AppLanguage,
   AppLogLevel,
   ChatMessage,
+  ModelAgentMessage,
   ModelCompleteRequest,
+  ModelToolCall,
+  ModelToolTurnRequest,
+  ModelToolTurnResult,
   ProviderKind,
   ProviderProfile
 } from "../shared/types";
@@ -27,6 +31,11 @@ interface ProviderCall {
   temperature: number;
   maxTokens: number;
   language?: AppLanguage;
+}
+
+interface ProviderToolCall extends Omit<ProviderCall, "messages"> {
+  messages: ModelAgentMessage[];
+  tools: ModelToolTurnRequest["tools"];
 }
 
 interface ProviderModelEntry {
@@ -173,6 +182,27 @@ async function resolveCall(
   };
 }
 
+async function resolveToolCall(
+  request: ModelToolTurnRequest
+): Promise<ProviderToolCall> {
+  const settings = await loadSettings();
+  const profile = profileForPurpose(settings, request.purpose, request.profileId);
+  if (!profile) {
+    throw new Error(uiText(settings.interfaceLanguage, "modelEngineRequired"));
+  }
+  const secret = await getProviderSecret(profile);
+  assertSecret(profile, secret, settings.interfaceLanguage);
+  return {
+    profile,
+    secret,
+    messages: request.messages,
+    tools: request.tools,
+    temperature: request.temperature ?? profile.temperature,
+    maxTokens: request.maxTokens ?? profile.maxTokens,
+    language: settings.interfaceLanguage
+  };
+}
+
 function imageParts(message: ChatMessage, language?: AppLanguage) {
   return (message.attachments ?? [])
     .filter(
@@ -185,6 +215,221 @@ function imageParts(message: ChatMessage, language?: AppLanguage) {
       attachment,
       ...dataUrlParts(attachment.dataUrl ?? "", language)
     }));
+}
+
+function agentImageParts(message: ModelAgentMessage, language?: AppLanguage) {
+  return imageParts(
+    {
+      id: "agent",
+      role: message.role === "tool" ? "user" : message.role,
+      content: message.content,
+      createdAt: 0,
+      attachments: message.attachments
+    },
+    language
+  );
+}
+
+export function buildOpenAiToolRequest(call: ProviderToolCall) {
+  return {
+    model: call.profile.model,
+    messages: call.messages.map((message) => {
+      if (message.role === "tool") {
+        return {
+          role: "tool",
+          tool_call_id: message.toolCallId,
+          content: message.content
+        };
+      }
+      if (message.role === "assistant" && message.toolCalls?.length) {
+        return {
+          role: "assistant",
+          content: message.content || null,
+          tool_calls: message.toolCalls.map((toolCall) => ({
+            id: toolCall.id,
+            type: "function",
+            function: {
+              name: toolCall.name,
+              arguments: JSON.stringify(toolCall.arguments)
+            }
+          }))
+        };
+      }
+      const images = agentImageParts(message, call.language);
+      return {
+        role: message.role,
+        content: images.length
+          ? [
+              { type: "text", text: message.content },
+              ...images.map(({ attachment }) => ({
+                type: "image_url",
+                image_url: { url: attachment.dataUrl }
+              }))
+            ]
+          : message.content
+      };
+    }),
+    tools: call.tools.map((tool) => ({
+      type: "function",
+      function: {
+        name: tool.name,
+        description: tool.description,
+        parameters: tool.inputSchema
+      }
+    })),
+    tool_choice: "auto",
+    temperature: call.temperature,
+    max_tokens: call.maxTokens,
+    stream: false
+  };
+}
+
+export function buildAnthropicToolRequest(call: ProviderToolCall) {
+  const system = call.messages
+    .filter((message) => message.role === "system")
+    .map((message) => message.content)
+    .join("\n\n");
+  const messages: Array<{ role: string; content: Array<Record<string, unknown>> }> = [];
+  for (const message of call.messages.filter((item) => item.role !== "system")) {
+    if (message.role === "tool") {
+      const result = {
+        type: "tool_result",
+        tool_use_id: message.toolCallId,
+        content: message.content
+      };
+      const previous = messages.at(-1);
+      if (
+        previous?.role === "user" &&
+        previous.content.every((item) => item.type === "tool_result")
+      ) {
+        previous.content.push(result);
+      } else {
+        messages.push({ role: "user", content: [result] });
+      }
+      continue;
+    }
+    const content: Array<Record<string, unknown>> = [];
+    if (message.content) content.push({ type: "text", text: message.content });
+    if (message.role === "assistant") {
+      for (const toolCall of message.toolCalls ?? []) {
+        content.push({
+          type: "tool_use",
+          id: toolCall.id,
+          name: toolCall.name,
+          input: toolCall.arguments
+        });
+      }
+    } else {
+      content.unshift(
+        ...agentImageParts(message, call.language).map(({ mimeType, base64 }) => ({
+          type: "image",
+          source: { type: "base64", media_type: mimeType, data: base64 }
+        }))
+      );
+    }
+    messages.push({
+      role: message.role === "assistant" ? "assistant" : "user",
+      content
+    });
+  }
+  return {
+    model: call.profile.model,
+    system: system || undefined,
+    messages,
+    tools: call.tools.map((tool) => ({
+      name: tool.name,
+      description: tool.description,
+      input_schema: tool.inputSchema
+    })),
+    temperature: call.temperature,
+    max_tokens: call.maxTokens,
+    stream: false
+  };
+}
+
+export function buildGeminiToolRequest(call: ProviderToolCall) {
+  const system = call.messages
+    .filter((message) => message.role === "system")
+    .map((message) => message.content)
+    .join("\n\n");
+  const contents: Array<{ role: string; parts: Array<Record<string, unknown>> }> = [];
+  for (const message of call.messages.filter((item) => item.role !== "system")) {
+    const role = message.role === "assistant" ? "model" : "user";
+    const parts: Array<Record<string, unknown>> =
+      message.role === "tool"
+        ? [
+            {
+              functionResponse: {
+                name: message.toolName,
+                response: { result: message.content }
+              }
+            }
+          ]
+        : [
+            ...(message.content ? [{ text: message.content }] : []),
+            ...(message.toolCalls ?? []).map((toolCall) => ({
+              functionCall: {
+                name: toolCall.name,
+                args: toolCall.arguments
+              }
+            })),
+            ...agentImageParts(message, call.language).map(
+              ({ mimeType, base64 }) => ({ inlineData: { mimeType, data: base64 } })
+            )
+          ];
+    const previous = contents.at(-1);
+    if (
+      message.role === "tool" &&
+      previous?.role === "user" &&
+      previous.parts.every((item) => "functionResponse" in item)
+    ) {
+      previous.parts.push(...parts);
+    } else {
+      contents.push({ role, parts });
+    }
+  }
+  return {
+    systemInstruction: system ? { parts: [{ text: system }] } : undefined,
+    contents,
+    tools: [
+      {
+        functionDeclarations: call.tools.map((tool) => ({
+          name: tool.name,
+          description: tool.description,
+          parameters: tool.inputSchema
+        }))
+      }
+    ],
+    generationConfig: {
+      temperature: call.temperature,
+      maxOutputTokens: call.maxTokens
+    }
+  };
+}
+
+export function buildOllamaToolRequest(call: ProviderToolCall) {
+  return {
+    model: call.profile.model,
+    messages: call.messages.map((message) => ({
+      role: message.role,
+      content: message.content,
+      tool_name: message.toolName,
+      tool_calls: message.toolCalls?.map((toolCall) => ({
+        function: { name: toolCall.name, arguments: toolCall.arguments }
+      })),
+      images: agentImageParts(message, call.language).map(({ base64 }) => base64)
+    })),
+    tools: call.tools.map((tool) => ({
+      type: "function",
+      function: {
+        name: tool.name,
+        description: tool.description,
+        parameters: tool.inputSchema
+      }
+    })),
+    options: { temperature: call.temperature, num_predict: call.maxTokens },
+    stream: false
+  };
 }
 
 export function buildOpenAiRequest(call: ProviderCall) {
@@ -342,7 +587,132 @@ async function ensureOk(response: Response, language?: AppLanguage): Promise<voi
   );
 }
 
-function commonHeaders(call: ProviderCall): Record<string, string> {
+function jsonArguments(value: unknown): Record<string, unknown> {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value as Record<string, unknown>;
+  }
+  if (typeof value !== "string" || !value.trim()) return {};
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+      ? parsed
+      : {};
+  } catch {
+    return {};
+  }
+}
+
+function openAiToolTurn(payload: any): ModelToolTurnResult {
+  const message = payload.choices?.[0]?.message ?? {};
+  return {
+    text: typeof message.content === "string" ? message.content : "",
+    toolCalls: (message.tool_calls ?? []).map((item: any) => ({
+      id: String(item.id ?? crypto.randomUUID()),
+      name: String(item.function?.name ?? ""),
+      arguments: jsonArguments(item.function?.arguments)
+    })).filter((item: ModelToolCall) => item.name)
+  };
+}
+
+function anthropicToolTurn(payload: any): ModelToolTurnResult {
+  const content = Array.isArray(payload.content) ? payload.content : [];
+  return {
+    text: content
+      .filter((item: any) => item.type === "text")
+      .map((item: any) => String(item.text ?? ""))
+      .join(""),
+    toolCalls: content
+      .filter((item: any) => item.type === "tool_use" && item.name)
+      .map((item: any) => ({
+        id: String(item.id ?? crypto.randomUUID()),
+        name: String(item.name),
+        arguments: jsonArguments(item.input)
+      }))
+  };
+}
+
+function geminiToolTurn(payload: any): ModelToolTurnResult {
+  const parts = payload.candidates?.[0]?.content?.parts ?? [];
+  return {
+    text: parts.map((part: any) => String(part.text ?? "")).join(""),
+    toolCalls: parts
+      .filter((part: any) => part.functionCall?.name)
+      .map((part: any) => ({
+        id: crypto.randomUUID(),
+        name: String(part.functionCall.name),
+        arguments: jsonArguments(part.functionCall.args)
+      }))
+  };
+}
+
+function ollamaToolTurn(payload: any): ModelToolTurnResult {
+  const message = payload.message ?? {};
+  return {
+    text: String(message.content ?? ""),
+    toolCalls: (message.tool_calls ?? [])
+      .map((item: any) => ({
+        id: String(item.id ?? crypto.randomUUID()),
+        name: String(item.function?.name ?? ""),
+        arguments: jsonArguments(item.function?.arguments)
+      }))
+      .filter((item: ModelToolCall) => item.name)
+  };
+}
+
+export async function completeModelToolTurn(
+  request: ModelToolTurnRequest,
+  signal: AbortSignal
+): Promise<ModelToolTurnResult> {
+  const call = await resolveToolCall(request);
+  let url: string;
+  let headers: Record<string, string>;
+  let body: unknown;
+  let parse: (payload: any) => ModelToolTurnResult;
+  if (isOpenAiCompatibleKind(call.profile.kind)) {
+    url = endpointUrl(call.profile.baseUrl, "/chat/completions");
+    headers = { ...commonHeaders(call), Authorization: `Bearer ${call.secret}` };
+    body = buildOpenAiToolRequest(call);
+    parse = openAiToolTurn;
+  } else if (call.profile.kind === "anthropic") {
+    url = endpointUrl(call.profile.baseUrl, "/v1/messages");
+    headers = {
+      ...commonHeaders(call),
+      "x-api-key": call.secret,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true"
+    };
+    body = buildAnthropicToolRequest(call);
+    parse = anthropicToolTurn;
+  } else if (call.profile.kind === "gemini") {
+    const base = endpointUrl(
+      call.profile.baseUrl,
+      `/models/${encodeURIComponent(call.profile.model)}:generateContent`
+    );
+    const target = new URL(base);
+    target.searchParams.set("key", call.secret);
+    url = target.toString();
+    headers = commonHeaders(call);
+    body = buildGeminiToolRequest(call);
+    parse = geminiToolTurn;
+  } else {
+    url = endpointUrl(call.profile.baseUrl, "/api/chat");
+    headers = commonHeaders(call);
+    body = buildOllamaToolRequest(call);
+    parse = ollamaToolTurn;
+  }
+  const response = await fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+    signal
+  });
+  await ensureOk(response, call.language);
+  return parse(await response.json());
+}
+
+function commonHeaders(
+  call: Pick<ProviderCall, "profile" | "secret" | "language">
+): Record<string, string> {
   return {
     "Content-Type": "application/json",
     ...parseCustomHeaders(call.profile.customHeaders, call.language)

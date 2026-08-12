@@ -1,5 +1,7 @@
 import { fetchYouTubeTranscript } from "./context";
 import { completeModel, listProviderModels, streamModel } from "./providers";
+import { listMcpTools } from "./mcpClient";
+import { runMcpAgent } from "./mcpAgent";
 import {
   fillPrompt,
   isDictionaryTranslationInput,
@@ -16,6 +18,8 @@ import type {
   AppLanguage,
   AppLogLevel,
   ImageAttachment,
+  McpServerConfig,
+  McpToolApprovalDecision,
   ChatRunRequest,
   PendingAction,
   ProviderProfile,
@@ -116,6 +120,13 @@ const menuActions = new Map(
   MENU_ITEMS.map((item) => [item.id, item.action])
 );
 const activeControllers = new Map<string, AbortController>();
+const pendingMcpApprovals = new Map<
+  string,
+  {
+    requestId: string;
+    resolve: (decision: McpToolApprovalDecision) => void;
+  }
+>();
 
 function arrayBufferToBase64(buffer: ArrayBuffer): string {
   const bytes = new Uint8Array(buffer);
@@ -241,7 +252,21 @@ chrome.runtime.onConnect.addListener((port) => {
     type: string;
     payload?: ChatRunRequest;
     requestId?: string;
+    approvalId?: string;
+    decision?: McpToolApprovalDecision;
   }) => {
+    if (
+      message.type === "mcp.approval" &&
+      message.requestId &&
+      message.approvalId &&
+      message.decision
+    ) {
+      const pending = pendingMcpApprovals.get(message.approvalId);
+      if (!pending || pending.requestId !== message.requestId) return;
+      pendingMcpApprovals.delete(message.approvalId);
+      pending.resolve(message.decision);
+      return;
+    }
     if (message.type === "chat.cancel" && message.requestId) {
       activeControllers.get(message.requestId)?.abort();
       return;
@@ -251,23 +276,67 @@ chrome.runtime.onConnect.addListener((port) => {
     const controller = new AbortController();
     activeControllers.set(request.requestId, controller);
     requests.add(request.requestId);
-    void streamModel(
-      {
-        profileId: request.profileId,
-        purpose: request.purpose,
-        messages: request.messages,
-        temperature: request.temperature,
-        maxTokens: request.maxTokens
-      },
-      (delta) => {
-        postToPort({
-          type: "chat.delta",
-          requestId: request.requestId,
-          delta
-        });
-      },
-      controller.signal
-    )
+    const execute = async () => {
+      if (request.mcpTools?.some((item) => item.toolNames.length)) {
+        const text = await runMcpAgent(
+          request,
+          controller.signal,
+          (approval) =>
+            new Promise<McpToolApprovalDecision>((resolve, reject) => {
+              if (controller.signal.aborted) {
+                reject(controller.signal.reason);
+                return;
+              }
+              const abort = () => {
+                pendingMcpApprovals.delete(approval.approvalId);
+                reject(controller.signal.reason);
+              };
+              controller.signal.addEventListener("abort", abort, { once: true });
+              pendingMcpApprovals.set(approval.approvalId, {
+                requestId: request.requestId,
+                resolve: (decision) => {
+                  controller.signal.removeEventListener("abort", abort);
+                  resolve(decision);
+                }
+              });
+              const posted = postToPort({
+                type: "mcp.approval.required",
+                requestId: request.requestId,
+                approval
+              });
+              if (!posted) {
+                controller.abort(new Error("MCP approval channel closed"));
+              }
+            })
+        );
+        if (text) {
+          postToPort({
+            type: "chat.delta",
+            requestId: request.requestId,
+            delta: text
+          });
+        }
+        return;
+      }
+      await streamModel(
+        {
+          profileId: request.profileId,
+          purpose: request.purpose,
+          messages: request.messages,
+          temperature: request.temperature,
+          maxTokens: request.maxTokens
+        },
+        (delta) => {
+          postToPort({
+            type: "chat.delta",
+            requestId: request.requestId,
+            delta
+          });
+        },
+        controller.signal
+      );
+    };
+    void execute()
       .then(() => {
         if (controller.signal.aborted) return;
         postToPort({
@@ -526,6 +595,11 @@ chrome.runtime.onMessage.addListener(
             format: "png"
           })
         };
+      }
+      if (message.type === "mcp.tools.list") {
+        const server = message.payload?.server as McpServerConfig | undefined;
+        if (!server) throw new Error("MCP server is required");
+        return listMcpTools(server);
       }
       return undefined;
     };

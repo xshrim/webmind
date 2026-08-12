@@ -10,6 +10,7 @@ import {
   ListChecks,
   Maximize2,
   MessageSquareText,
+  Network,
   Minimize2,
   NotepadText,
   PanelRightOpen,
@@ -78,6 +79,7 @@ function ProductLogoIcon() {
 export const NAV_ITEMS = [
   { id: "chat" as const, labelKey: "navChat" as UiTextKey, icon: MessageSquareText },
   { id: "tools" as const, labelKey: "navTools" as UiTextKey, icon: Wand2 },
+  { id: "mcp" as const, labelKey: "navMcp" as UiTextKey, icon: Network },
   { id: "history" as const, labelKey: "navHistory" as UiTextKey, icon: History },
   { id: "logs" as const, labelKey: "navLogs" as UiTextKey, icon: NotepadText }
 ];

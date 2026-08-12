@@ -49,6 +49,8 @@ npm run check
 - `src/shared/models.ts`：默认、翻译、视觉三类模型用途的路由逻辑。
 - `src/background/index.ts`：扩展消息路由、工具执行、快捷动作、搜索、图片获取/截图、打开侧边栏。
 - `src/background/providers.ts`：各模型接口的流式请求和兼容处理。
+- `src/background/mcpClient.ts`：基于官方 MCP SDK 的 SSE/Streamable HTTP 连接、工具发现和调用结果格式化。
+- `src/background/mcpAgent.ts`：普通对话的原生模型 tool-calling 循环、工具选择校验、逐次审批和步数/数量限制。
 - `src/content/index.tsx`：网页注入能力，包括划词浮层、快捷工具、沉浸翻译、沉浸阅读、悬停释义、自动回复、图文提取、搜索页回答窗口。
 - `src/content/pageContext.ts`：当前页面/当前正文提取、正文识别规则、父容器选择、block 划分、手动框选、逐段删除、智能剔除、预览定位。
 - `src/content/translationPreparation.ts`：页面/当前正文/选区翻译和沉浸阅读的 block 收集；当前正文 scope 使用侧边栏传入的 `articlePreview` block 作为 canonical 处理对象。
@@ -62,6 +64,7 @@ npm run check
 ## 当前产品能力
 
 - 侧边栏聊天支持当前页面、选中内容、无上下文、附件、URL/文档附件、网页搜索、Markdown 流式回答、停止生成、历史和日志。
+- MCP 选项卡支持本地添加 SSE/Streamable HTTP Server、刷新 Tools、编辑/删除 Server；聊天输入区可多选 Server 和工具。工具调用使用原生模型协议并逐次弹窗确认，固定翻译/视觉/内部工作流不会携带 MCP。
 - 上下文下拉框只有：无上下文、当前页面、当前正文、当前选中；默认上下文来自 `defaultContextScope`，当前真实默认值是当前正文。
 - 用户自行配置模型引擎；没有账号、登录、购买或订阅代码。
 - 模型预设包括 OpenAI 兼容、Grok、DeepSeek、Kimi、Qwen、智谱 GLM、MiMo、LongCat、MiniMax、Doubao Seed、OpenRouter、硅基流动、Anthropic、Gemini、Ollama。
@@ -223,6 +226,8 @@ npm run check
 - 手动框选依赖可访问的 DOM 和可见元素；浏览器内部页面、扩展商店页面等受限页面不能注入 content script。
 - 沉浸翻译和沉浸阅读仍需要避开脚本、隐藏内容、导航、页脚、侧栏和已有 WebMind 注入元素；当前正文 scope 则以选定父容器的可见 block 为准。
 - PDF worker chunk 较大。当前 Vite 构建能通过并输出较大的 `vendor-pdf`/worker chunk，这是预期现象，除非后续重新设计 PDF 处理方式。
+- MCP 当前只覆盖 Tools，不支持 Resources、Prompts、Sampling、Roots 或 Elicitation；图片/音频/资源结果以文本标记传回模型。MCP Server 配置和自定义请求头只保存在 local storage，不参与 Chrome Sync；每次操作会重新建立连接，并受 15 秒发现、60 秒调用和 60000 字符结果上限约束。
+- MCP 工具调用依赖实际模型的原生 tool-calling 能力。未启用工具时继续使用原有流式路径；启用后模型决策轮次是非流式的，可能增加请求次数和延迟。工具执行默认需要用户审批，Server 本身仍可能访问本机或内网资源，使用者应只添加可信 Server。
 
 ## 未完成问题
 
@@ -252,7 +257,7 @@ npm run build
 git diff --check
 ```
 
-测试结果：`18` 个测试文件、`157` 个测试通过；TypeScript 类型检查和构建均成功，已生成未打包扩展目录 `dist/`。以上是代码级验证，尚未替代真实 Chrome 手工验证。
+测试结果：`20` 个测试文件、`170` 个测试通过；TypeScript 类型检查和构建均成功，已生成未打包扩展目录 `dist/`。以上是代码级验证，尚未替代真实 Chrome 手工验证。
 
 ## 最近手工验证重点
 

@@ -10,7 +10,8 @@ import type {
   HoverDefinitionShortcut,
   ImmersiveShortcut,
   PendingAction,
-  ProviderProfile
+  ProviderProfile,
+  McpServerConfig
 } from "./types";
 
 const APP_LANGUAGES = new Set<AppLanguage>([
@@ -33,6 +34,7 @@ const HISTORY_KEY = "webmind.history";
 const CUSTOM_TOOLS_KEY = "webmind.customTools";
 const SESSION_SECRETS_KEY = "webmind.sessionSecrets";
 const PENDING_ACTION_KEY = "webmind.pendingAction";
+const MCP_SERVERS_KEY = "webmind.mcpServers";
 const CHROME_SYNC_META_KEY = "webmind.chromeSync.meta";
 const CHROME_SYNC_CHUNK_PREFIX = "webmind.chromeSync.chunk.";
 const CHROME_SYNC_CHUNK_CHARS = 2400;
@@ -611,6 +613,45 @@ export async function saveCustomTools(tools: CustomTool[]): Promise<void> {
   if (settings.chromeSyncEnabled) {
     await writeChromeSyncPayload(settings, normalized);
   }
+}
+
+function normalizeMcpServers(servers: McpServerConfig[] = []): McpServerConfig[] {
+  return servers
+    .map((server) => ({
+      id: String(server.id || crypto.randomUUID()),
+      name: String(server.name ?? "").trim(),
+      url: String(server.url ?? "").trim(),
+      transport: server.transport === "sse" ? "sse" as const : "streamable-http" as const,
+      customHeaders: String(server.customHeaders ?? "").trim(),
+      tools: Array.isArray(server.tools)
+        ? server.tools
+            .map((tool) => ({
+              name: String(tool.name ?? "").trim(),
+              description: String(tool.description ?? "").trim(),
+              inputSchema:
+                tool.inputSchema && typeof tool.inputSchema === "object"
+                  ? tool.inputSchema
+                  : { type: "object" },
+              readOnly: Boolean(tool.readOnly),
+              destructive: Boolean(tool.destructive)
+            }))
+            .filter((tool) => tool.name)
+        : [],
+      updatedAt: Number(server.updatedAt) || undefined
+    }))
+    .filter((server) => server.name && server.url);
+}
+
+export async function loadMcpServers(): Promise<McpServerConfig[]> {
+  return normalizeMcpServers(
+    await getValue<McpServerConfig[]>("local", MCP_SERVERS_KEY, [])
+  );
+}
+
+export async function saveMcpServers(
+  servers: McpServerConfig[]
+): Promise<void> {
+  await setValue("local", MCP_SERVERS_KEY, normalizeMcpServers(servers));
 }
 
 export async function setPendingAction(

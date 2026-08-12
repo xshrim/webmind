@@ -321,6 +321,7 @@ export interface ChatRunRequest {
   messages: ChatMessage[];
   temperature?: number;
   maxTokens?: number;
+  mcpTools?: McpToolSelection[];
 }
 
 export interface ModelCompleteRequest {
@@ -330,6 +331,78 @@ export interface ModelCompleteRequest {
   temperature?: number;
   maxTokens?: number;
 }
+
+export interface ModelToolDefinition {
+  name: string;
+  description: string;
+  inputSchema: Record<string, unknown>;
+}
+
+export interface ModelToolCall {
+  id: string;
+  name: string;
+  arguments: Record<string, unknown>;
+}
+
+export interface ModelAgentMessage {
+  role: "system" | "user" | "assistant" | "tool";
+  content: string;
+  attachments?: ImageAttachment[];
+  toolCallId?: string;
+  toolName?: string;
+  toolCalls?: ModelToolCall[];
+}
+
+export interface ModelToolTurnRequest {
+  profileId?: string;
+  purpose?: ModelPurpose;
+  messages: ModelAgentMessage[];
+  tools: ModelToolDefinition[];
+  temperature?: number;
+  maxTokens?: number;
+}
+
+export interface ModelToolTurnResult {
+  text: string;
+  toolCalls: ModelToolCall[];
+}
+
+export type McpTransport = "streamable-http" | "sse";
+
+export interface McpToolInfo {
+  name: string;
+  description: string;
+  inputSchema: Record<string, unknown>;
+  readOnly?: boolean;
+  destructive?: boolean;
+}
+
+export interface McpServerConfig {
+  id: string;
+  name: string;
+  url: string;
+  transport: McpTransport;
+  customHeaders: string;
+  tools: McpToolInfo[];
+  updatedAt?: number;
+}
+
+export interface McpToolSelection {
+  serverId: string;
+  toolNames: string[];
+}
+
+export interface McpToolApprovalRequest {
+  approvalId: string;
+  serverId: string;
+  serverName: string;
+  toolName: string;
+  arguments: Record<string, unknown>;
+  description?: string;
+  destructive?: boolean;
+}
+
+export type McpToolApprovalDecision = "allow-once" | "allow-session" | "deny";
 
 export interface ProviderTestResult {
   ok: boolean;

@@ -11,6 +11,7 @@ import {
   FileText,
   ImagePlus,
   Link2,
+  Network,
   LoaderCircle,
   MessageCirclePlus,
   MessageSquareText,
@@ -66,9 +67,11 @@ import {
   deleteConversation,
   listConversations,
   loadCustomTools,
+  loadMcpServers,
   loadSettings,
   saveConversation,
   saveCustomTools,
+  saveMcpServers,
   saveSettings
 } from "../shared/storage";
 import {
@@ -97,6 +100,10 @@ import type {
   Conversation,
   CustomTool,
   ImageAttachment,
+  McpServerConfig,
+  McpToolApprovalDecision,
+  McpToolApprovalRequest,
+  McpToolSelection,
   ModelPurpose,
   PageContext,
   PageTextBlock,
@@ -189,7 +196,7 @@ import {
   ImmersiveTranslateIcon
 } from "./customIcons";
 
-type ViewId = "chat" | "tools" | "history" | "logs";
+type ViewId = "chat" | "tools" | "mcp" | "history" | "logs";
 
 const LazyToolIconPicker = lazy(() =>
   import("./ToolIconPicker").then((module) => ({
@@ -205,10 +212,21 @@ interface OperationLogEntry {
 }
 
 interface StreamMessage {
-  type: "chat.delta" | "chat.done" | "chat.error" | "chat.cancelled";
+  type:
+    | "chat.delta"
+    | "chat.done"
+    | "chat.error"
+    | "chat.cancelled"
+    | "mcp.approval.required";
   requestId: string;
   delta?: string;
   error?: string;
+  approval?: McpToolApprovalRequest;
+}
+
+interface PendingMcpApproval {
+  requestId: string;
+  approval: McpToolApprovalRequest;
 }
 
 interface OperationLogRuntimeMessage {
@@ -302,6 +320,19 @@ export function App() {
   const [operationLogs, setOperationLogs] = useState<OperationLogEntry[]>([]);
   const [history, setHistory] = useState<Conversation[]>([]);
   const [customTools, setCustomTools] = useState<CustomTool[]>([]);
+  const [mcpServers, setMcpServers] = useState<McpServerConfig[]>([]);
+  const [selectedMcpTools, setSelectedMcpTools] = useState<McpToolSelection[]>([]);
+  const [mcpMenuOpen, setMcpMenuOpen] = useState(false);
+  const [mcpEditorOpen, setMcpEditorOpen] = useState(false);
+  const [mcpBusy, setMcpBusy] = useState(false);
+  const [editingMcpServerId, setEditingMcpServerId] = useState<string | null>(null);
+  const [mcpApproval, setMcpApproval] = useState<PendingMcpApproval | null>(null);
+  const [mcpDraft, setMcpDraft] = useState({
+    name: "",
+    url: "",
+    transport: "streamable-http" as McpServerConfig["transport"],
+    customHeaders: ""
+  });
   const [toolEditorOpen, setToolEditorOpen] = useState(false);
   const [toolIconPickerOpen, setToolIconPickerOpen] = useState(false);
   const [editingToolId, setEditingToolId] = useState<string | null>(null);
@@ -867,8 +898,9 @@ export function App() {
     void Promise.all([
       loadSettings(),
       listConversations(),
-      loadCustomTools()
-    ]).then(async ([loadedSettings, loadedHistory, tools]) => {
+      loadCustomTools(),
+      loadMcpServers()
+    ]).then(async ([loadedSettings, loadedHistory, tools, servers]) => {
       settingsRef.current = loadedSettings;
       setSettings(loadedSettings);
       setIncludePage(true);
@@ -876,6 +908,7 @@ export function App() {
       document.documentElement.dataset.theme = loadedSettings.theme;
       setHistory(loadedHistory);
       setCustomTools(tools);
+      setMcpServers(servers);
       await refreshActivePageContext("sidepanel-init", true, "default", true);
       appendOperationLog(
         uiText(loadedSettings.interfaceLanguage, "logSidepanelReady"),
@@ -987,6 +1020,14 @@ export function App() {
   useEffect(() => {
     if (!isExtensionRuntime()) return;
     const onMessage = (message: StreamMessage) => {
+      if (message.type === "mcp.approval.required" && message.approval) {
+        if (!requestMapRef.current.has(message.requestId)) return;
+        setMcpApproval({
+          requestId: message.requestId,
+          approval: message.approval
+        });
+        return;
+      }
       if (message.type === "chat.cancelled") {
         appendOperationLog(
           uiText(settingsRef.current?.interfaceLanguage, "logChatCancelled"),
@@ -998,6 +1039,9 @@ export function App() {
         requestTranslationRawTextRef.current.delete(message.requestId);
         setStreamingId((current) =>
           current === message.requestId ? null : current
+        );
+        setMcpApproval((current) =>
+          current?.requestId === message.requestId ? null : current
         );
         if (assistantId) {
           updateMessages((current) =>
@@ -1072,6 +1116,7 @@ export function App() {
         requestMapRef.current.delete(message.requestId);
         requestTranslationProtectionRef.current.delete(message.requestId);
         requestTranslationRawTextRef.current.delete(message.requestId);
+        setMcpApproval(null);
       }
       if (message.type === "chat.done") {
         appendOperationLog(
@@ -1103,6 +1148,7 @@ export function App() {
         requestMapRef.current.delete(message.requestId);
         requestTranslationProtectionRef.current.delete(message.requestId);
         requestTranslationRawTextRef.current.delete(message.requestId);
+        setMcpApproval(null);
         void persistConversationRef.current?.();
       }
     };
@@ -1132,6 +1178,7 @@ export function App() {
           requestTranslationProtectionRef.current.clear();
           requestTranslationRawTextRef.current.clear();
           setStreamingId(null);
+          setMcpApproval(null);
           setNotice(
             interruptionNotice
           );
@@ -1170,6 +1217,7 @@ export function App() {
   useEffect(() => {
     const wasStreaming = previousStreamingIdRef.current !== null;
     previousStreamingIdRef.current = streamingId;
+    if (streamingId) setMcpMenuOpen(false);
     if (
       settings?.autoScrollDuringStreaming === false &&
       (Boolean(streamingId) || wasStreaming)
@@ -1241,9 +1289,11 @@ export function App() {
 
   const postStreamMessage = useCallback(
     (message: {
-      type: "chat.start" | "chat.cancel";
+      type: "chat.start" | "chat.cancel" | "mcp.approval";
       payload?: ChatRunRequest;
       requestId?: string;
+      approvalId?: string;
+      decision?: McpToolApprovalDecision;
     }): boolean => {
       let port = portRef.current;
       if (!port) port = connectStreamPortRef.current?.() ?? null;
@@ -2140,6 +2190,7 @@ export function App() {
         translationProtection?: ProtectedTranslationText;
         requestModelContent?: string;
         requestSystemInstruction?: string;
+        disableMcp?: boolean;
         toolContextInput?: boolean;
         purpose?: ModelPurpose;
       } = {}
@@ -2404,7 +2455,11 @@ export function App() {
           requestId,
           profileId: profile.id,
           purpose,
-          messages: modelMessages
+          messages: modelMessages,
+          mcpTools:
+            options.disableMcp || options.toolInvocation
+              ? []
+              : selectedMcpTools
         }
       });
       if (!posted) {
@@ -2436,6 +2491,7 @@ export function App() {
       currentPageContext,
       pageContext,
       postStreamMessage,
+      selectedMcpTools,
       selectionContext,
       streamingId,
       updateMessages,
@@ -2459,6 +2515,7 @@ export function App() {
     requestMapRef.current.delete(requestId);
     requestTranslationProtectionRef.current.delete(requestId);
     requestTranslationRawTextRef.current.delete(requestId);
+    setMcpApproval(null);
     setStreamingId(null);
     if (assistantId) {
       updateMessages((current) => {
@@ -2477,6 +2534,167 @@ export function App() {
         );
       });
     }
+  };
+
+  const decideMcpApproval = (decision: McpToolApprovalDecision) => {
+    if (!mcpApproval) return;
+    postStreamMessage({
+      type: "mcp.approval",
+      requestId: mcpApproval.requestId,
+      approvalId: mcpApproval.approval.approvalId,
+      decision
+    });
+    setMcpApproval(null);
+  };
+
+  const openNewMcpServer = () => {
+    setEditingMcpServerId(null);
+    setMcpDraft({
+      name: "",
+      url: "",
+      transport: "streamable-http",
+      customHeaders: ""
+    });
+    setMcpEditorOpen(true);
+  };
+
+  const openMcpServerEditor = (server: McpServerConfig) => {
+    setEditingMcpServerId(server.id);
+    setMcpDraft({
+      name: server.name,
+      url: server.url,
+      transport: server.transport,
+      customHeaders: server.customHeaders
+    });
+    setMcpEditorOpen(true);
+  };
+
+  const saveMcpServer = async () => {
+    const name = mcpDraft.name.trim();
+    const url = mcpDraft.url.trim();
+    if (!name || !url) return;
+    setMcpBusy(true);
+    try {
+      const parsedUrl = new URL(url);
+      if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+        throw new Error(t("mcpHttpOnly"));
+      }
+      const allowed = await requestOriginPermission(url);
+      if (!allowed) throw new Error(t("mcpPermissionDenied"));
+      const current = editingMcpServerId
+        ? mcpServers.find((server) => server.id === editingMcpServerId)
+        : undefined;
+      const draft: McpServerConfig = {
+        id: current?.id ?? crypto.randomUUID(),
+        ...mcpDraft,
+        name,
+        url,
+        tools: current?.tools ?? []
+      };
+      const tools = await runtimeRequest<McpServerConfig["tools"]>(
+        "mcp.tools.list",
+        { server: draft },
+        settings?.interfaceLanguage
+      );
+      const saved = { ...draft, tools, updatedAt: Date.now() };
+      const next = editingMcpServerId
+        ? mcpServers.map((server) =>
+            server.id === saved.id ? saved : server
+          )
+        : [...mcpServers, saved];
+      await saveMcpServers(next);
+      setMcpServers(next);
+      setSelectedMcpTools((current) =>
+        current
+          .map((selection) =>
+            selection.serverId === saved.id
+              ? {
+                  ...selection,
+                  toolNames: selection.toolNames.filter((name) =>
+                    tools.some((tool) => tool.name === name)
+                  )
+                }
+              : selection
+          )
+          .filter((selection) => selection.toolNames.length)
+      );
+      setMcpEditorOpen(false);
+      setNotice(t("mcpServerSaved"));
+    } catch (error) {
+      setNotice(errorMessage(error));
+    } finally {
+      setMcpBusy(false);
+    }
+  };
+
+  const refreshMcpServer = async (server: McpServerConfig) => {
+    setMcpBusy(true);
+    try {
+      const tools = await runtimeRequest<McpServerConfig["tools"]>(
+        "mcp.tools.list",
+        { server },
+        settings?.interfaceLanguage
+      );
+      const updated = { ...server, tools, updatedAt: Date.now() };
+      const next = mcpServers.map((item) =>
+        item.id === server.id ? updated : item
+      );
+      await saveMcpServers(next);
+      setMcpServers(next);
+      setSelectedMcpTools((current) =>
+        current
+          .map((selection) =>
+            selection.serverId === server.id
+              ? {
+                  ...selection,
+                  toolNames: selection.toolNames.filter((name) =>
+                    tools.some((tool) => tool.name === name)
+                  )
+                }
+              : selection
+          )
+          .filter((selection) => selection.toolNames.length)
+      );
+    } catch (error) {
+      setNotice(errorMessage(error));
+    } finally {
+      setMcpBusy(false);
+    }
+  };
+
+  const deleteMcpServer = async (serverId: string) => {
+    const next = mcpServers.filter((server) => server.id !== serverId);
+    await saveMcpServers(next);
+    setMcpServers(next);
+    setSelectedMcpTools((current) =>
+      current.filter((selection) => selection.serverId !== serverId)
+    );
+  };
+
+  const selectedMcpToolNames = (serverId: string) =>
+    selectedMcpTools.find((selection) => selection.serverId === serverId)
+      ?.toolNames ?? [];
+
+  const toggleMcpTool = (serverId: string, toolName: string) => {
+    setSelectedMcpTools((current) => {
+      const selected = current.find((item) => item.serverId === serverId);
+      const names = new Set(selected?.toolNames ?? []);
+      names.has(toolName) ? names.delete(toolName) : names.add(toolName);
+      const remaining = current.filter((item) => item.serverId !== serverId);
+      return names.size
+        ? [...remaining, { serverId, toolNames: Array.from(names) }]
+        : remaining;
+    });
+  };
+
+  const toggleMcpServer = (server: McpServerConfig) => {
+    const selected = selectedMcpToolNames(server.id);
+    setSelectedMcpTools((current) => {
+      const remaining = current.filter((item) => item.serverId !== server.id);
+      return selected.length === server.tools.length
+        ? remaining
+        : [...remaining, { serverId: server.id, toolNames: server.tools.map((tool) => tool.name) }];
+    });
   };
 
   useEffect(() => {
@@ -2570,6 +2788,7 @@ export function App() {
       await sendMessage(editedText, {
         attachmentsOverride: editedAttachments,
         historyOverride: current.slice(0, messageIndex),
+        disableMcp: Boolean(message.toolInvocation),
         purpose:
           editedAttachments.some(
             (attachment) => (attachment.kind ?? "image") === "image"
@@ -2654,7 +2873,8 @@ export function App() {
         requestId,
         profileId: profile.id,
         purpose,
-        messages: modelMessages
+        messages: modelMessages,
+        mcpTools: userMessage.toolInvocation ? [] : selectedMcpTools
       }
     });
     if (!posted) {
@@ -2727,6 +2947,9 @@ export function App() {
     conversationCreatedAtRef.current = Date.now();
     setComposer("");
     setAttachments([]);
+    setSelectedMcpTools([]);
+    setMcpApproval(null);
+    setMcpMenuOpen(false);
     setEditingMessageId(null);
     setEditingMessageText("");
     setNotice("");
@@ -2742,6 +2965,9 @@ export function App() {
     conversationCreatedAtRef.current = Date.now();
     setComposer("");
     setAttachments([]);
+    setSelectedMcpTools([]);
+    setMcpApproval(null);
+    setMcpMenuOpen(false);
     setEditingMessageId(null);
     setEditingMessageText("");
     setChatToolsExpanded(false);
@@ -3583,6 +3809,7 @@ export function App() {
   };
 
   const loadConversation = (conversation: Conversation) => {
+    if (streamingId) stopStreaming();
     appendOperationLog(`${t("logConversationLoaded")}: ${conversation.title}`, "info");
     conversationIdRef.current = conversation.id;
     conversationCreatedAtRef.current = conversation.createdAt;
@@ -3592,6 +3819,9 @@ export function App() {
     chatToolsStreamStartedRef.current = false;
     setEditingMessageId(null);
     setEditingMessageText("");
+    setSelectedMcpTools([]);
+    setMcpApproval(null);
+    setMcpMenuOpen(false);
     if (
       settings &&
       settings.profiles.some((profile) => profile.id === conversation.providerId)
@@ -4487,6 +4717,69 @@ export function App() {
           </section>
         )}
 
+        {view === "mcp" && (
+          <section className="workspace-view">
+            <div className="view-heading">
+              <div>
+                <p className="eyebrow">MCP</p>
+                <h1>{t("mcpServers")}</h1>
+              </div>
+              <button
+                className="icon-button"
+                type="button"
+                title={t("addMcpServer")}
+                onClick={openNewMcpServer}
+              >
+                <CirclePlus />
+              </button>
+            </div>
+            {!mcpServers.length ? (
+              <div className="simple-empty">
+                <Network />
+                <strong>{t("noMcpServers")}</strong>
+                <span>{t("mcpServersHelp")}</span>
+              </div>
+            ) : (
+              <div className="mcp-server-list">
+                {mcpServers.map((server) => (
+                  <article className="mcp-server-row" key={server.id}>
+                    <header>
+                      <div>
+                        <strong>{server.name}</strong>
+                        <small>
+                          {server.transport === "sse"
+                            ? "SSE"
+                            : "Streamable HTTP"} · {server.url}
+                        </small>
+                      </div>
+                      <div className="view-heading-actions">
+                        <button className="icon-button mini" type="button" title={t("refreshMcpTools")} disabled={mcpBusy} onClick={() => void refreshMcpServer(server)}>
+                          <RefreshCcw className={mcpBusy ? "spin" : ""} />
+                        </button>
+                        <button className="icon-button mini" type="button" title={t("edit")} onClick={() => openMcpServerEditor(server)}>
+                          <PenLine />
+                        </button>
+                        <button className="icon-button mini danger" type="button" title={t("delete")} onClick={() => void deleteMcpServer(server.id)}>
+                          <Trash2 />
+                        </button>
+                      </div>
+                    </header>
+                    <div className="mcp-tool-list">
+                      {server.tools.map((tool) => (
+                        <div className="mcp-tool-row" key={tool.name}>
+                          <code>{tool.name}</code>
+                          <span>{tool.description || t("mcpNoDescription")}</span>
+                        </div>
+                      ))}
+                      {!server.tools.length && <small>{t("noMcpTools")}</small>}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
         {view === "history" && (
           <section className="workspace-view">
             <div className="view-heading">
@@ -5019,6 +5312,61 @@ export function App() {
                 >
                   <Search />
                 </button>
+                <div
+                  className="icon-menu-shell"
+                  onBlur={(event) => {
+                    if (isFocusOutside(event.currentTarget, event.relatedTarget)) {
+                      setMcpMenuOpen(false);
+                    }
+                  }}
+                >
+                  <button
+                    className={`icon-button mini ${selectedMcpTools.length ? "active" : ""}`}
+                    type="button"
+                    title={t("enableMcp")}
+                    aria-haspopup="menu"
+                    aria-expanded={mcpMenuOpen}
+                    disabled={Boolean(streamingId)}
+                    onClick={() => setMcpMenuOpen((open) => !open)}
+                  >
+                    <Network />
+                  </button>
+                  {mcpMenuOpen && (
+                    <div className="icon-menu-popover mcp-picker" role="menu">
+                      {!mcpServers.length ? (
+                        <button type="button" onClick={() => { setMcpMenuOpen(false); setView("mcp"); }}>
+                          <CirclePlus />
+                          <span>{t("addMcpServer")}</span>
+                        </button>
+                      ) : mcpServers.map((server) => {
+                        const selected = selectedMcpToolNames(server.id);
+                        return (
+                          <div className="mcp-picker-server" key={server.id}>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={Boolean(server.tools.length && selected.length === server.tools.length)}
+                                ref={(element) => { if (element) element.indeterminate = selected.length > 0 && selected.length < server.tools.length; }}
+                                onChange={() => toggleMcpServer(server)}
+                              />
+                              <strong>{server.name}</strong>
+                            </label>
+                            {server.tools.map((tool) => (
+                              <label key={tool.name} title={tool.description}>
+                                <input
+                                  type="checkbox"
+                                  checked={selected.includes(tool.name)}
+                                  onChange={() => toggleMcpTool(server.id, tool.name)}
+                                />
+                                <span>{tool.name}</span>
+                              </label>
+                            ))}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
                 <button
                   className={`icon-button mini ${
                     hasFileAttachments ? "active" : ""
@@ -5120,6 +5468,106 @@ export function App() {
           );
         })}
       </nav>
+
+      {mcpApproval && (
+        <div className="modal-backdrop">
+          <section className="modal mcp-approval-modal" role="dialog" aria-modal="true">
+            <header className="modal-header">
+              <div>
+                <p className="eyebrow">{mcpApproval.approval.serverName}</p>
+                <h2>{t("approveMcpTool")}</h2>
+              </div>
+            </header>
+            <div className="mcp-approval-body">
+              <strong>{mcpApproval.approval.toolName}</strong>
+              {mcpApproval.approval.description && <p>{mcpApproval.approval.description}</p>}
+              {mcpApproval.approval.destructive && <p className="mcp-danger">{t("mcpDestructiveWarning")}</p>}
+              <pre>{JSON.stringify(mcpApproval.approval.arguments, null, 2)}</pre>
+            </div>
+            <footer className="modal-actions">
+              <button className="secondary-button" type="button" onClick={() => decideMcpApproval("deny")}>{t("deny")}</button>
+              <button className="secondary-button" type="button" onClick={() => decideMcpApproval("allow-session")}>{t("allowSession")}</button>
+              <button className="primary-button" type="button" onClick={() => decideMcpApproval("allow-once")}>{t("allowOnce")}</button>
+            </footer>
+          </section>
+        </div>
+      )}
+
+      {mcpEditorOpen && (
+        <div className="modal-backdrop">
+          <section className="modal mcp-editor" role="dialog" aria-modal="true">
+            <header className="modal-header">
+              <div>
+                <p className="eyebrow">MCP</p>
+                <h2>{editingMcpServerId ? t("editMcpServer") : t("addMcpServer")}</h2>
+              </div>
+              <button className="icon-button" type="button" title={t("close")} onClick={() => setMcpEditorOpen(false)}><X /></button>
+            </header>
+            <div className="form-stack">
+              <label className="field">
+                <span className="field-label">{t("mcpServerName")}</span>
+                <input
+                  value={mcpDraft.name}
+                  onChange={(event) =>
+                    setMcpDraft((current) => ({
+                      ...current,
+                      name: event.target.value
+                    }))
+                  }
+                />
+              </label>
+              <label className="field">
+                <span className="field-label">{t("mcpServerUrl")}</span>
+                <input
+                  type="url"
+                  value={mcpDraft.url}
+                  placeholder="https://example.com/mcp"
+                  onChange={(event) =>
+                    setMcpDraft((current) => ({
+                      ...current,
+                      url: event.target.value
+                    }))
+                  }
+                />
+              </label>
+              <label className="field">
+                <span className="field-label">{t("mcpTransport")}</span>
+                <select
+                  value={mcpDraft.transport}
+                  onChange={(event) =>
+                    setMcpDraft((current) => ({
+                      ...current,
+                      transport: event.target
+                        .value as McpServerConfig["transport"]
+                    }))
+                  }
+                >
+                  <option value="streamable-http">Streamable HTTP</option>
+                  <option value="sse">SSE</option>
+                </select>
+              </label>
+              <label className="field">
+                <span className="field-label">{t("mcpHeaders")}</span>
+                <textarea
+                  rows={4}
+                  value={mcpDraft.customHeaders}
+                  placeholder={'{"Authorization":"Bearer ..."}'}
+                  onChange={(event) =>
+                    setMcpDraft((current) => ({
+                      ...current,
+                      customHeaders: event.target.value
+                    }))
+                  }
+                />
+              </label>
+            </div>
+            <footer className="modal-actions">
+              <button className="secondary-button" type="button" onClick={() => setMcpEditorOpen(false)}>{t("cancel")}</button>
+              <button className="primary-button" type="button" disabled={mcpBusy || !mcpDraft.name.trim() || !mcpDraft.url.trim()} onClick={() => void saveMcpServer()}>{mcpBusy ? <LoaderCircle className="spin" /> : <Check />}{t("saveAndConnect")}</button>
+            </footer>
+          </section>
+        </div>
+      )}
 
       {articleRuleEditorOpen && (
         <div className="modal-backdrop">
