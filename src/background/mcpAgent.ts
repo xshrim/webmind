@@ -135,7 +135,8 @@ export async function runMcpAgent(
         messages,
         tools,
         temperature: request.temperature,
-        maxTokens: request.maxTokens
+        maxTokens: request.maxTokens,
+        reasoningEnabled: request.reasoningEnabled
       },
       signal
     );

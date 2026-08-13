@@ -54,6 +54,21 @@ describe("settings normalization", () => {
     expect(normalizeSettings().modelThinkingTimeoutSeconds).toBe(0);
   });
 
+  it("defaults reasoning mode off and disables it for existing engines without a strategy", () => {
+    const legacyGemini = createProviderProfile("gemini", {
+      id: "legacy-gemini"
+    });
+    Reflect.deleteProperty(legacyGemini, "reasoningStrategy");
+    const settings = normalizeSettings({ profiles: [legacyGemini] });
+
+    expect(settings.reasoningEnabledByDefault).toBe(false);
+    expect(settings.profiles[0].reasoningStrategy).toBe("none");
+    expect(
+      normalizeSettings({ reasoningEnabledByDefault: true })
+        .reasoningEnabledByDefault
+    ).toBe(true);
+  });
+
   it("defaults invalid MCP tool authorization modes to ask", () => {
     expect(normalizeSettings().mcpToolApprovalMode).toBe("ask");
     expect(normalizeSettings({ mcpToolApprovalMode: "allow" }).mcpToolApprovalMode).toBe(

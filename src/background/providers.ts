@@ -14,7 +14,8 @@ import type {
   ModelToolTurnRequest,
   ModelToolTurnResult,
   ProviderKind,
-  ProviderProfile
+  ProviderProfile,
+  ReasoningStrategy
 } from "../shared/types";
 import {
   cleanBaseUrl,
@@ -30,6 +31,7 @@ interface ProviderCall {
   messages: ChatMessage[];
   temperature: number;
   maxTokens: number;
+  reasoningEnabled: boolean;
   language?: AppLanguage;
 }
 
@@ -178,6 +180,7 @@ async function resolveCall(
     messages: request.messages,
     temperature: request.temperature ?? profile.temperature,
     maxTokens: request.maxTokens ?? profile.maxTokens,
+    reasoningEnabled: request.reasoningEnabled === true,
     language: settings.interfaceLanguage
   };
 }
@@ -199,8 +202,16 @@ async function resolveToolCall(
     tools: request.tools,
     temperature: request.temperature ?? profile.temperature,
     maxTokens: request.maxTokens ?? profile.maxTokens,
+    reasoningEnabled: request.reasoningEnabled === true,
     language: settings.interfaceLanguage
   };
+}
+
+function usesReasoning(
+  call: ProviderCall | ProviderToolCall,
+  strategy: ReasoningStrategy
+): boolean {
+  return call.reasoningEnabled && call.profile.reasoningStrategy === strategy;
 }
 
 function imageParts(message: ChatMessage, language?: AppLanguage) {
@@ -278,6 +289,9 @@ export function buildOpenAiToolRequest(call: ProviderToolCall) {
       }
     })),
     tool_choice: "auto",
+    ...(usesReasoning(call, "openai-chat")
+      ? { reasoning_effort: "medium" }
+      : {}),
     temperature: call.temperature,
     max_tokens: call.maxTokens,
     stream: false
@@ -285,6 +299,9 @@ export function buildOpenAiToolRequest(call: ProviderToolCall) {
 }
 
 export function buildAnthropicToolRequest(call: ProviderToolCall) {
+  const thinking = usesReasoning(call, "anthropic")
+    ? { type: "enabled" as const, budget_tokens: 1024 }
+    : undefined;
   const system = call.messages
     .filter((message) => message.role === "system")
     .map((message) => message.content)
@@ -341,8 +358,9 @@ export function buildAnthropicToolRequest(call: ProviderToolCall) {
       description: tool.description,
       input_schema: tool.inputSchema
     })),
-    temperature: call.temperature,
-    max_tokens: call.maxTokens,
+    thinking,
+    temperature: thinking ? undefined : call.temperature,
+    max_tokens: Math.max(call.maxTokens, thinking ? 1025 : call.maxTokens),
     stream: false
   };
 }
@@ -402,7 +420,10 @@ export function buildGeminiToolRequest(call: ProviderToolCall) {
     ],
     generationConfig: {
       temperature: call.temperature,
-      maxOutputTokens: call.maxTokens
+      maxOutputTokens: call.maxTokens,
+      ...(usesReasoning(call, "gemini-budget")
+        ? { thinkingConfig: { thinkingBudget: 1024 } }
+        : {})
     }
   };
 }
@@ -428,6 +449,7 @@ export function buildOllamaToolRequest(call: ProviderToolCall) {
       }
     })),
     options: { temperature: call.temperature, num_predict: call.maxTokens },
+    ...(usesReasoning(call, "ollama") ? { think: true } : {}),
     stream: false
   };
 }
@@ -451,6 +473,9 @@ export function buildOpenAiRequest(call: ProviderCall) {
         ]
       };
     }),
+    ...(usesReasoning(call, "openai-chat")
+      ? { reasoning_effort: "medium" }
+      : {}),
     temperature: call.temperature,
     max_tokens: call.maxTokens,
     stream: true
@@ -458,6 +483,9 @@ export function buildOpenAiRequest(call: ProviderCall) {
 }
 
 export function buildAnthropicRequest(call: ProviderCall) {
+  const thinking = usesReasoning(call, "anthropic")
+    ? { type: "enabled" as const, budget_tokens: 1024 }
+    : undefined;
   const system = call.messages
     .filter((message) => message.role === "system")
     .map((message) => message.content)
@@ -481,8 +509,9 @@ export function buildAnthropicRequest(call: ProviderCall) {
           { type: "text", text: message.content }
         ]
       })),
-    temperature: call.temperature,
-    max_tokens: call.maxTokens,
+    thinking,
+    temperature: thinking ? undefined : call.temperature,
+    max_tokens: Math.max(call.maxTokens, thinking ? 1025 : call.maxTokens),
     stream: true
   };
 }
@@ -509,7 +538,10 @@ export function buildGeminiRequest(call: ProviderCall) {
       })),
     generationConfig: {
       temperature: call.temperature,
-      maxOutputTokens: call.maxTokens
+      maxOutputTokens: call.maxTokens,
+      ...(usesReasoning(call, "gemini-budget")
+        ? { thinkingConfig: { thinkingBudget: 1024 } }
+        : {})
     }
   };
 }
@@ -526,6 +558,7 @@ export function buildOllamaRequest(call: ProviderCall) {
       temperature: call.temperature,
       num_predict: call.maxTokens
     },
+    ...(usesReasoning(call, "ollama") ? { think: true } : {}),
     stream: true
   };
 }

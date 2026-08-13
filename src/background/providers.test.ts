@@ -29,6 +29,7 @@ function call(kind: "openai-compatible" | "anthropic" | "gemini" | "ollama") {
     secret: "test-secret",
     temperature: 0.2,
     maxTokens: 512,
+    reasoningEnabled: false,
     messages: [
       createMessage("system", "Be precise."),
       createMessage("user", "What is in this image?", { attachments: [image] })
@@ -79,6 +80,30 @@ describe("provider request adapters", () => {
     const request = buildOllamaRequest(call("ollama"));
     expect(request.messages[1].images).toEqual(["ZmFrZQ=="]);
     expect(request.options.num_predict).toBe(512);
+  });
+
+  it("adds each configured reasoning protocol only when enabled", () => {
+    const openAiProfile = createProviderProfile("openai-compatible", {
+      reasoningStrategy: "openai-chat"
+    });
+    expect(
+      buildOpenAiRequest({
+        ...call("openai-compatible"),
+        profile: openAiProfile,
+        reasoningEnabled: true
+      }).reasoning_effort
+    ).toBe("medium");
+    expect(
+      buildAnthropicRequest({ ...call("anthropic"), reasoningEnabled: true })
+        .thinking
+    ).toEqual({ type: "enabled", budget_tokens: 1024 });
+    expect(
+      buildGeminiRequest({ ...call("gemini"), reasoningEnabled: true })
+        .generationConfig.thinkingConfig
+    ).toEqual({ thinkingBudget: 1024 });
+    expect(
+      buildOllamaRequest({ ...call("ollama"), reasoningEnabled: true }).think
+    ).toBe(true);
   });
 });
 
@@ -176,6 +201,16 @@ describe("provider tool calling adapters", () => {
     expect(request.messages[2]).toMatchObject({
       role: "tool",
       tool_name: "weather"
+    });
+  });
+
+  it("uses the configured reasoning protocol for MCP tool decisions", () => {
+    const request = buildGeminiToolRequest({
+      ...toolCall("gemini"),
+      reasoningEnabled: true
+    });
+    expect(request.generationConfig.thinkingConfig).toEqual({
+      thinkingBudget: 1024
     });
   });
 

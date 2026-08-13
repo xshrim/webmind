@@ -256,6 +256,10 @@ svg {
   gap: 15px;
 }
 
+.provider-limit-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .field {
   display: flex;
   min-width: 0;
@@ -4244,6 +4248,10 @@ button.prompt-row:hover {
   }
 
   .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .provider-limit-grid {
     grid-template-columns: 1fr;
   }
 

@@ -75,6 +75,12 @@ export type ToolSurface = "selection" | "home" | "tools" | "edge";
 export type ModelPurpose = "default" | "translation" | "vision";
 export type DefaultContextScope = "article" | "page";
 export type McpToolApprovalMode = "deny" | "ask" | "allow";
+export type ReasoningStrategy =
+  | "none"
+  | "openai-chat"
+  | "anthropic"
+  | "gemini-budget"
+  | "ollama";
 
 export interface ToolDefinition {
   id: string;
@@ -100,6 +106,7 @@ export interface ProviderProfile {
   secretStorage: "local" | "session";
   customHeaders: string;
   supportsVision: boolean;
+  reasoningStrategy: ReasoningStrategy;
   temperature: number;
   maxTokens: number;
   maxContextChars: number;
@@ -116,6 +123,7 @@ export interface AppSettings {
   logLevel: AppLogLevel;
   autoScrollDuringStreaming: boolean;
   modelThinkingTimeoutSeconds: number;
+  reasoningEnabledByDefault: boolean;
   mcpToolApprovalMode: McpToolApprovalMode;
   interfaceLanguage: AppLanguage;
   translationLanguage: AppLanguage;
@@ -207,6 +215,8 @@ export interface ChatMessage {
   toolInvocation?: ToolInvocation;
   /** The text entered in the composer, before attachment context is appended. */
   inputText?: string;
+  /** Whether this request used the configured reasoning protocol. */
+  reasoningEnabled?: boolean;
   attachments?: ImageAttachment[];
   error?: boolean;
   interruptionNotice?: string;
@@ -330,6 +340,7 @@ export interface ChatRunRequest {
   messages: ChatMessage[];
   temperature?: number;
   maxTokens?: number;
+  reasoningEnabled?: boolean;
   mcpTools?: McpToolSelection[];
   mcpSessionTools?: McpToolSelection[];
 }
@@ -340,6 +351,7 @@ export interface ModelCompleteRequest {
   messages: ChatMessage[];
   temperature?: number;
   maxTokens?: number;
+  reasoningEnabled?: boolean;
 }
 
 export interface ModelToolDefinition {
@@ -370,6 +382,7 @@ export interface ModelToolTurnRequest {
   tools: ModelToolDefinition[];
   temperature?: number;
   maxTokens?: number;
+  reasoningEnabled?: boolean;
 }
 
 export interface ModelToolTurnResult {

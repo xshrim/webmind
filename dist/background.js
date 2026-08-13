@@ -7420,12 +7420,13 @@ var deUiText = {
   newEngine: "Neue Engine",
   providerKind: "API Typ",
   providerKindOpenAICompatible: "OpenAI Kompatibel",
+  providerKindGrok: "Grok",
   providerKindAnthropic: "Anthropic",
   providerKindGemini: "Gemini",
   providerKindOllama: "Ollama",
   providerName: "Anzeigename",
   providerNamePlaceholder: "Beispiel: Internes Unternehmensmodell",
-  providerBaseUrl: "API URL",
+  providerBaseUrl: "API Base URL",
   providerBaseUrlHelp: "Beim Speichern wird eine Netzwerkberechtigung f\xFCr diese Dom\xE4ne angefordert.",
   providerModel: "Modell-ID",
   providerModelPlaceholder: "Vom Dienstanbieter bereitgestellt",
@@ -7441,6 +7442,17 @@ var deUiText = {
   providerMaxContext: "Maximale Kontextzeichen",
   providerSupportsVision: "Unterst\xFCtzt Bildeingabe",
   providerSupportsVisionHelp: "Deaktivieren, wenn das Modell keine Bilderkennung (Vision) unterst\xFCtzt.",
+  reasoningStrategy: "Reasoning-Parameterstrategie",
+  reasoningStrategyHelp: "Sendet die gew\xE4hlten Protokollparameter nur bei aktiviertem Reasoning-Modus.",
+  reasoningStrategyNone: "Keine",
+  reasoningStrategyOpenAiChat: "OpenAI Chat Completions",
+  reasoningStrategyAnthropic: "Anthropic Extended Thinking",
+  reasoningStrategyGeminiBudget: "Gemini Thinking Budget",
+  reasoningStrategyOllama: "Ollama Think",
+  reasoningEnabled: "Reasoning-Modus",
+  reasoningUnavailable: "Das aktuelle Modell hat keine Reasoning-Parameterstrategie.",
+  reasoningEnabledByDefault: "Reasoning-Modus standardm\xE4\xDFig aktivieren",
+  reasoningEnabledByDefaultHelp: "Gilt nur f\xFCr Modelle mit konfigurierter Reasoning-Parameterstrategie.",
   providerCustomHeaders: "Benutzerdefinierte Header",
   providerCustomHeadersHelp: "Optionales JSON-Objekt; \xFCbereinstimmende Felder \xFCberschreiben Standard-Header.",
   saveEngine: "Engine speichern",
@@ -8021,12 +8033,13 @@ var esUiText = {
   newEngine: "Nuevo motor",
   providerKind: "API Tipo",
   providerKindOpenAICompatible: "OpenAI Compatible",
+  providerKindGrok: "Grok",
   providerKindAnthropic: "Anthropic",
   providerKindGemini: "Gemini",
   providerKindOllama: "Ollama",
   providerName: "Nombre para mostrar",
   providerNamePlaceholder: "Ejemplo: Modelo interno de la empresa",
-  providerBaseUrl: "API URL",
+  providerBaseUrl: "API Base URL",
   providerBaseUrlHelp: "Al guardar, se solicitar\xE1 permiso de red para este dominio.",
   providerModel: "ID del modelo",
   providerModelPlaceholder: "Proporcionado por tu proveedor de servicios",
@@ -8042,6 +8055,17 @@ var esUiText = {
   providerMaxContext: "M\xE1ximo de caracteres de contexto",
   providerSupportsVision: "Admite entrada de im\xE1genes",
   providerSupportsVisionHelp: "Desactivar si el modelo no admite visi\xF3n.",
+  reasoningStrategy: "Estrategia de par\xE1metros de razonamiento",
+  reasoningStrategyHelp: "Env\xEDa los par\xE1metros del protocolo seleccionado solo cuando el modo de razonamiento est\xE1 activado.",
+  reasoningStrategyNone: "Ninguna",
+  reasoningStrategyOpenAiChat: "OpenAI Chat Completions",
+  reasoningStrategyAnthropic: "Anthropic Extended Thinking",
+  reasoningStrategyGeminiBudget: "Gemini Thinking Budget",
+  reasoningStrategyOllama: "Ollama Think",
+  reasoningEnabled: "Modo de razonamiento",
+  reasoningUnavailable: "El modelo actual no tiene estrategia de par\xE1metros de razonamiento.",
+  reasoningEnabledByDefault: "Activar el modo de razonamiento por defecto",
+  reasoningEnabledByDefaultHelp: "Solo se aplica a modelos configurados con una estrategia de par\xE1metros de razonamiento.",
   providerCustomHeaders: "Encabezados personalizados",
   providerCustomHeadersHelp: "Objeto JSON opcional; los campos coincidentes sobrescriben los encabezados predeterminados.",
   saveEngine: "Guardar motor",
@@ -8622,12 +8646,13 @@ var frUiText = {
   newEngine: "Nouveau moteur",
   providerKind: "API Type",
   providerKindOpenAICompatible: "OpenAI Compatible",
+  providerKindGrok: "Grok",
   providerKindAnthropic: "Anthropic",
   providerKindGemini: "Gemini",
   providerKindOllama: "Ollama",
   providerName: "Nom d'affichage",
   providerNamePlaceholder: "Exemple : mod\xE8le interne \xE0 l'entreprise",
-  providerBaseUrl: "API URL",
+  providerBaseUrl: "API Base URL",
   providerBaseUrlHelp: "L'enregistrement n\xE9cessitera une autorisation r\xE9seau pour ce domaine.",
   providerModel: "ID du mod\xE8le",
   providerModelPlaceholder: "Fourni par votre prestataire de services",
@@ -8643,6 +8668,17 @@ var frUiText = {
   providerMaxContext: "Nombre maximal de caract\xE8res de contexte",
   providerSupportsVision: "Prend en charge les entr\xE9es d'image",
   providerSupportsVisionHelp: "D\xE9sactiver si le mod\xE8le ne prend pas en charge la vision.",
+  reasoningStrategy: "Strat\xE9gie de param\xE8tres de raisonnement",
+  reasoningStrategyHelp: "Envoie les param\xE8tres du protocole choisi uniquement lorsque le mode raisonnement est activ\xE9.",
+  reasoningStrategyNone: "Aucune",
+  reasoningStrategyOpenAiChat: "OpenAI Chat Completions",
+  reasoningStrategyAnthropic: "Anthropic Extended Thinking",
+  reasoningStrategyGeminiBudget: "Gemini Thinking Budget",
+  reasoningStrategyOllama: "Ollama Think",
+  reasoningEnabled: "Mode raisonnement",
+  reasoningUnavailable: "Le mod\xE8le actuel n'a pas de strat\xE9gie de param\xE8tres de raisonnement.",
+  reasoningEnabledByDefault: "Activer le mode raisonnement par d\xE9faut",
+  reasoningEnabledByDefaultHelp: "S'applique uniquement aux mod\xE8les configur\xE9s avec une strat\xE9gie de param\xE8tres de raisonnement.",
   providerCustomHeaders: "En-t\xEAtes personnalis\xE9s",
   providerCustomHeadersHelp: "Objet JSON facultatif ; les champs correspondants remplacent les en-t\xEAtes par d\xE9faut.",
   saveEngine: "Enregistrer le moteur",
@@ -9223,12 +9259,13 @@ var itUiText = {
   newEngine: "Nuovo motore",
   providerKind: "API Tipo",
   providerKindOpenAICompatible: "OpenAI Compatibile",
+  providerKindGrok: "Grok",
   providerKindAnthropic: "Anthropic",
   providerKindGemini: "Gemini",
   providerKindOllama: "Ollama",
   providerName: "Nome visualizzato",
   providerNamePlaceholder: "Esempio: modello interno aziendale",
-  providerBaseUrl: "API URL",
+  providerBaseUrl: "API Base URL",
   providerBaseUrlHelp: "Il salvataggio richieder\xE0 l'autorizzazione di rete per questo dominio.",
   providerModel: "ID modello",
   providerModelPlaceholder: "Fornito dal tuo provider di servizi",
@@ -9244,6 +9281,17 @@ var itUiText = {
   providerMaxContext: "Caratteri di contesto massimi",
   providerSupportsVision: "Supporta input di immagini",
   providerSupportsVisionHelp: "Disattiva se il modello non supporta la visione artificiale.",
+  reasoningStrategy: "Strategia dei parametri di ragionamento",
+  reasoningStrategyHelp: "Invia i parametri del protocollo selezionato solo quando la modalita di ragionamento e attiva.",
+  reasoningStrategyNone: "Nessuna",
+  reasoningStrategyOpenAiChat: "OpenAI Chat Completions",
+  reasoningStrategyAnthropic: "Anthropic Extended Thinking",
+  reasoningStrategyGeminiBudget: "Gemini Thinking Budget",
+  reasoningStrategyOllama: "Ollama Think",
+  reasoningEnabled: "Modalita di ragionamento",
+  reasoningUnavailable: "Il modello attuale non ha una strategia di parametri di ragionamento.",
+  reasoningEnabledByDefault: "Attiva la modalita di ragionamento per impostazione predefinita",
+  reasoningEnabledByDefaultHelp: "Si applica solo ai modelli configurati con una strategia di parametri di ragionamento.",
   providerCustomHeaders: "Intestazioni personalizzate",
   providerCustomHeadersHelp: "Oggetto JSON facoltativo; i campi corrispondenti sovrascrivono le intestazioni predefinite.",
   saveEngine: "Salva motore",
@@ -9817,7 +9865,7 @@ var CORE_UI_TEXT = {
     searchAnswerSettingHelp: "\u5F00\u542F\u540E\u5728\u641C\u7D22\u7ED3\u679C\u9875\u53F3\u4FA7\u81EA\u52A8\u56DE\u7B54\uFF0C\u5E76\u4F7F\u7528 DuckDuckGo \u641C\u7D22\u7ED3\u679C\u4F5C\u4E3A\u53C2\u8003\u3002",
     includePageByDefault: "\u9ED8\u8BA4\u9644\u5E26\u5F53\u524D\u9875\u9762",
     includePageByDefaultHelp: "\u53D1\u9001\u524D\u4ECD\u53EF\u5728\u8F93\u5165\u533A\u5173\u95ED\u9875\u9762\u4E0A\u4E0B\u6587\u3002",
-    webSearchByDefault: "\u5BF9\u8BDD\u9ED8\u8BA4\u542F\u7528\u7F51\u9875\u641C\u7D22",
+    webSearchByDefault: "\u5BF9\u8BDD\u9ED8\u8BA4\u542F\u7528\u8054\u7F51\u641C\u7D22",
     webSearchByDefaultHelp: "\u4FA7\u8FB9\u680F\u666E\u901A\u5BF9\u8BDD\u9ED8\u8BA4\u4F7F\u7528 DuckDuckGo \u7ED3\u679C\u8865\u5145\u95EE\u9898\u3002",
     toolResponseUseContextLanguage: "\u5DE5\u5177\u4F7F\u7528\u63D0\u95EE\u4E0A\u4E0B\u6587\u539F\u59CB\u8BED\u8A00\u8FDB\u884C\u56DE\u7B54",
     toolResponseUseContextLanguageHelp: "\u5173\u95ED\u65F6\u4F7F\u7528\u5F53\u524D\u754C\u9762\u8BED\u8A00\uFF1B\u4EC5\u5F71\u54CD\u5DE5\u5177\uFF0C\u5DE5\u5177\u63D0\u793A\u8BCD\u4E2D\u660E\u786E\u6307\u5B9A\u7684\u56DE\u7B54\u8BED\u8A00\u4F18\u5148\u3002",
@@ -9855,12 +9903,13 @@ var CORE_UI_TEXT = {
     newEngine: "\u65B0\u5F15\u64CE",
     providerKind: "\u63A5\u53E3\u7C7B\u578B",
     providerKindOpenAICompatible: "OpenAI \u517C\u5BB9",
+    providerKindGrok: "Grok",
     providerKindAnthropic: "Anthropic",
     providerKindGemini: "Gemini",
     providerKindOllama: "Ollama",
     providerName: "\u663E\u793A\u540D\u79F0",
     providerNamePlaceholder: "\u4F8B\u5982\uFF1A\u516C\u53F8\u5185\u7F51\u6A21\u578B",
-    providerBaseUrl: "\u63A5\u53E3\u5730\u5740",
+    providerBaseUrl: "\u63A5\u53E3 Base URL",
     providerBaseUrlHelp: "\u4FDD\u5B58\u65F6\u4F1A\u6309\u8FD9\u4E2A\u57DF\u540D\u7533\u8BF7\u7F51\u7EDC\u8BBF\u95EE\u6743\u9650\u3002",
     providerModel: "\u6A21\u578B ID",
     providerModelPlaceholder: "\u7531\u4F60\u7684\u670D\u52A1\u5546\u63D0\u4F9B",
@@ -9876,6 +9925,17 @@ var CORE_UI_TEXT = {
     providerMaxContext: "\u6700\u5927\u4E0A\u4E0B\u6587\u5B57\u6570",
     providerSupportsVision: "\u652F\u6301\u56FE\u7247\u8F93\u5165",
     providerSupportsVisionHelp: "\u6A21\u578B\u4E0D\u652F\u6301\u89C6\u89C9\u65F6\u8BF7\u5173\u95ED",
+    reasoningStrategy: "\u63A8\u7406\u4F20\u53C2\u7B56\u7565",
+    reasoningStrategyHelp: "\u4EC5\u5728\u5BF9\u8BDD\u5F00\u542F\u63A8\u7406\u6A21\u5F0F\u65F6\u5411\u6A21\u578B\u53D1\u9001\u5BF9\u5E94\u534F\u8BAE\u53C2\u6570\u3002",
+    reasoningStrategyNone: "\u4E0D\u4F20\u9012",
+    reasoningStrategyOpenAiChat: "OpenAI Chat Completions",
+    reasoningStrategyAnthropic: "Anthropic Extended Thinking",
+    reasoningStrategyGeminiBudget: "Gemini Thinking Budget",
+    reasoningStrategyOllama: "Ollama Think",
+    reasoningEnabled: "\u63A8\u7406\u6A21\u5F0F",
+    reasoningUnavailable: "\u5F53\u524D\u6A21\u578B\u672A\u914D\u7F6E\u63A8\u7406\u4F20\u53C2\u7B56\u7565",
+    reasoningEnabledByDefault: "\u5BF9\u8BDD\u9ED8\u8BA4\u5F00\u542F\u63A8\u7406\u6A21\u5F0F",
+    reasoningEnabledByDefaultHelp: "\u4EC5\u5BF9\u914D\u7F6E\u4E86\u63A8\u7406\u4F20\u53C2\u7B56\u7565\u7684\u6A21\u578B\u751F\u6548\u3002",
     providerCustomHeaders: "\u81EA\u5B9A\u4E49\u8BF7\u6C42\u5934",
     providerCustomHeadersHelp: "\u53EF\u9009\uFF0C\u4F7F\u7528 JSON \u5BF9\u8C61\u683C\u5F0F\uFF1B\u540C\u540D\u5B57\u6BB5\u4F1A\u8986\u76D6\u9ED8\u8BA4\u8BF7\u6C42\u5934\u3002",
     saveEngine: "\u4FDD\u5B58\u5F15\u64CE",
@@ -10416,7 +10476,7 @@ var CORE_UI_TEXT = {
     searchAnswerSettingHelp: "\u958B\u555F\u5F8C\u5728\u641C\u5C0B\u7D50\u679C\u9801\u53F3\u5074\u81EA\u52D5\u56DE\u7B54\uFF0C\u4E26\u4F7F\u7528 DuckDuckGo \u641C\u5C0B\u7D50\u679C\u4F5C\u70BA\u53C3\u8003\u3002",
     includePageByDefault: "\u9810\u8A2D\u9644\u5E36\u76EE\u524D\u9801\u9762",
     includePageByDefaultHelp: "\u9001\u51FA\u524D\u4ECD\u53EF\u5728\u8F38\u5165\u5340\u95DC\u9589\u9801\u9762\u4E0A\u4E0B\u6587\u3002",
-    webSearchByDefault: "\u5C0D\u8A71\u9810\u8A2D\u555F\u7528\u7DB2\u9801\u641C\u5C0B",
+    webSearchByDefault: "\u5C0D\u8A71\u9810\u8A2D\u555F\u7528\u806F\u7DB2\u641C\u5C0B",
     webSearchByDefaultHelp: "\u5074\u908A\u6B04\u4E00\u822C\u5C0D\u8A71\u9810\u8A2D\u4F7F\u7528 DuckDuckGo \u7D50\u679C\u88DC\u5145\u554F\u984C\u3002",
     toolResponseUseContextLanguage: "\u5DE5\u5177\u4F7F\u7528\u63D0\u554F\u4E0A\u4E0B\u6587\u539F\u59CB\u8A9E\u8A00\u56DE\u7B54",
     toolResponseUseContextLanguageHelp: "\u95DC\u9589\u6642\u4F7F\u7528\u76EE\u524D\u4ECB\u9762\u8A9E\u8A00\uFF1B\u50C5\u5F71\u97FF\u5DE5\u5177\uFF0C\u5DE5\u5177\u63D0\u793A\u8A5E\u4E2D\u660E\u78BA\u6307\u5B9A\u7684\u56DE\u7B54\u8A9E\u8A00\u512A\u5148\u3002",
@@ -10454,12 +10514,13 @@ var CORE_UI_TEXT = {
     newEngine: "\u65B0\u5F15\u64CE",
     providerKind: "\u4ECB\u9762\u985E\u578B",
     providerKindOpenAICompatible: "OpenAI \u76F8\u5BB9",
+    providerKindGrok: "Grok",
     providerKindAnthropic: "Anthropic",
     providerKindGemini: "Gemini",
     providerKindOllama: "Ollama",
     providerName: "\u986F\u793A\u540D\u7A31",
     providerNamePlaceholder: "\u4F8B\u5982\uFF1A\u516C\u53F8\u5167\u7DB2\u6A21\u578B",
-    providerBaseUrl: "\u4ECB\u9762\u5730\u5740",
+    providerBaseUrl: "\u4ECB\u9762 Base URL",
     providerBaseUrlHelp: "\u5132\u5B58\u6642\u6703\u4F9D\u9019\u500B\u7DB2\u57DF\u7533\u8ACB\u7DB2\u8DEF\u5B58\u53D6\u6B0A\u9650\u3002",
     providerModel: "\u6A21\u578B ID",
     providerModelPlaceholder: "\u7531\u4F60\u7684\u670D\u52D9\u5546\u63D0\u4F9B",
@@ -10475,6 +10536,17 @@ var CORE_UI_TEXT = {
     providerMaxContext: "\u6700\u5927\u4E0A\u4E0B\u6587\u5B57\u6578",
     providerSupportsVision: "\u652F\u63F4\u5716\u7247\u8F38\u5165",
     providerSupportsVisionHelp: "\u6A21\u578B\u4E0D\u652F\u63F4\u8996\u89BA\u6642\u8ACB\u95DC\u9589",
+    reasoningStrategy: "\u63A8\u7406\u50B3\u53C3\u7B56\u7565",
+    reasoningStrategyHelp: "\u53EA\u5728\u5C0D\u8A71\u958B\u555F\u63A8\u7406\u6A21\u5F0F\u6642\u5411\u6A21\u578B\u50B3\u9001\u5C0D\u61C9\u5354\u8B70\u53C3\u6578\u3002",
+    reasoningStrategyNone: "\u4E0D\u50B3\u9001",
+    reasoningStrategyOpenAiChat: "OpenAI Chat Completions",
+    reasoningStrategyAnthropic: "Anthropic Extended Thinking",
+    reasoningStrategyGeminiBudget: "Gemini Thinking Budget",
+    reasoningStrategyOllama: "Ollama Think",
+    reasoningEnabled: "\u63A8\u7406\u6A21\u5F0F",
+    reasoningUnavailable: "\u76EE\u524D\u6A21\u578B\u672A\u8A2D\u5B9A\u63A8\u7406\u50B3\u53C3\u7B56\u7565",
+    reasoningEnabledByDefault: "\u5C0D\u8A71\u9810\u8A2D\u958B\u555F\u63A8\u7406\u6A21\u5F0F",
+    reasoningEnabledByDefaultHelp: "\u50C5\u5C0D\u5DF2\u8A2D\u5B9A\u63A8\u7406\u50B3\u53C3\u7B56\u7565\u7684\u6A21\u578B\u751F\u6548\u3002",
     providerCustomHeaders: "\u81EA\u8A02\u8ACB\u6C42\u6A19\u982D",
     providerCustomHeadersHelp: "\u9078\u586B\uFF0C\u4F7F\u7528 JSON \u7269\u4EF6\u683C\u5F0F\uFF1B\u540C\u540D\u6B04\u4F4D\u6703\u8986\u84CB\u9810\u8A2D\u8ACB\u6C42\u6A19\u982D\u3002",
     saveEngine: "\u5132\u5B58\u5F15\u64CE",
@@ -11053,12 +11125,13 @@ var CORE_UI_TEXT = {
     newEngine: "New Engine",
     providerKind: "API Type",
     providerKindOpenAICompatible: "OpenAI Compatible",
+    providerKindGrok: "Grok",
     providerKindAnthropic: "Anthropic",
     providerKindGemini: "Gemini",
     providerKindOllama: "Ollama",
     providerName: "Display Name",
     providerNamePlaceholder: "Example: Company internal model",
-    providerBaseUrl: "API URL",
+    providerBaseUrl: "API Base URL",
     providerBaseUrlHelp: "Saving will request network permission for this domain.",
     providerModel: "Model ID",
     providerModelPlaceholder: "Provided by your service provider",
@@ -11074,6 +11147,17 @@ var CORE_UI_TEXT = {
     providerMaxContext: "Max Context Characters",
     providerSupportsVision: "Supports Image Input",
     providerSupportsVisionHelp: "Turn off if the model does not support vision.",
+    reasoningStrategy: "Reasoning Parameter Strategy",
+    reasoningStrategyHelp: "Sends the selected protocol parameters only when reasoning mode is enabled.",
+    reasoningStrategyNone: "None",
+    reasoningStrategyOpenAiChat: "OpenAI Chat Completions",
+    reasoningStrategyAnthropic: "Anthropic Extended Thinking",
+    reasoningStrategyGeminiBudget: "Gemini Thinking Budget",
+    reasoningStrategyOllama: "Ollama Think",
+    reasoningEnabled: "Reasoning Mode",
+    reasoningUnavailable: "The current model has no reasoning parameter strategy.",
+    reasoningEnabledByDefault: "Enable Reasoning Mode by Default",
+    reasoningEnabledByDefaultHelp: "Only applies to models configured with a reasoning parameter strategy.",
     providerCustomHeaders: "Custom Headers",
     providerCustomHeadersHelp: "Optional JSON object; matching fields override default headers.",
     saveEngine: "Save Engine",
@@ -11652,12 +11736,13 @@ var CORE_UI_TEXT = {
     newEngine: "\u65B0\u3057\u3044\u30A8\u30F3\u30B8\u30F3",
     providerKind: "API \u7A2E\u5225",
     providerKindOpenAICompatible: "OpenAI \u4E92\u63DB",
+    providerKindGrok: "Grok",
     providerKindAnthropic: "Anthropic",
     providerKindGemini: "Gemini",
     providerKindOllama: "Ollama",
     providerName: "\u8868\u793A\u540D",
     providerNamePlaceholder: "\u4F8B: \u793E\u5185\u30E2\u30C7\u30EB",
-    providerBaseUrl: "API URL",
+    providerBaseUrl: "API Base URL",
     providerBaseUrlHelp: "\u4FDD\u5B58\u6642\u306B\u3053\u306E\u30C9\u30E1\u30A4\u30F3\u3078\u306E\u30CD\u30C3\u30C8\u30EF\u30FC\u30AF\u6A29\u9650\u3092\u8981\u6C42\u3057\u307E\u3059\u3002",
     providerModel: "\u30E2\u30C7\u30EB ID",
     providerModelPlaceholder: "\u30B5\u30FC\u30D3\u30B9\u63D0\u4F9B\u5143\u304B\u3089\u6307\u5B9A\u3055\u308C\u305F\u3082\u306E",
@@ -11673,6 +11758,17 @@ var CORE_UI_TEXT = {
     providerMaxContext: "\u6700\u5927\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u6587\u5B57\u6570",
     providerSupportsVision: "\u753B\u50CF\u5165\u529B\u306B\u5BFE\u5FDC",
     providerSupportsVisionHelp: "\u30E2\u30C7\u30EB\u304C\u8996\u899A\u5165\u529B\u306B\u5BFE\u5FDC\u3057\u306A\u3044\u5834\u5408\u306F\u30AA\u30D5\u306B\u3057\u3066\u304F\u3060\u3055\u3044",
+    reasoningStrategy: "\u63A8\u8AD6\u30D1\u30E9\u30E1\u30FC\u30BF\u6226\u7565",
+    reasoningStrategyHelp: "\u63A8\u8AD6\u30E2\u30FC\u30C9\u6709\u52B9\u6642\u306B\u306E\u307F\u3001\u9078\u629E\u3057\u305F\u30D7\u30ED\u30C8\u30B3\u30EB\u306E\u30D1\u30E9\u30E1\u30FC\u30BF\u3092\u9001\u4FE1\u3057\u307E\u3059\u3002",
+    reasoningStrategyNone: "\u306A\u3057",
+    reasoningStrategyOpenAiChat: "OpenAI Chat Completions",
+    reasoningStrategyAnthropic: "Anthropic Extended Thinking",
+    reasoningStrategyGeminiBudget: "Gemini Thinking Budget",
+    reasoningStrategyOllama: "Ollama Think",
+    reasoningEnabled: "\u63A8\u8AD6\u30E2\u30FC\u30C9",
+    reasoningUnavailable: "\u73FE\u5728\u306E\u30E2\u30C7\u30EB\u306B\u306F\u63A8\u8AD6\u30D1\u30E9\u30E1\u30FC\u30BF\u6226\u7565\u304C\u8A2D\u5B9A\u3055\u308C\u3066\u3044\u307E\u305B\u3093",
+    reasoningEnabledByDefault: "\u30C1\u30E3\u30C3\u30C8\u3067\u63A8\u8AD6\u30E2\u30FC\u30C9\u3092\u65E2\u5B9A\u3067\u6709\u52B9\u5316",
+    reasoningEnabledByDefaultHelp: "\u63A8\u8AD6\u30D1\u30E9\u30E1\u30FC\u30BF\u6226\u7565\u304C\u8A2D\u5B9A\u3055\u308C\u305F\u30E2\u30C7\u30EB\u3060\u3051\u306B\u9069\u7528\u3055\u308C\u307E\u3059\u3002",
     providerCustomHeaders: "\u30AB\u30B9\u30BF\u30E0\u30D8\u30C3\u30C0\u30FC",
     providerCustomHeadersHelp: "\u4EFB\u610F\u3002JSON \u30AA\u30D6\u30B8\u30A7\u30AF\u30C8\u5F62\u5F0F\u3002\u540C\u540D\u30D5\u30A3\u30FC\u30EB\u30C9\u306F\u65E2\u5B9A\u30D8\u30C3\u30C0\u30FC\u3092\u4E0A\u66F8\u304D\u3057\u307E\u3059\u3002",
     saveEngine: "\u30A8\u30F3\u30B8\u30F3\u3092\u4FDD\u5B58",
@@ -12251,12 +12347,13 @@ var CORE_UI_TEXT = {
     newEngine: "\uC0C8 \uC5D4\uC9C4",
     providerKind: "API \uC720\uD615",
     providerKindOpenAICompatible: "OpenAI \uD638\uD658",
+    providerKindGrok: "Grok",
     providerKindAnthropic: "Anthropic",
     providerKindGemini: "Gemini",
     providerKindOllama: "Ollama",
     providerName: "\uD45C\uC2DC \uC774\uB984",
     providerNamePlaceholder: "\uC608: \uC0AC\uB0B4 \uBAA8\uB378",
-    providerBaseUrl: "API URL",
+    providerBaseUrl: "API Base URL",
     providerBaseUrlHelp: "\uC800\uC7A5 \uC2DC \uC774 \uB3C4\uBA54\uC778\uC5D0 \uB300\uD55C \uB124\uD2B8\uC6CC\uD06C \uAD8C\uD55C\uC744 \uC694\uCCAD\uD569\uB2C8\uB2E4.",
     providerModel: "\uBAA8\uB378 ID",
     providerModelPlaceholder: "\uC11C\uBE44\uC2A4 \uC81C\uACF5\uC790\uAC00 \uC81C\uACF5\uD55C \uAC12",
@@ -12272,6 +12369,17 @@ var CORE_UI_TEXT = {
     providerMaxContext: "\uCD5C\uB300 \uCEE8\uD14D\uC2A4\uD2B8 \uBB38\uC790 \uC218",
     providerSupportsVision: "\uC774\uBBF8\uC9C0 \uC785\uB825 \uC9C0\uC6D0",
     providerSupportsVisionHelp: "\uBAA8\uB378\uC774 \uBE44\uC804 \uC785\uB825\uC744 \uC9C0\uC6D0\uD558\uC9C0 \uC54A\uC73C\uBA74 \uB044\uC138\uC694",
+    reasoningStrategy: "\uCD94\uB860 \uB9E4\uAC1C\uBCC0\uC218 \uC804\uB7B5",
+    reasoningStrategyHelp: "\uCD94\uB860 \uBAA8\uB4DC\uAC00 \uCF1C\uC9C4 \uACBD\uC6B0\uC5D0\uB9CC \uC120\uD0DD\uD55C \uD504\uB85C\uD1A0\uCF5C \uB9E4\uAC1C\uBCC0\uC218\uB97C \uC804\uC1A1\uD569\uB2C8\uB2E4.",
+    reasoningStrategyNone: "\uC5C6\uC74C",
+    reasoningStrategyOpenAiChat: "OpenAI Chat Completions",
+    reasoningStrategyAnthropic: "Anthropic Extended Thinking",
+    reasoningStrategyGeminiBudget: "Gemini Thinking Budget",
+    reasoningStrategyOllama: "Ollama Think",
+    reasoningEnabled: "\uCD94\uB860 \uBAA8\uB4DC",
+    reasoningUnavailable: "\uD604\uC7AC \uBAA8\uB378\uC5D0 \uCD94\uB860 \uB9E4\uAC1C\uBCC0\uC218 \uC804\uB7B5\uC774 \uC124\uC815\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4",
+    reasoningEnabledByDefault: "\uB300\uD654\uC5D0\uC11C \uCD94\uB860 \uBAA8\uB4DC \uAE30\uBCF8 \uC0AC\uC6A9",
+    reasoningEnabledByDefaultHelp: "\uCD94\uB860 \uB9E4\uAC1C\uBCC0\uC218 \uC804\uB7B5\uC774 \uC124\uC815\uB41C \uBAA8\uB378\uC5D0\uB9CC \uC801\uC6A9\uB429\uB2C8\uB2E4.",
     providerCustomHeaders: "\uC0AC\uC6A9\uC790 \uC9C0\uC815 \uC694\uCCAD \uD5E4\uB354",
     providerCustomHeadersHelp: "\uC120\uD0DD \uC0AC\uD56D. JSON \uAC1D\uCCB4 \uD615\uC2DD\uC774\uBA70 \uAC19\uC740 \uC774\uB984\uC758 \uD544\uB4DC\uB294 \uAE30\uBCF8 \uD5E4\uB354\uB97C \uB36E\uC5B4\uC501\uB2C8\uB2E4.",
     saveEngine: "\uC5D4\uC9C4 \uC800\uC7A5",
@@ -14371,6 +14479,7 @@ var DEFAULT_SETTINGS = {
   logLevel: "info",
   autoScrollDuringStreaming: true,
   modelThinkingTimeoutSeconds: 0,
+  reasoningEnabledByDefault: false,
   mcpToolApprovalMode: "ask",
   interfaceLanguage: "auto",
   translationLanguage: "auto",
@@ -14473,6 +14582,13 @@ var MCP_TOOL_APPROVAL_MODES = /* @__PURE__ */ new Set([
   "ask",
   "allow"
 ]);
+var REASONING_STRATEGIES = /* @__PURE__ */ new Set([
+  "none",
+  "openai-chat",
+  "anthropic",
+  "gemini-budget",
+  "ollama"
+]);
 var SELECTION_MATCH_HIGHLIGHT_MODES = /* @__PURE__ */ new Set([
   "off",
   "ignore-case",
@@ -14513,7 +14629,12 @@ function normalizeArticleExtractionRules(rules = []) {
   })).filter((rule) => rule.urlPattern && rule.selector);
 }
 function normalizeSettings(stored = {}) {
-  const profiles = stored.profiles ?? [];
+  const profiles = (stored.profiles ?? []).map((profile) => ({
+    ...profile,
+    reasoningStrategy: REASONING_STRATEGIES.has(
+      profile.reasoningStrategy
+    ) ? profile.reasoningStrategy : "none"
+  }));
   const quickToolsUrlBlacklist = stored.edgeQuickToolUrlBlacklist ?? [];
   const profileIds = new Set(profiles.map((profile) => profile.id));
   const visionProfileIds = new Set(
@@ -14538,6 +14659,7 @@ function normalizeSettings(stored = {}) {
     logLevel: APP_LOG_LEVELS.has(stored.logLevel) ? stored.logLevel : DEFAULT_SETTINGS.logLevel,
     autoScrollDuringStreaming: stored.autoScrollDuringStreaming ?? true,
     modelThinkingTimeoutSeconds: storedTimeoutSeconds,
+    reasoningEnabledByDefault: stored.reasoningEnabledByDefault ?? DEFAULT_SETTINGS.reasoningEnabledByDefault,
     mcpToolApprovalMode: MCP_TOOL_APPROVAL_MODES.has(
       stored.mcpToolApprovalMode
     ) ? stored.mcpToolApprovalMode : DEFAULT_SETTINGS.mcpToolApprovalMode,
@@ -14795,6 +14917,7 @@ async function resolveCall(request) {
     messages: request.messages,
     temperature: request.temperature ?? profile.temperature,
     maxTokens: request.maxTokens ?? profile.maxTokens,
+    reasoningEnabled: request.reasoningEnabled === true,
     language: settings.interfaceLanguage
   };
 }
@@ -14813,8 +14936,12 @@ async function resolveToolCall(request) {
     tools: request.tools,
     temperature: request.temperature ?? profile.temperature,
     maxTokens: request.maxTokens ?? profile.maxTokens,
+    reasoningEnabled: request.reasoningEnabled === true,
     language: settings.interfaceLanguage
   };
+}
+function usesReasoning(call, strategy) {
+  return call.reasoningEnabled && call.profile.reasoningStrategy === strategy;
 }
 function imageParts(message, language) {
   return (message.attachments ?? []).filter(
@@ -14882,12 +15009,14 @@ function buildOpenAiToolRequest(call) {
       }
     })),
     tool_choice: "auto",
+    ...usesReasoning(call, "openai-chat") ? { reasoning_effort: "medium" } : {},
     temperature: call.temperature,
     max_tokens: call.maxTokens,
     stream: false
   };
 }
 function buildAnthropicToolRequest(call) {
+  const thinking = usesReasoning(call, "anthropic") ? { type: "enabled", budget_tokens: 1024 } : void 0;
   const system = call.messages.filter((message) => message.role === "system").map((message) => message.content).join("\n\n");
   const messages = [];
   for (const message of call.messages.filter((item) => item.role !== "system")) {
@@ -14938,8 +15067,9 @@ function buildAnthropicToolRequest(call) {
       description: tool.description,
       input_schema: tool.inputSchema
     })),
-    temperature: call.temperature,
-    max_tokens: call.maxTokens,
+    thinking,
+    temperature: thinking ? void 0 : call.temperature,
+    max_tokens: Math.max(call.maxTokens, thinking ? 1025 : call.maxTokens),
     stream: false
   };
 }
@@ -14988,7 +15118,8 @@ function buildGeminiToolRequest(call) {
     ],
     generationConfig: {
       temperature: call.temperature,
-      maxOutputTokens: call.maxTokens
+      maxOutputTokens: call.maxTokens,
+      ...usesReasoning(call, "gemini-budget") ? { thinkingConfig: { thinkingBudget: 1024 } } : {}
     }
   };
 }
@@ -15013,6 +15144,7 @@ function buildOllamaToolRequest(call) {
       }
     })),
     options: { temperature: call.temperature, num_predict: call.maxTokens },
+    ...usesReasoning(call, "ollama") ? { think: true } : {},
     stream: false
   };
 }
@@ -15035,12 +15167,14 @@ function buildOpenAiRequest(call) {
         ]
       };
     }),
+    ...usesReasoning(call, "openai-chat") ? { reasoning_effort: "medium" } : {},
     temperature: call.temperature,
     max_tokens: call.maxTokens,
     stream: true
   };
 }
 function buildAnthropicRequest(call) {
+  const thinking = usesReasoning(call, "anthropic") ? { type: "enabled", budget_tokens: 1024 } : void 0;
   const system = call.messages.filter((message) => message.role === "system").map((message) => message.content).join("\n\n");
   return {
     model: call.profile.model,
@@ -15059,8 +15193,9 @@ function buildAnthropicRequest(call) {
         { type: "text", text: message.content }
       ]
     })),
-    temperature: call.temperature,
-    max_tokens: call.maxTokens,
+    thinking,
+    temperature: thinking ? void 0 : call.temperature,
+    max_tokens: Math.max(call.maxTokens, thinking ? 1025 : call.maxTokens),
     stream: true
   };
 }
@@ -15079,7 +15214,8 @@ function buildGeminiRequest(call) {
     })),
     generationConfig: {
       temperature: call.temperature,
-      maxOutputTokens: call.maxTokens
+      maxOutputTokens: call.maxTokens,
+      ...usesReasoning(call, "gemini-budget") ? { thinkingConfig: { thinkingBudget: 1024 } } : {}
     }
   };
 }
@@ -15095,6 +15231,7 @@ function buildOllamaRequest(call) {
       temperature: call.temperature,
       num_predict: call.maxTokens
     },
+    ...usesReasoning(call, "ollama") ? { think: true } : {},
     stream: true
   };
 }
@@ -26448,7 +26585,8 @@ async function runMcpAgent(request, signal, requestApproval, reportToolEvent = (
         messages,
         tools,
         temperature: request.temperature,
-        maxTokens: request.maxTokens
+        maxTokens: request.maxTokens,
+        reasoningEnabled: request.reasoningEnabled
       },
       signal
     );
@@ -26993,7 +27131,8 @@ chrome.runtime.onConnect.addListener((port) => {
           purpose: request.purpose,
           messages: request.messages,
           temperature: request.temperature,
-          maxTokens: request.maxTokens
+          maxTokens: request.maxTokens,
+          reasoningEnabled: request.reasoningEnabled
         },
         (delta) => {
           postToPort({

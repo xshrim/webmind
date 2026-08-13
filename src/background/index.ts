@@ -347,7 +347,8 @@ chrome.runtime.onConnect.addListener((port) => {
           purpose: request.purpose,
           messages: request.messages,
           temperature: request.temperature,
-          maxTokens: request.maxTokens
+          maxTokens: request.maxTokens,
+          reasoningEnabled: request.reasoningEnabled
         },
         (delta) => {
           postToPort({

@@ -58,6 +58,7 @@ import type {
   ImmersiveReadingStrategy,
   ProviderKind,
   ProviderProfile,
+  ReasoningStrategy,
   SelectionMatchHighlightMode,
   SelectionOverlayMode,
   ToolDefinition,
@@ -90,6 +91,7 @@ const PRIMARY_PROVIDER_KINDS: ProviderKind[] = [
   "openai-compatible",
   "anthropic",
   "gemini",
+  "grok",
   "openrouter",
   "siliconflow",
   "ollama"
@@ -265,10 +267,22 @@ function languageLabel(language: AppLanguage, current: AppLanguage): string {
 
 const PROVIDER_KIND_LABEL_KEYS: Partial<Record<ProviderKind, UiTextKey>> = {
   "openai-compatible": "providerKindOpenAICompatible",
+  grok: "providerKindGrok",
   anthropic: "providerKindAnthropic",
   gemini: "providerKindGemini",
   ollama: "providerKindOllama"
 };
+
+const REASONING_STRATEGIES: Array<{
+  id: ReasoningStrategy;
+  label: UiTextKey;
+}> = [
+  { id: "none", label: "reasoningStrategyNone" },
+  { id: "openai-chat", label: "reasoningStrategyOpenAiChat" },
+  { id: "anthropic", label: "reasoningStrategyAnthropic" },
+  { id: "gemini-budget", label: "reasoningStrategyGeminiBudget" },
+  { id: "ollama", label: "reasoningStrategyOllama" }
+];
 
 const SELECTION_MATCH_HIGHLIGHT_MODES: Array<{
   id: SelectionMatchHighlightMode;
@@ -514,7 +528,8 @@ function ProviderEditor({
       baseUrl: preset.baseUrl,
       model: preset.model,
       supportsVision: preset.supportsVision,
-      maxContextChars: preset.maxContextChars
+      maxContextChars: preset.maxContextChars,
+      reasoningStrategy: preset.reasoningStrategy
     }));
   };
 
@@ -589,7 +604,7 @@ function ProviderEditor({
         <header className="modal-header">
           <div>
             <p className="eyebrow">{t("modelEngines")}</p>
-            <h2>{profile.name || t("newEngine")}</h2>
+            <h2>{providerKindLabel(draft.kind, language)}</h2>
           </div>
           <button className="icon-button" type="button" title={t("close")} onClick={onClose}>
             <X />
@@ -660,85 +675,84 @@ function ProviderEditor({
             />
           </label>
 
-          <label className="field">
-            <span className="field-label">{t("providerBaseUrl")}</span>
-            <input
-              value={draft.baseUrl}
-              onChange={(event) => update("baseUrl", event.target.value)}
-              placeholder="https://api.example.com/v1"
-              inputMode="url"
-            />
-            <small>{t("providerBaseUrlHelp")}</small>
-          </label>
-
-          <label className="field">
-            <span className="field-label">{t("providerModel")}</span>
-            <div className="model-input-row">
-              <input
-                value={draft.model}
-                onChange={(event) => update("model", event.target.value)}
-                placeholder={t("providerModelPlaceholder")}
-                list={modelListId}
-              />
-              <button
-                className="secondary-button compact icon-only"
-                type="button"
-                title={t("fetchModels")}
-                disabled={modelsBusy}
-                onClick={() => void fetchModels()}
-              >
-                <RefreshCw className={modelsBusy ? "spin" : ""} />
-              </button>
-            </div>
-            <datalist id={modelListId}>
-              {modelOptions.map((model) => (
-                <option key={model} value={model} />
-              ))}
-            </datalist>
-            <small>
-              {modelsError || t("providerModelHelp")}
-            </small>
-          </label>
-
-          {draft.kind !== "ollama" && (
+          <div className="form-grid">
             <label className="field">
-              <span className="field-label">
-                {t("providerApiKey")}
-                <KeyRound size={14} />
-              </span>
+              <span className="field-label">{t("providerBaseUrl")}</span>
               <input
-                value={secret}
-                onChange={(event) => setSecret(event.target.value)}
-                placeholder={t("providerApiKeyPlaceholder")}
-                type="password"
-                autoComplete="off"
+                value={draft.baseUrl}
+                onChange={(event) => update("baseUrl", event.target.value)}
+                placeholder="https://api.example.com/v1"
+                inputMode="url"
               />
+              <small>{t("providerBaseUrlHelp")}</small>
             </label>
-          )}
+
+            <label className="field">
+              <span className="field-label">{t("providerModel")}</span>
+              <div className="model-input-row">
+                <input
+                  value={draft.model}
+                  onChange={(event) => update("model", event.target.value)}
+                  placeholder={t("providerModelPlaceholder")}
+                  list={modelListId}
+                />
+                <button
+                  className="secondary-button compact icon-only"
+                  type="button"
+                  title={t("fetchModels")}
+                  disabled={modelsBusy}
+                  onClick={() => void fetchModels()}
+                >
+                  <RefreshCw className={modelsBusy ? "spin" : ""} />
+                </button>
+              </div>
+              <datalist id={modelListId}>
+                {modelOptions.map((model) => (
+                  <option key={model} value={model} />
+                ))}
+              </datalist>
+              <small>{modelsError || t("providerModelHelp")}</small>
+            </label>
+          </div>
 
           {draft.kind !== "ollama" && (
-            <div className="field">
-              <span className="field-label">{t("providerSecretStorage")}</span>
-              <div className="segmented">
-                <button
-                  className={draft.secretStorage === "local" ? "active" : ""}
-                  type="button"
-                  onClick={() => update("secretStorage", "local")}
-                >
-                  {t("providerSecretLocal")}
-                </button>
-                <button
-                  className={draft.secretStorage === "session" ? "active" : ""}
-                  type="button"
-                  onClick={() => update("secretStorage", "session")}
-                >
-                  {t("providerSecretSession")}
-                </button>
+            <div className="form-grid">
+              <label className="field">
+                <span className="field-label">
+                  {t("providerApiKey")}
+                  <KeyRound size={14} />
+                </span>
+                <input
+                  value={secret}
+                  onChange={(event) => setSecret(event.target.value)}
+                  placeholder={t("providerApiKeyPlaceholder")}
+                  type="password"
+                  autoComplete="off"
+                />
+              </label>
+              <div className="field">
+                <span className="field-label">{t("providerSecretStorage")}</span>
+                <div className="segmented">
+                  <button
+                    className={draft.secretStorage === "local" ? "active" : ""}
+                    type="button"
+                    onClick={() => update("secretStorage", "local")}
+                  >
+                    {t("providerSecretLocal")}
+                  </button>
+                  <button
+                    className={draft.secretStorage === "session" ? "active" : ""}
+                    type="button"
+                    onClick={() => update("secretStorage", "session")}
+                  >
+                    {t("providerSecretSession")}
+                  </button>
+                </div>
               </div>
             </div>
           )}
 
-          <div className="form-grid">
+          <div className="form-grid provider-limit-grid">
             <label className="field">
               <span className="field-label">{t("providerTemperature")}</span>
               <input
@@ -778,6 +792,9 @@ function ProviderEditor({
                 }
               />
             </label>
+          </div>
+
+          <div className="form-grid">
             <label className="toggle-row field-toggle">
               <input
                 type="checkbox"
@@ -790,6 +807,25 @@ function ProviderEditor({
                 <strong>{t("providerSupportsVision")}</strong>
                 <small>{t("providerSupportsVisionHelp")}</small>
               </span>
+            </label>
+            <label className="field">
+              <span className="field-label">{t("reasoningStrategy")}</span>
+              <select
+                value={draft.reasoningStrategy}
+                onChange={(event) =>
+                  update(
+                    "reasoningStrategy",
+                    event.target.value as ReasoningStrategy
+                  )
+                }
+              >
+                {REASONING_STRATEGIES.map((strategy) => (
+                  <option key={strategy.id} value={strategy.id}>
+                    {t(strategy.label)}
+                  </option>
+                ))}
+              </select>
+              <small>{t("reasoningStrategyHelp")}</small>
             </label>
           </div>
 
@@ -2313,6 +2349,22 @@ export function SettingsApp() {
                   <span>
                     <strong>{t("includePageByDefault")}</strong>
                     <small>{t("includePageByDefaultHelp")}</small>
+                  </span>
+                </label>
+                <label className="toggle-row">
+                  <input
+                    type="checkbox"
+                    checked={settings.reasoningEnabledByDefault}
+                    onChange={(event) =>
+                      void updatePreference(
+                        "reasoningEnabledByDefault",
+                        event.target.checked
+                      )
+                    }
+                  />
+                  <span>
+                    <strong>{t("reasoningEnabledByDefault")}</strong>
+                    <small>{t("reasoningEnabledByDefaultHelp")}</small>
                   </span>
                 </label>
                 <label className="toggle-row">

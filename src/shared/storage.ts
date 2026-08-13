@@ -13,6 +13,7 @@ import type {
   ProviderProfile,
   McpServerConfig,
   McpToolApprovalMode,
+  ReasoningStrategy,
   SelectionMatchHighlightMode
 } from "./types";
 
@@ -78,6 +79,14 @@ const MCP_TOOL_APPROVAL_MODES = new Set<McpToolApprovalMode>([
   "deny",
   "ask",
   "allow"
+]);
+
+const REASONING_STRATEGIES = new Set<ReasoningStrategy>([
+  "none",
+  "openai-chat",
+  "anthropic",
+  "gemini-budget",
+  "ollama"
 ]);
 
 const SELECTION_MATCH_HIGHLIGHT_MODES = new Set<SelectionMatchHighlightMode>([
@@ -199,7 +208,14 @@ function normalizeArticleExtractionRules(
 }
 
 export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSettings {
-  const profiles = stored.profiles ?? [];
+  const profiles = (stored.profiles ?? []).map((profile) => ({
+    ...profile,
+    reasoningStrategy: REASONING_STRATEGIES.has(
+      profile.reasoningStrategy as ReasoningStrategy
+    )
+      ? (profile.reasoningStrategy as ReasoningStrategy)
+      : "none"
+  }));
   const quickToolsUrlBlacklist = stored.edgeQuickToolUrlBlacklist ?? [];
   const profileIds = new Set(profiles.map((profile) => profile.id));
   const visionProfileIds = new Set(
@@ -240,6 +256,9 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
       : DEFAULT_SETTINGS.logLevel,
     autoScrollDuringStreaming: stored.autoScrollDuringStreaming ?? true,
     modelThinkingTimeoutSeconds: storedTimeoutSeconds,
+    reasoningEnabledByDefault:
+      stored.reasoningEnabledByDefault ??
+      DEFAULT_SETTINGS.reasoningEnabledByDefault,
     mcpToolApprovalMode: MCP_TOOL_APPROVAL_MODES.has(
       stored.mcpToolApprovalMode as McpToolApprovalMode
     )

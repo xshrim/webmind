@@ -1,6 +1,7 @@
 import {
   ArrowUp,
   Bot,
+  Brain,
   Check,
   ChevronDown,
   ChevronRight,
@@ -323,6 +324,7 @@ export function App() {
   const [attachments, setAttachments] = useState<ImageAttachment[]>([]);
   const [includePage, setIncludePage] = useState(true);
   const [webSearchEnabled, setWebSearchEnabled] = useState(false);
+  const [reasoningEnabled, setReasoningEnabled] = useState(false);
   const [pageContext, setPageContext] = useState<PageContext | null>(null);
   const [currentPageContext, setCurrentPageContext] =
     useState<PageContext | null>(null);
@@ -957,6 +959,7 @@ export function App() {
       setSettings(loadedSettings);
       setIncludePage(true);
       setWebSearchEnabled(loadedSettings.webSearchByDefault);
+      setReasoningEnabled(loadedSettings.reasoningEnabledByDefault);
       document.documentElement.dataset.theme = loadedSettings.theme;
       setHistory(loadedHistory);
       setCustomTools(tools);
@@ -2508,6 +2511,8 @@ export function App() {
       const userMessage = createMessage("user", userContent, {
         attachments: requestAttachments,
         inputText: text,
+        reasoningEnabled:
+          reasoningEnabled && profile.reasoningStrategy !== "none",
         modelContent,
         toolInvocation
       });
@@ -2591,6 +2596,8 @@ export function App() {
           profileId: profile.id,
           purpose,
           messages: modelMessages,
+          reasoningEnabled:
+            reasoningEnabled && profile.reasoningStrategy !== "none",
           mcpTools:
             options.disableMcp || options.toolInvocation
               ? []
@@ -2635,6 +2642,7 @@ export function App() {
       selectionContext,
       streamingId,
       updateMessages,
+      reasoningEnabled,
       webSearchEnabled
     ]
   );
@@ -3142,6 +3150,9 @@ export function App() {
         profileId: profile.id,
         purpose,
         messages: modelMessages,
+        reasoningEnabled:
+          userMessage.reasoningEnabled === true &&
+          profile.reasoningStrategy !== "none",
         mcpTools: userMessage.toolInvocation ? [] : selectedMcpTools,
         mcpSessionTools: userMessage.toolInvocation
           ? []
@@ -5626,6 +5637,34 @@ export function App() {
                     </div>
                   )}
                 </div>
+                <button
+                  className={`icon-button mini ${
+                    reasoningEnabled ? "active" : ""
+                  }`}
+                  type="button"
+                  title={
+                    activeProfile?.reasoningStrategy === "none"
+                      ? t("reasoningUnavailable")
+                      : t("reasoningEnabled")
+                  }
+                  disabled={
+                    Boolean(streamingId) ||
+                    activeProfile?.reasoningStrategy === "none"
+                  }
+                  onClick={() =>
+                    setReasoningEnabled((value) => {
+                      appendOperationLog(
+                        `${t("reasoningEnabled")}: ${
+                          value ? t("logDisabled") : t("logEnabled")
+                        }`,
+                        "info"
+                      );
+                      return !value;
+                    })
+                  }
+                >
+                  <Brain />
+                </button>
                 <button
                   className={`icon-button mini ${
                     webSearchEnabled ? "active" : ""

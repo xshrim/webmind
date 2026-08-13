@@ -33,7 +33,12 @@ export const PROVIDER_DEFAULTS: Record<
   ProviderKind,
   Pick<
     ProviderProfile,
-    "name" | "baseUrl" | "model" | "supportsVision" | "maxContextChars"
+    | "name"
+    | "baseUrl"
+    | "model"
+    | "supportsVision"
+    | "maxContextChars"
+    | "reasoningStrategy"
   >
 > = {
   "openai-compatible": {
@@ -41,105 +46,120 @@ export const PROVIDER_DEFAULTS: Record<
     baseUrl: "https://api.openai.com/v1",
     model: "gpt-4.1-mini",
     supportsVision: true,
-    maxContextChars: 60000
+    maxContextChars: 60000,
+    reasoningStrategy: "none"
   },
   grok: {
     name: "Grok",
     baseUrl: "https://api.x.ai/v1",
     model: "grok-4",
     supportsVision: true,
-    maxContextChars: 90000
+    maxContextChars: 90000,
+    reasoningStrategy: "none"
   },
   deepseek: {
     name: "DeepSeek",
     baseUrl: "https://api.deepseek.com",
     model: "deepseek-chat",
     supportsVision: false,
-    maxContextChars: 60000
+    maxContextChars: 60000,
+    reasoningStrategy: "none"
   },
   kimi: {
     name: "Kimi",
     baseUrl: "https://api.moonshot.cn/v1",
     model: "moonshot-v1-8k",
     supportsVision: false,
-    maxContextChars: 60000
+    maxContextChars: 60000,
+    reasoningStrategy: "none"
   },
   qwen: {
     name: "Qwen",
     baseUrl: "https://dashscope.aliyuncs.com/compatible-mode/v1",
     model: "qwen-plus",
     supportsVision: false,
-    maxContextChars: 90000
+    maxContextChars: 90000,
+    reasoningStrategy: "none"
   },
   zhipu: {
     name: "智谱 GLM",
     baseUrl: "https://open.bigmodel.cn/api/paas/v4",
     model: "glm-4.5",
     supportsVision: false,
-    maxContextChars: 90000
+    maxContextChars: 90000,
+    reasoningStrategy: "none"
   },
   mimo: {
     name: "MiMo",
     baseUrl: "https://api.xiaomimimo.com/v1",
     model: "mimo-v2.5-pro",
     supportsVision: false,
-    maxContextChars: 60000
+    maxContextChars: 60000,
+    reasoningStrategy: "none"
   },
   longcat: {
     name: "LongCat",
     baseUrl: "https://api.longcat.chat/openai/v1",
     model: "LongCat-2.0",
     supportsVision: false,
-    maxContextChars: 90000
+    maxContextChars: 90000,
+    reasoningStrategy: "none"
   },
   minimax: {
     name: "MiniMax",
     baseUrl: "https://api.minimax.chat/v1",
     model: "MiniMax-M1",
     supportsVision: false,
-    maxContextChars: 90000
+    maxContextChars: 90000,
+    reasoningStrategy: "none"
   },
   "doubao-seed": {
     name: "Doubao Seed",
     baseUrl: "https://ark.cn-beijing.volces.com/api/v3",
     model: "doubao-seed-1-6-250615",
     supportsVision: false,
-    maxContextChars: 90000
+    maxContextChars: 90000,
+    reasoningStrategy: "none"
   },
   openrouter: {
     name: "OpenRouter",
     baseUrl: "https://openrouter.ai/api/v1",
     model: "openai/gpt-4.1-mini",
     supportsVision: true,
-    maxContextChars: 60000
+    maxContextChars: 60000,
+    reasoningStrategy: "none"
   },
   siliconflow: {
     name: "硅基流动",
     baseUrl: "https://api.siliconflow.cn/v1",
     model: "Qwen/Qwen3-8B",
     supportsVision: false,
-    maxContextChars: 60000
+    maxContextChars: 60000,
+    reasoningStrategy: "none"
   },
   anthropic: {
     name: "Anthropic",
     baseUrl: "https://api.anthropic.com",
     model: "claude-sonnet-4-20250514",
     supportsVision: true,
-    maxContextChars: 90000
+    maxContextChars: 90000,
+    reasoningStrategy: "anthropic"
   },
   gemini: {
     name: "Google Gemini",
     baseUrl: "https://generativelanguage.googleapis.com/v1beta",
     model: "gemini-2.5-flash",
     supportsVision: true,
-    maxContextChars: 90000
+    maxContextChars: 90000,
+    reasoningStrategy: "gemini-budget"
   },
   ollama: {
     name: "Ollama Local",
     baseUrl: "http://localhost:11434",
     model: "qwen3:8b",
     supportsVision: false,
-    maxContextChars: 50000
+    maxContextChars: 50000,
+    reasoningStrategy: "ollama"
   }
 };
 
@@ -190,6 +210,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   logLevel: "info",
   autoScrollDuringStreaming: true,
   modelThinkingTimeoutSeconds: 0,
+  reasoningEnabledByDefault: false,
   mcpToolApprovalMode: "ask",
   interfaceLanguage: "auto",
   translationLanguage: "auto",
@@ -268,6 +289,7 @@ export function createProviderProfile(
     secretStorage: "local",
     customHeaders: "",
     supportsVision: preset.supportsVision,
+    reasoningStrategy: preset.reasoningStrategy,
     temperature: 0.5,
     maxTokens: 2048,
     maxContextChars: preset.maxContextChars,
