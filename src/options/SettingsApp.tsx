@@ -2272,6 +2272,7 @@ export function SettingsApp() {
                         </button>
                       ))}
                     </div>
+                    <small>{t("appearanceThemeHelp")}</small>
                   </div>
                   <div className="field">
                     <span className="field-label">
