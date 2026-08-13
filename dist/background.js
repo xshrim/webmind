@@ -7388,6 +7388,20 @@ var deUiText = {
   searchSelection: "Ausgew\xE4hlten Text suchen",
   selectionSearchEngine: "Suchmaschine f\xFCr Auswahl",
   selectionSearchEngineHelp: "Die Suchmaschine f\xFCr die Suchschaltfl\xE4che der Auswahlleiste.",
+  selectionFixedTools: "Feste Werkzeuge",
+  selectionFixedToolsHelp: "W\xE4hlen Sie feste Werkzeuge, die vor der Seitenleistenfrage und anderen Werkzeugen angezeigt werden.",
+  selectionFixedToolCopy: "Kopieren",
+  selectionFixedToolSearch: "Suchen",
+  selectionFixedToolBookmark: "Lesezeichen",
+  selectionFixedToolShare: "Teilen",
+  selectionFixedToolTodo: "Aufgabe",
+  selectionFixedToolQrCode: "QR-Code",
+  selectionBookmark: "Ausgew\xE4hlten Text als Lesezeichen speichern",
+  selectionShare: "Ausgew\xE4hlten Text teilen",
+  selectionTodo: "Ausgew\xE4hlten Text zu Aufgaben hinzuf\xFCgen",
+  selectionQrCode: "QR-Code f\xFCr ausgew\xE4hlten Text erzeugen",
+  selectionSearchCustomUrl: "Benutzerdefinierte Such-URL",
+  selectionSearchCustomUrlHelp: "Verwenden Sie eine HTTP(S)-URL mit dem Platzhalter {query}.",
   selectionSearchOpenMode: "Ziel der Auswahlsuche",
   selectionSearchOpenModeHelp: "\xD6ffnen Sie Ergebnisse in einem neuen Tab oder ersetzen Sie die aktuelle Seite.",
   selectionSearchOpenNewTab: "Neuer Tab",
@@ -8014,6 +8028,20 @@ var esUiText = {
   searchSelection: "Buscar texto seleccionado",
   selectionSearchEngine: "Motor de b\xFAsqueda para la selecci\xF3n",
   selectionSearchEngineHelp: "El motor que usa el bot\xF3n de b\xFAsqueda de la barra de selecci\xF3n.",
+  selectionFixedTools: "Herramientas fijas",
+  selectionFixedToolsHelp: "Elija las herramientas fijas que aparecen antes de la pregunta en la barra lateral y de las dem\xE1s herramientas.",
+  selectionFixedToolCopy: "Copiar",
+  selectionFixedToolSearch: "Buscar",
+  selectionFixedToolBookmark: "Favorito",
+  selectionFixedToolShare: "Compartir",
+  selectionFixedToolTodo: "Tarea",
+  selectionFixedToolQrCode: "C\xF3digo QR",
+  selectionBookmark: "A\xF1adir el texto seleccionado a favoritos",
+  selectionShare: "Compartir el texto seleccionado",
+  selectionTodo: "A\xF1adir el texto seleccionado a tareas",
+  selectionQrCode: "Generar un c\xF3digo QR del texto seleccionado",
+  selectionSearchCustomUrl: "URL de b\xFAsqueda personalizada",
+  selectionSearchCustomUrlHelp: "Usa una URL HTTP(S) que contenga el marcador {query}.",
   selectionSearchOpenMode: "Destino de la b\xFAsqueda de selecci\xF3n",
   selectionSearchOpenModeHelp: "Abra los resultados en una pesta\xF1a nueva o reemplace la p\xE1gina actual.",
   selectionSearchOpenNewTab: "Pesta\xF1a nueva",
@@ -8640,6 +8668,20 @@ var frUiText = {
   searchSelection: "Rechercher le texte s\xE9lectionn\xE9",
   selectionSearchEngine: "Moteur de recherche de la s\xE9lection",
   selectionSearchEngineHelp: "Le moteur utilis\xE9 par le bouton de recherche de la barre de s\xE9lection.",
+  selectionFixedTools: "Outils fixes",
+  selectionFixedToolsHelp: "Choisissez les outils fixes affich\xE9s avant la question dans la barre lat\xE9rale et les autres outils.",
+  selectionFixedToolCopy: "Copier",
+  selectionFixedToolSearch: "Rechercher",
+  selectionFixedToolBookmark: "Favori",
+  selectionFixedToolShare: "Partager",
+  selectionFixedToolTodo: "T\xE2che",
+  selectionFixedToolQrCode: "Code QR",
+  selectionBookmark: "Ajouter le texte s\xE9lectionn\xE9 aux favoris",
+  selectionShare: "Partager le texte s\xE9lectionn\xE9",
+  selectionTodo: "Ajouter le texte s\xE9lectionn\xE9 aux t\xE2ches",
+  selectionQrCode: "G\xE9n\xE9rer un code QR pour le texte s\xE9lectionn\xE9",
+  selectionSearchCustomUrl: "URL de recherche personnalis\xE9e",
+  selectionSearchCustomUrlHelp: "Utilisez une URL HTTP(S) contenant le param\xE8tre {query}.",
   selectionSearchOpenMode: "Destination de la recherche de s\xE9lection",
   selectionSearchOpenModeHelp: "Ouvrez les r\xE9sultats dans un nouvel onglet ou remplacez la page actuelle.",
   selectionSearchOpenNewTab: "Nouvel onglet",
@@ -9266,6 +9308,20 @@ var itUiText = {
   searchSelection: "Cerca il testo selezionato",
   selectionSearchEngine: "Motore di ricerca della selezione",
   selectionSearchEngineHelp: "Il motore usato dal pulsante di ricerca della barra di selezione.",
+  selectionFixedTools: "Strumenti fissi",
+  selectionFixedToolsHelp: "Scegli gli strumenti fissi da mostrare prima della domanda nella barra laterale e degli altri strumenti.",
+  selectionFixedToolCopy: "Copia",
+  selectionFixedToolSearch: "Cerca",
+  selectionFixedToolBookmark: "Preferito",
+  selectionFixedToolShare: "Condividi",
+  selectionFixedToolTodo: "Attivit\xE0",
+  selectionFixedToolQrCode: "Codice QR",
+  selectionBookmark: "Aggiungi il testo selezionato ai preferiti",
+  selectionShare: "Condividi il testo selezionato",
+  selectionTodo: "Aggiungi il testo selezionato alle attivit\xE0",
+  selectionQrCode: "Genera un codice QR per il testo selezionato",
+  selectionSearchCustomUrl: "URL di ricerca personalizzato",
+  selectionSearchCustomUrlHelp: "Usa un URL HTTP(S) contenente il segnaposto {query}.",
   selectionSearchOpenMode: "Destinazione della ricerca della selezione",
   selectionSearchOpenModeHelp: "Apri i risultati in una nuova scheda o sostituisci la pagina corrente.",
   selectionSearchOpenNewTab: "Nuova scheda",
@@ -9923,6 +9979,20 @@ var CORE_UI_TEXT = {
     searchAnswerSettingHelp: "\u5F00\u542F\u540E\u5728\u641C\u7D22\u7ED3\u679C\u9875\u53F3\u4FA7\u81EA\u52A8\u56DE\u7B54\uFF0C\u5E76\u4F7F\u7528 DuckDuckGo \u641C\u7D22\u7ED3\u679C\u4F5C\u4E3A\u53C2\u8003\u3002",
     selectionSearchEngine: "\u5212\u8BCD\u641C\u7D22\u5F15\u64CE",
     selectionSearchEngineHelp: "\u70B9\u51FB\u5212\u8BCD\u6D6E\u5C42\u7684\u641C\u7D22\u6309\u94AE\u65F6\u4F7F\u7528\u7684\u641C\u7D22\u5F15\u64CE\u3002",
+    selectionFixedTools: "\u56FA\u5B9A\u5DE5\u5177",
+    selectionFixedToolsHelp: "\u9009\u62E9\u5728\u4FA7\u8FB9\u680F\u63D0\u95EE\u548C\u5176\u4ED6\u5DE5\u5177\u4E4B\u524D\u663E\u793A\u7684\u56FA\u5B9A\u5DE5\u5177\u3002",
+    selectionFixedToolCopy: "\u590D\u5236",
+    selectionFixedToolSearch: "\u641C\u7D22",
+    selectionFixedToolBookmark: "\u6536\u85CF",
+    selectionFixedToolShare: "\u5206\u4EAB",
+    selectionFixedToolTodo: "\u5F85\u529E",
+    selectionFixedToolQrCode: "\u4E8C\u7EF4\u7801",
+    selectionBookmark: "\u6536\u85CF\u6240\u9009\u6587\u672C",
+    selectionShare: "\u5206\u4EAB\u6240\u9009\u6587\u672C",
+    selectionTodo: "\u5C06\u6240\u9009\u6587\u672C\u52A0\u5165\u5F85\u529E",
+    selectionQrCode: "\u4E3A\u6240\u9009\u6587\u672C\u751F\u6210\u4E8C\u7EF4\u7801",
+    selectionSearchCustomUrl: "\u81EA\u5B9A\u4E49\u641C\u7D22\u5730\u5740",
+    selectionSearchCustomUrlHelp: "\u5730\u5740\u5FC5\u987B\u4F7F\u7528 HTTP(S)\uFF0C\u5E76\u5305\u542B {query} \u5360\u4F4D\u7B26\u3002",
     selectionSearchOpenMode: "\u5212\u8BCD\u641C\u7D22\u6253\u5F00\u65B9\u5F0F",
     selectionSearchOpenModeHelp: "\u9009\u62E9\u5728\u65B0\u6807\u7B7E\u9875\u6253\u5F00\u641C\u7D22\u7ED3\u679C\uFF0C\u6216\u5728\u5F53\u524D\u9875\u9762\u8DF3\u8F6C\u3002",
     selectionSearchOpenNewTab: "\u65B0\u6807\u7B7E\u9875",
@@ -10547,6 +10617,20 @@ var CORE_UI_TEXT = {
     searchAnswerSettingHelp: "\u958B\u555F\u5F8C\u5728\u641C\u5C0B\u7D50\u679C\u9801\u53F3\u5074\u81EA\u52D5\u56DE\u7B54\uFF0C\u4E26\u4F7F\u7528 DuckDuckGo \u641C\u5C0B\u7D50\u679C\u4F5C\u70BA\u53C3\u8003\u3002",
     selectionSearchEngine: "\u5283\u8A5E\u641C\u5C0B\u5F15\u64CE",
     selectionSearchEngineHelp: "\u9EDE\u64CA\u5283\u8A5E\u6D6E\u5C64\u7684\u641C\u5C0B\u6309\u9215\u6642\u4F7F\u7528\u7684\u641C\u5C0B\u5F15\u64CE\u3002",
+    selectionFixedTools: "\u56FA\u5B9A\u5DE5\u5177",
+    selectionFixedToolsHelp: "\u9078\u64C7\u5728\u5074\u908A\u6B04\u63D0\u554F\u548C\u5176\u4ED6\u5DE5\u5177\u4E4B\u524D\u986F\u793A\u7684\u56FA\u5B9A\u5DE5\u5177\u3002",
+    selectionFixedToolCopy: "\u8907\u88FD",
+    selectionFixedToolSearch: "\u641C\u5C0B",
+    selectionFixedToolBookmark: "\u6536\u85CF",
+    selectionFixedToolShare: "\u5206\u4EAB",
+    selectionFixedToolTodo: "\u5F85\u8FA6",
+    selectionFixedToolQrCode: "\u4E8C\u7DAD\u78BC",
+    selectionBookmark: "\u6536\u85CF\u9078\u53D6\u6587\u5B57",
+    selectionShare: "\u5206\u4EAB\u9078\u53D6\u6587\u5B57",
+    selectionTodo: "\u5C07\u9078\u53D6\u6587\u5B57\u52A0\u5165\u5F85\u8FA6",
+    selectionQrCode: "\u70BA\u9078\u53D6\u6587\u5B57\u7522\u751F\u4E8C\u7DAD\u78BC",
+    selectionSearchCustomUrl: "\u81EA\u8A02\u641C\u5C0B\u5730\u5740",
+    selectionSearchCustomUrlHelp: "\u5730\u5740\u5FC5\u9808\u4F7F\u7528 HTTP(S)\uFF0C\u4E26\u5305\u542B {query} \u4F54\u4F4D\u7B26\u3002",
     selectionSearchOpenMode: "\u5283\u8A5E\u641C\u5C0B\u958B\u555F\u65B9\u5F0F",
     selectionSearchOpenModeHelp: "\u9078\u64C7\u5728\u65B0\u5206\u9801\u958B\u555F\u641C\u5C0B\u7D50\u679C\uFF0C\u6216\u5728\u76EE\u524D\u9801\u9762\u8DF3\u8F49\u3002",
     selectionSearchOpenNewTab: "\u65B0\u5206\u9801",
@@ -11171,6 +11255,20 @@ var CORE_UI_TEXT = {
     searchAnswerSettingHelp: "When enabled, search result pages show an automatic answer using DuckDuckGo results as reference.",
     selectionSearchEngine: "Selection Search Engine",
     selectionSearchEngineHelp: "The search engine used by the selection toolbar's search button.",
+    selectionFixedTools: "Fixed Tools",
+    selectionFixedToolsHelp: "Choose fixed tools shown before the sidebar question and other tools.",
+    selectionFixedToolCopy: "Copy",
+    selectionFixedToolSearch: "Search",
+    selectionFixedToolBookmark: "Bookmark",
+    selectionFixedToolShare: "Share",
+    selectionFixedToolTodo: "To-do",
+    selectionFixedToolQrCode: "QR code",
+    selectionBookmark: "Bookmark selected text",
+    selectionShare: "Share selected text",
+    selectionTodo: "Add selected text to to-do",
+    selectionQrCode: "Generate QR code for selected text",
+    selectionSearchCustomUrl: "Custom Search URL",
+    selectionSearchCustomUrlHelp: "Use an HTTP(S) URL containing the {query} placeholder.",
     selectionSearchOpenMode: "Selection Search Destination",
     selectionSearchOpenModeHelp: "Choose whether search results open in a new tab or replace the current page.",
     selectionSearchOpenNewTab: "New Tab",
@@ -11795,6 +11893,20 @@ var CORE_UI_TEXT = {
     searchAnswerSettingHelp: "\u6709\u52B9\u306B\u3059\u308B\u3068\u691C\u7D22\u7D50\u679C\u30DA\u30FC\u30B8\u306E\u53F3\u5074\u306B\u3001DuckDuckGo \u306E\u691C\u7D22\u7D50\u679C\u3092\u53C2\u8003\u306B\u3057\u305F\u81EA\u52D5\u56DE\u7B54\u3092\u8868\u793A\u3057\u307E\u3059\u3002",
     selectionSearchEngine: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u306E\u691C\u7D22\u30A8\u30F3\u30B8\u30F3",
     selectionSearchEngineHelp: "\u9078\u629E\u30C4\u30FC\u30EB\u30D0\u30FC\u306E\u691C\u7D22\u30DC\u30BF\u30F3\u3067\u4F7F\u7528\u3059\u308B\u691C\u7D22\u30A8\u30F3\u30B8\u30F3\u3067\u3059\u3002",
+    selectionFixedTools: "\u56FA\u5B9A\u30C4\u30FC\u30EB",
+    selectionFixedToolsHelp: "\u30B5\u30A4\u30C9\u30D0\u30FC\u3078\u306E\u8CEA\u554F\u3068\u305D\u306E\u4ED6\u306E\u30C4\u30FC\u30EB\u3088\u308A\u524D\u306B\u8868\u793A\u3059\u308B\u56FA\u5B9A\u30C4\u30FC\u30EB\u3092\u9078\u629E\u3057\u307E\u3059\u3002",
+    selectionFixedToolCopy: "\u30B3\u30D4\u30FC",
+    selectionFixedToolSearch: "\u691C\u7D22",
+    selectionFixedToolBookmark: "\u304A\u6C17\u306B\u5165\u308A",
+    selectionFixedToolShare: "\u5171\u6709",
+    selectionFixedToolTodo: "ToDo",
+    selectionFixedToolQrCode: "QR\u30B3\u30FC\u30C9",
+    selectionBookmark: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u3092\u304A\u6C17\u306B\u5165\u308A\u306B\u8FFD\u52A0",
+    selectionShare: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u3092\u5171\u6709",
+    selectionTodo: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u3092ToDo\u306B\u8FFD\u52A0",
+    selectionQrCode: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u306EQR\u30B3\u30FC\u30C9\u3092\u751F\u6210",
+    selectionSearchCustomUrl: "\u30AB\u30B9\u30BF\u30E0\u691C\u7D22URL",
+    selectionSearchCustomUrlHelp: "{query} \u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3092\u542B\u3080HTTP(S) URL\u3092\u6307\u5B9A\u3057\u307E\u3059\u3002",
     selectionSearchOpenMode: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u691C\u7D22\u306E\u958B\u304D\u65B9",
     selectionSearchOpenModeHelp: "\u691C\u7D22\u7D50\u679C\u3092\u65B0\u3057\u3044\u30BF\u30D6\u3067\u958B\u304F\u304B\u3001\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u3092\u7F6E\u304D\u63DB\u3048\u308B\u304B\u3092\u9078\u629E\u3057\u307E\u3059\u3002",
     selectionSearchOpenNewTab: "\u65B0\u3057\u3044\u30BF\u30D6",
@@ -12419,6 +12531,20 @@ var CORE_UI_TEXT = {
     searchAnswerSettingHelp: "\uCF1C\uBA74 \uAC80\uC0C9 \uACB0\uACFC \uD398\uC774\uC9C0 \uC624\uB978\uCABD\uC5D0 DuckDuckGo \uAC80\uC0C9 \uACB0\uACFC\uB97C \uCC38\uACE0\uD55C \uC790\uB3D9 \uB2F5\uBCC0\uC744 \uD45C\uC2DC\uD569\uB2C8\uB2E4.",
     selectionSearchEngine: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 \uAC80\uC0C9 \uC5D4\uC9C4",
     selectionSearchEngineHelp: "\uC120\uD0DD \uB3C4\uAD6C \uBAA8\uC74C\uC758 \uAC80\uC0C9 \uBC84\uD2BC\uC5D0\uC11C \uC0AC\uC6A9\uD560 \uAC80\uC0C9 \uC5D4\uC9C4\uC785\uB2C8\uB2E4.",
+    selectionFixedTools: "\uACE0\uC815 \uB3C4\uAD6C",
+    selectionFixedToolsHelp: "\uC0AC\uC774\uB4DC\uBC14 \uC9C8\uBB38 \uBC0F \uB2E4\uB978 \uB3C4\uAD6C\uBCF4\uB2E4 \uBA3C\uC800 \uD45C\uC2DC\uD560 \uACE0\uC815 \uB3C4\uAD6C\uB97C \uC120\uD0DD\uD569\uB2C8\uB2E4.",
+    selectionFixedToolCopy: "\uBCF5\uC0AC",
+    selectionFixedToolSearch: "\uAC80\uC0C9",
+    selectionFixedToolBookmark: "\uBD81\uB9C8\uD06C",
+    selectionFixedToolShare: "\uACF5\uC720",
+    selectionFixedToolTodo: "\uD560 \uC77C",
+    selectionFixedToolQrCode: "QR \uCF54\uB4DC",
+    selectionBookmark: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 \uBD81\uB9C8\uD06C",
+    selectionShare: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 \uACF5\uC720",
+    selectionTodo: "\uC120\uD0DD \uD14D\uC2A4\uD2B8\uB97C \uD560 \uC77C\uC5D0 \uCD94\uAC00",
+    selectionQrCode: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 QR \uCF54\uB4DC \uC0DD\uC131",
+    selectionSearchCustomUrl: "\uC0AC\uC6A9\uC790 \uC9C0\uC815 \uAC80\uC0C9 URL",
+    selectionSearchCustomUrlHelp: "{query} \uC790\uB9AC \uD45C\uC2DC\uC790\uB97C \uD3EC\uD568\uD55C HTTP(S) URL\uC744 \uC785\uB825\uD558\uC138\uC694.",
     selectionSearchOpenMode: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 \uAC80\uC0C9 \uC5F4\uAE30 \uBC29\uC2DD",
     selectionSearchOpenModeHelp: "\uAC80\uC0C9 \uACB0\uACFC\uB97C \uC0C8 \uD0ED\uC5D0\uC11C \uC5F4\uC9C0, \uD604\uC7AC \uD398\uC774\uC9C0\uC5D0\uC11C \uC774\uB3D9\uD560\uC9C0 \uC120\uD0DD\uD569\uB2C8\uB2E4.",
     selectionSearchOpenNewTab: "\uC0C8 \uD0ED",
@@ -14529,6 +14655,16 @@ async function fetchYouTubeTranscript(pageUrl, preferredLanguage, interfaceLangu
   };
 }
 
+// src/shared/types.ts
+var SELECTION_OVERLAY_FIXED_TOOL_ORDER = [
+  "copy",
+  "search",
+  "bookmark",
+  "share",
+  "todo",
+  "qrcode"
+];
+
 // src/shared/defaults.ts
 var TOOL_IDS = BUILT_IN_TOOLS.map((tool) => tool.id);
 var DEFAULT_SELECTION_TOOL_IDS = [
@@ -14604,7 +14740,12 @@ var DEFAULT_SETTINGS = {
   selectionOverlayMode: "off",
   selectionOverlayShortcut: "off",
   selectionOverlayMinChars: 2,
+  selectionOverlayFixedTools: [
+    SELECTION_OVERLAY_FIXED_TOOL_ORDER[0],
+    SELECTION_OVERLAY_FIXED_TOOL_ORDER[1]
+  ],
   selectionSearchEngine: "google",
+  selectionSearchCustomUrl: "",
   selectionSearchOpenMode: "new-tab",
   selectionMatchHighlightMode: "off",
   linkTextSelectionEnabled: false,
@@ -14793,7 +14934,11 @@ function normalizeSettings(stored = {}) {
       1,
       Math.round(Number(stored.selectionOverlayMinChars ?? 2) || 2)
     ),
-    selectionSearchEngine: stored.selectionSearchEngine === "bing" || stored.selectionSearchEngine === "duckduckgo" || stored.selectionSearchEngine === "brave" || stored.selectionSearchEngine === "baidu" || stored.selectionSearchEngine === "yahoo" || stored.selectionSearchEngine === "yandex" || stored.selectionSearchEngine === "ecosia" ? stored.selectionSearchEngine : DEFAULT_SETTINGS.selectionSearchEngine,
+    selectionOverlayFixedTools: Array.isArray(stored.selectionOverlayFixedTools) ? SELECTION_OVERLAY_FIXED_TOOL_ORDER.filter(
+      (tool) => stored.selectionOverlayFixedTools?.includes(tool)
+    ) : DEFAULT_SETTINGS.selectionOverlayFixedTools,
+    selectionSearchEngine: stored.selectionSearchEngine === "bing" || stored.selectionSearchEngine === "duckduckgo" || stored.selectionSearchEngine === "brave" || stored.selectionSearchEngine === "baidu" || stored.selectionSearchEngine === "yahoo" || stored.selectionSearchEngine === "yandex" || stored.selectionSearchEngine === "ecosia" || stored.selectionSearchEngine === "custom" ? stored.selectionSearchEngine : DEFAULT_SETTINGS.selectionSearchEngine,
+    selectionSearchCustomUrl: String(stored.selectionSearchCustomUrl ?? "").trim(),
     selectionSearchOpenMode: stored.selectionSearchOpenMode === "current" || stored.selectionSearchOpenMode === "new-tab" ? stored.selectionSearchOpenMode : DEFAULT_SETTINGS.selectionSearchOpenMode,
     selectionMatchHighlightMode: SELECTION_MATCH_HIGHLIGHT_MODES.has(
       stored.selectionMatchHighlightMode
@@ -27013,8 +27158,23 @@ var SELECTION_SEARCH_URLS = {
   yandex: "https://yandex.com/search/?text=",
   ecosia: "https://www.ecosia.org/search?q="
 };
-function selectionSearchUrl(engine, query) {
-  return `${SELECTION_SEARCH_URLS[engine] ?? SELECTION_SEARCH_URLS.google}${encodeURIComponent(query.trim())}`;
+function isSelectionSearchTemplate(value) {
+  if (!value.includes("{query}")) return false;
+  try {
+    const url2 = new URL(value.replaceAll("{query}", "query"));
+    return url2.protocol === "http:" || url2.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+function selectionSearchUrl(engine, query, customTemplate = "") {
+  if (engine === "custom") {
+    if (!isSelectionSearchTemplate(customTemplate)) {
+      throw new Error("Invalid custom selection search URL");
+    }
+    return customTemplate.replaceAll("{query}", encodeURIComponent(query.trim()));
+  }
+  return `${SELECTION_SEARCH_URLS[engine]}${encodeURIComponent(query.trim())}`;
 }
 
 // src/background/index.ts
@@ -27370,7 +27530,11 @@ chrome.runtime.onMessage.addListener(
         const settings = await loadSettings();
         const query = String(message.payload?.query ?? "").trim();
         if (!query) throw new Error(uiText(settings.interfaceLanguage, "provideSearchQuery"));
-        const url2 = selectionSearchUrl(settings.selectionSearchEngine, query);
+        const url2 = selectionSearchUrl(
+          settings.selectionSearchEngine,
+          query,
+          settings.selectionSearchCustomUrl
+        );
         if (settings.selectionSearchOpenMode === "current") {
           if (!sender.tab?.id) {
             throw new Error(uiText(settings.interfaceLanguage, "cannotDetermineTab"));

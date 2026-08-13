@@ -12878,16 +12878,28 @@
   ];
   var BookOpen = createLucideIcon("book-open", __iconNode2);
 
+  // node_modules/lucide-react/dist/esm/icons/bookmark.mjs
+  var __iconNode3 = [
+    [
+      "path",
+      {
+        d: "M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z",
+        key: "oz39mx"
+      }
+    ]
+  ];
+  var Bookmark = createLucideIcon("bookmark", __iconNode3);
+
   // node_modules/lucide-react/dist/esm/icons/check.mjs
-  var __iconNode3 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-  var Check = createLucideIcon("check", __iconNode3);
+  var __iconNode4 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+  var Check = createLucideIcon("check", __iconNode4);
 
   // node_modules/lucide-react/dist/esm/icons/chevron-down.mjs
-  var __iconNode4 = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-  var ChevronDown = createLucideIcon("chevron-down", __iconNode4);
+  var __iconNode5 = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+  var ChevronDown = createLucideIcon("chevron-down", __iconNode5);
 
   // node_modules/lucide-react/dist/esm/icons/clipboard.mjs
-  var __iconNode5 = [
+  var __iconNode6 = [
     ["rect", { width: "8", height: "4", x: "8", y: "2", rx: "1", ry: "1", key: "tgr4d6" }],
     [
       "path",
@@ -12897,25 +12909,25 @@
       }
     ]
   ];
-  var Clipboard = createLucideIcon("clipboard", __iconNode5);
+  var Clipboard = createLucideIcon("clipboard", __iconNode6);
 
   // node_modules/lucide-react/dist/esm/icons/code-xml.mjs
-  var __iconNode6 = [
+  var __iconNode7 = [
     ["path", { d: "m18 16 4-4-4-4", key: "1inbqp" }],
     ["path", { d: "m6 8-4 4 4 4", key: "15zrgr" }],
     ["path", { d: "m14.5 4-5 16", key: "e7oirm" }]
   ];
-  var CodeXml = createLucideIcon("code-xml", __iconNode6);
+  var CodeXml = createLucideIcon("code-xml", __iconNode7);
 
   // node_modules/lucide-react/dist/esm/icons/copy.mjs
-  var __iconNode7 = [
+  var __iconNode8 = [
     ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
     ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
   ];
-  var Copy = createLucideIcon("copy", __iconNode7);
+  var Copy = createLucideIcon("copy", __iconNode8);
 
   // node_modules/lucide-react/dist/esm/icons/earth.mjs
-  var __iconNode8 = [
+  var __iconNode9 = [
     ["path", { d: "M21.54 15H17a2 2 0 0 0-2 2v4.54", key: "1djwo0" }],
     [
       "path",
@@ -12927,10 +12939,10 @@
     ["path", { d: "M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05", key: "14pb5j" }],
     ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
   ];
-  var Earth = createLucideIcon("earth", __iconNode8);
+  var Earth = createLucideIcon("earth", __iconNode9);
 
   // node_modules/lucide-react/dist/esm/icons/file-text.mjs
-  var __iconNode9 = [
+  var __iconNode10 = [
     [
       "path",
       {
@@ -12943,27 +12955,27 @@
     ["path", { d: "M16 13H8", key: "t4e002" }],
     ["path", { d: "M16 17H8", key: "z1uh3a" }]
   ];
-  var FileText = createLucideIcon("file-text", __iconNode9);
+  var FileText = createLucideIcon("file-text", __iconNode10);
 
   // node_modules/lucide-react/dist/esm/icons/highlighter.mjs
-  var __iconNode10 = [
+  var __iconNode11 = [
     ["path", { d: "m9 11-6 6v3h9l3-3", key: "1a3l36" }],
     ["path", { d: "m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4", key: "14a9rk" }]
   ];
-  var Highlighter = createLucideIcon("highlighter", __iconNode10);
+  var Highlighter = createLucideIcon("highlighter", __iconNode11);
 
   // node_modules/lucide-react/dist/esm/icons/image-plus.mjs
-  var __iconNode11 = [
+  var __iconNode12 = [
     ["path", { d: "M16 5h6", key: "1vod17" }],
     ["path", { d: "M19 2v6", key: "4bpg5p" }],
     ["path", { d: "M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5", key: "1ue2ih" }],
     ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }],
     ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }]
   ];
-  var ImagePlus = createLucideIcon("image-plus", __iconNode11);
+  var ImagePlus = createLucideIcon("image-plus", __iconNode12);
 
   // node_modules/lucide-react/dist/esm/icons/languages.mjs
-  var __iconNode12 = [
+  var __iconNode13 = [
     ["path", { d: "m5 8 6 6", key: "1wu5hv" }],
     ["path", { d: "m4 14 6-6 2-3", key: "1k1g8d" }],
     ["path", { d: "M2 5h12", key: "or177f" }],
@@ -12971,10 +12983,10 @@
     ["path", { d: "m22 22-5-10-5 10", key: "don7ne" }],
     ["path", { d: "M14 18h6", key: "1m8k6r" }]
   ];
-  var Languages = createLucideIcon("languages", __iconNode12);
+  var Languages = createLucideIcon("languages", __iconNode13);
 
   // node_modules/lucide-react/dist/esm/icons/lightbulb.mjs
-  var __iconNode13 = [
+  var __iconNode14 = [
     [
       "path",
       {
@@ -12985,29 +12997,39 @@
     ["path", { d: "M9 18h6", key: "x1upvd" }],
     ["path", { d: "M10 22h4", key: "ceow96" }]
   ];
-  var Lightbulb = createLucideIcon("lightbulb", __iconNode13);
+  var Lightbulb = createLucideIcon("lightbulb", __iconNode14);
 
   // node_modules/lucide-react/dist/esm/icons/list-checks.mjs
-  var __iconNode14 = [
+  var __iconNode15 = [
     ["path", { d: "M13 5h8", key: "a7qcls" }],
     ["path", { d: "M13 12h8", key: "h98zly" }],
     ["path", { d: "M13 19h8", key: "c3s6r1" }],
     ["path", { d: "m3 17 2 2 4-4", key: "1jhpwq" }],
     ["path", { d: "m3 7 2 2 4-4", key: "1obspn" }]
   ];
-  var ListChecks = createLucideIcon("list-checks", __iconNode14);
+  var ListChecks = createLucideIcon("list-checks", __iconNode15);
+
+  // node_modules/lucide-react/dist/esm/icons/list-todo.mjs
+  var __iconNode16 = [
+    ["path", { d: "M13 5h8", key: "a7qcls" }],
+    ["path", { d: "M13 12h8", key: "h98zly" }],
+    ["path", { d: "M13 19h8", key: "c3s6r1" }],
+    ["path", { d: "m3 17 2 2 4-4", key: "1jhpwq" }],
+    ["rect", { x: "3", y: "4", width: "6", height: "6", rx: "1", key: "cif1o7" }]
+  ];
+  var ListTodo = createLucideIcon("list-todo", __iconNode16);
 
   // node_modules/lucide-react/dist/esm/icons/maximize-2.mjs
-  var __iconNode15 = [
+  var __iconNode17 = [
     ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
     ["path", { d: "m21 3-7 7", key: "1l2asr" }],
     ["path", { d: "m3 21 7-7", key: "tjx5ai" }],
     ["path", { d: "M9 21H3v-6", key: "wtvkvv" }]
   ];
-  var Maximize2 = createLucideIcon("maximize-2", __iconNode15);
+  var Maximize2 = createLucideIcon("maximize-2", __iconNode17);
 
   // node_modules/lucide-react/dist/esm/icons/message-square-reply.mjs
-  var __iconNode16 = [
+  var __iconNode18 = [
     [
       "path",
       {
@@ -13018,10 +13040,10 @@
     ["path", { d: "m10 8-3 3 3 3", key: "fp6dz7" }],
     ["path", { d: "M17 14v-1a2 2 0 0 0-2-2H7", key: "1tkjnz" }]
   ];
-  var MessageSquareReply = createLucideIcon("message-square-reply", __iconNode16);
+  var MessageSquareReply = createLucideIcon("message-square-reply", __iconNode18);
 
   // node_modules/lucide-react/dist/esm/icons/message-square-text.mjs
-  var __iconNode17 = [
+  var __iconNode19 = [
     [
       "path",
       {
@@ -13033,27 +13055,27 @@
     ["path", { d: "M7 15h6", key: "d9of3u" }],
     ["path", { d: "M7 7h8", key: "af5zfr" }]
   ];
-  var MessageSquareText = createLucideIcon("message-square-text", __iconNode17);
+  var MessageSquareText = createLucideIcon("message-square-text", __iconNode19);
 
   // node_modules/lucide-react/dist/esm/icons/minimize-2.mjs
-  var __iconNode18 = [
+  var __iconNode20 = [
     ["path", { d: "m14 10 7-7", key: "oa77jy" }],
     ["path", { d: "M20 10h-6V4", key: "mjg0md" }],
     ["path", { d: "m3 21 7-7", key: "tjx5ai" }],
     ["path", { d: "M4 14h6v6", key: "rmj7iw" }]
   ];
-  var Minimize2 = createLucideIcon("minimize-2", __iconNode18);
+  var Minimize2 = createLucideIcon("minimize-2", __iconNode20);
 
   // node_modules/lucide-react/dist/esm/icons/panel-right-open.mjs
-  var __iconNode19 = [
+  var __iconNode21 = [
     ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }],
     ["path", { d: "M15 3v18", key: "14nvp0" }],
     ["path", { d: "m10 15-3-3 3-3", key: "1pgupc" }]
   ];
-  var PanelRightOpen = createLucideIcon("panel-right-open", __iconNode19);
+  var PanelRightOpen = createLucideIcon("panel-right-open", __iconNode21);
 
   // node_modules/lucide-react/dist/esm/icons/pen-line.mjs
-  var __iconNode20 = [
+  var __iconNode22 = [
     ["path", { d: "M13 21h8", key: "1jsn5i" }],
     [
       "path",
@@ -13063,32 +13085,49 @@
       }
     ]
   ];
-  var PenLine = createLucideIcon("pen-line", __iconNode20);
+  var PenLine = createLucideIcon("pen-line", __iconNode22);
 
   // node_modules/lucide-react/dist/esm/icons/presentation.mjs
-  var __iconNode21 = [
+  var __iconNode23 = [
     ["path", { d: "M2 3h20", key: "91anmk" }],
     ["path", { d: "M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3", key: "2k9sn8" }],
     ["path", { d: "m7 21 5-5 5 5", key: "bip4we" }]
   ];
-  var Presentation = createLucideIcon("presentation", __iconNode21);
+  var Presentation = createLucideIcon("presentation", __iconNode23);
+
+  // node_modules/lucide-react/dist/esm/icons/qr-code.mjs
+  var __iconNode24 = [
+    ["rect", { width: "5", height: "5", x: "3", y: "3", rx: "1", key: "1tu5fj" }],
+    ["rect", { width: "5", height: "5", x: "16", y: "3", rx: "1", key: "1v8r4q" }],
+    ["rect", { width: "5", height: "5", x: "3", y: "16", rx: "1", key: "1x03jg" }],
+    ["path", { d: "M21 16h-3a2 2 0 0 0-2 2v3", key: "177gqh" }],
+    ["path", { d: "M21 21v.01", key: "ents32" }],
+    ["path", { d: "M12 7v3a2 2 0 0 1-2 2H7", key: "8crl2c" }],
+    ["path", { d: "M3 12h.01", key: "nlz23k" }],
+    ["path", { d: "M12 3h.01", key: "n36tog" }],
+    ["path", { d: "M12 16v.01", key: "133mhm" }],
+    ["path", { d: "M16 12h1", key: "1slzba" }],
+    ["path", { d: "M21 12v.01", key: "1lwtk9" }],
+    ["path", { d: "M12 21v-1", key: "1880an" }]
+  ];
+  var QrCode = createLucideIcon("qr-code", __iconNode24);
 
   // node_modules/lucide-react/dist/esm/icons/reply.mjs
-  var __iconNode22 = [
+  var __iconNode25 = [
     ["path", { d: "M20 18v-2a4 4 0 0 0-4-4H4", key: "5vmcpk" }],
     ["path", { d: "m9 17-5-5 5-5", key: "nvlc11" }]
   ];
-  var Reply = createLucideIcon("reply", __iconNode22);
+  var Reply = createLucideIcon("reply", __iconNode25);
 
   // node_modules/lucide-react/dist/esm/icons/rotate-ccw.mjs
-  var __iconNode23 = [
+  var __iconNode26 = [
     ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
     ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
   ];
-  var RotateCcw = createLucideIcon("rotate-ccw", __iconNode23);
+  var RotateCcw = createLucideIcon("rotate-ccw", __iconNode26);
 
   // node_modules/lucide-react/dist/esm/icons/scan-text.mjs
-  var __iconNode24 = [
+  var __iconNode27 = [
     ["path", { d: "M3 7V5a2 2 0 0 1 2-2h2", key: "aa7l1z" }],
     ["path", { d: "M17 3h2a2 2 0 0 1 2 2v2", key: "4qcy5o" }],
     ["path", { d: "M21 17v2a2 2 0 0 1-2 2h-2", key: "6vwrx8" }],
@@ -13097,17 +13136,17 @@
     ["path", { d: "M7 12h10", key: "b7w52i" }],
     ["path", { d: "M7 16h6", key: "1vyc9m" }]
   ];
-  var ScanText = createLucideIcon("scan-text", __iconNode24);
+  var ScanText = createLucideIcon("scan-text", __iconNode27);
 
   // node_modules/lucide-react/dist/esm/icons/search.mjs
-  var __iconNode25 = [
+  var __iconNode28 = [
     ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
     ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
   ];
-  var Search = createLucideIcon("search", __iconNode25);
+  var Search = createLucideIcon("search", __iconNode28);
 
   // node_modules/lucide-react/dist/esm/icons/send.mjs
-  var __iconNode26 = [
+  var __iconNode29 = [
     [
       "path",
       {
@@ -13117,10 +13156,20 @@
     ],
     ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
   ];
-  var Send = createLucideIcon("send", __iconNode26);
+  var Send = createLucideIcon("send", __iconNode29);
+
+  // node_modules/lucide-react/dist/esm/icons/share-2.mjs
+  var __iconNode30 = [
+    ["circle", { cx: "18", cy: "5", r: "3", key: "gq8acd" }],
+    ["circle", { cx: "6", cy: "12", r: "3", key: "w7nqdw" }],
+    ["circle", { cx: "18", cy: "19", r: "3", key: "1xt0gg" }],
+    ["line", { x1: "8.59", x2: "15.42", y1: "13.51", y2: "17.49", key: "47mynk" }],
+    ["line", { x1: "15.41", x2: "8.59", y1: "6.51", y2: "10.49", key: "1n3mei" }]
+  ];
+  var Share2 = createLucideIcon("share-2", __iconNode30);
 
   // node_modules/lucide-react/dist/esm/icons/sparkles.mjs
-  var __iconNode27 = [
+  var __iconNode31 = [
     [
       "path",
       {
@@ -13132,10 +13181,10 @@
     ["path", { d: "M22 4h-4", key: "gwowj6" }],
     ["circle", { cx: "4", cy: "20", r: "2", key: "6kqj1y" }]
   ];
-  var Sparkles = createLucideIcon("sparkles", __iconNode27);
+  var Sparkles = createLucideIcon("sparkles", __iconNode31);
 
   // node_modules/lucide-react/dist/esm/icons/square-dashed-text.mjs
-  var __iconNode28 = [
+  var __iconNode32 = [
     ["path", { d: "M14 21h1", key: "v9vybs" }],
     ["path", { d: "M14 3h1", key: "1ec4yj" }],
     ["path", { d: "M19 3a2 2 0 0 1 2 2", key: "18rm91" }],
@@ -13152,10 +13201,10 @@
     ["path", { d: "M9 21h1", key: "15o7lz" }],
     ["path", { d: "M9 3h1", key: "1yesri" }]
   ];
-  var SquareDashedText = createLucideIcon("square-dashed-text", __iconNode28);
+  var SquareDashedText = createLucideIcon("square-dashed-text", __iconNode32);
 
   // node_modules/lucide-react/dist/esm/icons/wand-sparkles.mjs
-  var __iconNode29 = [
+  var __iconNode33 = [
     [
       "path",
       {
@@ -13171,14 +13220,14 @@
     ["path", { d: "M21 16h-4", key: "1cnmox" }],
     ["path", { d: "M11 3H9", key: "1obp7u" }]
   ];
-  var WandSparkles = createLucideIcon("wand-sparkles", __iconNode29);
+  var WandSparkles = createLucideIcon("wand-sparkles", __iconNode33);
 
   // node_modules/lucide-react/dist/esm/icons/x.mjs
-  var __iconNode30 = [
+  var __iconNode34 = [
     ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
     ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
   ];
-  var X = createLucideIcon("x", __iconNode30);
+  var X = createLucideIcon("x", __iconNode34);
 
   // src/content/index.tsx
   var import_react5 = __toESM(require_react(), 1);
@@ -13558,6 +13607,20 @@
     searchSelection: "Ausgew\xE4hlten Text suchen",
     selectionSearchEngine: "Suchmaschine f\xFCr Auswahl",
     selectionSearchEngineHelp: "Die Suchmaschine f\xFCr die Suchschaltfl\xE4che der Auswahlleiste.",
+    selectionFixedTools: "Feste Werkzeuge",
+    selectionFixedToolsHelp: "W\xE4hlen Sie feste Werkzeuge, die vor der Seitenleistenfrage und anderen Werkzeugen angezeigt werden.",
+    selectionFixedToolCopy: "Kopieren",
+    selectionFixedToolSearch: "Suchen",
+    selectionFixedToolBookmark: "Lesezeichen",
+    selectionFixedToolShare: "Teilen",
+    selectionFixedToolTodo: "Aufgabe",
+    selectionFixedToolQrCode: "QR-Code",
+    selectionBookmark: "Ausgew\xE4hlten Text als Lesezeichen speichern",
+    selectionShare: "Ausgew\xE4hlten Text teilen",
+    selectionTodo: "Ausgew\xE4hlten Text zu Aufgaben hinzuf\xFCgen",
+    selectionQrCode: "QR-Code f\xFCr ausgew\xE4hlten Text erzeugen",
+    selectionSearchCustomUrl: "Benutzerdefinierte Such-URL",
+    selectionSearchCustomUrlHelp: "Verwenden Sie eine HTTP(S)-URL mit dem Platzhalter {query}.",
     selectionSearchOpenMode: "Ziel der Auswahlsuche",
     selectionSearchOpenModeHelp: "\xD6ffnen Sie Ergebnisse in einem neuen Tab oder ersetzen Sie die aktuelle Seite.",
     selectionSearchOpenNewTab: "Neuer Tab",
@@ -14184,6 +14247,20 @@
     searchSelection: "Buscar texto seleccionado",
     selectionSearchEngine: "Motor de b\xFAsqueda para la selecci\xF3n",
     selectionSearchEngineHelp: "El motor que usa el bot\xF3n de b\xFAsqueda de la barra de selecci\xF3n.",
+    selectionFixedTools: "Herramientas fijas",
+    selectionFixedToolsHelp: "Elija las herramientas fijas que aparecen antes de la pregunta en la barra lateral y de las dem\xE1s herramientas.",
+    selectionFixedToolCopy: "Copiar",
+    selectionFixedToolSearch: "Buscar",
+    selectionFixedToolBookmark: "Favorito",
+    selectionFixedToolShare: "Compartir",
+    selectionFixedToolTodo: "Tarea",
+    selectionFixedToolQrCode: "C\xF3digo QR",
+    selectionBookmark: "A\xF1adir el texto seleccionado a favoritos",
+    selectionShare: "Compartir el texto seleccionado",
+    selectionTodo: "A\xF1adir el texto seleccionado a tareas",
+    selectionQrCode: "Generar un c\xF3digo QR del texto seleccionado",
+    selectionSearchCustomUrl: "URL de b\xFAsqueda personalizada",
+    selectionSearchCustomUrlHelp: "Usa una URL HTTP(S) que contenga el marcador {query}.",
     selectionSearchOpenMode: "Destino de la b\xFAsqueda de selecci\xF3n",
     selectionSearchOpenModeHelp: "Abra los resultados en una pesta\xF1a nueva o reemplace la p\xE1gina actual.",
     selectionSearchOpenNewTab: "Pesta\xF1a nueva",
@@ -14810,6 +14887,20 @@
     searchSelection: "Rechercher le texte s\xE9lectionn\xE9",
     selectionSearchEngine: "Moteur de recherche de la s\xE9lection",
     selectionSearchEngineHelp: "Le moteur utilis\xE9 par le bouton de recherche de la barre de s\xE9lection.",
+    selectionFixedTools: "Outils fixes",
+    selectionFixedToolsHelp: "Choisissez les outils fixes affich\xE9s avant la question dans la barre lat\xE9rale et les autres outils.",
+    selectionFixedToolCopy: "Copier",
+    selectionFixedToolSearch: "Rechercher",
+    selectionFixedToolBookmark: "Favori",
+    selectionFixedToolShare: "Partager",
+    selectionFixedToolTodo: "T\xE2che",
+    selectionFixedToolQrCode: "Code QR",
+    selectionBookmark: "Ajouter le texte s\xE9lectionn\xE9 aux favoris",
+    selectionShare: "Partager le texte s\xE9lectionn\xE9",
+    selectionTodo: "Ajouter le texte s\xE9lectionn\xE9 aux t\xE2ches",
+    selectionQrCode: "G\xE9n\xE9rer un code QR pour le texte s\xE9lectionn\xE9",
+    selectionSearchCustomUrl: "URL de recherche personnalis\xE9e",
+    selectionSearchCustomUrlHelp: "Utilisez une URL HTTP(S) contenant le param\xE8tre {query}.",
     selectionSearchOpenMode: "Destination de la recherche de s\xE9lection",
     selectionSearchOpenModeHelp: "Ouvrez les r\xE9sultats dans un nouvel onglet ou remplacez la page actuelle.",
     selectionSearchOpenNewTab: "Nouvel onglet",
@@ -15436,6 +15527,20 @@
     searchSelection: "Cerca il testo selezionato",
     selectionSearchEngine: "Motore di ricerca della selezione",
     selectionSearchEngineHelp: "Il motore usato dal pulsante di ricerca della barra di selezione.",
+    selectionFixedTools: "Strumenti fissi",
+    selectionFixedToolsHelp: "Scegli gli strumenti fissi da mostrare prima della domanda nella barra laterale e degli altri strumenti.",
+    selectionFixedToolCopy: "Copia",
+    selectionFixedToolSearch: "Cerca",
+    selectionFixedToolBookmark: "Preferito",
+    selectionFixedToolShare: "Condividi",
+    selectionFixedToolTodo: "Attivit\xE0",
+    selectionFixedToolQrCode: "Codice QR",
+    selectionBookmark: "Aggiungi il testo selezionato ai preferiti",
+    selectionShare: "Condividi il testo selezionato",
+    selectionTodo: "Aggiungi il testo selezionato alle attivit\xE0",
+    selectionQrCode: "Genera un codice QR per il testo selezionato",
+    selectionSearchCustomUrl: "URL di ricerca personalizzato",
+    selectionSearchCustomUrlHelp: "Usa un URL HTTP(S) contenente il segnaposto {query}.",
     selectionSearchOpenMode: "Destinazione della ricerca della selezione",
     selectionSearchOpenModeHelp: "Apri i risultati in una nuova scheda o sostituisci la pagina corrente.",
     selectionSearchOpenNewTab: "Nuova scheda",
@@ -16093,6 +16198,20 @@
       searchAnswerSettingHelp: "\u5F00\u542F\u540E\u5728\u641C\u7D22\u7ED3\u679C\u9875\u53F3\u4FA7\u81EA\u52A8\u56DE\u7B54\uFF0C\u5E76\u4F7F\u7528 DuckDuckGo \u641C\u7D22\u7ED3\u679C\u4F5C\u4E3A\u53C2\u8003\u3002",
       selectionSearchEngine: "\u5212\u8BCD\u641C\u7D22\u5F15\u64CE",
       selectionSearchEngineHelp: "\u70B9\u51FB\u5212\u8BCD\u6D6E\u5C42\u7684\u641C\u7D22\u6309\u94AE\u65F6\u4F7F\u7528\u7684\u641C\u7D22\u5F15\u64CE\u3002",
+      selectionFixedTools: "\u56FA\u5B9A\u5DE5\u5177",
+      selectionFixedToolsHelp: "\u9009\u62E9\u5728\u4FA7\u8FB9\u680F\u63D0\u95EE\u548C\u5176\u4ED6\u5DE5\u5177\u4E4B\u524D\u663E\u793A\u7684\u56FA\u5B9A\u5DE5\u5177\u3002",
+      selectionFixedToolCopy: "\u590D\u5236",
+      selectionFixedToolSearch: "\u641C\u7D22",
+      selectionFixedToolBookmark: "\u6536\u85CF",
+      selectionFixedToolShare: "\u5206\u4EAB",
+      selectionFixedToolTodo: "\u5F85\u529E",
+      selectionFixedToolQrCode: "\u4E8C\u7EF4\u7801",
+      selectionBookmark: "\u6536\u85CF\u6240\u9009\u6587\u672C",
+      selectionShare: "\u5206\u4EAB\u6240\u9009\u6587\u672C",
+      selectionTodo: "\u5C06\u6240\u9009\u6587\u672C\u52A0\u5165\u5F85\u529E",
+      selectionQrCode: "\u4E3A\u6240\u9009\u6587\u672C\u751F\u6210\u4E8C\u7EF4\u7801",
+      selectionSearchCustomUrl: "\u81EA\u5B9A\u4E49\u641C\u7D22\u5730\u5740",
+      selectionSearchCustomUrlHelp: "\u5730\u5740\u5FC5\u987B\u4F7F\u7528 HTTP(S)\uFF0C\u5E76\u5305\u542B {query} \u5360\u4F4D\u7B26\u3002",
       selectionSearchOpenMode: "\u5212\u8BCD\u641C\u7D22\u6253\u5F00\u65B9\u5F0F",
       selectionSearchOpenModeHelp: "\u9009\u62E9\u5728\u65B0\u6807\u7B7E\u9875\u6253\u5F00\u641C\u7D22\u7ED3\u679C\uFF0C\u6216\u5728\u5F53\u524D\u9875\u9762\u8DF3\u8F6C\u3002",
       selectionSearchOpenNewTab: "\u65B0\u6807\u7B7E\u9875",
@@ -16717,6 +16836,20 @@
       searchAnswerSettingHelp: "\u958B\u555F\u5F8C\u5728\u641C\u5C0B\u7D50\u679C\u9801\u53F3\u5074\u81EA\u52D5\u56DE\u7B54\uFF0C\u4E26\u4F7F\u7528 DuckDuckGo \u641C\u5C0B\u7D50\u679C\u4F5C\u70BA\u53C3\u8003\u3002",
       selectionSearchEngine: "\u5283\u8A5E\u641C\u5C0B\u5F15\u64CE",
       selectionSearchEngineHelp: "\u9EDE\u64CA\u5283\u8A5E\u6D6E\u5C64\u7684\u641C\u5C0B\u6309\u9215\u6642\u4F7F\u7528\u7684\u641C\u5C0B\u5F15\u64CE\u3002",
+      selectionFixedTools: "\u56FA\u5B9A\u5DE5\u5177",
+      selectionFixedToolsHelp: "\u9078\u64C7\u5728\u5074\u908A\u6B04\u63D0\u554F\u548C\u5176\u4ED6\u5DE5\u5177\u4E4B\u524D\u986F\u793A\u7684\u56FA\u5B9A\u5DE5\u5177\u3002",
+      selectionFixedToolCopy: "\u8907\u88FD",
+      selectionFixedToolSearch: "\u641C\u5C0B",
+      selectionFixedToolBookmark: "\u6536\u85CF",
+      selectionFixedToolShare: "\u5206\u4EAB",
+      selectionFixedToolTodo: "\u5F85\u8FA6",
+      selectionFixedToolQrCode: "\u4E8C\u7DAD\u78BC",
+      selectionBookmark: "\u6536\u85CF\u9078\u53D6\u6587\u5B57",
+      selectionShare: "\u5206\u4EAB\u9078\u53D6\u6587\u5B57",
+      selectionTodo: "\u5C07\u9078\u53D6\u6587\u5B57\u52A0\u5165\u5F85\u8FA6",
+      selectionQrCode: "\u70BA\u9078\u53D6\u6587\u5B57\u7522\u751F\u4E8C\u7DAD\u78BC",
+      selectionSearchCustomUrl: "\u81EA\u8A02\u641C\u5C0B\u5730\u5740",
+      selectionSearchCustomUrlHelp: "\u5730\u5740\u5FC5\u9808\u4F7F\u7528 HTTP(S)\uFF0C\u4E26\u5305\u542B {query} \u4F54\u4F4D\u7B26\u3002",
       selectionSearchOpenMode: "\u5283\u8A5E\u641C\u5C0B\u958B\u555F\u65B9\u5F0F",
       selectionSearchOpenModeHelp: "\u9078\u64C7\u5728\u65B0\u5206\u9801\u958B\u555F\u641C\u5C0B\u7D50\u679C\uFF0C\u6216\u5728\u76EE\u524D\u9801\u9762\u8DF3\u8F49\u3002",
       selectionSearchOpenNewTab: "\u65B0\u5206\u9801",
@@ -17341,6 +17474,20 @@
       searchAnswerSettingHelp: "When enabled, search result pages show an automatic answer using DuckDuckGo results as reference.",
       selectionSearchEngine: "Selection Search Engine",
       selectionSearchEngineHelp: "The search engine used by the selection toolbar's search button.",
+      selectionFixedTools: "Fixed Tools",
+      selectionFixedToolsHelp: "Choose fixed tools shown before the sidebar question and other tools.",
+      selectionFixedToolCopy: "Copy",
+      selectionFixedToolSearch: "Search",
+      selectionFixedToolBookmark: "Bookmark",
+      selectionFixedToolShare: "Share",
+      selectionFixedToolTodo: "To-do",
+      selectionFixedToolQrCode: "QR code",
+      selectionBookmark: "Bookmark selected text",
+      selectionShare: "Share selected text",
+      selectionTodo: "Add selected text to to-do",
+      selectionQrCode: "Generate QR code for selected text",
+      selectionSearchCustomUrl: "Custom Search URL",
+      selectionSearchCustomUrlHelp: "Use an HTTP(S) URL containing the {query} placeholder.",
       selectionSearchOpenMode: "Selection Search Destination",
       selectionSearchOpenModeHelp: "Choose whether search results open in a new tab or replace the current page.",
       selectionSearchOpenNewTab: "New Tab",
@@ -17965,6 +18112,20 @@
       searchAnswerSettingHelp: "\u6709\u52B9\u306B\u3059\u308B\u3068\u691C\u7D22\u7D50\u679C\u30DA\u30FC\u30B8\u306E\u53F3\u5074\u306B\u3001DuckDuckGo \u306E\u691C\u7D22\u7D50\u679C\u3092\u53C2\u8003\u306B\u3057\u305F\u81EA\u52D5\u56DE\u7B54\u3092\u8868\u793A\u3057\u307E\u3059\u3002",
       selectionSearchEngine: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u306E\u691C\u7D22\u30A8\u30F3\u30B8\u30F3",
       selectionSearchEngineHelp: "\u9078\u629E\u30C4\u30FC\u30EB\u30D0\u30FC\u306E\u691C\u7D22\u30DC\u30BF\u30F3\u3067\u4F7F\u7528\u3059\u308B\u691C\u7D22\u30A8\u30F3\u30B8\u30F3\u3067\u3059\u3002",
+      selectionFixedTools: "\u56FA\u5B9A\u30C4\u30FC\u30EB",
+      selectionFixedToolsHelp: "\u30B5\u30A4\u30C9\u30D0\u30FC\u3078\u306E\u8CEA\u554F\u3068\u305D\u306E\u4ED6\u306E\u30C4\u30FC\u30EB\u3088\u308A\u524D\u306B\u8868\u793A\u3059\u308B\u56FA\u5B9A\u30C4\u30FC\u30EB\u3092\u9078\u629E\u3057\u307E\u3059\u3002",
+      selectionFixedToolCopy: "\u30B3\u30D4\u30FC",
+      selectionFixedToolSearch: "\u691C\u7D22",
+      selectionFixedToolBookmark: "\u304A\u6C17\u306B\u5165\u308A",
+      selectionFixedToolShare: "\u5171\u6709",
+      selectionFixedToolTodo: "ToDo",
+      selectionFixedToolQrCode: "QR\u30B3\u30FC\u30C9",
+      selectionBookmark: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u3092\u304A\u6C17\u306B\u5165\u308A\u306B\u8FFD\u52A0",
+      selectionShare: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u3092\u5171\u6709",
+      selectionTodo: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u3092ToDo\u306B\u8FFD\u52A0",
+      selectionQrCode: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u306EQR\u30B3\u30FC\u30C9\u3092\u751F\u6210",
+      selectionSearchCustomUrl: "\u30AB\u30B9\u30BF\u30E0\u691C\u7D22URL",
+      selectionSearchCustomUrlHelp: "{query} \u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3092\u542B\u3080HTTP(S) URL\u3092\u6307\u5B9A\u3057\u307E\u3059\u3002",
       selectionSearchOpenMode: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u691C\u7D22\u306E\u958B\u304D\u65B9",
       selectionSearchOpenModeHelp: "\u691C\u7D22\u7D50\u679C\u3092\u65B0\u3057\u3044\u30BF\u30D6\u3067\u958B\u304F\u304B\u3001\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u3092\u7F6E\u304D\u63DB\u3048\u308B\u304B\u3092\u9078\u629E\u3057\u307E\u3059\u3002",
       selectionSearchOpenNewTab: "\u65B0\u3057\u3044\u30BF\u30D6",
@@ -18589,6 +18750,20 @@
       searchAnswerSettingHelp: "\uCF1C\uBA74 \uAC80\uC0C9 \uACB0\uACFC \uD398\uC774\uC9C0 \uC624\uB978\uCABD\uC5D0 DuckDuckGo \uAC80\uC0C9 \uACB0\uACFC\uB97C \uCC38\uACE0\uD55C \uC790\uB3D9 \uB2F5\uBCC0\uC744 \uD45C\uC2DC\uD569\uB2C8\uB2E4.",
       selectionSearchEngine: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 \uAC80\uC0C9 \uC5D4\uC9C4",
       selectionSearchEngineHelp: "\uC120\uD0DD \uB3C4\uAD6C \uBAA8\uC74C\uC758 \uAC80\uC0C9 \uBC84\uD2BC\uC5D0\uC11C \uC0AC\uC6A9\uD560 \uAC80\uC0C9 \uC5D4\uC9C4\uC785\uB2C8\uB2E4.",
+      selectionFixedTools: "\uACE0\uC815 \uB3C4\uAD6C",
+      selectionFixedToolsHelp: "\uC0AC\uC774\uB4DC\uBC14 \uC9C8\uBB38 \uBC0F \uB2E4\uB978 \uB3C4\uAD6C\uBCF4\uB2E4 \uBA3C\uC800 \uD45C\uC2DC\uD560 \uACE0\uC815 \uB3C4\uAD6C\uB97C \uC120\uD0DD\uD569\uB2C8\uB2E4.",
+      selectionFixedToolCopy: "\uBCF5\uC0AC",
+      selectionFixedToolSearch: "\uAC80\uC0C9",
+      selectionFixedToolBookmark: "\uBD81\uB9C8\uD06C",
+      selectionFixedToolShare: "\uACF5\uC720",
+      selectionFixedToolTodo: "\uD560 \uC77C",
+      selectionFixedToolQrCode: "QR \uCF54\uB4DC",
+      selectionBookmark: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 \uBD81\uB9C8\uD06C",
+      selectionShare: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 \uACF5\uC720",
+      selectionTodo: "\uC120\uD0DD \uD14D\uC2A4\uD2B8\uB97C \uD560 \uC77C\uC5D0 \uCD94\uAC00",
+      selectionQrCode: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 QR \uCF54\uB4DC \uC0DD\uC131",
+      selectionSearchCustomUrl: "\uC0AC\uC6A9\uC790 \uC9C0\uC815 \uAC80\uC0C9 URL",
+      selectionSearchCustomUrlHelp: "{query} \uC790\uB9AC \uD45C\uC2DC\uC790\uB97C \uD3EC\uD568\uD55C HTTP(S) URL\uC744 \uC785\uB825\uD558\uC138\uC694.",
       selectionSearchOpenMode: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 \uAC80\uC0C9 \uC5F4\uAE30 \uBC29\uC2DD",
       selectionSearchOpenModeHelp: "\uAC80\uC0C9 \uACB0\uACFC\uB97C \uC0C8 \uD0ED\uC5D0\uC11C \uC5F4\uC9C0, \uD604\uC7AC \uD398\uC774\uC9C0\uC5D0\uC11C \uC774\uB3D9\uD560\uC9C0 \uC120\uD0DD\uD569\uB2C8\uB2E4.",
       selectionSearchOpenNewTab: "\uC0C8 \uD0ED",
@@ -20728,6 +20903,16 @@
     });
   }
 
+  // src/shared/types.ts
+  var SELECTION_OVERLAY_FIXED_TOOL_ORDER = [
+    "copy",
+    "search",
+    "bookmark",
+    "share",
+    "todo",
+    "qrcode"
+  ];
+
   // src/shared/defaults.ts
   var TOOL_IDS = BUILT_IN_TOOLS.map((tool) => tool.id);
   var DEFAULT_SELECTION_TOOL_IDS = [
@@ -20768,7 +20953,12 @@
     selectionOverlayMode: "off",
     selectionOverlayShortcut: "off",
     selectionOverlayMinChars: 2,
+    selectionOverlayFixedTools: [
+      SELECTION_OVERLAY_FIXED_TOOL_ORDER[0],
+      SELECTION_OVERLAY_FIXED_TOOL_ORDER[1]
+    ],
     selectionSearchEngine: "google",
+    selectionSearchCustomUrl: "",
     selectionSearchOpenMode: "new-tab",
     selectionMatchHighlightMode: "off",
     linkTextSelectionEnabled: false,
@@ -20974,7 +21164,11 @@
         1,
         Math.round(Number(stored.selectionOverlayMinChars ?? 2) || 2)
       ),
-      selectionSearchEngine: stored.selectionSearchEngine === "bing" || stored.selectionSearchEngine === "duckduckgo" || stored.selectionSearchEngine === "brave" || stored.selectionSearchEngine === "baidu" || stored.selectionSearchEngine === "yahoo" || stored.selectionSearchEngine === "yandex" || stored.selectionSearchEngine === "ecosia" ? stored.selectionSearchEngine : DEFAULT_SETTINGS.selectionSearchEngine,
+      selectionOverlayFixedTools: Array.isArray(stored.selectionOverlayFixedTools) ? SELECTION_OVERLAY_FIXED_TOOL_ORDER.filter(
+        (tool) => stored.selectionOverlayFixedTools?.includes(tool)
+      ) : DEFAULT_SETTINGS.selectionOverlayFixedTools,
+      selectionSearchEngine: stored.selectionSearchEngine === "bing" || stored.selectionSearchEngine === "duckduckgo" || stored.selectionSearchEngine === "brave" || stored.selectionSearchEngine === "baidu" || stored.selectionSearchEngine === "yahoo" || stored.selectionSearchEngine === "yandex" || stored.selectionSearchEngine === "ecosia" || stored.selectionSearchEngine === "custom" ? stored.selectionSearchEngine : DEFAULT_SETTINGS.selectionSearchEngine,
+      selectionSearchCustomUrl: String(stored.selectionSearchCustomUrl ?? "").trim(),
       selectionSearchOpenMode: stored.selectionSearchOpenMode === "current" || stored.selectionSearchOpenMode === "new-tab" ? stored.selectionSearchOpenMode : DEFAULT_SETTINGS.selectionSearchOpenMode,
       selectionMatchHighlightMode: SELECTION_MATCH_HIGHLIGHT_MODES.has(
         stored.selectionMatchHighlightMode
@@ -33365,6 +33559,40 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       if (!snapshot?.text.trim()) return;
       await runtimeRequest2("selection.search", { query: snapshot.text });
     };
+    const fixedSelectionToolButton = (tool) => {
+      const fixedTools = {
+        copy: {
+          title: uiText(activeSettings?.interfaceLanguage, "copySelection"),
+          icon: selectionCopied ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Check, {}) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Copy, {}),
+          onClick: async () => {
+            await copyText(snapshot?.text ?? "");
+            setSelectionCopied(true);
+            window.setTimeout(() => setSelectionCopied(false), 1200);
+          }
+        },
+        search: {
+          title: t("searchSelection"),
+          icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Search, {}),
+          onClick: searchSelection
+        },
+        bookmark: { title: t("selectionBookmark"), icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Bookmark, {}), onClick: () => void 0 },
+        share: { title: t("selectionShare"), icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Share2, {}), onClick: () => void 0 },
+        todo: { title: t("selectionTodo"), icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ListTodo, {}), onClick: () => void 0 },
+        qrcode: { title: t("selectionQrCode"), icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(QrCode, {}), onClick: () => void 0 }
+      }[tool];
+      return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        "button",
+        {
+          className: "md-icon-button",
+          type: "button",
+          title: fixedTools.title,
+          "aria-label": fixedTools.title,
+          onClick: () => void fixedTools.onClick(),
+          children: fixedTools.icon
+        },
+        tool
+      );
+    };
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
       autoReplyPosition && inputAutoReplyEnabled && !autoReplyBlocked && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
         "button",
@@ -33693,32 +33921,10 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           onMouseEnter: clearHoverTimeout,
           onMouseLeave: activeSettings?.selectionOverlayMode === "hover" ? scheduleHoverClose : void 0,
           children: [
+            SELECTION_OVERLAY_FIXED_TOOL_ORDER.filter(
+              (tool) => (activeSettings?.selectionOverlayFixedTools ?? []).includes(tool)
+            ).map(fixedSelectionToolButton),
             selectionToolButton(askSelectionTool),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-              "button",
-              {
-                className: "md-icon-button",
-                type: "button",
-                title: uiText(activeSettings?.interfaceLanguage, "copySelection"),
-                onClick: async () => {
-                  await copyText(snapshot.text);
-                  setSelectionCopied(true);
-                  window.setTimeout(() => setSelectionCopied(false), 1200);
-                },
-                children: selectionCopied ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Check, {}) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Copy, {})
-              }
-            ),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-              "button",
-              {
-                className: "md-icon-button",
-                type: "button",
-                title: t("searchSelection"),
-                "aria-label": t("searchSelection"),
-                onClick: () => void searchSelection(),
-                children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Search, {})
-              }
-            ),
             selectionTools.map(selectionToolButton)
           ]
         }

@@ -1,5 +1,6 @@
 import {
   ArrowRightLeft,
+  Bookmark,
   Check,
   ChevronDown,
   Clipboard,
@@ -10,6 +11,9 @@ import {
   RotateCcw,
   Search,
   Send,
+  ListTodo,
+  QrCode,
+  Share2,
   Sparkles,
   X
 } from "lucide-react";
@@ -41,6 +45,7 @@ import {
 } from "../shared/immersiveReading";
 import { loadCustomTools, loadSettings, saveSettings } from "../shared/storage";
 import { allTools, toolInstruction } from "../shared/tools";
+import { SELECTION_OVERLAY_FIXED_TOOL_ORDER } from "../shared/types";
 import { profileForPurpose } from "../shared/models";
 import {
   immersiveReadingInstruction,
@@ -3500,6 +3505,59 @@ function SelectionAssistant({ query }: { query: string | null }) {
     await runtimeRequest("selection.search", { query: snapshot.text });
   };
 
+  const fixedSelectionToolButton = (
+    tool: NonNullable<AppSettings["selectionOverlayFixedTools"]>[number]
+  ) => {
+    const fixedTools = {
+      copy: {
+        title: uiText(activeSettings?.interfaceLanguage, "copySelection"),
+        icon: selectionCopied ? <Check /> : <Copy />,
+        onClick: async () => {
+          await copyText(snapshot?.text ?? "");
+          setSelectionCopied(true);
+          window.setTimeout(() => setSelectionCopied(false), 1200);
+        }
+      },
+      search: {
+        title: t("searchSelection"),
+        icon: <Search />,
+        onClick: searchSelection
+      },
+      bookmark: {
+        title: t("selectionBookmark"),
+        icon: <Bookmark />,
+        onClick: () => undefined
+      },
+      share: {
+        title: t("selectionShare"),
+        icon: <Share2 />,
+        onClick: () => undefined
+      },
+      todo: {
+        title: t("selectionTodo"),
+        icon: <ListTodo />,
+        onClick: () => undefined
+      },
+      qrcode: {
+        title: t("selectionQrCode"),
+        icon: <QrCode />,
+        onClick: () => undefined
+      }
+    }[tool];
+    return (
+      <button
+        key={tool}
+        className="md-icon-button"
+        type="button"
+        title={fixedTools.title}
+        aria-label={fixedTools.title}
+        onClick={() => void fixedTools.onClick()}
+      >
+        {fixedTools.icon}
+      </button>
+    );
+  };
+
   return (
     <>
       {autoReplyPosition && inputAutoReplyEnabled && !autoReplyBlocked && (
@@ -3829,28 +3887,10 @@ function SelectionAssistant({ query }: { query: string | null }) {
               : undefined
           }
         >
+          {SELECTION_OVERLAY_FIXED_TOOL_ORDER.filter((tool) =>
+            (activeSettings?.selectionOverlayFixedTools ?? []).includes(tool)
+          ).map(fixedSelectionToolButton)}
           {selectionToolButton(askSelectionTool)}
-          <button
-            className="md-icon-button"
-            type="button"
-            title={uiText(activeSettings?.interfaceLanguage, "copySelection")}
-            onClick={async () => {
-              await copyText(snapshot.text);
-              setSelectionCopied(true);
-              window.setTimeout(() => setSelectionCopied(false), 1200);
-            }}
-          >
-            {selectionCopied ? <Check /> : <Copy />}
-          </button>
-          <button
-            className="md-icon-button"
-            type="button"
-            title={t("searchSelection")}
-            aria-label={t("searchSelection")}
-            onClick={() => void searchSelection()}
-          >
-            <Search />
-          </button>
           {selectionTools.map(selectionToolButton)}
         </div>
       )}

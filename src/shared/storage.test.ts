@@ -72,6 +72,10 @@ describe("settings normalization", () => {
   it("defaults selection search to Google in a new tab", () => {
     expect(normalizeSettings().selectionSearchEngine).toBe("google");
     expect(normalizeSettings().selectionSearchOpenMode).toBe("new-tab");
+    expect(normalizeSettings().selectionOverlayFixedTools).toEqual([
+      "copy",
+      "search"
+    ]);
     expect(
       normalizeSettings({
         selectionSearchEngine: "baidu",

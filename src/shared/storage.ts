@@ -16,6 +16,7 @@ import type {
   ReasoningStrategy,
   SelectionMatchHighlightMode
 } from "./types";
+import { SELECTION_OVERLAY_FIXED_TOOL_ORDER } from "./types";
 
 const APP_LANGUAGES = new Set<AppLanguage>([
   "auto",
@@ -287,6 +288,11 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
       1,
       Math.round(Number(stored.selectionOverlayMinChars ?? 2) || 2)
     ),
+    selectionOverlayFixedTools: Array.isArray(stored.selectionOverlayFixedTools)
+      ? SELECTION_OVERLAY_FIXED_TOOL_ORDER.filter((tool) =>
+          stored.selectionOverlayFixedTools?.includes(tool)
+        )
+      : DEFAULT_SETTINGS.selectionOverlayFixedTools,
     selectionSearchEngine:
       stored.selectionSearchEngine === "bing" ||
       stored.selectionSearchEngine === "duckduckgo" ||
@@ -294,9 +300,11 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
       stored.selectionSearchEngine === "baidu" ||
       stored.selectionSearchEngine === "yahoo" ||
       stored.selectionSearchEngine === "yandex" ||
-      stored.selectionSearchEngine === "ecosia"
+      stored.selectionSearchEngine === "ecosia" ||
+      stored.selectionSearchEngine === "custom"
         ? stored.selectionSearchEngine
         : DEFAULT_SETTINGS.selectionSearchEngine,
+    selectionSearchCustomUrl: String(stored.selectionSearchCustomUrl ?? "").trim(),
     selectionSearchOpenMode:
       stored.selectionSearchOpenMode === "current" ||
       stored.selectionSearchOpenMode === "new-tab"

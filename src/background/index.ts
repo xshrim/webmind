@@ -470,7 +470,11 @@ chrome.runtime.onMessage.addListener(
         const settings = await loadSettings();
         const query = String(message.payload?.query ?? "").trim();
         if (!query) throw new Error(uiText(settings.interfaceLanguage, "provideSearchQuery"));
-        const url = selectionSearchUrl(settings.selectionSearchEngine, query);
+        const url = selectionSearchUrl(
+          settings.selectionSearchEngine,
+          query,
+          settings.selectionSearchCustomUrl
+        );
         if (settings.selectionSearchOpenMode === "current") {
           if (!sender.tab?.id) {
             throw new Error(uiText(settings.interfaceLanguage, "cannotDetermineTab"));

@@ -47,5 +47,8 @@ describe("search engine URL detection", () => {
     expect(selectionSearchUrl("baidu", "浏览器 AI")).toBe(
       "https://www.baidu.com/s?wd=%E6%B5%8F%E8%A7%88%E5%99%A8%20AI"
     );
+    expect(
+      selectionSearchUrl("custom", "WebMind AI", "https://example.com/?q={query}")
+    ).toBe("https://example.com/?q=WebMind%20AI");
   });
 });

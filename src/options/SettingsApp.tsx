@@ -26,7 +26,10 @@ import {
   PROVIDER_MODEL_SUGGESTIONS
 } from "../shared/defaults";
 import { LANGUAGE_OPTIONS, uiText, type UiTextKey } from "../shared/i18n";
-import { SELECTION_SEARCH_ENGINE_OPTIONS } from "../shared/searchEngines";
+import {
+  isSelectionSearchTemplate,
+  SELECTION_SEARCH_ENGINE_OPTIONS
+} from "../shared/searchEngines";
 import { requestOriginPermission, runtimeRequest } from "../shared/browser";
 import {
   clearConversations,
@@ -64,6 +67,7 @@ import type {
   SelectionSearchEngine,
   SelectionSearchOpenMode,
   SelectionOverlayMode,
+  SelectionOverlayFixedTool,
   ToolDefinition,
   ToolSurface
 } from "../shared/types";
@@ -297,6 +301,18 @@ const SELECTION_MATCH_HIGHLIGHT_MODES: Array<{
     titleKey: "selectionMatchHighlightCaseSensitive"
   },
   { id: "ignore-case", titleKey: "selectionMatchHighlightIgnoreCase" }
+];
+
+const SELECTION_OVERLAY_FIXED_TOOLS: Array<{
+  id: SelectionOverlayFixedTool;
+  titleKey: UiTextKey;
+}> = [
+  { id: "copy", titleKey: "selectionFixedToolCopy" },
+  { id: "search", titleKey: "selectionFixedToolSearch" },
+  { id: "bookmark", titleKey: "selectionFixedToolBookmark" },
+  { id: "share", titleKey: "selectionFixedToolShare" },
+  { id: "todo", titleKey: "selectionFixedToolTodo" },
+  { id: "qrcode", titleKey: "selectionFixedToolQrCode" }
 ];
 
 function providerKindLabel(kind: ProviderKind, language: AppLanguage): string {
@@ -1640,6 +1656,94 @@ export function SettingsApp() {
                   />
                   <small>{t("selectionOverlayMinCharsHelp")}</small>
                 </label>
+                <div className="field">
+                  <span className="field-label">{t("selectionFixedTools")}</span>
+                  <div className="general-toggle-grid">
+                    {SELECTION_OVERLAY_FIXED_TOOLS.map((tool) => (
+                      <label className="toggle-row" key={tool.id}>
+                        <input
+                          type="checkbox"
+                          checked={settings.selectionOverlayFixedTools.includes(tool.id)}
+                          onChange={(event) =>
+                            void updatePreference(
+                              "selectionOverlayFixedTools",
+                              event.target.checked
+                                ? [...settings.selectionOverlayFixedTools, tool.id]
+                                : settings.selectionOverlayFixedTools.filter(
+                                    (id) => id !== tool.id
+                                  )
+                            )
+                          }
+                        />
+                        <span>
+                          <strong>{t(tool.titleKey)}</strong>
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  <small>{t("selectionFixedToolsHelp")}</small>
+                </div>
+                <div className="form-grid">
+                  <label className="field">
+                    <span className="field-label">{t("selectionSearchEngine")}</span>
+                    <select
+                      value={settings.selectionSearchEngine}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "selectionSearchEngine",
+                          event.target.value as SelectionSearchEngine
+                        )
+                      }
+                    >
+                      {SELECTION_SEARCH_ENGINE_OPTIONS.map(([id, label]) => (
+                        <option key={id} value={id}>
+                          {id === "custom" ? t("custom") : label}
+                        </option>
+                      ))}
+                    </select>
+                    <small>{t("selectionSearchEngineHelp")}</small>
+                  </label>
+                  <label className="field">
+                    <span className="field-label">{t("selectionSearchOpenMode")}</span>
+                    <select
+                      value={settings.selectionSearchOpenMode}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "selectionSearchOpenMode",
+                          event.target.value as SelectionSearchOpenMode
+                        )
+                      }
+                    >
+                      <option value="new-tab">{t("selectionSearchOpenNewTab")}</option>
+                      <option value="current">{t("selectionSearchOpenCurrent")}</option>
+                    </select>
+                    <small>{t("selectionSearchOpenModeHelp")}</small>
+                  </label>
+                </div>
+                {settings.selectionSearchEngine === "custom" && (
+                  <label className="field">
+                    <span className="field-label">{t("selectionSearchCustomUrl")}</span>
+                    <input
+                      type="url"
+                      value={settings.selectionSearchCustomUrl}
+                      placeholder="https://example.com/search?q={query}"
+                      onChange={(event) =>
+                        void updatePreference(
+                          "selectionSearchCustomUrl",
+                          event.target.value
+                        )
+                      }
+                    />
+                    <small className={
+                      settings.selectionSearchCustomUrl &&
+                      !isSelectionSearchTemplate(settings.selectionSearchCustomUrl)
+                        ? "field-error"
+                        : undefined
+                    }>
+                      {t("selectionSearchCustomUrlHelp")}
+                    </small>
+                  </label>
+                )}
                 <label className="field">
                   <span className="field-label">{t("urlBlacklist")}</span>
                   <textarea
@@ -2438,43 +2542,6 @@ export function SettingsApp() {
                       <strong>{t("searchAnswerSetting")}</strong>
                       <small>{t("searchAnswerSettingHelp")}</small>
                     </span>
-                  </label>
-                </div>
-                <div className="form-grid">
-                  <label className="field">
-                    <span className="field-label">{t("selectionSearchEngine")}</span>
-                    <select
-                      value={settings.selectionSearchEngine}
-                      onChange={(event) =>
-                        void updatePreference(
-                          "selectionSearchEngine",
-                          event.target.value as SelectionSearchEngine
-                        )
-                      }
-                    >
-                      {SELECTION_SEARCH_ENGINE_OPTIONS.map(([id, label]) => (
-                        <option key={id} value={id}>
-                          {label}
-                        </option>
-                      ))}
-                    </select>
-                    <small>{t("selectionSearchEngineHelp")}</small>
-                  </label>
-                  <label className="field">
-                    <span className="field-label">{t("selectionSearchOpenMode")}</span>
-                    <select
-                      value={settings.selectionSearchOpenMode}
-                      onChange={(event) =>
-                        void updatePreference(
-                          "selectionSearchOpenMode",
-                          event.target.value as SelectionSearchOpenMode
-                        )
-                      }
-                    >
-                      <option value="new-tab">{t("selectionSearchOpenNewTab")}</option>
-                      <option value="current">{t("selectionSearchOpenCurrent")}</option>
-                    </select>
-                    <small>{t("selectionSearchOpenModeHelp")}</small>
                   </label>
                 </div>
                 <div className="form-grid">

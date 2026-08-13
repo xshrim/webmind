@@ -5,6 +5,7 @@ import type {
   ProviderProfile,
   ToolSurface
 } from "./types";
+import { SELECTION_OVERLAY_FIXED_TOOL_ORDER } from "./types";
 
 export const APP_NAME = "WebMind";
 
@@ -218,7 +219,12 @@ export const DEFAULT_SETTINGS: AppSettings = {
   selectionOverlayMode: "off",
   selectionOverlayShortcut: "off",
   selectionOverlayMinChars: 2,
+  selectionOverlayFixedTools: [
+    SELECTION_OVERLAY_FIXED_TOOL_ORDER[0],
+    SELECTION_OVERLAY_FIXED_TOOL_ORDER[1]
+  ],
   selectionSearchEngine: "google",
+  selectionSearchCustomUrl: "",
   selectionSearchOpenMode: "new-tab",
   selectionMatchHighlightMode: "off",
   linkTextSelectionEnabled: false,

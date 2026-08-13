@@ -11,13 +11,17 @@ export const SELECTION_SEARCH_ENGINE_OPTIONS = [
   ["baidu", "百度"],
   ["yahoo", "Yahoo"],
   ["yandex", "Yandex"],
-  ["ecosia", "Ecosia"]
+  ["ecosia", "Ecosia"],
+  ["custom", "Custom"]
 ] as const;
 
 export type SelectionSearchEngineId =
   (typeof SELECTION_SEARCH_ENGINE_OPTIONS)[number][0];
 
-const SELECTION_SEARCH_URLS: Record<SelectionSearchEngineId, string> = {
+const SELECTION_SEARCH_URLS: Record<
+  Exclude<SelectionSearchEngineId, "custom">,
+  string
+> = {
   google: "https://www.google.com/search?q=",
   bing: "https://www.bing.com/search?q=",
   duckduckgo: "https://duckduckgo.com/?q=",
@@ -28,11 +32,28 @@ const SELECTION_SEARCH_URLS: Record<SelectionSearchEngineId, string> = {
   ecosia: "https://www.ecosia.org/search?q="
 };
 
+export function isSelectionSearchTemplate(value: string): boolean {
+  if (!value.includes("{query}")) return false;
+  try {
+    const url = new URL(value.replaceAll("{query}", "query"));
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export function selectionSearchUrl(
   engine: SelectionSearchEngineId,
-  query: string
+  query: string,
+  customTemplate = ""
 ): string {
-  return `${SELECTION_SEARCH_URLS[engine] ?? SELECTION_SEARCH_URLS.google}${encodeURIComponent(query.trim())}`;
+  if (engine === "custom") {
+    if (!isSelectionSearchTemplate(customTemplate)) {
+      throw new Error("Invalid custom selection search URL");
+    }
+    return customTemplate.replaceAll("{query}", encodeURIComponent(query.trim()));
+  }
+  return `${SELECTION_SEARCH_URLS[engine]}${encodeURIComponent(query.trim())}`;
 }
 
 const SEARCH_RULES: SearchRule[] = [

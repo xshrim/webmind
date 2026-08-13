@@ -37,8 +37,25 @@ export type SelectionSearchEngine =
   | "baidu"
   | "yahoo"
   | "yandex"
-  | "ecosia";
+  | "ecosia"
+  | "custom";
 export type SelectionSearchOpenMode = "current" | "new-tab";
+export type SelectionOverlayFixedTool =
+  | "copy"
+  | "search"
+  | "bookmark"
+  | "share"
+  | "todo"
+  | "qrcode";
+
+export const SELECTION_OVERLAY_FIXED_TOOL_ORDER: SelectionOverlayFixedTool[] = [
+  "copy",
+  "search",
+  "bookmark",
+  "share",
+  "todo",
+  "qrcode"
+];
 export type SelectionMatchHighlightMode =
   | "off"
   | "ignore-case"
@@ -141,7 +158,9 @@ export interface AppSettings {
   selectionOverlayMode: SelectionOverlayMode;
   selectionOverlayShortcut: SelectionOverlayShortcut;
   selectionOverlayMinChars: number;
+  selectionOverlayFixedTools: SelectionOverlayFixedTool[];
   selectionSearchEngine: SelectionSearchEngine;
+  selectionSearchCustomUrl: string;
   selectionSearchOpenMode: SelectionSearchOpenMode;
   selectionMatchHighlightMode: SelectionMatchHighlightMode;
   linkTextSelectionEnabled: boolean;

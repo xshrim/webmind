@@ -339,6 +339,10 @@ svg {
   line-height: 1.45;
 }
 
+.field small.field-error {
+  color: var(--danger);
+}
+
 .segmented {
   display: inline-flex;
   width: fit-content;
