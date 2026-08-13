@@ -28388,6 +28388,35 @@ ${index}. ${content.trim()}
   function shouldCloseFloatingResult(event, startedInsideResult) {
     return event.isPrimary && event.button === 0 && !startedInsideResult;
   }
+  function candidateFloatingResultPosition(target, width, height, viewportWidth, viewportHeight, margin = 10, gap = 10) {
+    const actualWidth = Math.min(width, viewportWidth - margin * 2);
+    const actualHeight = Math.min(height, viewportHeight - margin * 2);
+    const clamp2 = (left, top) => ({
+      left: Math.max(
+        margin,
+        Math.min(viewportWidth - actualWidth - margin, Math.round(left))
+      ),
+      top: Math.max(
+        margin,
+        Math.min(viewportHeight - actualHeight - margin, Math.round(top))
+      )
+    });
+    const centeredLeft = target.left + (target.width - actualWidth) / 2;
+    const centeredTop = target.top + (target.height - actualHeight) / 2;
+    if (target.bottom + gap + actualHeight <= viewportHeight - margin) {
+      return clamp2(centeredLeft, target.bottom + gap);
+    }
+    if (target.right + gap + actualWidth <= viewportWidth - margin) {
+      return clamp2(target.right + gap, centeredTop);
+    }
+    if (target.left - gap - actualWidth >= margin) {
+      return clamp2(target.left - gap - actualWidth, centeredTop);
+    }
+    if (target.top - gap - actualHeight >= margin) {
+      return clamp2(centeredLeft, target.top - gap - actualHeight);
+    }
+    return clamp2(centeredLeft, target.bottom + gap);
+  }
 
   // src/content/linkTextSelection.ts
   var LINK_TEXT_SELECTION_STYLE_ID = "webmind-link-text-selection";
@@ -34318,18 +34347,26 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
       const top = below + 12 < window.innerHeight ? below : Math.max(6, snapshot.rect.top - 15);
       return { left, top };
     }, [snapshot]);
-    const resultPosition = (0, import_react5.useMemo)(() => {
-      const width = Math.min(420, window.innerWidth - 20);
-      const left = Math.max(
-        10,
-        Math.min(window.innerWidth - width - 10, position.left)
-      );
-      const top = Math.max(
-        10,
-        Math.min(window.innerHeight - 300, position.top + 46)
-      );
-      return { left, top };
-    }, [position]);
+    const resultPosition = (0, import_react5.useMemo)(
+      () => snapshot ? candidateFloatingResultPosition(
+        snapshot.rect,
+        420,
+        Math.min(460, window.innerHeight - 20),
+        window.innerWidth,
+        window.innerHeight
+      ) : { left: 10, top: 10 },
+      [snapshot]
+    );
+    const selectionQrCodePosition = (0, import_react5.useMemo)(
+      () => snapshot ? candidateFloatingResultPosition(
+        snapshot.rect,
+        300,
+        294,
+        window.innerWidth,
+        window.innerHeight
+      ) : { left: 10, top: 10 },
+      [snapshot]
+    );
     const applyImmersiveSelection = (target, translation, mode, displayStyle, effects) => {
       installPageStyles();
       if (target.range) {
@@ -35509,20 +35546,17 @@ ${t("currentResultLabel")}\uFF1A` : "",
       )
     } : null;
     const imageResultPosition = (0, import_react5.useMemo)(() => {
-      if (activeTool?.id !== IMAGE_TEXT_EXTRACTION_TOOL_ID || !imageTextButtonPosition) {
+      if (activeTool?.id !== IMAGE_TEXT_EXTRACTION_TOOL_ID || !imageTextTarget) {
         return null;
       }
-      const width = Math.min(420, window.innerWidth - 20);
-      const left = Math.max(
-        10,
-        Math.min(window.innerWidth - width - 10, imageTextButtonPosition.left + 16 - width)
+      return candidateFloatingResultPosition(
+        imageTextTarget.rect,
+        420,
+        Math.min(460, window.innerHeight - 20),
+        window.innerWidth,
+        window.innerHeight
       );
-      const top = Math.max(
-        10,
-        Math.min(window.innerHeight - 300, imageTextButtonPosition.top + 24)
-      );
-      return { left, top };
-    }, [activeTool?.id, imageTextButtonPosition]);
+    }, [activeTool?.id, imageTextTarget]);
     const runImageTextExtraction = async (triggerButton) => {
       const target = imageTextTarget;
       if (!target || imageTextBusy || !target.element.isConnected) return;
@@ -35699,6 +35733,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
     const showSelectionQrCode = async () => {
       if (!snapshot?.text.trim()) return;
       setHoverOpen(false);
+      setResultPositionOverride(null);
       try {
         setSelectionQrCode({ svg: await selectionQrCodeSvg(snapshot.text), error: "" });
       } catch {
@@ -36271,25 +36306,41 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
         "div",
         {
           className: "md-result md-qr-result",
-          style: { left: resultPosition.left, top: resultPosition.top },
+          style: {
+            left: (resultPositionOverride ?? selectionQrCodePosition).left,
+            top: (resultPositionOverride ?? selectionQrCodePosition).top
+          },
           onPointerDown: (event) => event.stopPropagation(),
           onMouseDown: (event) => event.stopPropagation(),
           onMouseUp: (event) => event.stopPropagation(),
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "md-result-head", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(QrCode, {}),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "md-result-title", children: t("selectionQrCodeTitle") }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-                "button",
-                {
-                  className: "md-icon-button",
-                  type: "button",
-                  title: t("close"),
-                  onClick: () => setSelectionQrCode(null),
-                  children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(X, {})
-                }
-              )
-            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+              "div",
+              {
+                className: "md-result-head md-draggable-head",
+                onPointerDown: startFloatingPanelDrag,
+                onPointerMove: moveFloatingPanelDrag,
+                onPointerUp: endFloatingPanelDrag,
+                onPointerCancel: endFloatingPanelDrag,
+                children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(QrCode, {}),
+                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "md-result-title", children: t("selectionQrCodeTitle") }),
+                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                    "button",
+                    {
+                      className: "md-icon-button",
+                      type: "button",
+                      title: t("close"),
+                      onClick: () => {
+                        setSelectionQrCode(null);
+                        setResultPositionOverride(null);
+                      },
+                      children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(X, {})
+                    }
+                  )
+                ]
+              }
+            ),
             /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "md-qr-result-body", children: selectionQrCode.error ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "md-result-error", children: selectionQrCode.error }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
               "div",
               {

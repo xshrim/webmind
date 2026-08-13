@@ -1,5 +1,18 @@
 import { describe, expect, it } from "vitest";
-import { shouldCloseFloatingResult } from "./floatingResult";
+import {
+  candidateFloatingResultPosition,
+  shouldCloseFloatingResult,
+  type FloatingResultAnchor
+} from "./floatingResult";
+
+const anchor = (left: number, top: number): FloatingResultAnchor => ({
+  left,
+  top,
+  right: left + 20,
+  bottom: top + 20,
+  width: 20,
+  height: 20
+});
 
 describe("floating result dismissal", () => {
   it("closes for a primary pointer press outside the result", () => {
@@ -21,5 +34,24 @@ describe("floating result dismissal", () => {
     expect(
       shouldCloseFloatingResult({ isPrimary: false, button: 0 }, false)
     ).toBe(false);
+  });
+
+  it("prefers lower, right, left, then upper placement", () => {
+    expect(candidateFloatingResultPosition(anchor(100, 100), 100, 100, 400, 400)).toEqual({
+      left: 60,
+      top: 130
+    });
+    expect(candidateFloatingResultPosition(anchor(100, 280), 100, 100, 400, 400)).toEqual({
+      left: 130,
+      top: 240
+    });
+    expect(candidateFloatingResultPosition(anchor(280, 280), 100, 100, 400, 400)).toEqual({
+      left: 170,
+      top: 240
+    });
+    expect(candidateFloatingResultPosition(anchor(100, 280), 300, 100, 400, 400)).toEqual({
+      left: 10,
+      top: 170
+    });
   });
 });

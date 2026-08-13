@@ -114,7 +114,10 @@ import {
   textRectAtPoint,
   type LatestFrameState
 } from "./hoverDefinition";
-import { shouldCloseFloatingResult } from "./floatingResult";
+import {
+  candidateFloatingResultPosition,
+  shouldCloseFloatingResult
+} from "./floatingResult";
 import { setLinkTextSelectionEnabled } from "./linkTextSelection";
 import { setSelectionMatchHighlightMode } from "./selectionHighlighter";
 import { ToolIcon } from "./toolIcons";
@@ -1981,18 +1984,33 @@ function SelectionAssistant({ query }: { query: string | null }) {
     return { left, top };
   }, [snapshot]);
 
-  const resultPosition = useMemo(() => {
-    const width = Math.min(420, window.innerWidth - 20);
-    const left = Math.max(
-      10,
-      Math.min(window.innerWidth - width - 10, position.left)
-    );
-    const top = Math.max(
-      10,
-      Math.min(window.innerHeight - 300, position.top + 46)
-    );
-    return { left, top };
-  }, [position]);
+  const resultPosition = useMemo(
+    () =>
+      snapshot
+        ? candidateFloatingResultPosition(
+            snapshot.rect,
+            420,
+            Math.min(460, window.innerHeight - 20),
+            window.innerWidth,
+            window.innerHeight
+          )
+        : { left: 10, top: 10 },
+    [snapshot]
+  );
+
+  const selectionQrCodePosition = useMemo(
+    () =>
+      snapshot
+        ? candidateFloatingResultPosition(
+            snapshot.rect,
+            300,
+            294,
+            window.innerWidth,
+            window.innerHeight
+          )
+        : { left: 10, top: 10 },
+    [snapshot]
+  );
 
   const applyImmersiveSelection = (
     target: SelectionSnapshot,
@@ -3316,20 +3334,20 @@ function SelectionAssistant({ query }: { query: string | null }) {
     : null;
 
   const imageResultPosition = useMemo(() => {
-    if (activeTool?.id !== IMAGE_TEXT_EXTRACTION_TOOL_ID || !imageTextButtonPosition) {
+    if (
+      activeTool?.id !== IMAGE_TEXT_EXTRACTION_TOOL_ID ||
+      !imageTextTarget
+    ) {
       return null;
     }
-    const width = Math.min(420, window.innerWidth - 20);
-    const left = Math.max(
-      10,
-      Math.min(window.innerWidth - width - 10, imageTextButtonPosition.left + 16 - width)
+    return candidateFloatingResultPosition(
+      imageTextTarget.rect,
+      420,
+      Math.min(460, window.innerHeight - 20),
+      window.innerWidth,
+      window.innerHeight
     );
-    const top = Math.max(
-      10,
-      Math.min(window.innerHeight - 300, imageTextButtonPosition.top + 24)
-    );
-    return { left, top };
-  }, [activeTool?.id, imageTextButtonPosition]);
+  }, [activeTool?.id, imageTextTarget]);
 
   const runImageTextExtraction = async (triggerButton?: HTMLButtonElement) => {
     const target = imageTextTarget;
@@ -3527,6 +3545,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
   const showSelectionQrCode = async () => {
     if (!snapshot?.text.trim()) return;
     setHoverOpen(false);
+    setResultPositionOverride(null);
     try {
       setSelectionQrCode({ svg: await selectionQrCodeSvg(snapshot.text), error: "" });
     } catch {
@@ -4114,19 +4133,31 @@ function SelectionAssistant({ query }: { query: string | null }) {
       {selectionQrCode && snapshot && (
         <div
           className="md-result md-qr-result"
-          style={{ left: resultPosition.left, top: resultPosition.top }}
+          style={{
+            left: (resultPositionOverride ?? selectionQrCodePosition).left,
+            top: (resultPositionOverride ?? selectionQrCodePosition).top
+          }}
           onPointerDown={(event) => event.stopPropagation()}
           onMouseDown={(event) => event.stopPropagation()}
           onMouseUp={(event) => event.stopPropagation()}
         >
-          <div className="md-result-head">
+          <div
+            className="md-result-head md-draggable-head"
+            onPointerDown={startFloatingPanelDrag}
+            onPointerMove={moveFloatingPanelDrag}
+            onPointerUp={endFloatingPanelDrag}
+            onPointerCancel={endFloatingPanelDrag}
+          >
             <QrCode />
             <span className="md-result-title">{t("selectionQrCodeTitle")}</span>
             <button
               className="md-icon-button"
               type="button"
               title={t("close")}
-              onClick={() => setSelectionQrCode(null)}
+              onClick={() => {
+                setSelectionQrCode(null);
+                setResultPositionOverride(null);
+              }}
             >
               <X />
             </button>
