@@ -3,6 +3,7 @@ import {
   buildSystemMessage,
   contextMatchesTab,
   contextModeAfterTabSwitch,
+  contextModeForRefresh,
   contextTranslationSourceText,
   defaultContextMode,
   sameTabIdentity
@@ -67,6 +68,20 @@ describe("contextModeAfterTabSwitch", () => {
     expect(contextModeAfterTabSwitch("none", "article", null)).toBe("none");
     expect(contextModeAfterTabSwitch("page", "article", null)).toBe("page");
     expect(contextModeAfterTabSwitch("article", "page", null)).toBe("article");
+  });
+});
+
+describe("contextModeForRefresh", () => {
+  it("keeps a pending selection during the initial default refresh", () => {
+    expect(contextModeForRefresh("selection", "article", "default")).toBe(
+      "selection"
+    );
+  });
+
+  it("uses the configured default when no selection is pending", () => {
+    expect(contextModeForRefresh("page", "article", "default")).toBe(
+      "article"
+    );
   });
 });
 

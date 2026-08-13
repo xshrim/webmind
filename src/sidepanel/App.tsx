@@ -179,6 +179,7 @@ import {
   contextModeAfterTabSwitch,
   contextLabel,
   contextMatchesTab,
+  contextModeForRefresh,
   contextSnapshotExcerpt,
   contextTranslationSourceText,
   defaultContextMode,
@@ -727,7 +728,16 @@ export function App() {
         selection: pending.text
       };
       if (next.kind === "selection" && pending.text?.trim()) {
+        // Supersede any page-context request started while the panel opened.
+        activeTabContextVersionRef.current += 1;
+        selectionContextVersionRef.current += 1;
+        const tab = await getActiveTab();
+        if (tab?.url === next.url) {
+          setActiveTab(tab);
+          activeTabIdRef.current = tab.id ?? null;
+        }
         pendingSelectionContextRef.current = next;
+        selectionContextRef.current = next;
         setSelectionContext(next);
         setPageContext(next);
       } else {
@@ -735,7 +745,8 @@ export function App() {
       }
       if (pendingContextScope === "selection") {
         contextModeRef.current = "selection";
-        const tabId = activeTab?.id;
+        const tabId =
+          activeTab?.url === next.url ? activeTab.id : activeTabIdRef.current;
         if (tabId) {
           void sendToTab(tabId, {
             type: "immersive.contextScope.set",
@@ -813,8 +824,11 @@ export function App() {
             replaceableArticleExtraction:
               scope === "article" && replaceableArticleExtraction
           });
-        const requestedMode: ContextMode =
-          policy === "preserve" ? currentMode : defaultMode;
+        const requestedMode = contextModeForRefresh(
+          currentMode,
+          defaultMode,
+          policy
+        );
         let page =
           requestedMode === "none"
             ? { tab: await getActiveTab(), context: null }
@@ -1692,6 +1706,7 @@ export function App() {
 
   const changeContextMode = async (mode: ContextMode) => {
     selectionOverrideRef.current = null;
+    pendingSelectionContextRef.current = null;
     contextModeRef.current = mode;
     syncImmersiveContextScope(mode);
     appendOperationLog(
@@ -2146,6 +2161,7 @@ export function App() {
       setIncludePage(true);
       setNotice("");
       if (Boolean(payload.hasSelection) && text) {
+        pendingSelectionContextRef.current = null;
         if (
           !selectionOverrideRef.current &&
           (contextModeRef.current !== "selection" || !includePage)
@@ -2180,6 +2196,10 @@ export function App() {
         return;
       }
 
+      const pendingSelection = pendingSelectionContextRef.current;
+      if (pendingSelection && (!url || pendingSelection.url === url)) {
+        return;
+      }
       pendingSelectionContextRef.current = null;
       setSelectionContext(null);
       const selectionOverride = selectionOverrideRef.current;

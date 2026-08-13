@@ -32,6 +32,19 @@ export function contextModeAfterTabSwitch(
   return nextContext?.kind === "selection" ? "selection" : fallbackMode;
 }
 
+export function contextModeForRefresh(
+  currentMode: ContextMode,
+  defaultMode: Extract<ContextMode, "none" | "page" | "article">,
+  policy: "default" | "preserve"
+): ContextMode {
+  // A selection supplied by a pending action is an explicit user choice and
+  // must win over the sidebar's initial default-context refresh.
+  if (policy === "preserve" || currentMode === "selection") {
+    return currentMode;
+  }
+  return defaultMode;
+}
+
 export function sameTabIdentity(
   currentTab: TabContextIdentity | null | undefined,
   cachedTab: TabContextIdentity | null | undefined
