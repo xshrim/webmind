@@ -13,6 +13,7 @@ import {
   Copy,
   Eraser,
   FileText,
+  Globe2,
   ImagePlus,
   Link2,
   Network,
@@ -23,6 +24,7 @@ import {
   PanelTop,
   PenLine,
   Presentation,
+  QrCode,
   RefreshCcw,
   RedoDot,
   ScanText,
@@ -188,6 +190,7 @@ import {
   type ContextMode
 } from "./context";
 import { markdownPreviewSegments } from "./markdownPreview";
+import { selectionQrCodeSvg } from "../shared/selectionQrCode";
 import {
   NAV_ITEMS,
   TOOL_TAB_PRIORITY,
@@ -394,6 +397,9 @@ export function App() {
     "up" | "down" | "same"
   >("same");
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const [messageQrCodes, setMessageQrCodes] = useState<
+    Record<string, { svg?: string; error?: string; loading?: boolean }>
+  >({});
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [editingMessageText, setEditingMessageText] = useState("");
   const [editingMessageSubmitting, setEditingMessageSubmitting] =
@@ -520,6 +526,25 @@ export function App() {
     [customTools, settings]
   );
   const t = (key: UiTextKey) => uiText(settings?.interfaceLanguage, key);
+  const addMessageQrCode = (message: ChatMessage) => {
+    if (messageQrCodes[message.id]) return;
+    setMessageQrCodes((current) => ({
+      ...current,
+      [message.id]: { loading: true }
+    }));
+    void selectionQrCodeSvg(message.content).then(
+      (svg) =>
+        setMessageQrCodes((current) => ({
+          ...current,
+          [message.id]: { svg }
+        })),
+      () =>
+        setMessageQrCodes((current) => ({
+          ...current,
+          [message.id]: { error: t("messageQrCodeError") }
+        }))
+    );
+  };
   const selectedMcpServerCount = selectedMcpTools.filter(
     (selection) => selection.toolNames.length
   ).length;
@@ -4755,6 +4780,27 @@ export function App() {
                       message.role === "assistant" ? (
                         <>
                           <SyntaxHighlightedMarkdown content={message.content} />
+                          {messageQrCodes[message.id] && (
+                            <section
+                              className="message-qr-code"
+                              aria-label={t("messageQrCodeTitle")}
+                            >
+                              <strong>{t("messageQrCodeTitle")}</strong>
+                              {messageQrCodes[message.id].loading ? (
+                                <LoaderCircle className="spin" />
+                              ) : messageQrCodes[message.id].error ? (
+                                <small className="field-error">
+                                  {messageQrCodes[message.id].error}
+                                </small>
+                              ) : (
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: messageQrCodes[message.id].svg ?? ""
+                                  }}
+                                />
+                              )}
+                            </section>
+                          )}
                           {streamingMessageId !== message.id && (
                             <div className="message-actions assistant-actions">
                               <button
@@ -4782,6 +4828,16 @@ export function App() {
                                 ) : (
                                   <Copy />
                                 )}
+                              </button>
+                              <button
+                                className="message-action-button icon-only"
+                                type="button"
+                                title={t("messageQrCode")}
+                                aria-label={t("messageQrCode")}
+                                disabled={Boolean(messageQrCodes[message.id]?.loading)}
+                                onClick={() => addMessageQrCode(message)}
+                              >
+                                <QrCode />
                               </button>
                               <button
                                 className="message-action-button icon-only"
@@ -5042,10 +5098,9 @@ export function App() {
             <div className="view-heading">
               <div>
                 <p className="eyebrow">{t("navTools")}</p>
-                <h1>{t("processCurrentContent")}</h1>
+                <h1>{t("promptTools")}</h1>
               </div>
               <div className="view-heading-actions">
-                <ContextIcon />
                 <button
                   className="icon-button"
                   type="button"
@@ -5201,7 +5256,7 @@ export function App() {
             <div className="view-heading">
               <div>
                 <p className="eyebrow">{t("localRecords")}</p>
-                <h1>{t("savedConversations")}</h1>
+                <h1>{t("historySessions")}</h1>
               </div>
               <div className="view-heading-actions">
                 <button
@@ -5275,7 +5330,7 @@ export function App() {
             <div className="view-heading">
               <div>
                 <p className="eyebrow">{t("operationLogs")}</p>
-                <h1>{t("navLogs")}</h1>
+                <h1>{t("operationLogs")}</h1>
               </div>
               <button
                 className="icon-button"
@@ -5754,7 +5809,7 @@ export function App() {
                     })
                   }
                 >
-                  <Search />
+                  <Globe2 />
                 </button>
                 <div
                   className="icon-menu-shell mcp-menu-shell"

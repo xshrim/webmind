@@ -1686,67 +1686,6 @@ export function SettingsApp() {
                   </div>
                   <small>{t("selectionFixedToolsHelp")}</small>
                 </div>
-                <div className="form-grid">
-                  <label className="field">
-                    <span className="field-label">{t("selectionSearchEngine")}</span>
-                    <select
-                      value={settings.selectionSearchEngine}
-                      onChange={(event) =>
-                        void updatePreference(
-                          "selectionSearchEngine",
-                          event.target.value as SelectionSearchEngine
-                        )
-                      }
-                    >
-                      {SELECTION_SEARCH_ENGINE_OPTIONS.map(([id, label]) => (
-                        <option key={id} value={id}>
-                          {id === "custom" ? t("custom") : label}
-                        </option>
-                      ))}
-                    </select>
-                    <small>{t("selectionSearchEngineHelp")}</small>
-                  </label>
-                  <label className="field">
-                    <span className="field-label">{t("selectionSearchOpenMode")}</span>
-                    <select
-                      value={settings.selectionSearchOpenMode}
-                      onChange={(event) =>
-                        void updatePreference(
-                          "selectionSearchOpenMode",
-                          event.target.value as SelectionSearchOpenMode
-                        )
-                      }
-                    >
-                      <option value="new-tab">{t("selectionSearchOpenNewTab")}</option>
-                      <option value="current">{t("selectionSearchOpenCurrent")}</option>
-                    </select>
-                    <small>{t("selectionSearchOpenModeHelp")}</small>
-                  </label>
-                </div>
-                {settings.selectionSearchEngine === "custom" && (
-                  <label className="field">
-                    <span className="field-label">{t("selectionSearchCustomUrl")}</span>
-                    <input
-                      type="url"
-                      value={settings.selectionSearchCustomUrl}
-                      placeholder="https://example.com/search?q={query}"
-                      onChange={(event) =>
-                        void updatePreference(
-                          "selectionSearchCustomUrl",
-                          event.target.value
-                        )
-                      }
-                    />
-                    <small className={
-                      settings.selectionSearchCustomUrl &&
-                      !isSelectionSearchTemplate(settings.selectionSearchCustomUrl)
-                        ? "field-error"
-                        : undefined
-                    }>
-                      {t("selectionSearchCustomUrlHelp")}
-                    </small>
-                  </label>
-                )}
                 <label className="field">
                   <span className="field-label">{t("urlBlacklist")}</span>
                   <textarea
@@ -2448,6 +2387,67 @@ export function SettingsApp() {
                   </div>
                   <small>{t("mcpToolApprovalModeHelp")}</small>
                 </div>
+                <div className="form-grid">
+                  <label className="field">
+                    <span className="field-label">{t("searchEngine")}</span>
+                    <select
+                      value={settings.selectionSearchEngine}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "selectionSearchEngine",
+                          event.target.value as SelectionSearchEngine
+                        )
+                      }
+                    >
+                      {SELECTION_SEARCH_ENGINE_OPTIONS.map(([id, label]) => (
+                        <option key={id} value={id}>
+                          {id === "custom" ? t("custom") : label}
+                        </option>
+                      ))}
+                    </select>
+                    <small>{t("selectionSearchEngineHelp")}</small>
+                  </label>
+                  <label className="field">
+                    <span className="field-label">{t("searchOpenMode")}</span>
+                    <select
+                      value={settings.selectionSearchOpenMode}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "selectionSearchOpenMode",
+                          event.target.value as SelectionSearchOpenMode
+                        )
+                      }
+                    >
+                      <option value="new-tab">{t("selectionSearchOpenNewTab")}</option>
+                      <option value="current">{t("selectionSearchOpenCurrent")}</option>
+                    </select>
+                    <small>{t("selectionSearchOpenModeHelp")}</small>
+                  </label>
+                </div>
+                {settings.selectionSearchEngine === "custom" && (
+                  <label className="field">
+                    <span className="field-label">{t("selectionSearchCustomUrl")}</span>
+                    <input
+                      type="url"
+                      value={settings.selectionSearchCustomUrl}
+                      placeholder="https://example.com/search?q={query}"
+                      onChange={(event) =>
+                        void updatePreference(
+                          "selectionSearchCustomUrl",
+                          event.target.value
+                        )
+                      }
+                    />
+                    <small className={
+                      settings.selectionSearchCustomUrl &&
+                      !isSelectionSearchTemplate(settings.selectionSearchCustomUrl)
+                        ? "field-error"
+                        : undefined
+                    }>
+                      {t("selectionSearchCustomUrlHelp")}
+                    </small>
+                  </label>
+                )}
                 <div className="general-toggle-grid">
                   <label className="toggle-row">
                     <input

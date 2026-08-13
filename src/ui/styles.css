@@ -2396,6 +2396,42 @@ svg {
   white-space: nowrap;
 }
 
+.message-qr-code {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  width: min(100%, 224px);
+  margin: 12px auto 0;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.message-qr-code > strong {
+  font-size: 12px;
+}
+
+.message-qr-code > svg {
+  width: 20px;
+  height: 20px;
+}
+
+.message-qr-code > div {
+  width: min(100%, 192px);
+  aspect-ratio: 1;
+}
+
+.message-qr-code > div svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.message-qr-code small {
+  text-align: center;
+}
+
 .message-actions {
   display: flex;
   min-width: 0;
