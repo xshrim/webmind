@@ -16,16 +16,16 @@ export type ContextMode = "none" | "page" | "article" | "selection";
 
 type TabContextIdentity = Pick<chrome.tabs.Tab, "id" | "url">;
 
-export function defaultContextMode(settings: AppSettings | null): Extract<
-  ContextMode,
-  "page" | "article"
-> {
+export function defaultContextMode(
+  settings: AppSettings | null
+): Extract<ContextMode, "none" | "page" | "article"> {
+  if (settings?.defaultContextScope === "none") return "none";
   return settings?.defaultContextScope === "page" ? "page" : "article";
 }
 
 export function contextModeAfterTabSwitch(
   currentMode: ContextMode,
-  fallbackMode: Extract<ContextMode, "page" | "article">,
+  fallbackMode: Extract<ContextMode, "none" | "page" | "article">,
   nextContext: PageContext | null
 ): ContextMode {
   if (currentMode !== "selection") return currentMode;

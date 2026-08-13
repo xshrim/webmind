@@ -14692,7 +14692,7 @@ function normalizeSettings(stored = {}) {
     ) ? stored.mcpToolApprovalMode : DEFAULT_SETTINGS.mcpToolApprovalMode,
     interfaceLanguage: stored.interfaceLanguage && APP_LANGUAGES.has(stored.interfaceLanguage) ? stored.interfaceLanguage : DEFAULT_SETTINGS.interfaceLanguage,
     translationLanguage: stored.translationLanguage && APP_LANGUAGES.has(stored.translationLanguage) ? stored.translationLanguage : DEFAULT_SETTINGS.translationLanguage,
-    defaultContextScope: stored.defaultContextScope === "page" ? "page" : "article",
+    defaultContextScope: stored.defaultContextScope === "none" || stored.defaultContextScope === "page" ? stored.defaultContextScope : "article",
     selectionOverlayMode: stored.selectionOverlayMode ?? DEFAULT_SETTINGS.selectionOverlayMode,
     selectionOverlayShortcut: HOVER_DEFINITION_SHORTCUTS.has(
       stored.selectionOverlayShortcut

@@ -4,9 +4,10 @@ import {
   contextMatchesTab,
   contextModeAfterTabSwitch,
   contextTranslationSourceText,
+  defaultContextMode,
   sameTabIdentity
 } from "./context";
-import type { PageContext, ProviderProfile } from "../shared/types";
+import type { AppSettings, PageContext, ProviderProfile } from "../shared/types";
 
 const profile = {
   maxContextChars: 1000
@@ -53,6 +54,13 @@ describe("contextModeAfterTabSwitch", () => {
         text: "page text"
       })
     ).toBe("article");
+    expect(contextModeAfterTabSwitch("selection", "none", null)).toBe("none");
+  });
+
+  it("maps the no-context setting to the chat context menu default", () => {
+    expect(defaultContextMode({ defaultContextScope: "none" } as AppSettings)).toBe(
+      "none"
+    );
   });
 
   it("preserves non-selection modes", () => {

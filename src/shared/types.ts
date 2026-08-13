@@ -73,7 +73,7 @@ export type HoverDefinitionStyle = "none" | "highlight" | "underline";
 export type SelectionOverlayShortcut = HoverDefinitionShortcut;
 export type ToolSurface = "selection" | "home" | "tools" | "edge";
 export type ModelPurpose = "default" | "translation" | "vision";
-export type DefaultContextScope = "article" | "page";
+export type DefaultContextScope = "none" | "article" | "page";
 export type McpToolApprovalMode = "deny" | "ask" | "allow";
 export type ReasoningStrategy =
   | "none"

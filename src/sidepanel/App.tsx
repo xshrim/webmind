@@ -995,10 +995,8 @@ export function App() {
           );
           if (
             previousDefaultContextScope !== next.defaultContextScope &&
-            (contextModeRef.current === "page" ||
-              contextModeRef.current === "article")
+            contextModeRef.current !== "selection"
           ) {
-            setIncludePage(true);
             void refreshActivePageContext(
               "default-context-updated",
               true,
@@ -1571,8 +1569,13 @@ export function App() {
           defaultContextMode(settingsRef.current),
           refreshed
         );
-        resolvedMode =
-          nextMode === "none" ? defaultContextMode(settingsRef.current) : nextMode;
+        if (nextMode === "none") {
+          contextModeRef.current = "none";
+          setIncludePage(false);
+          setPageContext(null);
+          return null;
+        }
+        resolvedMode = nextMode;
         if (
           requestedMode === "selection" &&
           resolvedMode === "article" &&
@@ -2270,7 +2273,17 @@ export function App() {
         return;
       }
       if (!senderTab.id) return;
-      const fallbackScope = "article" as const;
+      const fallbackMode = defaultContextMode(settingsRef.current);
+      if (fallbackMode === "none") {
+        contextModeRef.current = "none";
+        setIncludePage(false);
+        void sendToTab(senderTab.id, {
+          type: "immersive.contextScope.set",
+          scope: "none"
+        }).catch(() => undefined);
+        return;
+      }
+      const fallbackScope = fallbackMode;
       void sendToTab<PageContext>(senderTab.id, {
         type: "page.context",
         ignoreSelection: true,

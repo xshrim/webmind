@@ -2283,6 +2283,7 @@ export function SettingsApp() {
                     </span>
                     <div className="segmented">
                       {([
+                        ["none", "noneContext"],
                         ["article", "currentBody"],
                         ["page", "currentPage"]
                       ] as const).map(([scope, labelKey]) => (

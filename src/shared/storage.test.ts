@@ -59,6 +59,16 @@ describe("settings normalization", () => {
     expect(normalizeSettings({ historyLimit: 30 }).historyLimit).toBe(30);
   });
 
+  it("preserves the no-context default while rejecting unsupported values", () => {
+    expect(normalizeSettings({ defaultContextScope: "none" }).defaultContextScope).toBe(
+      "none"
+    );
+    expect(
+      normalizeSettings({ defaultContextScope: "unsupported" as "none" })
+        .defaultContextScope
+    ).toBe("article");
+  });
+
   it("defaults reasoning mode off and disables it for existing engines without a strategy", () => {
     const legacyGemini = createProviderProfile("gemini", {
       id: "legacy-gemini"

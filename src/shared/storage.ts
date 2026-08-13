@@ -273,7 +273,9 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
         ? stored.translationLanguage
         : DEFAULT_SETTINGS.translationLanguage,
     defaultContextScope:
-      stored.defaultContextScope === "page" ? "page" : "article",
+      stored.defaultContextScope === "none" || stored.defaultContextScope === "page"
+        ? stored.defaultContextScope
+        : "article",
     selectionOverlayMode:
       stored.selectionOverlayMode ?? DEFAULT_SETTINGS.selectionOverlayMode,
     selectionOverlayShortcut: HOVER_DEFINITION_SHORTCUTS.has(
