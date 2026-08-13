@@ -54,6 +54,11 @@ describe("settings normalization", () => {
     expect(normalizeSettings().modelThinkingTimeoutSeconds).toBe(0);
   });
 
+  it("defaults the saved chat limit to 100 without replacing an explicit value", () => {
+    expect(normalizeSettings().historyLimit).toBe(100);
+    expect(normalizeSettings({ historyLimit: 30 }).historyLimit).toBe(30);
+  });
+
   it("defaults reasoning mode off and disables it for existing engines without a strategy", () => {
     const legacyGemini = createProviderProfile("gemini", {
       id: "legacy-gemini"

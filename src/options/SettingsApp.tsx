@@ -2400,39 +2400,41 @@ export function SettingsApp() {
                     <small>{t("toolResponseUseContextLanguageHelp")}</small>
                   </span>
                 </label>
-                <label className="field">
-                  <span className="field-label">{t("modelThinkingTimeout")}</span>
-                  <input
-                    type="number"
-                    min="0"
-                    max="86400"
-                    step="10"
-                    value={settings.modelThinkingTimeoutSeconds}
-                    onChange={(event) =>
-                      void updatePreference(
-                        "modelThinkingTimeoutSeconds",
-                        Math.max(0, Math.round(Number(event.target.value) || 0))
-                      )
-                    }
-                  />
-                  <small>{t("modelThinkingTimeoutHelp")}</small>
-                </label>
-                <label className="field">
-                  <span className="field-label">{t("historyLimit")}</span>
-                  <input
-                    type="number"
-                    min="10"
-                    max="200"
-                    step="10"
-                    value={settings.historyLimit}
-                    onChange={(event) =>
-                      void updatePreference(
-                        "historyLimit",
-                        Number(event.target.value)
-                      )
-                    }
-                  />
-                </label>
+                <div className="form-grid">
+                  <label className="field">
+                    <span className="field-label">{t("modelThinkingTimeout")}</span>
+                    <input
+                      type="number"
+                      min="0"
+                      max="86400"
+                      step="10"
+                      value={settings.modelThinkingTimeoutSeconds}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "modelThinkingTimeoutSeconds",
+                          Math.max(0, Math.round(Number(event.target.value) || 0))
+                        )
+                      }
+                    />
+                    <small>{t("modelThinkingTimeoutHelp")}</small>
+                  </label>
+                  <label className="field">
+                    <span className="field-label">{t("historyLimit")}</span>
+                    <input
+                      type="number"
+                      min="10"
+                      max="200"
+                      step="10"
+                      value={settings.historyLimit}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "historyLimit",
+                          Number(event.target.value)
+                        )
+                      }
+                    />
+                  </label>
+                </div>
               </div>
             </article>
 

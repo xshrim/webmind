@@ -456,11 +456,11 @@ const CORE_UI_TEXT = {
     searchAnswerSetting: "搜索页显示模型回答",
     searchAnswerSettingHelp:
       "开启后在搜索结果页右侧自动回答，并使用 DuckDuckGo 搜索结果作为参考。",
-    includePageByDefault: "默认附带当前页面",
+    includePageByDefault: "默认附带当前上下文",
     includePageByDefaultHelp: "发送前仍可在输入区关闭页面上下文。",
     webSearchByDefault: "对话默认启用联网搜索",
     webSearchByDefaultHelp: "侧边栏普通对话默认使用 DuckDuckGo 结果补充问题。",
-    toolResponseUseContextLanguage: "工具使用提问上下文原始语言进行回答",
+    toolResponseUseContextLanguage: "工具以上下文语言作答",
     toolResponseUseContextLanguageHelp:
       "关闭时使用当前界面语言；仅影响工具，工具提示词中明确指定的回答语言优先。",
     historyLimit: "最多保存对话",
@@ -1108,11 +1108,11 @@ const CORE_UI_TEXT = {
     searchAnswerSetting: "搜尋頁顯示模型回答",
     searchAnswerSettingHelp:
       "開啟後在搜尋結果頁右側自動回答，並使用 DuckDuckGo 搜尋結果作為參考。",
-    includePageByDefault: "預設附帶目前頁面",
+    includePageByDefault: "預設附帶目前上下文",
     includePageByDefaultHelp: "送出前仍可在輸入區關閉頁面上下文。",
     webSearchByDefault: "對話預設啟用聯網搜尋",
     webSearchByDefaultHelp: "側邊欄一般對話預設使用 DuckDuckGo 結果補充問題。",
-    toolResponseUseContextLanguage: "工具使用提問上下文原始語言回答",
+    toolResponseUseContextLanguage: "工具以上下文語言作答",
     toolResponseUseContextLanguageHelp:
       "關閉時使用目前介面語言；僅影響工具，工具提示詞中明確指定的回答語言優先。",
     historyLimit: "最多儲存對話",

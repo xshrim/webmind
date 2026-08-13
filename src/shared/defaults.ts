@@ -260,7 +260,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   includePageByDefault: true,
   webSearchByDefault: false,
   toolResponseUseContextLanguage: false,
-  historyLimit: 60
+  historyLimit: 100
 };
 
 export function defaultEnabledToolIds(
