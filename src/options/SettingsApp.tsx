@@ -1658,7 +1658,7 @@ export function SettingsApp() {
                 </label>
                 <div className="field">
                   <span className="field-label">{t("selectionFixedTools")}</span>
-                  <div className="general-toggle-grid">
+                  <div className="selection-fixed-tools-grid">
                     {SELECTION_OVERLAY_FIXED_TOOLS.map((tool) => (
                       <label className="toggle-row" key={tool.id}>
                         <input
