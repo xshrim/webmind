@@ -870,6 +870,9 @@ export function SettingsApp() {
   const [editor, setEditor] = useState<ProviderProfile | null>(null);
   const [status, setStatus] = useState<Status>(null);
   const [testingId, setTestingId] = useState<string | null>(null);
+  const [readingEffectsTarget, setReadingEffectsTarget] = useState<
+    "outer" | "inner"
+  >("outer");
   const [syncBusy, setSyncBusy] = useState<"to" | "from" | "toggle" | null>(
     null
   );
@@ -2112,24 +2115,36 @@ export function SettingsApp() {
                     ))}
                   </div>
                 </div>
-                {([
-                  [
-                    "immersiveReadingOuterTextEffects",
-                    "immersiveReadingOuterEffects"
-                  ],
-                  [
-                    "immersiveReadingInnerTextEffects",
-                    "immersiveReadingInnerEffects"
-                  ]
-                ] as const).map(([key, labelKey]) => (
-                  <div className="field" key={key}>
-                    <span className="field-label">{t(labelKey)}</span>
-                    <div className="effect-check-grid">
-                      {TRANSLATION_TEXT_EFFECTS.map((effect) => (
-                        <label
-                          className="tool-check-row compact"
-                          key={effect.id}
-                        >
+                <div className="field">
+                  <span className="field-label">{t("textEffects")}</span>
+                  <div className="segmented">
+                    <button
+                      className={
+                        readingEffectsTarget === "outer" ? "active" : ""
+                      }
+                      type="button"
+                      onClick={() => setReadingEffectsTarget("outer")}
+                    >
+                      {t("immersiveReadingOuterEffects")}
+                    </button>
+                    <button
+                      className={
+                        readingEffectsTarget === "inner" ? "active" : ""
+                      }
+                      type="button"
+                      onClick={() => setReadingEffectsTarget("inner")}
+                    >
+                      {t("immersiveReadingInnerEffects")}
+                    </button>
+                  </div>
+                  <div className="effect-check-grid">
+                    {TRANSLATION_TEXT_EFFECTS.map((effect) => {
+                      const key =
+                        readingEffectsTarget === "outer"
+                          ? "immersiveReadingOuterTextEffects"
+                          : "immersiveReadingInnerTextEffects";
+                      return (
+                        <label className="tool-check-row compact" key={effect.id}>
                           <input
                             type="checkbox"
                             checked={(settings[key] ?? []).includes(effect.id)}
@@ -2150,10 +2165,10 @@ export function SettingsApp() {
                             </strong>
                           </span>
                         </label>
-                      ))}
-                    </div>
+                      );
+                    })}
                   </div>
-                ))}
+                </div>
                 <label className="field">
                   <span className="field-label">
                     {t("immersiveReadingAutoWhitelist")}
