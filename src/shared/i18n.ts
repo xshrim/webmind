@@ -114,7 +114,7 @@ const CORE_UI_TEXT = {
     languageSettingHelp: "影响界面文字、内置工具名称和默认提示词。",
     translationLanguageSetting: "译文语言",
     translationLanguageSettingHelp:
-      "基于上下文语言和界面语言自动判断或手动指定。",
+      "基于上下文和界面语言自动判断或手动指定。",
     defaultContextScopeSetting: "默认上下文",
     defaultContextScopeHelp:
       "对话/工具/沉浸翻译和阅读默认携带的上下文。",
