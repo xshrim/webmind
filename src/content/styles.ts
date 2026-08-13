@@ -125,6 +125,18 @@ export const SHADOW_STYLES = `
     white-space: pre-wrap;
     overflow-wrap: anywhere;
   }
+  .md-qr-result { width: min(300px, calc(100vw - 20px)); }
+  .md-qr-result-body {
+    display: grid;
+    min-height: 252px;
+    place-items: center;
+    padding: 20px;
+  }
+  .md-qr-code {
+    width: min(240px, calc(100vw - 80px));
+    aspect-ratio: 1;
+  }
+  .md-qr-code svg { display: block; width: 100%; height: 100%; }
   .md-result-body .markdown {
     min-width: 0;
     white-space: normal;

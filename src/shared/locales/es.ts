@@ -383,6 +383,8 @@ export const esUiText = {
   selectionShare: "Compartir el texto seleccionado",
   selectionTodo: "Añadir el texto seleccionado a tareas",
   selectionQrCode: "Generar un código QR del texto seleccionado",
+  selectionQrCodeTitle: "Código QR",
+  selectionQrCodeError: "No se pudo generar un código QR. Acorte el texto seleccionado e inténtelo de nuevo.",
   selectionSearchCustomUrl: "URL de búsqueda personalizada",
   selectionSearchCustomUrlHelp: "Usa una URL HTTP(S) que contenga el marcador {query}.",
   selectionSearchOpenMode: "Destino de la búsqueda de selección",

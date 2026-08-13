@@ -46,6 +46,7 @@ import {
 import { loadCustomTools, loadSettings, saveSettings } from "../shared/storage";
 import { allTools, toolInstruction } from "../shared/tools";
 import { SELECTION_OVERLAY_FIXED_TOOL_ORDER } from "../shared/types";
+import { selectionQrCodeSvg } from "../shared/selectionQrCode";
 import { profileForPurpose } from "../shared/models";
 import {
   immersiveReadingInstruction,
@@ -1111,6 +1112,10 @@ function SelectionAssistant({ query }: { query: string | null }) {
   const [resultBusy, setResultBusy] = useState(false);
   const [copied, setCopied] = useState(false);
   const [selectionCopied, setSelectionCopied] = useState(false);
+  const [selectionQrCode, setSelectionQrCode] = useState<{
+    svg: string;
+    error: string;
+  } | null>(null);
   const [hoverOpen, setHoverOpen] = useState(false);
   const [hoverDefinition, setHoverDefinition] = useState<{
     text: string;
@@ -1305,6 +1310,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
       setResultBusy(false);
       setCopied(false);
       setSelectionCopied(false);
+      setSelectionQrCode(null);
       setHoverOpen(false);
       setSelectedResultToolId("");
       setResultToolMenuOpen(false);
@@ -3468,6 +3474,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
     setResultToolMenuOpen(false);
     setFollowUpQuestion("");
     setResultPositionOverride(null);
+    setSelectionQrCode(null);
     setSnapshot(null);
   };
 
@@ -3482,11 +3489,23 @@ function SelectionAssistant({ query }: { query: string | null }) {
       document.removeEventListener("pointerdown", handlePointerDown, true);
   }, [activeTool, snapshot]);
 
+  useEffect(() => {
+    if (!selectionQrCode || !snapshot) return;
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!shouldCloseFloatingResult(event, isAssistantEvent(event))) return;
+      setSelectionQrCode(null);
+    };
+    document.addEventListener("pointerdown", handlePointerDown, true);
+    return () =>
+      document.removeEventListener("pointerdown", handlePointerDown, true);
+  }, [selectionQrCode, snapshot]);
+
   const visibleToolbar =
     snapshot &&
     !selectionOverlayBlocked &&
     activeSettings?.selectionOverlayMode !== "off" &&
     !activeTool &&
+    !selectionQrCode &&
     (activeSettings?.selectionOverlayMode === "always" || hoverOpen);
   const selectionToolButton = (tool: ToolDefinition) => (
     <button
@@ -3503,6 +3522,16 @@ function SelectionAssistant({ query }: { query: string | null }) {
   const searchSelection = async () => {
     if (!snapshot?.text.trim()) return;
     await runtimeRequest("selection.search", { query: snapshot.text });
+  };
+
+  const showSelectionQrCode = async () => {
+    if (!snapshot?.text.trim()) return;
+    setHoverOpen(false);
+    try {
+      setSelectionQrCode({ svg: await selectionQrCodeSvg(snapshot.text), error: "" });
+    } catch {
+      setSelectionQrCode({ svg: "", error: t("selectionQrCodeError") });
+    }
   };
 
   const fixedSelectionToolButton = (
@@ -3541,7 +3570,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
       qrcode: {
         title: t("selectionQrCode"),
         icon: <QrCode />,
-        onClick: () => undefined
+        onClick: showSelectionQrCode
       }
     }[tool];
     return (
@@ -3852,6 +3881,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
       {snapshot &&
         activeSettings?.selectionOverlayMode === "hover" &&
         !activeTool &&
+        !selectionQrCode &&
         !selectionOverlayBlocked &&
         !hoverOpen && (
         <button
@@ -4079,6 +4109,39 @@ function SelectionAssistant({ query }: { query: string | null }) {
               </button>
             </div>
           )}
+        </div>
+      )}
+      {selectionQrCode && snapshot && (
+        <div
+          className="md-result md-qr-result"
+          style={{ left: resultPosition.left, top: resultPosition.top }}
+          onPointerDown={(event) => event.stopPropagation()}
+          onMouseDown={(event) => event.stopPropagation()}
+          onMouseUp={(event) => event.stopPropagation()}
+        >
+          <div className="md-result-head">
+            <QrCode />
+            <span className="md-result-title">{t("selectionQrCodeTitle")}</span>
+            <button
+              className="md-icon-button"
+              type="button"
+              title={t("close")}
+              onClick={() => setSelectionQrCode(null)}
+            >
+              <X />
+            </button>
+          </div>
+          <div className="md-qr-result-body">
+            {selectionQrCode.error ? (
+              <span className="md-result-error">{selectionQrCode.error}</span>
+            ) : (
+              <div
+                className="md-qr-code"
+                aria-label={t("selectionQrCodeTitle")}
+                dangerouslySetInnerHTML={{ __html: selectionQrCode.svg }}
+              />
+            )}
+          </div>
         </div>
       )}
       {translationProgress && (

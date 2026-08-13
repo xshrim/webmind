@@ -383,6 +383,8 @@ export const frUiText = {
   selectionShare: "Partager le texte sélectionné",
   selectionTodo: "Ajouter le texte sélectionné aux tâches",
   selectionQrCode: "Générer un code QR pour le texte sélectionné",
+  selectionQrCodeTitle: "Code QR",
+  selectionQrCodeError: "Impossible de générer le code QR. Raccourcissez le texte sélectionné et réessayez.",
   selectionSearchCustomUrl: "URL de recherche personnalisée",
   selectionSearchCustomUrlHelp: "Utilisez une URL HTTP(S) contenant le paramètre {query}.",
   selectionSearchOpenMode: "Destination de la recherche de sélection",

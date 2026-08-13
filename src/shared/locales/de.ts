@@ -383,6 +383,8 @@ export const deUiText = {
   selectionShare: "Ausgewählten Text teilen",
   selectionTodo: "Ausgewählten Text zu Aufgaben hinzufügen",
   selectionQrCode: "QR-Code für ausgewählten Text erzeugen",
+  selectionQrCodeTitle: "QR-Code",
+  selectionQrCodeError: "QR-Code konnte nicht erzeugt werden. Kürzen Sie den ausgewählten Text und versuchen Sie es erneut.",
   selectionSearchCustomUrl: "Benutzerdefinierte Such-URL",
   selectionSearchCustomUrlHelp: "Verwenden Sie eine HTTP(S)-URL mit dem Platzhalter {query}.",
   selectionSearchOpenMode: "Ziel der Auswahlsuche",
