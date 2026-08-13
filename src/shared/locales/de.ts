@@ -427,7 +427,7 @@ export const deUiText = {
   providerSupportsVisionHelp: "Deaktivieren, wenn das Modell keine Bilderkennung (Vision) unterstützt.",
   reasoningStrategy: "Reasoning-Parameterstrategie",
   reasoningStrategyHelp: "Sendet die gewählten Protokollparameter nur bei aktiviertem Reasoning-Modus.",
-  reasoningStrategyNone: "Keine",
+  reasoningStrategyNone: "None",
   reasoningStrategyOpenAiChat: "OpenAI Chat Completions",
   reasoningStrategyAnthropic: "Anthropic Extended Thinking",
   reasoningStrategyGeminiBudget: "Gemini Thinking Budget",

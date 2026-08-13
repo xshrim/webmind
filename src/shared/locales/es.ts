@@ -427,7 +427,7 @@ export const esUiText = {
   providerSupportsVisionHelp: "Desactivar si el modelo no admite visión.",
   reasoningStrategy: "Estrategia de parámetros de razonamiento",
   reasoningStrategyHelp: "Envía los parámetros del protocolo seleccionado solo cuando el modo de razonamiento está activado.",
-  reasoningStrategyNone: "Ninguna",
+  reasoningStrategyNone: "None",
   reasoningStrategyOpenAiChat: "OpenAI Chat Completions",
   reasoningStrategyAnthropic: "Anthropic Extended Thinking",
   reasoningStrategyGeminiBudget: "Gemini Thinking Budget",

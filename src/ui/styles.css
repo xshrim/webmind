@@ -260,6 +260,10 @@ svg {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.provider-proportion-grid {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+}
+
 .field {
   display: flex;
   min-width: 0;
@@ -564,6 +568,17 @@ svg {
 .modal-header > div {
   min-width: 0;
   flex: 1;
+}
+
+.provider-editor-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.provider-editor-heading span {
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .modal-header h2 {
@@ -4252,6 +4267,10 @@ button.prompt-row:hover {
   }
 
   .provider-limit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .provider-proportion-grid {
     grid-template-columns: 1fr;
   }
 

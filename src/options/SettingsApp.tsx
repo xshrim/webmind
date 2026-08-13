@@ -602,9 +602,9 @@ function ProviderEditor({
         aria-label={t("providerEditorAria")}
       >
         <header className="modal-header">
-          <div>
-            <p className="eyebrow">{t("modelEngines")}</p>
+          <div className="provider-editor-heading">
             <h2>{providerKindLabel(draft.kind, language)}</h2>
+            <span>{t("modelEngines")}</span>
           </div>
           <button className="icon-button" type="button" title={t("close")} onClick={onClose}>
             <X />
@@ -675,7 +675,7 @@ function ProviderEditor({
             />
           </label>
 
-          <div className="form-grid">
+          <div className="form-grid provider-proportion-grid">
             <label className="field">
               <span className="field-label">{t("providerBaseUrl")}</span>
               <input
@@ -716,7 +716,7 @@ function ProviderEditor({
           </div>
 
           {draft.kind !== "ollama" && (
-            <div className="form-grid">
+            <div className="form-grid provider-proportion-grid">
               <label className="field">
                 <span className="field-label">
                   {t("providerApiKey")}
@@ -795,19 +795,6 @@ function ProviderEditor({
           </div>
 
           <div className="form-grid">
-            <label className="toggle-row field-toggle">
-              <input
-                type="checkbox"
-                checked={draft.supportsVision}
-                onChange={(event) =>
-                  update("supportsVision", event.target.checked)
-                }
-              />
-              <span>
-                <strong>{t("providerSupportsVision")}</strong>
-                <small>{t("providerSupportsVisionHelp")}</small>
-              </span>
-            </label>
             <label className="field">
               <span className="field-label">{t("reasoningStrategy")}</span>
               <select
@@ -827,12 +814,25 @@ function ProviderEditor({
               </select>
               <small>{t("reasoningStrategyHelp")}</small>
             </label>
+            <label className="toggle-row field-toggle">
+              <input
+                type="checkbox"
+                checked={draft.supportsVision}
+                onChange={(event) =>
+                  update("supportsVision", event.target.checked)
+                }
+              />
+              <span>
+                <strong>{t("providerSupportsVision")}</strong>
+                <small>{t("providerSupportsVisionHelp")}</small>
+              </span>
+            </label>
           </div>
 
           <label className="field">
             <span className="field-label">{t("providerCustomHeaders")}</span>
             <textarea
-              rows={4}
+              rows={3}
               value={draft.customHeaders}
               onChange={(event) => update("customHeaders", event.target.value)}
               placeholder={'{"X-Organization": "team-a"}'}
