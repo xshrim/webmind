@@ -736,6 +736,7 @@ export function App() {
           setActiveTab(tab);
           activeTabIdRef.current = tab.id ?? null;
         }
+        setContextLoading(false);
         pendingSelectionContextRef.current = next;
         selectionContextRef.current = next;
         setSelectionContext(next);
