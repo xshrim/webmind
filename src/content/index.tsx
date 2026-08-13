@@ -3887,10 +3887,10 @@ function SelectionAssistant({ query }: { query: string | null }) {
               : undefined
           }
         >
+          {selectionToolButton(askSelectionTool)}
           {SELECTION_OVERLAY_FIXED_TOOL_ORDER.filter((tool) =>
             (activeSettings?.selectionOverlayFixedTools ?? []).includes(tool)
           ).map(fixedSelectionToolButton)}
-          {selectionToolButton(askSelectionTool)}
           {selectionTools.map(selectionToolButton)}
         </div>
       )}

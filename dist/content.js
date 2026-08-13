@@ -33575,10 +33575,26 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Search, {}),
           onClick: searchSelection
         },
-        bookmark: { title: t("selectionBookmark"), icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Bookmark, {}), onClick: () => void 0 },
-        share: { title: t("selectionShare"), icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Share2, {}), onClick: () => void 0 },
-        todo: { title: t("selectionTodo"), icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ListTodo, {}), onClick: () => void 0 },
-        qrcode: { title: t("selectionQrCode"), icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(QrCode, {}), onClick: () => void 0 }
+        bookmark: {
+          title: t("selectionBookmark"),
+          icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Bookmark, {}),
+          onClick: () => void 0
+        },
+        share: {
+          title: t("selectionShare"),
+          icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Share2, {}),
+          onClick: () => void 0
+        },
+        todo: {
+          title: t("selectionTodo"),
+          icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ListTodo, {}),
+          onClick: () => void 0
+        },
+        qrcode: {
+          title: t("selectionQrCode"),
+          icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(QrCode, {}),
+          onClick: () => void 0
+        }
       }[tool];
       return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
         "button",
@@ -33921,10 +33937,10 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           onMouseEnter: clearHoverTimeout,
           onMouseLeave: activeSettings?.selectionOverlayMode === "hover" ? scheduleHoverClose : void 0,
           children: [
+            selectionToolButton(askSelectionTool),
             SELECTION_OVERLAY_FIXED_TOOL_ORDER.filter(
               (tool) => (activeSettings?.selectionOverlayFixedTools ?? []).includes(tool)
             ).map(fixedSelectionToolButton),
-            selectionToolButton(askSelectionTool),
             selectionTools.map(selectionToolButton)
           ]
         }
