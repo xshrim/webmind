@@ -1533,7 +1533,7 @@ svg {
 .effect-check-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 2px 8px;
+  gap: 1px 8px;
 }
 
 .article-rule-list {
