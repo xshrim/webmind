@@ -5698,7 +5698,7 @@ export function App() {
                   type="button"
                   title={
                     activeProfile?.reasoningStrategy === "none"
-                      ? t("reasoningUnavailable")
+                      ? t("composerReasoningUnavailable")
                       : t("reasoningEnabled")
                   }
                   disabled={
@@ -5724,7 +5724,7 @@ export function App() {
                     webSearchEnabled ? "active" : ""
                   }`}
                   type="button"
-                  title={t("webSearch")}
+                  title={t("composerWebSearch")}
                   onClick={() =>
                     setWebSearchEnabled((value) => {
                       appendOperationLog(
@@ -5828,7 +5828,7 @@ export function App() {
                     screenshotSelecting ? "active" : ""
                   }`}
                   type="button"
-                  title={t("captureScreenshot")}
+                  title={t("composerAddScreenshot")}
                   disabled={screenshotSelecting}
                   onClick={() => void addScreenshotAttachment()}
                 >
