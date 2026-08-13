@@ -36,6 +36,7 @@ import {
   restoreTranslationText
 } from "../shared/utils";
 import { searchWeb } from "../shared/webSearch";
+import { selectionSearchUrl } from "../shared/searchEngines";
 import { uiText, type UiTextKey } from "../shared/i18n";
 
 type MenuContext =
@@ -464,6 +465,25 @@ chrome.runtime.onMessage.addListener(
         return {
           results: await searchWeb(query, limit, settings.interfaceLanguage)
         };
+      }
+      if (message.type === "selection.search") {
+        const settings = await loadSettings();
+        const query = String(message.payload?.query ?? "").trim();
+        if (!query) throw new Error(uiText(settings.interfaceLanguage, "provideSearchQuery"));
+        const url = selectionSearchUrl(settings.selectionSearchEngine, query);
+        if (settings.selectionSearchOpenMode === "current") {
+          if (!sender.tab?.id) {
+            throw new Error(uiText(settings.interfaceLanguage, "cannotDetermineTab"));
+          }
+          await chrome.tabs.update(sender.tab.id, { url });
+        } else {
+          await chrome.tabs.create({
+            url,
+            active: true,
+            openerTabId: sender.tab?.id
+          });
+        }
+        return { ok: true };
       }
       if (message.type === "model.complete") {
         return {

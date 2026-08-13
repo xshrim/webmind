@@ -29,6 +29,16 @@ export type AppLanguage =
   | "it";
 export type AppLogLevel = "debug" | "info" | "success" | "warning" | "error";
 export type SelectionOverlayMode = "off" | "always" | "hover";
+export type SelectionSearchEngine =
+  | "google"
+  | "bing"
+  | "duckduckgo"
+  | "brave"
+  | "baidu"
+  | "yahoo"
+  | "yandex"
+  | "ecosia";
+export type SelectionSearchOpenMode = "current" | "new-tab";
 export type SelectionMatchHighlightMode =
   | "off"
   | "ignore-case"
@@ -131,6 +141,8 @@ export interface AppSettings {
   selectionOverlayMode: SelectionOverlayMode;
   selectionOverlayShortcut: SelectionOverlayShortcut;
   selectionOverlayMinChars: number;
+  selectionSearchEngine: SelectionSearchEngine;
+  selectionSearchOpenMode: SelectionSearchOpenMode;
   selectionMatchHighlightMode: SelectionMatchHighlightMode;
   linkTextSelectionEnabled: boolean;
   immersiveTranslationStyle: ImmersiveTranslationStyle;

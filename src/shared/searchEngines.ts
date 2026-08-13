@@ -3,6 +3,38 @@ type SearchRule = {
   params: string[];
 };
 
+export const SELECTION_SEARCH_ENGINE_OPTIONS = [
+  ["google", "Google"],
+  ["bing", "Bing"],
+  ["duckduckgo", "DuckDuckGo"],
+  ["brave", "Brave"],
+  ["baidu", "百度"],
+  ["yahoo", "Yahoo"],
+  ["yandex", "Yandex"],
+  ["ecosia", "Ecosia"]
+] as const;
+
+export type SelectionSearchEngineId =
+  (typeof SELECTION_SEARCH_ENGINE_OPTIONS)[number][0];
+
+const SELECTION_SEARCH_URLS: Record<SelectionSearchEngineId, string> = {
+  google: "https://www.google.com/search?q=",
+  bing: "https://www.bing.com/search?q=",
+  duckduckgo: "https://duckduckgo.com/?q=",
+  brave: "https://search.brave.com/search?q=",
+  baidu: "https://www.baidu.com/s?wd=",
+  yahoo: "https://search.yahoo.com/search?p=",
+  yandex: "https://yandex.com/search/?text=",
+  ecosia: "https://www.ecosia.org/search?q="
+};
+
+export function selectionSearchUrl(
+  engine: SelectionSearchEngineId,
+  query: string
+): string {
+  return `${SELECTION_SEARCH_URLS[engine] ?? SELECTION_SEARCH_URLS.google}${encodeURIComponent(query.trim())}`;
+}
+
 const SEARCH_RULES: SearchRule[] = [
   {
     match: (host, path) =>

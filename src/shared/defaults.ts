@@ -218,6 +218,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   selectionOverlayMode: "off",
   selectionOverlayShortcut: "off",
   selectionOverlayMinChars: 2,
+  selectionSearchEngine: "google",
+  selectionSearchOpenMode: "new-tab",
   selectionMatchHighlightMode: "off",
   linkTextSelectionEnabled: false,
   immersiveTranslationStyle: "bilingual",

@@ -26,6 +26,7 @@ import {
   PROVIDER_MODEL_SUGGESTIONS
 } from "../shared/defaults";
 import { LANGUAGE_OPTIONS, uiText, type UiTextKey } from "../shared/i18n";
+import { SELECTION_SEARCH_ENGINE_OPTIONS } from "../shared/searchEngines";
 import { requestOriginPermission, runtimeRequest } from "../shared/browser";
 import {
   clearConversations,
@@ -60,6 +61,8 @@ import type {
   ProviderProfile,
   ReasoningStrategy,
   SelectionMatchHighlightMode,
+  SelectionSearchEngine,
+  SelectionSearchOpenMode,
   SelectionOverlayMode,
   ToolDefinition,
   ToolSurface
@@ -2435,6 +2438,43 @@ export function SettingsApp() {
                       <strong>{t("searchAnswerSetting")}</strong>
                       <small>{t("searchAnswerSettingHelp")}</small>
                     </span>
+                  </label>
+                </div>
+                <div className="form-grid">
+                  <label className="field">
+                    <span className="field-label">{t("selectionSearchEngine")}</span>
+                    <select
+                      value={settings.selectionSearchEngine}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "selectionSearchEngine",
+                          event.target.value as SelectionSearchEngine
+                        )
+                      }
+                    >
+                      {SELECTION_SEARCH_ENGINE_OPTIONS.map(([id, label]) => (
+                        <option key={id} value={id}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                    <small>{t("selectionSearchEngineHelp")}</small>
+                  </label>
+                  <label className="field">
+                    <span className="field-label">{t("selectionSearchOpenMode")}</span>
+                    <select
+                      value={settings.selectionSearchOpenMode}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "selectionSearchOpenMode",
+                          event.target.value as SelectionSearchOpenMode
+                        )
+                      }
+                    >
+                      <option value="new-tab">{t("selectionSearchOpenNewTab")}</option>
+                      <option value="current">{t("selectionSearchOpenCurrent")}</option>
+                    </select>
+                    <small>{t("selectionSearchOpenModeHelp")}</small>
                   </label>
                 </div>
                 <div className="form-grid">

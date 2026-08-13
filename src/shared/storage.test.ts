@@ -69,6 +69,17 @@ describe("settings normalization", () => {
     ).toBe("article");
   });
 
+  it("defaults selection search to Google in a new tab", () => {
+    expect(normalizeSettings().selectionSearchEngine).toBe("google");
+    expect(normalizeSettings().selectionSearchOpenMode).toBe("new-tab");
+    expect(
+      normalizeSettings({
+        selectionSearchEngine: "baidu",
+        selectionSearchOpenMode: "current"
+      }).selectionSearchEngine
+    ).toBe("baidu");
+  });
+
   it("defaults reasoning mode off and disables it for existing engines without a strategy", () => {
     const legacyGemini = createProviderProfile("gemini", {
       id: "legacy-gemini"

@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { searchParamNamesFromUrl, searchQueryFromUrl } from "./searchEngines";
+import {
+  searchParamNamesFromUrl,
+  searchQueryFromUrl,
+  selectionSearchUrl
+} from "./searchEngines";
 
 describe("search engine URL detection", () => {
   it.each([
@@ -34,5 +38,14 @@ describe("search engine URL detection", () => {
       "q"
     ]);
     expect(searchParamNamesFromUrl("https://example.com/search")).toEqual([]);
+  });
+
+  it("builds encoded URLs for selection searches", () => {
+    expect(selectionSearchUrl("google", "WebMind AI")).toBe(
+      "https://www.google.com/search?q=WebMind%20AI"
+    );
+    expect(selectionSearchUrl("baidu", "浏览器 AI")).toBe(
+      "https://www.baidu.com/s?wd=%E6%B5%8F%E8%A7%88%E5%99%A8%20AI"
+    );
   });
 });

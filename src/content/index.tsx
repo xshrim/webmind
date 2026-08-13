@@ -8,6 +8,7 @@ import {
   Highlighter,
   PanelRightOpen,
   RotateCcw,
+  Search,
   Send,
   Sparkles,
   X
@@ -3494,6 +3495,11 @@ function SelectionAssistant({ query }: { query: string | null }) {
     </button>
   );
 
+  const searchSelection = async () => {
+    if (!snapshot?.text.trim()) return;
+    await runtimeRequest("selection.search", { query: snapshot.text });
+  };
+
   return (
     <>
       {autoReplyPosition && inputAutoReplyEnabled && !autoReplyBlocked && (
@@ -3835,6 +3841,15 @@ function SelectionAssistant({ query }: { query: string | null }) {
             }}
           >
             {selectionCopied ? <Check /> : <Copy />}
+          </button>
+          <button
+            className="md-icon-button"
+            type="button"
+            title={t("searchSelection")}
+            aria-label={t("searchSelection")}
+            onClick={() => void searchSelection()}
+          >
+            <Search />
           </button>
           {selectionTools.map(selectionToolButton)}
         </div>

@@ -287,6 +287,21 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
       1,
       Math.round(Number(stored.selectionOverlayMinChars ?? 2) || 2)
     ),
+    selectionSearchEngine:
+      stored.selectionSearchEngine === "bing" ||
+      stored.selectionSearchEngine === "duckduckgo" ||
+      stored.selectionSearchEngine === "brave" ||
+      stored.selectionSearchEngine === "baidu" ||
+      stored.selectionSearchEngine === "yahoo" ||
+      stored.selectionSearchEngine === "yandex" ||
+      stored.selectionSearchEngine === "ecosia"
+        ? stored.selectionSearchEngine
+        : DEFAULT_SETTINGS.selectionSearchEngine,
+    selectionSearchOpenMode:
+      stored.selectionSearchOpenMode === "current" ||
+      stored.selectionSearchOpenMode === "new-tab"
+        ? stored.selectionSearchOpenMode
+        : DEFAULT_SETTINGS.selectionSearchOpenMode,
     selectionMatchHighlightMode: SELECTION_MATCH_HIGHLIGHT_MODES.has(
       stored.selectionMatchHighlightMode as SelectionMatchHighlightMode
     )
