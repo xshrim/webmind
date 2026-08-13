@@ -288,7 +288,7 @@ export const deUiText = {
   immersiveReadingHelp: "Ersetzt geeignete Wörter durch Begriffe der Zielsprache für eine Mischung aus Muttersprache und Fremdsprache beim Lesen.",
   immersiveReadingStrategy: "Strategie",
   immersiveReadingStrategyLocalFirst: "Lokal priorisiert",
-  immersiveReadingStrategyLocalFirstHelp: "Bevorzugen Sie lokales Wort-Ranking und Offline-Wörterbuchdefinitionen für schnellere, kostengünstigere Ergebnisse; nutzen Sie das Modell nur, um verbleibende Lücken zu schließen.",
+  immersiveReadingStrategyLocalFirstHelp: "Bevorzugen Sie lokale Wortlistenfilter und Offline-Wörterbuchübersetzungen für schnellere, kostengünstigere Ergebnisse; nutzen Sie das Modell nur ergänzend.",
   immersiveReadingStrategyModelPage: "Modell priorisiert",
   immersiveReadingStrategyModelPageHelp: "Lassen Sie das Modell den Seitenkontext nutzen, um Ersatzbegriffe auszuwählen und zu übersetzen. Flexibler, aber Geschwindigkeit und Kosten hängen vom Modell ab.",
   immersiveReadingAutoWhitelist: "Whitelist für automatisches Lesen",

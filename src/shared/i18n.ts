@@ -377,7 +377,7 @@ const CORE_UI_TEXT = {
     immersiveReadingStrategy: "执行方案",
     immersiveReadingStrategyLocalFirst: "本地优先",
     immersiveReadingStrategyLocalFirstHelp:
-      "优先使用本地词表筛选和离线词典翻译，速度更快、消耗更低；本地没有可用释义时才少量调用大模型兜底。",
+      "优先使用本地词表筛选和离线词典翻译，速度更快、消耗更低；大模型仅做补充。",
     immersiveReadingStrategyModelPage: "模型优先",
     immersiveReadingStrategyModelPageHelp:
       "将页面内容交给大模型结合上下文筛选和翻译，效果更灵活，但速度和费用取决于模型。",
@@ -1030,7 +1030,7 @@ const CORE_UI_TEXT = {
     immersiveReadingStrategy: "執行方案",
     immersiveReadingStrategyLocalFirst: "本地優先",
     immersiveReadingStrategyLocalFirstHelp:
-      "優先使用本地詞表篩選和離線字典翻譯，速度更快、消耗更低；本地沒有可用釋義時才少量呼叫大模型兜底。",
+      "優先使用本地詞表篩選和離線字典翻譯，速度更快、消耗更低；大模型僅做補充。",
     immersiveReadingStrategyModelPage: "模型優先",
     immersiveReadingStrategyModelPageHelp:
       "將頁面內容交給大模型結合上下文篩選和翻譯，效果更彈性，但速度和費用取決於模型。",
@@ -1683,7 +1683,7 @@ const CORE_UI_TEXT = {
     immersiveReadingStrategy: "Strategy",
     immersiveReadingStrategyLocalFirst: "Local-first",
     immersiveReadingStrategyLocalFirstHelp:
-      "Prefer local word ranking and offline dictionary glosses for faster, cheaper results; call the model only for small fallback gaps.",
+      "Prefer local vocabulary filtering and offline dictionary translations for faster, lower-cost results; use the model only as a supplement.",
     immersiveReadingStrategyModelPage: "Model-first",
     immersiveReadingStrategyModelPageHelp:
       "Let the model use page context to choose and translate replacements. More flexible, but speed and cost depend on the model.",
@@ -2342,7 +2342,7 @@ const CORE_UI_TEXT = {
     immersiveReadingStrategy: "実行方式",
     immersiveReadingStrategyLocalFirst: "ローカル優先",
     immersiveReadingStrategyLocalFirstHelp:
-      "ローカルの語彙判定とオフライン辞書を優先し、速く低コストに処理します。ローカル結果がない場合のみ少量をモデルで補完します。",
+      "ローカルの語彙選別とオフライン辞書翻訳を優先し、高速かつ低コストに処理します。モデルは補完にのみ使用します。",
     immersiveReadingStrategyModelPage: "モデル優先",
     immersiveReadingStrategyModelPageHelp:
       "ページ文脈を使った選定と翻訳をモデルに任せます。柔軟ですが、速度とコストはモデルに依存します。",
@@ -2996,7 +2996,7 @@ const CORE_UI_TEXT = {
     immersiveReadingStrategy: "실행 방식",
     immersiveReadingStrategyLocalFirst: "로컬 우선",
     immersiveReadingStrategyLocalFirstHelp:
-      "로컬 단어 선별과 오프라인 사전 풀이를 우선 사용해 더 빠르고 저렴하게 처리하며, 로컬 결과가 없을 때만 소량을 모델로 보완합니다.",
+      "로컬 단어 선별과 오프라인 사전 번역을 우선 사용해 더 빠르고 저렴하게 처리하며, 모델은 보완에만 사용합니다.",
     immersiveReadingStrategyModelPage: "모델 우선",
     immersiveReadingStrategyModelPageHelp:
       "페이지 문맥을 바탕으로 모델이 교체 대상을 고르고 번역합니다. 더 유연하지만 속도와 비용은 모델에 따라 달라집니다.",

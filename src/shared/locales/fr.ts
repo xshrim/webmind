@@ -288,7 +288,7 @@ export const frUiText = {
   immersiveReadingHelp: "Remplace certains mots par leur équivalent dans la langue apprise pour une lecture mêlant langue maternelle et langue étrangère.",
   immersiveReadingStrategy: "Stratégie",
   immersiveReadingStrategyLocalFirst: "Priorité au local",
-  immersiveReadingStrategyLocalFirstHelp: "Privilégier le classement local des mots et les définitions hors ligne pour des résultats plus rapides et moins coûteux ; ne faire appel au modèle que pour combler les lacunes restantes.",
+  immersiveReadingStrategyLocalFirstHelp: "Privilégier le filtrage de vocabulaire local et les traductions de dictionnaire hors ligne pour des résultats plus rapides et moins coûteux ; n'utiliser le modèle qu'en complément.",
   immersiveReadingStrategyModelPage: "Priorité au modèle",
   immersiveReadingStrategyModelPageHelp: "Laisser le modèle utiliser le contexte de la page pour choisir et traduire les termes de remplacement. Approche plus flexible, mais la vitesse et le coût dépendent du modèle.",
   immersiveReadingAutoWhitelist: "Liste blanche de lecture automatique",

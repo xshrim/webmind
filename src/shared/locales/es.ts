@@ -288,7 +288,7 @@ export const esUiText = {
   immersiveReadingHelp: "Sustituye palabras adecuadas por términos en el idioma de aprendizaje para una lectura mixta (nativo y no nativo).",
   immersiveReadingStrategy: "Estrategia",
   immersiveReadingStrategyLocalFirst: "Prioridad local",
-  immersiveReadingStrategyLocalFirstHelp: "Prioriza la clasificación local de palabras y las definiciones de diccionario sin conexión para obtener resultados más rápidos y económicos; recurre al modelo solo para cubrir las carencias restantes.",
+  immersiveReadingStrategyLocalFirstHelp: "Prioriza el filtrado de vocabulario local y las traducciones de diccionario sin conexión para obtener resultados más rápidos y económicos; usa el modelo solo como complemento.",
   immersiveReadingStrategyModelPage: "Prioridad del modelo",
   immersiveReadingStrategyModelPageHelp: "Permite que el modelo utilice el contexto de la página para seleccionar y traducir las sustituciones. Es una opción más flexible, pero la velocidad y el coste dependen del modelo.",
   immersiveReadingAutoWhitelist: "Lista blanca de lectura automática",
