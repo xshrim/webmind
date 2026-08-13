@@ -71,6 +71,7 @@ import {
   imageElementToAttachment,
   imageHoverRect
 } from "./imageAttachments";
+import { selectScreenshotArea } from "./screenshotSelection";
 import {
   autoReplyTargetFromEvent,
   currentSelection,
@@ -4253,6 +4254,9 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
           onPerformance: emitDebugLog
         }
       );
+    }
+    if (message.type === "page.screenshot.select") {
+      return selectScreenshotArea();
     }
     if (message.type === "page.article.pick") {
       return startManualArticleSelection(settings?.interfaceLanguage);

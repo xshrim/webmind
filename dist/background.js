@@ -7242,6 +7242,8 @@ var deUiText = {
   noneContext: "Kein Kontext",
   webSearch: "Websuche",
   addAttachment: "Bild oder Dokument hinzuf\xFCgen",
+  captureScreenshot: "Screenshot aufnehmen",
+  screenshotSelectArea: "Ziehen Sie auf der Seite, um einen Bereich auszuw\xE4hlen. Mit Esc brechen Sie ab.",
   addUrl: "URL hinzuf\xFCgen",
   you: "Sie",
   ordinaryConversation: "Normaler Chat",
@@ -7856,6 +7858,8 @@ var esUiText = {
   noneContext: "Sin contexto",
   webSearch: "B\xFAsqueda web",
   addAttachment: "A\xF1adir imagen o documento",
+  captureScreenshot: "Capturar pantalla",
+  screenshotSelectArea: "Arrastre en la p\xE1gina para seleccionar un \xE1rea. Pulse Esc para cancelar.",
   addUrl: "A\xF1adir URL",
   you: "Usted",
   ordinaryConversation: "Chat normal",
@@ -8470,6 +8474,8 @@ var frUiText = {
   noneContext: "Aucun contexte",
   webSearch: "Recherche Web",
   addAttachment: "Ajouter une image ou un document",
+  captureScreenshot: "Capturer l'\xE9cran",
+  screenshotSelectArea: "Faites glisser sur la page pour s\xE9lectionner une zone. Appuyez sur \xC9chap pour annuler.",
   addUrl: "Ajouter URL",
   you: "Vous",
   ordinaryConversation: "Discussion classique",
@@ -9084,6 +9090,8 @@ var itUiText = {
   noneContext: "Nessun contesto",
   webSearch: "Ricerca web",
   addAttachment: "Aggiungi immagine o documento",
+  captureScreenshot: "Cattura schermata",
+  screenshotSelectArea: "Trascina sulla pagina per selezionare un'area. Premi Esc per annullare.",
   addUrl: "Aggiungi URL",
   you: "Tu",
   ordinaryConversation: "Chat standard",
@@ -9729,6 +9737,8 @@ var CORE_UI_TEXT = {
     noneContext: "\u65E0\u4E0A\u4E0B\u6587",
     webSearch: "\u7F51\u9875\u641C\u7D22",
     addAttachment: "\u6DFB\u52A0\u56FE\u7247\u6216\u6587\u6863",
+    captureScreenshot: "\u622A\u56FE",
+    screenshotSelectArea: "\u8BF7\u5728\u9875\u9762\u4E0A\u62D6\u62FD\u6846\u9009\u622A\u56FE\u533A\u57DF\uFF0C\u6309 Esc \u53D6\u6D88\u3002",
     addUrl: "\u6DFB\u52A0 URL",
     you: "\u4F60",
     ordinaryConversation: "\u666E\u901A\u5BF9\u8BDD",
@@ -10341,6 +10351,8 @@ var CORE_UI_TEXT = {
     noneContext: "\u7121\u4E0A\u4E0B\u6587",
     webSearch: "\u7DB2\u9801\u641C\u5C0B",
     addAttachment: "\u65B0\u589E\u5716\u7247\u6216\u6587\u4EF6",
+    captureScreenshot: "\u622A\u5716",
+    screenshotSelectArea: "\u8ACB\u5728\u9801\u9762\u4E0A\u62D6\u66F3\u6846\u9078\u622A\u5716\u5340\u57DF\uFF0C\u6309 Esc \u53D6\u6D88\u3002",
     addUrl: "\u65B0\u589E URL",
     you: "\u4F60",
     ordinaryConversation: "\u4E00\u822C\u5C0D\u8A71",
@@ -10953,6 +10965,8 @@ var CORE_UI_TEXT = {
     noneContext: "No Context",
     webSearch: "Web Search",
     addAttachment: "Add Image or Document",
+    captureScreenshot: "Capture Screenshot",
+    screenshotSelectArea: "Drag on the page to select an area. Press Esc to cancel.",
     addUrl: "Add URL",
     you: "You",
     ordinaryConversation: "Regular Chat",
@@ -11565,6 +11579,8 @@ var CORE_UI_TEXT = {
     noneContext: "\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u306A\u3057",
     webSearch: "\u30A6\u30A7\u30D6\u691C\u7D22",
     addAttachment: "\u753B\u50CF\u307E\u305F\u306F\u6587\u66F8\u3092\u8FFD\u52A0",
+    captureScreenshot: "\u30B9\u30AF\u30EA\u30FC\u30F3\u30B7\u30E7\u30C3\u30C8",
+    screenshotSelectArea: "\u30DA\u30FC\u30B8\u4E0A\u3067\u30C9\u30E9\u30C3\u30B0\u3057\u3066\u7BC4\u56F2\u3092\u9078\u629E\u3057\u307E\u3059\u3002Esc \u3067\u30AD\u30E3\u30F3\u30BB\u30EB\u3067\u304D\u307E\u3059\u3002",
     addUrl: "URL \u3092\u8FFD\u52A0",
     you: "\u3042\u306A\u305F",
     ordinaryConversation: "\u901A\u5E38\u306E\u30C1\u30E3\u30C3\u30C8",
@@ -12177,6 +12193,8 @@ var CORE_UI_TEXT = {
     noneContext: "\uCEE8\uD14D\uC2A4\uD2B8 \uC5C6\uC74C",
     webSearch: "\uC6F9 \uAC80\uC0C9",
     addAttachment: "\uC774\uBBF8\uC9C0 \uB610\uB294 \uBB38\uC11C \uCD94\uAC00",
+    captureScreenshot: "\uC2A4\uD06C\uB9B0\uC0F7",
+    screenshotSelectArea: "\uD398\uC774\uC9C0\uC5D0\uC11C \uB4DC\uB798\uADF8\uD574 \uC601\uC5ED\uC744 \uC120\uD0DD\uD558\uC138\uC694. Esc \uD0A4\uB85C \uCDE8\uC18C\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
     addUrl: "URL \uCD94\uAC00",
     you: "\uB098",
     ordinaryConversation: "\uC77C\uBC18 \uB300\uD654",
@@ -27368,11 +27386,17 @@ chrome.runtime.onMessage.addListener(
       }
       if (message.type === "image.captureVisible") {
         const settings = await loadSettings();
-        if (!sender.tab?.active || sender.tab.windowId === void 0) {
+        const requestedTabId = Number(message.payload?.tabId);
+        const tabId = Number.isInteger(requestedTabId) ? requestedTabId : sender.tab?.id;
+        if (tabId === void 0) {
+          throw new Error(uiText(settings.interfaceLanguage, "readImageUrlFailed"));
+        }
+        const tab = await chrome.tabs.get(tabId);
+        if (!tab.active || tab.windowId === void 0) {
           throw new Error(uiText(settings.interfaceLanguage, "readImageUrlFailed"));
         }
         return {
-          dataUrl: await chrome.tabs.captureVisibleTab(sender.tab.windowId, {
+          dataUrl: await chrome.tabs.captureVisibleTab(tab.windowId, {
             format: "png"
           })
         };

@@ -225,6 +225,8 @@ export const frUiText = {
   noneContext: "Aucun contexte",
   webSearch: "Recherche Web",
   addAttachment: "Ajouter une image ou un document",
+  captureScreenshot: "Capturer l'écran",
+  screenshotSelectArea: "Faites glisser sur la page pour sélectionner une zone. Appuyez sur Échap pour annuler.",
   addUrl: "Ajouter URL",
   you: "Vous",
   ordinaryConversation: "Discussion classique",

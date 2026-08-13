@@ -2,6 +2,7 @@ import {
   ArrowUp,
   Bot,
   Brain,
+  Camera,
   Check,
   ChevronDown,
   ChevronRight,
@@ -168,9 +169,11 @@ import { extractPdfContext } from "./pdf";
 import { searchWeb } from "../shared/webSearch";
 import {
   fileToAttachment,
+  screenshotToAttachment,
   urlToAttachment,
   urlToTextAttachment
 } from "./attachments";
+import type { ScreenshotSelection } from "./screenshotCrop";
 import {
   buildSystemMessage,
   contextModeAfterTabSwitch,
@@ -322,6 +325,7 @@ export function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [composer, setComposer] = useState("");
   const [attachments, setAttachments] = useState<ImageAttachment[]>([]);
+  const [screenshotSelecting, setScreenshotSelecting] = useState(false);
   const [includePage, setIncludePage] = useState(true);
   const [webSearchEnabled, setWebSearchEnabled] = useState(false);
   const [reasoningEnabled, setReasoningEnabled] = useState(false);
@@ -4234,6 +4238,43 @@ export function App() {
     }
   };
 
+  const addScreenshotAttachment = async () => {
+    if (!activeTab?.id || screenshotSelecting) {
+      if (!activeTab?.id) setNotice(t("noActiveTab"));
+      return;
+    }
+    setScreenshotSelecting(true);
+    setNotice(t("screenshotSelectArea"));
+    try {
+      const selection = await sendToTab<ScreenshotSelection | null>(
+        activeTab.id,
+        { type: "page.screenshot.select" },
+        settingsRef.current?.interfaceLanguage
+      );
+      if (!selection) {
+        setNotice("");
+        return;
+      }
+      const capture = await runtimeRequest<{ dataUrl: string }>(
+        "image.captureVisible",
+        { tabId: activeTab.id },
+        settingsRef.current?.interfaceLanguage
+      );
+      const attachment = await screenshotToAttachment(capture.dataUrl, selection);
+      setAttachments((current) => [...current, attachment].slice(0, 6));
+      appendOperationLog(
+        `${t("logAttachmentAdded")}: ${t("captureScreenshot")}`,
+        "success"
+      );
+      setNotice("");
+      setView("chat");
+    } catch (error) {
+      setNotice(errorMessage(error));
+    } finally {
+      setScreenshotSelecting(false);
+    }
+  };
+
   const contextMode = effectiveContextMode();
   const previewContext = includePage ? contextForCurrentMode() : null;
   const ContextIcon = contextIcon(previewContext);
@@ -5768,6 +5809,17 @@ export function App() {
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <Paperclip />
+                </button>
+                <button
+                  className={`icon-button mini ${
+                    screenshotSelecting ? "active" : ""
+                  }`}
+                  type="button"
+                  title={t("captureScreenshot")}
+                  disabled={screenshotSelecting}
+                  onClick={() => void addScreenshotAttachment()}
+                >
+                  <Camera />
                 </button>
                 <button
                   className={`icon-button mini ${

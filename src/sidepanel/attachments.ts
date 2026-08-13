@@ -4,6 +4,7 @@ import { requestOriginPermission } from "../shared/browser";
 import type { AppLanguage, ImageAttachment } from "../shared/types";
 import { truncateText } from "../shared/utils";
 import { extractPdfDataContext } from "./pdf";
+import { screenshotCrop, type ScreenshotSelection } from "./screenshotCrop";
 
 const TEXT_DOCUMENT_TYPES = new Set([
   "application/json",
@@ -43,6 +44,39 @@ function readFileAsText(file: File, language?: AppLanguage): Promise<string> {
     reader.onload = () => resolve(String(reader.result));
     reader.readAsText(file);
   });
+}
+
+export async function screenshotToAttachment(
+  captureDataUrl: string,
+  selection: ScreenshotSelection
+): Promise<ImageAttachment> {
+  const image = new Image();
+  image.src = captureDataUrl;
+  await image.decode();
+  const crop = screenshotCrop(image.naturalWidth, image.naturalHeight, selection);
+  const canvas = document.createElement("canvas");
+  canvas.width = crop.outputWidth;
+  canvas.height = crop.outputHeight;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Unable to create screenshot canvas");
+  context.drawImage(
+    image,
+    crop.sourceX,
+    crop.sourceY,
+    crop.sourceWidth,
+    crop.sourceHeight,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+  return {
+    id: crypto.randomUUID(),
+    kind: "image",
+    name: "screenshot.png",
+    mimeType: "image/png",
+    dataUrl: canvas.toDataURL("image/png")
+  };
 }
 
 export async function fileToAttachment(

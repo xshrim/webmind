@@ -615,11 +615,19 @@ chrome.runtime.onMessage.addListener(
       }
       if (message.type === "image.captureVisible") {
         const settings = await loadSettings();
-        if (!sender.tab?.active || sender.tab.windowId === undefined) {
+        const requestedTabId = Number(message.payload?.tabId);
+        const tabId = Number.isInteger(requestedTabId)
+          ? requestedTabId
+          : sender.tab?.id;
+        if (tabId === undefined) {
+          throw new Error(uiText(settings.interfaceLanguage, "readImageUrlFailed"));
+        }
+        const tab = await chrome.tabs.get(tabId);
+        if (!tab.active || tab.windowId === undefined) {
           throw new Error(uiText(settings.interfaceLanguage, "readImageUrlFailed"));
         }
         return {
-          dataUrl: await chrome.tabs.captureVisibleTab(sender.tab.windowId, {
+          dataUrl: await chrome.tabs.captureVisibleTab(tab.windowId, {
             format: "png"
           })
         };

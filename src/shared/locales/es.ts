@@ -225,6 +225,8 @@ export const esUiText = {
   noneContext: "Sin contexto",
   webSearch: "Búsqueda web",
   addAttachment: "Añadir imagen o documento",
+  captureScreenshot: "Capturar pantalla",
+  screenshotSelectArea: "Arrastre en la página para seleccionar un área. Pulse Esc para cancelar.",
   addUrl: "Añadir URL",
   you: "Usted",
   ordinaryConversation: "Chat normal",

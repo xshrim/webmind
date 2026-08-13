@@ -225,6 +225,8 @@ export const deUiText = {
   noneContext: "Kein Kontext",
   webSearch: "Websuche",
   addAttachment: "Bild oder Dokument hinzufügen",
+  captureScreenshot: "Screenshot aufnehmen",
+  screenshotSelectArea: "Ziehen Sie auf der Seite, um einen Bereich auszuwählen. Mit Esc brechen Sie ab.",
   addUrl: "URL hinzufügen",
   you: "Sie",
   ordinaryConversation: "Normaler Chat",

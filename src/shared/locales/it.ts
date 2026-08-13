@@ -225,6 +225,8 @@ export const itUiText = {
   noneContext: "Nessun contesto",
   webSearch: "Ricerca web",
   addAttachment: "Aggiungi immagine o documento",
+  captureScreenshot: "Cattura schermata",
+  screenshotSelectArea: "Trascina sulla pagina per selezionare un'area. Premi Esc per annullare.",
   addUrl: "Aggiungi URL",
   you: "Tu",
   ordinaryConversation: "Chat standard",
