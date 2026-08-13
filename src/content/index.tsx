@@ -1,6 +1,5 @@
 import {
   ArrowRightLeft,
-  Bookmark,
   Check,
   ChevronDown,
   Clipboard,
@@ -13,7 +12,6 @@ import {
   Send,
   ListTodo,
   QrCode,
-  Share2,
   Sparkles,
   X
 } from "lucide-react";
@@ -1115,6 +1113,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
   const [resultBusy, setResultBusy] = useState(false);
   const [copied, setCopied] = useState(false);
   const [selectionCopied, setSelectionCopied] = useState(false);
+  const [todoCreated, setTodoCreated] = useState(false);
   const [selectionQrCode, setSelectionQrCode] = useState<{
     svg: string;
     error: string;
@@ -3542,6 +3541,29 @@ function SelectionAssistant({ query }: { query: string | null }) {
     await runtimeRequest("selection.search", { query: snapshot.text });
   };
 
+  const createTodoFromSelection = async () => {
+    if (!snapshot?.text.trim()) return;
+    try {
+      await runtimeRequest("todo.create", {
+        content: snapshot.text,
+        source: {
+          kind: "selection",
+          url: location.href,
+          pageTitle: document.title,
+          selectedText: snapshot.text
+        }
+      });
+      showPageTooltip(contentText("todoSaved"), snapshot.rect);
+      setTodoCreated(true);
+      window.setTimeout(() => setTodoCreated(false), 1200);
+    } catch (requestError) {
+      showPageTooltip(
+        requestError instanceof Error ? requestError.message : String(requestError),
+        snapshot.rect
+      );
+    }
+  };
+
   const showSelectionQrCode = async () => {
     if (!snapshot?.text.trim()) return;
     setHoverOpen(false);
@@ -3571,20 +3593,10 @@ function SelectionAssistant({ query }: { query: string | null }) {
         icon: <Search />,
         onClick: searchSelection
       },
-      bookmark: {
-        title: t("selectionBookmark"),
-        icon: <Bookmark />,
-        onClick: () => undefined
-      },
-      share: {
-        title: t("selectionShare"),
-        icon: <Share2 />,
-        onClick: () => undefined
-      },
       todo: {
         title: t("selectionTodo"),
-        icon: <ListTodo />,
-        onClick: () => undefined
+        icon: todoCreated ? <Check /> : <ListTodo />,
+        onClick: createTodoFromSelection
       },
       qrcode: {
         title: t("selectionQrCode"),

@@ -7,6 +7,7 @@ import {
   ImagePlus,
   Languages,
   Lightbulb,
+  ListTodo,
   ListChecks,
   Maximize2,
   MessageSquareText,
@@ -80,6 +81,7 @@ export const NAV_ITEMS = [
   { id: "chat" as const, labelKey: "navChat" as UiTextKey, icon: MessageSquareText },
   { id: "tools" as const, labelKey: "navTools" as UiTextKey, icon: Wand2 },
   { id: "mcp" as const, labelKey: "navMcp" as UiTextKey, icon: Network },
+  { id: "todos" as const, labelKey: "navTodos" as UiTextKey, icon: ListTodo },
   { id: "history" as const, labelKey: "navHistory" as UiTextKey, icon: History },
   { id: "logs" as const, labelKey: "navLogs" as UiTextKey, icon: NotepadText }
 ];

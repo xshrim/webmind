@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { createProviderProfile, DEFAULT_SETTINGS } from "./defaults";
 import {
+  clearAllTodos,
+  createStoredTodo,
+  loadTodos,
   normalizeSettings,
   SETTINGS_EXPORT_FORMAT,
-  SETTINGS_EXPORT_VERSION
+  SETTINGS_EXPORT_VERSION,
+  splitStoredTodo
 } from "./storage";
 
 const DEPRECATED_SETTINGS_KEYS = [
@@ -82,6 +86,33 @@ describe("settings normalization", () => {
         selectionSearchOpenMode: "current"
       }).selectionSearchEngine
     ).toBe("baidu");
+  });
+
+  it("drops removed selection fixed tools from stored settings", () => {
+    expect(
+      normalizeSettings({
+        selectionOverlayFixedTools: ["copy", "bookmark", "share", "qrcode"] as never
+      }).selectionOverlayFixedTools
+    ).toEqual(["copy", "qrcode"]);
+  });
+
+  it("preserves the context-menu tool surface while normalizing settings", () => {
+    expect(normalizeSettings().enabledToolIds["context-menu"]).toEqual([
+      "translate-text",
+      "summary",
+      "explain",
+      "concise",
+      "study-notes",
+      "explain-code"
+    ]);
+    expect(
+      normalizeSettings({
+        enabledToolIds: {
+          ...DEFAULT_SETTINGS.enabledToolIds,
+          "context-menu": ["custom-tool", "summary"]
+        }
+      }).enabledToolIds["context-menu"]
+    ).toEqual(["custom-tool", "summary"]);
   });
 
   it("defaults reasoning mode off and disables it for existing engines without a strategy", () => {
@@ -195,5 +226,46 @@ describe("settings normalization", () => {
     expect(settings.articleExtractionRules[1].id).toBeTruthy();
     expect(settings.articleExtractionRules[1].urlPattern).toBe("*.example.com/*");
     expect(settings.articleExtractionRules[1].selector).toBe("main");
+  });
+});
+
+describe("todo storage", () => {
+  it("replaces the original todo with split items and preserves the source", async () => {
+    await clearAllTodos();
+    const original = await createStoredTodo({
+      content: "Prepare a release\nWrite notes and publish",
+      source: {
+        kind: "answer",
+        url: "https://example.com/article",
+        pageTitle: "Article"
+      }
+    });
+
+    const split = await splitStoredTodo(original.id, [
+      "Write release notes",
+      "Publish the release"
+    ]);
+    const stored = await loadTodos();
+
+    expect(split).toHaveLength(2);
+    expect(stored.map((todo) => todo.id)).not.toContain(original.id);
+    expect(stored.map((todo) => todo.title)).toEqual(
+      expect.arrayContaining(["Write release notes", "Publish the release"])
+    );
+    expect(stored.every((todo) => todo.source?.url === "https://example.com/article")).toBe(
+      true
+    );
+    await clearAllTodos();
+  });
+
+  it("rejects invalid split sizes without changing the original todo", async () => {
+    await clearAllTodos();
+    const original = await createStoredTodo({ content: "Keep this todo" });
+
+    await expect(splitStoredTodo(original.id, ["Only one"])).rejects.toThrow(
+      "between 2 and 20"
+    );
+    expect((await loadTodos()).map((todo) => todo.id)).toEqual([original.id]);
+    await clearAllTodos();
   });
 });

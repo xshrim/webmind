@@ -4336,7 +4336,7 @@ var require_core = __commonJS({
       errorsText(errors = this.errors, { separator = ", ", dataVar = "data" } = {}) {
         if (!errors || errors.length === 0)
           return "No errors";
-        return errors.map((e) => `${dataVar}${e.instancePath} ${e.message}`).reduce((text, msg) => text + separator + msg);
+        return errors.map((e) => `${dataVar}${e.instancePath} ${e.message}`).reduce((text2, msg) => text2 + separator + msg);
       }
       $dataMetaSchema(metaSchema, keywordsJsonPointers) {
         const rules = this.RULES.all;
@@ -7100,7 +7100,8 @@ var deUiText = {
   mcpToolApprovalAllow: "Immer erlauben",
   cookieViewer: "Cookies anzeigen",
   cookieFormat: "Format",
-  cookiePreview: "Vorschau ({count} Cookies)",
+  cookiePreview: "Vorschau",
+  cookiePreviewCount: "({count} Cookies)",
   mcpToolUsed: "Verwendetes MCP-Tool",
   mcpToolNotCalled: "MCP-Tool nicht aufgerufen",
   mcpToolFailed: "MCP-Tool-Aufruf fehlgeschlagen",
@@ -7108,8 +7109,59 @@ var deUiText = {
   mcpToolBlockedUserDeny: "Nutzer hat die Berechtigung abgelehnt",
   mcpToolBlockedApprovalTimeout: "Zeitlimit f\xFCr Berechtigung abgelaufen",
   navTools: "Tools",
+  navTodos: "Aufgaben",
   navHistory: "Verlauf",
   navLogs: "Protokolle",
+  logsPageTitle: "Protokolle",
+  logsPageHeading: "Vorgangsprotokolle",
+  historyPageEyebrow: "Verlauf",
+  localSessionsTitle: "Sitzungsaufzeichnungen",
+  todoPageEyebrow: "Aufgaben",
+  localTodosTitle: "Aufgaben",
+  todosTitle: "Aufgaben",
+  todoItemsTitle: "Aufgabenliste",
+  todoAdd: "Aufgabe hinzuf\xFCgen",
+  todoEdit: "Aufgabe bearbeiten",
+  todoContent: "Inhalt",
+  todoSplit: "Mit KI aufteilen",
+  todoSplitRunning: "Aufgabe wird mit KI aufgeteilt",
+  todoSplitInvalid: "Das Modell hat nicht mindestens zwei g\xFCltige Aufgaben zur\xFCckgegeben",
+  todoSplitSuccess: "Aufgabe aufgeteilt",
+  todoSplitSystemPrompt: "Teilen Sie die vom Nutzer angegebene einzelne Aufgabe in mehrere unabh\xE4ngige, umsetzbare Aufgaben auf. Geben Sie ausschlie\xDFlich ein JSON-String-Array ohne Markdown oder Erkl\xE4rung zur\xFCck. Geben Sie mindestens 2 und h\xF6chstens 20 Eintr\xE4ge zur\xFCck. Erfinden Sie keine Aufgaben, die sich nicht aus dem Originaltext ergeben.",
+  todoSearchPlaceholder: "Aufgaben suchen",
+  todoFilter: "Aufgabenfilter",
+  todoAll: "Alle",
+  todoOpen: "Offen",
+  todoCompleted: "Erledigt",
+  todoMarkComplete: "Als erledigt markieren",
+  todoMarkOpen: "Wieder \xF6ffnen",
+  todoMarkInProgress: "Als in Bearbeitung markieren",
+  todoMarkNotInProgress: "Markierung In Bearbeitung entfernen",
+  todoInProgressDisabled: "Erledigte Aufgaben k\xF6nnen nicht als in Bearbeitung markiert werden",
+  todoExpand: "Aufgabe ausklappen",
+  todoCollapse: "Aufgabe einklappen",
+  todoContentExpand: "Inhalt ausklappen",
+  todoContentCollapse: "Inhalt einklappen",
+  todoDelete: "Aufgabe l\xF6schen",
+  todoClearCompleted: "Erledigte l\xF6schen",
+  todoClearAll: "Alle Aufgaben l\xF6schen",
+  todoEmpty: "Noch keine Aufgaben",
+  todoEmptyHelp: "Erstellen Sie eine Aufgabe aus der Auswahl, dem Kontextmen\xFC oder hier.",
+  todoNoSearchResults: "Keine passenden Aufgaben",
+  todoCreatedFromSelection: "Aus ausgew\xE4hltem Text",
+  todoCreatedManually: "Manuell erstellt",
+  todoSaved: "Zur Aufgabenliste hinzugef\xFCgt",
+  todoTitleRequired: "Geben Sie den Aufgabeninhalt ein",
+  logTodoSplit: "Aufgabe mit KI aufgeteilt",
+  messageAddToTodo: "Antwort zu Aufgaben hinzuf\xFCgen",
+  logTodoCreated: "Aufgabe erstellt",
+  logTodoUpdated: "Aufgabe aktualisiert",
+  logTodoCompleted: "Aufgabe erledigt",
+  logTodoReopened: "Aufgabe wieder ge\xF6ffnet",
+  logTodoDeleted: "Aufgabe gel\xF6scht",
+  logTodoCleared: "Erledigte Aufgaben gel\xF6scht",
+  logTodoAllCleared: "Alle Aufgaben gel\xF6scht",
+  addSelectionToTodo: "Zur Aufgabenliste hinzuf\xFCgen",
   operationLogs: "Vorgangsprotokolle",
   operationLogsHelp: "Wichtige Produktvorg\xE4nge werden hier in Echtzeit angezeigt.",
   clearLogs: "Protokolle l\xF6schen",
@@ -7393,12 +7445,8 @@ var deUiText = {
   selectionFixedToolsHelp: "W\xE4hlen Sie feste Werkzeuge, die vor der Seitenleistenfrage und anderen Werkzeugen angezeigt werden.",
   selectionFixedToolCopy: "Kopieren",
   selectionFixedToolSearch: "Suchen",
-  selectionFixedToolBookmark: "Lesezeichen",
-  selectionFixedToolShare: "Teilen",
   selectionFixedToolTodo: "Aufgabe",
   selectionFixedToolQrCode: "QR-Code",
-  selectionBookmark: "Ausgew\xE4hlten Text als Lesezeichen speichern",
-  selectionShare: "Ausgew\xE4hlten Text teilen",
   selectionTodo: "Ausgew\xE4hlten Text zu Aufgaben hinzuf\xFCgen",
   selectionQrCode: "QR-Code f\xFCr ausgew\xE4hlten Text erzeugen",
   selectionQrCodeTitle: "QR-Code",
@@ -7753,7 +7801,8 @@ var esUiText = {
   mcpToolApprovalAllow: "Permitir siempre",
   cookieViewer: "Ver cookies",
   cookieFormat: "Formato",
-  cookiePreview: "Vista previa ({count} cookies)",
+  cookiePreview: "Vista previa",
+  cookiePreviewCount: "({count} cookies)",
   mcpToolUsed: "Herramienta MCP utilizada",
   mcpToolNotCalled: "Herramienta MCP no llamada",
   mcpToolFailed: "Fall\xF3 la llamada a la herramienta MCP",
@@ -7761,8 +7810,59 @@ var esUiText = {
   mcpToolBlockedUserDeny: "El usuario deneg\xF3 la autorizaci\xF3n",
   mcpToolBlockedApprovalTimeout: "Tiempo de autorizaci\xF3n agotado",
   navTools: "Herramientas",
+  navTodos: "Tareas",
   navHistory: "Historial",
   navLogs: "Registros",
+  logsPageTitle: "Registros",
+  logsPageHeading: "Registros de operaciones",
+  historyPageEyebrow: "Historial",
+  localSessionsTitle: "Registros de sesiones",
+  todoPageEyebrow: "Tareas",
+  localTodosTitle: "Tareas",
+  todosTitle: "Tareas",
+  todoItemsTitle: "Lista de tareas",
+  todoAdd: "A\xF1adir tarea",
+  todoEdit: "Editar tarea",
+  todoContent: "Contenido",
+  todoSplit: "Dividir con IA",
+  todoSplitRunning: "Dividiendo la tarea con IA",
+  todoSplitInvalid: "El modelo no devolvi\xF3 al menos dos tareas v\xE1lidas",
+  todoSplitSuccess: "Tarea dividida",
+  todoSplitSystemPrompt: "Divide la tarea proporcionada por el usuario en varias tareas independientes y ejecutables. Devuelve \xFAnicamente una matriz JSON de cadenas, sin Markdown ni explicaciones. Devuelve entre 2 y 20 elementos. No inventes tareas que no est\xE9n respaldadas por el texto original.",
+  todoSearchPlaceholder: "Buscar tareas",
+  todoFilter: "Filtro de tareas",
+  todoAll: "Todas",
+  todoOpen: "Pendientes",
+  todoCompleted: "Completadas",
+  todoMarkComplete: "Marcar como completada",
+  todoMarkOpen: "Reabrir",
+  todoMarkInProgress: "Marcar como en curso",
+  todoMarkNotInProgress: "Quitar la marca de en curso",
+  todoInProgressDisabled: "Las tareas completadas no pueden marcarse en curso",
+  todoExpand: "Expandir tarea",
+  todoCollapse: "Contraer tarea",
+  todoContentExpand: "Expandir contenido",
+  todoContentCollapse: "Contraer contenido",
+  todoDelete: "Eliminar tarea",
+  todoClearCompleted: "Borrar completadas",
+  todoClearAll: "Borrar todas las tareas",
+  todoEmpty: "A\xFAn no hay tareas",
+  todoEmptyHelp: "Cree una tarea desde la selecci\xF3n, el men\xFA contextual o aqu\xED.",
+  todoNoSearchResults: "No hay tareas coincidentes",
+  todoCreatedFromSelection: "Del texto seleccionado",
+  todoCreatedManually: "Creada manualmente",
+  todoSaved: "A\xF1adida a tareas",
+  todoTitleRequired: "Escriba el contenido de la tarea",
+  logTodoSplit: "Tarea dividida con IA",
+  messageAddToTodo: "A\xF1adir respuesta a tareas",
+  logTodoCreated: "Tarea creada",
+  logTodoUpdated: "Tarea actualizada",
+  logTodoCompleted: "Tarea completada",
+  logTodoReopened: "Tarea reabierta",
+  logTodoDeleted: "Tarea eliminada",
+  logTodoCleared: "Tareas completadas borradas",
+  logTodoAllCleared: "Todas las tareas borradas",
+  addSelectionToTodo: "A\xF1adir a tareas",
   operationLogs: "Registros de operaciones",
   operationLogsHelp: "Aqu\xED aparecen en tiempo real las operaciones clave del producto.",
   clearLogs: "Borrar registros",
@@ -8046,12 +8146,8 @@ var esUiText = {
   selectionFixedToolsHelp: "Elija las herramientas fijas que aparecen antes de la pregunta en la barra lateral y de las dem\xE1s herramientas.",
   selectionFixedToolCopy: "Copiar",
   selectionFixedToolSearch: "Buscar",
-  selectionFixedToolBookmark: "Favorito",
-  selectionFixedToolShare: "Compartir",
   selectionFixedToolTodo: "Tarea",
   selectionFixedToolQrCode: "C\xF3digo QR",
-  selectionBookmark: "A\xF1adir el texto seleccionado a favoritos",
-  selectionShare: "Compartir el texto seleccionado",
   selectionTodo: "A\xF1adir el texto seleccionado a tareas",
   selectionQrCode: "Generar un c\xF3digo QR del texto seleccionado",
   selectionQrCodeTitle: "C\xF3digo QR",
@@ -8406,7 +8502,8 @@ var frUiText = {
   mcpToolApprovalAllow: "Toujours autoriser",
   cookieViewer: "Afficher les cookies",
   cookieFormat: "Format",
-  cookiePreview: "Aper\xE7u ({count} cookies)",
+  cookiePreview: "Aper\xE7u",
+  cookiePreviewCount: "({count} cookies)",
   mcpToolUsed: "Outil MCP utilis\xE9",
   mcpToolNotCalled: "Outil MCP non appel\xE9",
   mcpToolFailed: "\xC9chec de l'appel de l'outil MCP",
@@ -8414,8 +8511,59 @@ var frUiText = {
   mcpToolBlockedUserDeny: "L'utilisateur a refus\xE9 l'autorisation",
   mcpToolBlockedApprovalTimeout: "D\xE9lai d'autorisation expir\xE9",
   navTools: "Outils",
+  navTodos: "T\xE2ches",
   navHistory: "Historique",
   navLogs: "Journaux",
+  logsPageTitle: "Journaux",
+  logsPageHeading: "Journaux d'op\xE9rations",
+  historyPageEyebrow: "Historique",
+  localSessionsTitle: "Enregistrements de sessions",
+  todoPageEyebrow: "T\xE2ches",
+  localTodosTitle: "T\xE2ches",
+  todosTitle: "T\xE2ches",
+  todoItemsTitle: "Liste des t\xE2ches",
+  todoAdd: "Ajouter une t\xE2che",
+  todoEdit: "Modifier la t\xE2che",
+  todoContent: "Contenu",
+  todoSplit: "Diviser avec l'IA",
+  todoSplitRunning: "Division de la t\xE2che avec l'IA",
+  todoSplitInvalid: "Le mod\xE8le n'a pas renvoy\xE9 au moins deux t\xE2ches valides",
+  todoSplitSuccess: "T\xE2che divis\xE9e",
+  todoSplitSystemPrompt: "Divisez la t\xE2che fournie par l'utilisateur en plusieurs t\xE2ches ind\xE9pendantes et r\xE9alisables. Retournez uniquement un tableau JSON de cha\xEEnes, sans Markdown ni explication. Retournez entre 2 et 20 \xE9l\xE9ments. N'inventez pas de t\xE2ches qui ne sont pas fond\xE9es sur le texte original.",
+  todoSearchPlaceholder: "Rechercher des t\xE2ches",
+  todoFilter: "Filtre des t\xE2ches",
+  todoAll: "Toutes",
+  todoOpen: "\xC0 faire",
+  todoCompleted: "Termin\xE9es",
+  todoMarkComplete: "Marquer comme termin\xE9e",
+  todoMarkOpen: "Rouvrir",
+  todoMarkInProgress: "Marquer comme en cours",
+  todoMarkNotInProgress: "Retirer le marqueur En cours",
+  todoInProgressDisabled: "Une t\xE2che termin\xE9e ne peut pas \xEAtre marqu\xE9e en cours",
+  todoExpand: "D\xE9velopper la t\xE2che",
+  todoCollapse: "R\xE9duire la t\xE2che",
+  todoContentExpand: "D\xE9velopper le contenu",
+  todoContentCollapse: "R\xE9duire le contenu",
+  todoDelete: "Supprimer la t\xE2che",
+  todoClearCompleted: "Effacer les t\xE2ches termin\xE9es",
+  todoClearAll: "Effacer toutes les t\xE2ches",
+  todoEmpty: "Aucune t\xE2che pour le moment",
+  todoEmptyHelp: "Cr\xE9ez une t\xE2che depuis la s\xE9lection, le menu contextuel ou ici.",
+  todoNoSearchResults: "Aucune t\xE2che correspondante",
+  todoCreatedFromSelection: "Depuis le texte s\xE9lectionn\xE9",
+  todoCreatedManually: "Cr\xE9\xE9e manuellement",
+  todoSaved: "Ajout\xE9e aux t\xE2ches",
+  todoTitleRequired: "Saisissez le contenu de la t\xE2che",
+  logTodoSplit: "T\xE2che divis\xE9e avec l'IA",
+  messageAddToTodo: "Ajouter la r\xE9ponse aux t\xE2ches",
+  logTodoCreated: "T\xE2che cr\xE9\xE9e",
+  logTodoUpdated: "T\xE2che mise \xE0 jour",
+  logTodoCompleted: "T\xE2che termin\xE9e",
+  logTodoReopened: "T\xE2che rouverte",
+  logTodoDeleted: "T\xE2che supprim\xE9e",
+  logTodoCleared: "T\xE2ches termin\xE9es effac\xE9es",
+  logTodoAllCleared: "Toutes les t\xE2ches effac\xE9es",
+  addSelectionToTodo: "Ajouter aux t\xE2ches",
   operationLogs: "Journaux d'op\xE9rations",
   operationLogsHelp: "Les op\xE9rations cl\xE9s du produit s'affichent ici en temps r\xE9el.",
   clearLogs: "Effacer les journaux",
@@ -8699,12 +8847,8 @@ var frUiText = {
   selectionFixedToolsHelp: "Choisissez les outils fixes affich\xE9s avant la question dans la barre lat\xE9rale et les autres outils.",
   selectionFixedToolCopy: "Copier",
   selectionFixedToolSearch: "Rechercher",
-  selectionFixedToolBookmark: "Favori",
-  selectionFixedToolShare: "Partager",
   selectionFixedToolTodo: "T\xE2che",
   selectionFixedToolQrCode: "Code QR",
-  selectionBookmark: "Ajouter le texte s\xE9lectionn\xE9 aux favoris",
-  selectionShare: "Partager le texte s\xE9lectionn\xE9",
   selectionTodo: "Ajouter le texte s\xE9lectionn\xE9 aux t\xE2ches",
   selectionQrCode: "G\xE9n\xE9rer un code QR pour le texte s\xE9lectionn\xE9",
   selectionQrCodeTitle: "Code QR",
@@ -9059,7 +9203,8 @@ var itUiText = {
   mcpToolApprovalAllow: "Consenti sempre",
   cookieViewer: "Visualizza cookie",
   cookieFormat: "Formato",
-  cookiePreview: "Anteprima ({count} cookie)",
+  cookiePreview: "Anteprima",
+  cookiePreviewCount: "({count} cookie)",
   mcpToolUsed: "Strumento MCP utilizzato",
   mcpToolNotCalled: "Strumento MCP non chiamato",
   mcpToolFailed: "Chiamata allo strumento MCP non riuscita",
@@ -9067,8 +9212,59 @@ var itUiText = {
   mcpToolBlockedUserDeny: "L'utente ha rifiutato l'autorizzazione",
   mcpToolBlockedApprovalTimeout: "Tempo di autorizzazione scaduto",
   navTools: "Strumenti",
+  navTodos: "Attivit\xE0",
   navHistory: "Cronologia",
   navLogs: "Log",
+  logsPageTitle: "Log",
+  logsPageHeading: "Log delle operazioni",
+  historyPageEyebrow: "Cronologia",
+  localSessionsTitle: "Registri delle sessioni",
+  todoPageEyebrow: "Attivit\xE0",
+  localTodosTitle: "Attivit\xE0",
+  todosTitle: "Attivit\xE0",
+  todoItemsTitle: "Elenco attivit\xE0",
+  todoAdd: "Aggiungi attivit\xE0",
+  todoEdit: "Modifica attivit\xE0",
+  todoContent: "Contenuto",
+  todoSplit: "Dividi con l'IA",
+  todoSplitRunning: "Divisione dell'attivit\xE0 con l'IA",
+  todoSplitInvalid: "Il modello non ha restituito almeno due attivit\xE0 valide",
+  todoSplitSuccess: "Attivit\xE0 divisa",
+  todoSplitSystemPrompt: "Dividi l'attivit\xE0 fornita dall'utente in pi\xF9 attivit\xE0 indipendenti ed eseguibili. Restituisci solo un array JSON di stringhe, senza Markdown o spiegazioni. Restituisci da 2 a 20 elementi. Non inventare attivit\xE0 non supportate dal testo originale.",
+  todoSearchPlaceholder: "Cerca attivit\xE0",
+  todoFilter: "Filtro attivit\xE0",
+  todoAll: "Tutte",
+  todoOpen: "Aperte",
+  todoCompleted: "Completate",
+  todoMarkComplete: "Segna come completata",
+  todoMarkOpen: "Riapri",
+  todoMarkInProgress: "Segna come in corso",
+  todoMarkNotInProgress: "Rimuovi il contrassegno In corso",
+  todoInProgressDisabled: "Le attivit\xE0 completate non possono essere segnate come in corso",
+  todoExpand: "Espandi attivit\xE0",
+  todoCollapse: "Comprimi attivit\xE0",
+  todoContentExpand: "Espandi contenuto",
+  todoContentCollapse: "Comprimi contenuto",
+  todoDelete: "Elimina attivit\xE0",
+  todoClearCompleted: "Cancella completate",
+  todoClearAll: "Cancella tutte le attivit\xE0",
+  todoEmpty: "Nessuna attivit\xE0",
+  todoEmptyHelp: "Crea un'attivit\xE0 dalla selezione, dal menu contestuale o qui.",
+  todoNoSearchResults: "Nessuna attivit\xE0 corrispondente",
+  todoCreatedFromSelection: "Dal testo selezionato",
+  todoCreatedManually: "Creata manualmente",
+  todoSaved: "Aggiunta alle attivit\xE0",
+  todoTitleRequired: "Inserisci il contenuto dell'attivit\xE0",
+  logTodoSplit: "Attivit\xE0 divisa con l'IA",
+  messageAddToTodo: "Aggiungi la risposta alle attivit\xE0",
+  logTodoCreated: "Attivit\xE0 creata",
+  logTodoUpdated: "Attivit\xE0 aggiornata",
+  logTodoCompleted: "Attivit\xE0 completata",
+  logTodoReopened: "Attivit\xE0 riaperta",
+  logTodoDeleted: "Attivit\xE0 eliminata",
+  logTodoCleared: "Attivit\xE0 completate cancellate",
+  logTodoAllCleared: "Tutte le attivit\xE0 cancellate",
+  addSelectionToTodo: "Aggiungi alle attivit\xE0",
   operationLogs: "Log delle operazioni",
   operationLogsHelp: "Le operazioni principali del prodotto vengono visualizzate qui in tempo reale.",
   clearLogs: "Cancella log",
@@ -9352,12 +9548,8 @@ var itUiText = {
   selectionFixedToolsHelp: "Scegli gli strumenti fissi da mostrare prima della domanda nella barra laterale e degli altri strumenti.",
   selectionFixedToolCopy: "Copia",
   selectionFixedToolSearch: "Cerca",
-  selectionFixedToolBookmark: "Preferito",
-  selectionFixedToolShare: "Condividi",
   selectionFixedToolTodo: "Attivit\xE0",
   selectionFixedToolQrCode: "Codice QR",
-  selectionBookmark: "Aggiungi il testo selezionato ai preferiti",
-  selectionShare: "Condividi il testo selezionato",
   selectionTodo: "Aggiungi il testo selezionato alle attivit\xE0",
   selectionQrCode: "Genera un codice QR per il testo selezionato",
   selectionQrCodeTitle: "Codice QR",
@@ -9743,8 +9935,9 @@ var CORE_UI_TEXT = {
     mcpToolApprovalAsk: "\u59CB\u7EC8\u8BE2\u95EE",
     mcpToolApprovalAllow: "\u59CB\u7EC8\u5141\u8BB8",
     cookieViewer: "\u67E5\u770B Cookie",
-    cookieFormat: "\u67E5\u770B\u683C\u5F0F",
-    cookiePreview: "\u9884\u89C8\uFF08{count} \u4E2A Cookie\uFF09",
+    cookieFormat: "\u683C\u5F0F",
+    cookiePreview: "\u9884\u89C8",
+    cookiePreviewCount: "\uFF08{count} \u4E2A Cookie\uFF09",
     mcpToolUsed: "\u5DF2\u4F7F\u7528 MCP \u5DE5\u5177",
     mcpToolNotCalled: "\u672A\u8C03\u7528 MCP \u5DE5\u5177",
     mcpToolFailed: "MCP \u5DE5\u5177\u8C03\u7528\u5931\u8D25",
@@ -9752,8 +9945,59 @@ var CORE_UI_TEXT = {
     mcpToolBlockedUserDeny: "\u7528\u6237\u62D2\u7EDD\u6388\u6743",
     mcpToolBlockedApprovalTimeout: "\u7B49\u5F85\u6388\u6743\u8D85\u65F6",
     navTools: "\u5DE5\u5177",
+    navTodos: "\u5F85\u529E",
     navHistory: "\u5386\u53F2",
     navLogs: "\u65E5\u5FD7",
+    logsPageTitle: "\u65E5\u5FD7",
+    logsPageHeading: "\u64CD\u4F5C\u65E5\u5FD7",
+    historyPageEyebrow: "\u5386\u53F2",
+    localSessionsTitle: "\u5386\u53F2\u4F1A\u8BDD",
+    todoPageEyebrow: "\u5F85\u529E",
+    localTodosTitle: "\u5F85\u529E\u4E8B\u9879",
+    todosTitle: "\u5F85\u529E",
+    todoItemsTitle: "\u5F85\u529E\u4E8B\u9879",
+    todoAdd: "\u6DFB\u52A0\u5F85\u529E",
+    todoEdit: "\u7F16\u8F91\u5F85\u529E",
+    todoContent: "\u6B63\u6587",
+    todoSplit: "\u667A\u80FD\u62C6\u5206",
+    todoSplitRunning: "\u6B63\u5728\u667A\u80FD\u62C6\u5206\u5F85\u529E",
+    todoSplitInvalid: "\u5927\u6A21\u578B\u6CA1\u6709\u8FD4\u56DE\u81F3\u5C11\u4E24\u4E2A\u6709\u6548\u5F85\u529E",
+    todoSplitSuccess: "\u5F85\u529E\u5DF2\u62C6\u5206",
+    todoSplitSystemPrompt: "\u8BF7\u5C06\u7528\u6237\u63D0\u4F9B\u7684\u4E00\u4E2A\u5F85\u529E\u62C6\u5206\u4E3A\u591A\u4E2A\u76F8\u4E92\u72EC\u7ACB\u3001\u53EF\u6267\u884C\u7684\u5F85\u529E\u3002\u53EA\u8FD4\u56DE JSON \u5B57\u7B26\u4E32\u6570\u7EC4\uFF0C\u4E0D\u8981\u8FD4\u56DE Markdown \u6216\u5176\u4ED6\u8BF4\u660E\uFF1B\u6BCF\u4E2A\u5B57\u7B26\u4E32\u53EA\u5305\u542B\u4E00\u4E2A\u5F85\u529E\u7684\u6B63\u6587\uFF0C\u81F3\u5C11\u8FD4\u56DE 2 \u9879\uFF0C\u6700\u591A\u8FD4\u56DE 20 \u9879\u3002\u4E0D\u8981\u6DFB\u52A0\u539F\u6587\u6CA1\u6709\u4F9D\u636E\u7684\u65B0\u4EFB\u52A1\u3002",
+    todoSearchPlaceholder: "\u641C\u7D22\u5F85\u529E",
+    todoFilter: "\u5F85\u529E\u7B5B\u9009",
+    todoAll: "\u5168\u90E8",
+    todoOpen: "\u672A\u5B8C\u6210",
+    todoCompleted: "\u5DF2\u5B8C\u6210",
+    todoMarkComplete: "\u6807\u8BB0\u5B8C\u6210",
+    todoMarkOpen: "\u6062\u590D\u672A\u5B8C\u6210",
+    todoMarkInProgress: "\u6807\u8BB0\u4E3A\u8FDB\u884C\u4E2D",
+    todoMarkNotInProgress: "\u53D6\u6D88\u8FDB\u884C\u4E2D\u6807\u8BB0",
+    todoInProgressDisabled: "\u5DF2\u5B8C\u6210\u4E8B\u9879\u4E0D\u53EF\u6807\u8BB0\u4E3A\u8FDB\u884C\u4E2D",
+    todoExpand: "\u5C55\u5F00\u5F85\u529E",
+    todoCollapse: "\u6298\u53E0\u5F85\u529E",
+    todoContentExpand: "\u5C55\u5F00\u5185\u5BB9",
+    todoContentCollapse: "\u6298\u53E0\u5185\u5BB9",
+    todoDelete: "\u5220\u9664\u5F85\u529E",
+    todoClearCompleted: "\u6E05\u7406\u5DF2\u5B8C\u6210",
+    todoClearAll: "\u6E05\u9664\u5168\u90E8\u5F85\u529E",
+    todoEmpty: "\u8FD8\u6CA1\u6709\u5F85\u529E",
+    todoEmptyHelp: "\u53EF\u4EE5\u4ECE\u5212\u8BCD\u6D6E\u5C42\u3001\u53F3\u952E\u83DC\u5355\u6216\u8FD9\u91CC\u521B\u5EFA\u5F85\u529E\u3002",
+    todoNoSearchResults: "\u6CA1\u6709\u5339\u914D\u7684\u5F85\u529E",
+    todoCreatedFromSelection: "\u6765\u81EA\u9009\u4E2D\u6587\u672C",
+    todoCreatedManually: "\u624B\u52A8\u521B\u5EFA",
+    todoSaved: "\u5DF2\u52A0\u5165\u5F85\u529E",
+    todoTitleRequired: "\u8BF7\u586B\u5199\u5F85\u529E\u6B63\u6587",
+    logTodoSplit: "\u5DF2\u667A\u80FD\u62C6\u5206\u5F85\u529E",
+    messageAddToTodo: "\u5C06\u56DE\u7B54\u52A0\u5165\u5F85\u529E",
+    logTodoCreated: "\u5DF2\u521B\u5EFA\u5F85\u529E",
+    logTodoUpdated: "\u5DF2\u66F4\u65B0\u5F85\u529E",
+    logTodoCompleted: "\u5DF2\u5B8C\u6210\u5F85\u529E",
+    logTodoReopened: "\u5DF2\u6062\u590D\u5F85\u529E",
+    logTodoDeleted: "\u5DF2\u5220\u9664\u5F85\u529E",
+    logTodoCleared: "\u5DF2\u6E05\u7406\u5B8C\u6210\u5F85\u529E",
+    logTodoAllCleared: "\u5DF2\u6E05\u9664\u5168\u90E8\u5F85\u529E",
+    addSelectionToTodo: "\u52A0\u5165\u5F85\u529E",
     operationLogs: "\u64CD\u4F5C\u65E5\u5FD7",
     operationLogsHelp: "\u4EA7\u54C1\u6267\u884C\u7684\u5173\u952E\u64CD\u4F5C\u4F1A\u5B9E\u65F6\u663E\u793A\u5728\u8FD9\u91CC\u3002",
     clearLogs: "\u6E05\u7A7A\u65E5\u5FD7",
@@ -10036,12 +10280,8 @@ var CORE_UI_TEXT = {
     selectionFixedToolsHelp: "\u9009\u62E9\u5728\u4FA7\u8FB9\u680F\u63D0\u95EE\u548C\u5176\u4ED6\u5DE5\u5177\u4E4B\u524D\u663E\u793A\u7684\u56FA\u5B9A\u5DE5\u5177\u3002",
     selectionFixedToolCopy: "\u590D\u5236",
     selectionFixedToolSearch: "\u641C\u7D22",
-    selectionFixedToolBookmark: "\u6536\u85CF",
-    selectionFixedToolShare: "\u5206\u4EAB",
     selectionFixedToolTodo: "\u5F85\u529E",
     selectionFixedToolQrCode: "\u4E8C\u7EF4\u7801",
-    selectionBookmark: "\u6536\u85CF\u6240\u9009\u6587\u672C",
-    selectionShare: "\u5206\u4EAB\u6240\u9009\u6587\u672C",
     selectionTodo: "\u5C06\u6240\u9009\u6587\u672C\u52A0\u5165\u5F85\u529E",
     selectionQrCode: "\u4E3A\u6240\u9009\u6587\u672C\u751F\u6210\u4E8C\u7EF4\u7801",
     selectionQrCodeTitle: "\u4E8C\u7EF4\u7801",
@@ -10394,8 +10634,9 @@ var CORE_UI_TEXT = {
     mcpToolApprovalAsk: "\u59CB\u7D42\u8A62\u554F",
     mcpToolApprovalAllow: "\u59CB\u7D42\u5141\u8A31",
     cookieViewer: "\u67E5\u770B Cookie",
-    cookieFormat: "\u67E5\u770B\u683C\u5F0F",
-    cookiePreview: "\u9810\u89BD\uFF08{count} \u500B Cookie\uFF09",
+    cookieFormat: "\u683C\u5F0F",
+    cookiePreview: "\u9810\u89BD",
+    cookiePreviewCount: "\uFF08{count} \u500B Cookie\uFF09",
     mcpToolUsed: "\u5DF2\u4F7F\u7528 MCP \u5DE5\u5177",
     mcpToolNotCalled: "\u672A\u547C\u53EB MCP \u5DE5\u5177",
     mcpToolFailed: "MCP \u5DE5\u5177\u547C\u53EB\u5931\u6557",
@@ -10403,8 +10644,59 @@ var CORE_UI_TEXT = {
     mcpToolBlockedUserDeny: "\u4F7F\u7528\u8005\u62D2\u7D55\u6388\u6B0A",
     mcpToolBlockedApprovalTimeout: "\u7B49\u5F85\u6388\u6B0A\u903E\u6642",
     navTools: "\u5DE5\u5177",
+    navTodos: "\u5F85\u8FA6",
     navHistory: "\u6B77\u53F2",
     navLogs: "\u65E5\u8A8C",
+    logsPageTitle: "\u65E5\u8A8C",
+    logsPageHeading: "\u64CD\u4F5C\u65E5\u8A8C",
+    historyPageEyebrow: "\u6B77\u53F2",
+    localSessionsTitle: "\u6703\u8A71\u8A18\u9304",
+    todoPageEyebrow: "\u5F85\u8FA6",
+    localTodosTitle: "\u5F85\u8FA6\u4E8B\u9805",
+    todosTitle: "\u5F85\u8FA6",
+    todoItemsTitle: "\u5F85\u8FA6\u4E8B\u9805",
+    todoAdd: "\u65B0\u589E\u5F85\u8FA6",
+    todoEdit: "\u7DE8\u8F2F\u5F85\u8FA6",
+    todoContent: "\u6B63\u6587",
+    todoSplit: "\u667A\u6167\u62C6\u5206",
+    todoSplitRunning: "\u6B63\u5728\u667A\u6167\u62C6\u5206\u5F85\u8FA6",
+    todoSplitInvalid: "\u5927\u6A21\u578B\u6C92\u6709\u8FD4\u56DE\u81F3\u5C11\u5169\u500B\u6709\u6548\u5F85\u8FA6",
+    todoSplitSuccess: "\u5F85\u8FA6\u5DF2\u62C6\u5206",
+    todoSplitSystemPrompt: "\u8ACB\u5C07\u4F7F\u7528\u8005\u63D0\u4F9B\u7684\u4E00\u500B\u5F85\u8FA6\u62C6\u5206\u70BA\u591A\u500B\u76F8\u4E92\u7368\u7ACB\u3001\u53EF\u57F7\u884C\u7684\u5F85\u8FA6\u3002\u53EA\u8FD4\u56DE JSON \u5B57\u4E32\u9663\u5217\uFF0C\u4E0D\u8981\u8FD4\u56DE Markdown \u6216\u5176\u4ED6\u8AAA\u660E\uFF1B\u6BCF\u500B\u5B57\u4E32\u53EA\u5305\u542B\u4E00\u500B\u5F85\u8FA6\u7684\u6B63\u6587\uFF0C\u81F3\u5C11\u8FD4\u56DE 2 \u9805\uFF0C\u6700\u591A\u8FD4\u56DE 20 \u9805\u3002\u4E0D\u8981\u6DFB\u52A0\u539F\u6587\u6C92\u6709\u4F9D\u64DA\u7684\u65B0\u4EFB\u52D9\u3002",
+    todoSearchPlaceholder: "\u641C\u5C0B\u5F85\u8FA6",
+    todoFilter: "\u5F85\u8FA6\u7BE9\u9078",
+    todoAll: "\u5168\u90E8",
+    todoOpen: "\u672A\u5B8C\u6210",
+    todoCompleted: "\u5DF2\u5B8C\u6210",
+    todoMarkComplete: "\u6A19\u8A18\u5B8C\u6210",
+    todoMarkOpen: "\u6062\u5FA9\u672A\u5B8C\u6210",
+    todoMarkInProgress: "\u6A19\u8A18\u70BA\u9032\u884C\u4E2D",
+    todoMarkNotInProgress: "\u53D6\u6D88\u9032\u884C\u4E2D\u6A19\u8A18",
+    todoInProgressDisabled: "\u5DF2\u5B8C\u6210\u4E8B\u9805\u4E0D\u53EF\u6A19\u8A18\u70BA\u9032\u884C\u4E2D",
+    todoExpand: "\u5C55\u958B\u5F85\u8FA6",
+    todoCollapse: "\u647A\u758A\u5F85\u8FA6",
+    todoContentExpand: "\u5C55\u958B\u5167\u5BB9",
+    todoContentCollapse: "\u647A\u758A\u5167\u5BB9",
+    todoDelete: "\u522A\u9664\u5F85\u8FA6",
+    todoClearCompleted: "\u6E05\u7406\u5DF2\u5B8C\u6210",
+    todoClearAll: "\u6E05\u9664\u5168\u90E8\u5F85\u8FA6",
+    todoEmpty: "\u9084\u6C92\u6709\u5F85\u8FA6",
+    todoEmptyHelp: "\u53EF\u4EE5\u5F9E\u5283\u8A5E\u6D6E\u5C64\u3001\u53F3\u9375\u9078\u55AE\u6216\u9019\u88E1\u5EFA\u7ACB\u5F85\u8FA6\u3002",
+    todoNoSearchResults: "\u6C92\u6709\u7B26\u5408\u7684\u5F85\u8FA6",
+    todoCreatedFromSelection: "\u4F86\u81EA\u9078\u53D6\u6587\u5B57",
+    todoCreatedManually: "\u624B\u52D5\u5EFA\u7ACB",
+    todoSaved: "\u5DF2\u52A0\u5165\u5F85\u8FA6",
+    todoTitleRequired: "\u8ACB\u586B\u5BEB\u5F85\u8FA6\u6B63\u6587",
+    logTodoSplit: "\u5DF2\u667A\u6167\u62C6\u5206\u5F85\u8FA6",
+    messageAddToTodo: "\u5C07\u56DE\u7B54\u52A0\u5165\u5F85\u8FA6",
+    logTodoCreated: "\u5DF2\u5EFA\u7ACB\u5F85\u8FA6",
+    logTodoUpdated: "\u5DF2\u66F4\u65B0\u5F85\u8FA6",
+    logTodoCompleted: "\u5DF2\u5B8C\u6210\u5F85\u8FA6",
+    logTodoReopened: "\u5DF2\u6062\u5FA9\u5F85\u8FA6",
+    logTodoDeleted: "\u5DF2\u522A\u9664\u5F85\u8FA6",
+    logTodoCleared: "\u5DF2\u6E05\u7406\u5B8C\u6210\u5F85\u8FA6",
+    logTodoAllCleared: "\u5DF2\u6E05\u9664\u5168\u90E8\u5F85\u8FA6",
+    addSelectionToTodo: "\u52A0\u5165\u5F85\u8FA6",
     operationLogs: "\u64CD\u4F5C\u65E5\u8A8C",
     operationLogsHelp: "\u7522\u54C1\u57F7\u884C\u7684\u95DC\u9375\u64CD\u4F5C\u6703\u5373\u6642\u986F\u793A\u5728\u9019\u88E1\u3002",
     clearLogs: "\u6E05\u7A7A\u65E5\u8A8C",
@@ -10687,12 +10979,8 @@ var CORE_UI_TEXT = {
     selectionFixedToolsHelp: "\u9078\u64C7\u5728\u5074\u908A\u6B04\u63D0\u554F\u548C\u5176\u4ED6\u5DE5\u5177\u4E4B\u524D\u986F\u793A\u7684\u56FA\u5B9A\u5DE5\u5177\u3002",
     selectionFixedToolCopy: "\u8907\u88FD",
     selectionFixedToolSearch: "\u641C\u5C0B",
-    selectionFixedToolBookmark: "\u6536\u85CF",
-    selectionFixedToolShare: "\u5206\u4EAB",
     selectionFixedToolTodo: "\u5F85\u8FA6",
     selectionFixedToolQrCode: "\u4E8C\u7DAD\u78BC",
-    selectionBookmark: "\u6536\u85CF\u9078\u53D6\u6587\u5B57",
-    selectionShare: "\u5206\u4EAB\u9078\u53D6\u6587\u5B57",
     selectionTodo: "\u5C07\u9078\u53D6\u6587\u5B57\u52A0\u5165\u5F85\u8FA6",
     selectionQrCode: "\u70BA\u9078\u53D6\u6587\u5B57\u7522\u751F\u4E8C\u7DAD\u78BC",
     selectionQrCodeTitle: "\u4E8C\u7DAD\u78BC",
@@ -11046,7 +11334,8 @@ var CORE_UI_TEXT = {
     mcpToolApprovalAllow: "Always Allow",
     cookieViewer: "View Cookies",
     cookieFormat: "Format",
-    cookiePreview: "Preview ({count} cookies)",
+    cookiePreview: "Preview",
+    cookiePreviewCount: "({count} cookies)",
     mcpToolUsed: "MCP tool used",
     mcpToolNotCalled: "MCP tool not called",
     mcpToolFailed: "MCP tool call failed",
@@ -11054,8 +11343,59 @@ var CORE_UI_TEXT = {
     mcpToolBlockedUserDeny: "User denied authorization",
     mcpToolBlockedApprovalTimeout: "Authorization timed out",
     navTools: "Tools",
+    navTodos: "To-do",
     navHistory: "History",
     navLogs: "Logs",
+    logsPageTitle: "Logs",
+    logsPageHeading: "Operation Logs",
+    historyPageEyebrow: "History",
+    localSessionsTitle: "Session Records",
+    todoPageEyebrow: "To-do",
+    localTodosTitle: "To-dos",
+    todosTitle: "To-do",
+    todoItemsTitle: "To-dos",
+    todoAdd: "Add To-do",
+    todoEdit: "Edit To-do",
+    todoContent: "Body",
+    todoSplit: "Split with AI",
+    todoSplitRunning: "Splitting to-do with AI",
+    todoSplitInvalid: "The model did not return at least two valid to-dos",
+    todoSplitSuccess: "To-do split successfully",
+    todoSplitSystemPrompt: "Split the single to-do provided by the user into multiple independent, actionable to-dos. Return only a JSON array of strings, with no Markdown or explanation. Return at least 2 and at most 20 items. Do not invent tasks that are not supported by the original text.",
+    todoSearchPlaceholder: "Search to-dos",
+    todoFilter: "To-do filter",
+    todoAll: "All",
+    todoOpen: "Open",
+    todoCompleted: "Completed",
+    todoMarkComplete: "Mark complete",
+    todoMarkOpen: "Reopen",
+    todoMarkInProgress: "Mark as in progress",
+    todoMarkNotInProgress: "Remove in-progress mark",
+    todoInProgressDisabled: "Completed to-dos cannot be marked in progress",
+    todoExpand: "Expand to-do",
+    todoCollapse: "Collapse to-do",
+    todoContentExpand: "Expand content",
+    todoContentCollapse: "Collapse content",
+    todoDelete: "Delete to-do",
+    todoClearCompleted: "Clear completed",
+    todoClearAll: "Clear all to-dos",
+    todoEmpty: "No to-dos yet",
+    todoEmptyHelp: "Create one from the selection overlay, context menu, or here.",
+    todoNoSearchResults: "No matching to-dos",
+    todoCreatedFromSelection: "From selected text",
+    todoCreatedManually: "Created manually",
+    todoSaved: "Added to to-dos",
+    todoTitleRequired: "Enter to-do content",
+    logTodoSplit: "To-do split with AI",
+    messageAddToTodo: "Add answer to to-dos",
+    logTodoCreated: "To-do created",
+    logTodoUpdated: "To-do updated",
+    logTodoCompleted: "To-do completed",
+    logTodoReopened: "To-do reopened",
+    logTodoDeleted: "To-do deleted",
+    logTodoCleared: "Completed to-dos cleared",
+    logTodoAllCleared: "All to-dos cleared",
+    addSelectionToTodo: "Add to to-dos",
     operationLogs: "Operation Logs",
     operationLogsHelp: "Key product operations appear here in real time.",
     clearLogs: "Clear Logs",
@@ -11338,12 +11678,8 @@ var CORE_UI_TEXT = {
     selectionFixedToolsHelp: "Choose fixed tools shown before the sidebar question and other tools.",
     selectionFixedToolCopy: "Copy",
     selectionFixedToolSearch: "Search",
-    selectionFixedToolBookmark: "Bookmark",
-    selectionFixedToolShare: "Share",
     selectionFixedToolTodo: "To-do",
     selectionFixedToolQrCode: "QR code",
-    selectionBookmark: "Bookmark selected text",
-    selectionShare: "Share selected text",
     selectionTodo: "Add selected text to to-do",
     selectionQrCode: "Generate QR code for selected text",
     selectionQrCodeTitle: "QR Code",
@@ -11697,7 +12033,8 @@ var CORE_UI_TEXT = {
     mcpToolApprovalAllow: "\u5E38\u306B\u8A31\u53EF",
     cookieViewer: "Cookie \u3092\u8868\u793A",
     cookieFormat: "\u8868\u793A\u5F62\u5F0F",
-    cookiePreview: "\u30D7\u30EC\u30D3\u30E5\u30FC\uFF08{count} \u500B\u306E Cookie\uFF09",
+    cookiePreview: "\u30D7\u30EC\u30D3\u30E5\u30FC",
+    cookiePreviewCount: "\uFF08{count} \u500B\u306E Cookie\uFF09",
     mcpToolUsed: "\u4F7F\u7528\u3057\u305F MCP \u30C4\u30FC\u30EB",
     mcpToolNotCalled: "MCP \u30C4\u30FC\u30EB\u306F\u672A\u5B9F\u884C",
     mcpToolFailed: "MCP \u30C4\u30FC\u30EB\u306E\u547C\u3073\u51FA\u3057\u306B\u5931\u6557",
@@ -11705,8 +12042,59 @@ var CORE_UI_TEXT = {
     mcpToolBlockedUserDeny: "\u30E6\u30FC\u30B6\u30FC\u304C\u8A31\u53EF\u3092\u62D2\u5426",
     mcpToolBlockedApprovalTimeout: "\u8A31\u53EF\u5F85\u3061\u304C\u30BF\u30A4\u30E0\u30A2\u30A6\u30C8",
     navTools: "\u30C4\u30FC\u30EB",
+    navTodos: "ToDo",
     navHistory: "\u5C65\u6B74",
     navLogs: "\u30ED\u30B0",
+    logsPageTitle: "\u30ED\u30B0",
+    logsPageHeading: "\u64CD\u4F5C\u30ED\u30B0",
+    historyPageEyebrow: "\u5C65\u6B74",
+    localSessionsTitle: "\u30BB\u30C3\u30B7\u30E7\u30F3\u8A18\u9332",
+    todoPageEyebrow: "ToDo",
+    localTodosTitle: "ToDo\u4E00\u89A7",
+    todosTitle: "ToDo",
+    todoItemsTitle: "ToDo\u4E00\u89A7",
+    todoAdd: "ToDo\u3092\u8FFD\u52A0",
+    todoEdit: "ToDo\u3092\u7DE8\u96C6",
+    todoContent: "\u672C\u6587",
+    todoSplit: "AI\u3067\u5206\u5272",
+    todoSplitRunning: "AI\u3067ToDo\u3092\u5206\u5272\u4E2D",
+    todoSplitInvalid: "\u30E2\u30C7\u30EB\u304C\u6709\u52B9\u306AToDo\u30922\u4EF6\u4EE5\u4E0A\u8FD4\u3057\u307E\u305B\u3093\u3067\u3057\u305F",
+    todoSplitSuccess: "ToDo\u3092\u5206\u5272\u3057\u307E\u3057\u305F",
+    todoSplitSystemPrompt: "\u30E6\u30FC\u30B6\u30FC\u304C\u63D0\u4F9B\u3057\u305F1\u4EF6\u306EToDo\u3092\u3001\u72EC\u7ACB\u3057\u305F\u5B9F\u884C\u53EF\u80FD\u306A\u8907\u6570\u306EToDo\u306B\u5206\u5272\u3057\u3066\u304F\u3060\u3055\u3044\u3002Markdown\u3084\u8AAC\u660E\u306F\u8FD4\u3055\u305A\u3001JSON\u6587\u5B57\u5217\u914D\u5217\u3060\u3051\u3092\u8FD4\u3057\u3066\u304F\u3060\u3055\u3044\u30022\u4EF6\u4EE5\u4E0A20\u4EF6\u4EE5\u4E0B\u306B\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u5143\u306E\u6587\u7AE0\u304B\u3089\u6839\u62E0\u306E\u306A\u3044\u65B0\u3057\u3044\u30BF\u30B9\u30AF\u3092\u8FFD\u52A0\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002",
+    todoSearchPlaceholder: "ToDo\u3092\u691C\u7D22",
+    todoFilter: "ToDo\u30D5\u30A3\u30EB\u30BF\u30FC",
+    todoAll: "\u3059\u3079\u3066",
+    todoOpen: "\u672A\u5B8C\u4E86",
+    todoCompleted: "\u5B8C\u4E86",
+    todoMarkComplete: "\u5B8C\u4E86\u306B\u3059\u308B",
+    todoMarkOpen: "\u672A\u5B8C\u4E86\u306B\u623B\u3059",
+    todoMarkInProgress: "\u9032\u884C\u4E2D\u306B\u3059\u308B",
+    todoMarkNotInProgress: "\u9032\u884C\u4E2D\u30DE\u30FC\u30AF\u3092\u89E3\u9664",
+    todoInProgressDisabled: "\u5B8C\u4E86\u6E08\u307FToDo\u306F\u9032\u884C\u4E2D\u306B\u3067\u304D\u307E\u305B\u3093",
+    todoExpand: "ToDo\u3092\u5C55\u958B",
+    todoCollapse: "ToDo\u3092\u6298\u308A\u305F\u305F\u3080",
+    todoContentExpand: "\u5185\u5BB9\u3092\u5C55\u958B",
+    todoContentCollapse: "\u5185\u5BB9\u3092\u6298\u308A\u305F\u305F\u3080",
+    todoDelete: "ToDo\u3092\u524A\u9664",
+    todoClearCompleted: "\u5B8C\u4E86\u6E08\u307F\u3092\u524A\u9664",
+    todoClearAll: "\u3059\u3079\u3066\u306EToDo\u3092\u524A\u9664",
+    todoEmpty: "ToDo\u306F\u307E\u3060\u3042\u308A\u307E\u305B\u3093",
+    todoEmptyHelp: "\u9078\u629E\u7BC4\u56F2\u3001\u53F3\u30AF\u30EA\u30C3\u30AF\u30E1\u30CB\u30E5\u30FC\u3001\u307E\u305F\u306F\u3053\u3053\u304B\u3089\u4F5C\u6210\u3067\u304D\u307E\u3059\u3002",
+    todoNoSearchResults: "\u4E00\u81F4\u3059\u308BToDo\u306F\u3042\u308A\u307E\u305B\u3093",
+    todoCreatedFromSelection: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u304B\u3089\u4F5C\u6210",
+    todoCreatedManually: "\u624B\u52D5\u3067\u4F5C\u6210",
+    todoSaved: "ToDo\u306B\u8FFD\u52A0\u3057\u307E\u3057\u305F",
+    todoTitleRequired: "ToDo\u306E\u672C\u6587\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044",
+    logTodoSplit: "AI\u3067ToDo\u3092\u5206\u5272\u3057\u307E\u3057\u305F",
+    messageAddToTodo: "\u56DE\u7B54\u3092ToDo\u306B\u8FFD\u52A0",
+    logTodoCreated: "ToDo\u3092\u4F5C\u6210\u3057\u307E\u3057\u305F",
+    logTodoUpdated: "ToDo\u3092\u66F4\u65B0\u3057\u307E\u3057\u305F",
+    logTodoCompleted: "ToDo\u3092\u5B8C\u4E86\u3057\u307E\u3057\u305F",
+    logTodoReopened: "ToDo\u3092\u672A\u5B8C\u4E86\u306B\u623B\u3057\u307E\u3057\u305F",
+    logTodoDeleted: "ToDo\u3092\u524A\u9664\u3057\u307E\u3057\u305F",
+    logTodoCleared: "\u5B8C\u4E86\u6E08\u307FToDo\u3092\u524A\u9664\u3057\u307E\u3057\u305F",
+    logTodoAllCleared: "\u3059\u3079\u3066\u306EToDo\u3092\u524A\u9664\u3057\u307E\u3057\u305F",
+    addSelectionToTodo: "ToDo\u306B\u8FFD\u52A0",
     operationLogs: "\u64CD\u4F5C\u30ED\u30B0",
     operationLogsHelp: "\u88FD\u54C1\u304C\u5B9F\u884C\u3057\u305F\u4E3B\u306A\u64CD\u4F5C\u304C\u30EA\u30A2\u30EB\u30BF\u30A4\u30E0\u3067\u8868\u793A\u3055\u308C\u307E\u3059\u3002",
     clearLogs: "\u30ED\u30B0\u3092\u6D88\u53BB",
@@ -11989,12 +12377,8 @@ var CORE_UI_TEXT = {
     selectionFixedToolsHelp: "\u30B5\u30A4\u30C9\u30D0\u30FC\u3078\u306E\u8CEA\u554F\u3068\u305D\u306E\u4ED6\u306E\u30C4\u30FC\u30EB\u3088\u308A\u524D\u306B\u8868\u793A\u3059\u308B\u56FA\u5B9A\u30C4\u30FC\u30EB\u3092\u9078\u629E\u3057\u307E\u3059\u3002",
     selectionFixedToolCopy: "\u30B3\u30D4\u30FC",
     selectionFixedToolSearch: "\u691C\u7D22",
-    selectionFixedToolBookmark: "\u304A\u6C17\u306B\u5165\u308A",
-    selectionFixedToolShare: "\u5171\u6709",
     selectionFixedToolTodo: "ToDo",
     selectionFixedToolQrCode: "QR\u30B3\u30FC\u30C9",
-    selectionBookmark: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u3092\u304A\u6C17\u306B\u5165\u308A\u306B\u8FFD\u52A0",
-    selectionShare: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u3092\u5171\u6709",
     selectionTodo: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u3092ToDo\u306B\u8FFD\u52A0",
     selectionQrCode: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u306EQR\u30B3\u30FC\u30C9\u3092\u751F\u6210",
     selectionQrCodeTitle: "QR\u30B3\u30FC\u30C9",
@@ -12348,7 +12732,8 @@ var CORE_UI_TEXT = {
     mcpToolApprovalAllow: "\uD56D\uC0C1 \uD5C8\uC6A9",
     cookieViewer: "Cookie \uBCF4\uAE30",
     cookieFormat: "\uD45C\uC2DC \uD615\uC2DD",
-    cookiePreview: "\uBBF8\uB9AC\uBCF4\uAE30 ({count}\uAC1C Cookie)",
+    cookiePreview: "\uBBF8\uB9AC\uBCF4\uAE30",
+    cookiePreviewCount: "({count}\uAC1C Cookie)",
     mcpToolUsed: "\uC0AC\uC6A9\uD55C MCP \uB3C4\uAD6C",
     mcpToolNotCalled: "MCP \uB3C4\uAD6C\uB97C \uD638\uCD9C\uD558\uC9C0 \uC54A\uC74C",
     mcpToolFailed: "MCP \uB3C4\uAD6C \uD638\uCD9C \uC2E4\uD328",
@@ -12356,8 +12741,59 @@ var CORE_UI_TEXT = {
     mcpToolBlockedUserDeny: "\uC0AC\uC6A9\uC790\uAC00 \uAD8C\uD55C\uC744 \uAC70\uBD80\uD568",
     mcpToolBlockedApprovalTimeout: "\uAD8C\uD55C \uB300\uAE30 \uC2DC\uAC04\uC774 \uCD08\uACFC\uB428",
     navTools: "\uB3C4\uAD6C",
+    navTodos: "\uD560 \uC77C",
     navHistory: "\uAE30\uB85D",
     navLogs: "\uB85C\uADF8",
+    logsPageTitle: "\uB85C\uADF8",
+    logsPageHeading: "\uC791\uC5C5 \uB85C\uADF8",
+    historyPageEyebrow: "\uAE30\uB85D",
+    localSessionsTitle: "\uC138\uC158 \uAE30\uB85D",
+    todoPageEyebrow: "\uD560 \uC77C",
+    localTodosTitle: "\uD560 \uC77C",
+    todosTitle: "\uD560 \uC77C",
+    todoItemsTitle: "\uD560 \uC77C \uBAA9\uB85D",
+    todoAdd: "\uD560 \uC77C \uCD94\uAC00",
+    todoEdit: "\uD560 \uC77C \uD3B8\uC9D1",
+    todoContent: "\uBCF8\uBB38",
+    todoSplit: "AI\uB85C \uBD84\uD560",
+    todoSplitRunning: "AI\uB85C \uD560 \uC77C\uC744 \uBD84\uD560\uD558\uB294 \uC911",
+    todoSplitInvalid: "\uBAA8\uB378\uC774 \uC720\uD6A8\uD55C \uD560 \uC77C\uC744 \uB450 \uAC1C \uC774\uC0C1 \uBC18\uD658\uD558\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4",
+    todoSplitSuccess: "\uD560 \uC77C\uC744 \uBD84\uD560\uD588\uC2B5\uB2C8\uB2E4",
+    todoSplitSystemPrompt: "\uC0AC\uC6A9\uC790\uAC00 \uC81C\uACF5\uD55C \uD558\uB098\uC758 \uD560 \uC77C\uC744 \uC11C\uB85C \uB3C5\uB9BD\uC801\uC774\uACE0 \uC2E4\uD589 \uAC00\uB2A5\uD55C \uC5EC\uB7EC \uD560 \uC77C\uB85C \uB098\uB204\uC138\uC694. Markdown\uC774\uB098 \uC124\uBA85 \uC5C6\uC774 JSON \uBB38\uC790\uC5F4 \uBC30\uC5F4\uB9CC \uBC18\uD658\uD558\uC138\uC694. 2\uAC1C \uC774\uC0C1 20\uAC1C \uC774\uD558\uB85C \uBC18\uD658\uD558\uACE0, \uC6D0\uBB38\uC5D0 \uADFC\uAC70\uD558\uC9C0 \uC54A\uC740 \uC0C8 \uC791\uC5C5\uC740 \uB9CC\uB4E4\uC9C0 \uB9C8\uC138\uC694.",
+    todoSearchPlaceholder: "\uD560 \uC77C \uAC80\uC0C9",
+    todoFilter: "\uD560 \uC77C \uD544\uD130",
+    todoAll: "\uC804\uCCB4",
+    todoOpen: "\uBBF8\uC644\uB8CC",
+    todoCompleted: "\uC644\uB8CC",
+    todoMarkComplete: "\uC644\uB8CC\uB85C \uD45C\uC2DC",
+    todoMarkOpen: "\uBBF8\uC644\uB8CC\uB85C \uB418\uB3CC\uB9AC\uAE30",
+    todoMarkInProgress: "\uC9C4\uD589 \uC911\uC73C\uB85C \uD45C\uC2DC",
+    todoMarkNotInProgress: "\uC9C4\uD589 \uC911 \uD45C\uC2DC \uD574\uC81C",
+    todoInProgressDisabled: "\uC644\uB8CC\uD55C \uD560 \uC77C\uC740 \uC9C4\uD589 \uC911\uC73C\uB85C \uD45C\uC2DC\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4",
+    todoExpand: "\uD560 \uC77C \uD3BC\uCE58\uAE30",
+    todoCollapse: "\uD560 \uC77C \uC811\uAE30",
+    todoContentExpand: "\uB0B4\uC6A9 \uD3BC\uCE58\uAE30",
+    todoContentCollapse: "\uB0B4\uC6A9 \uC811\uAE30",
+    todoDelete: "\uD560 \uC77C \uC0AD\uC81C",
+    todoClearCompleted: "\uC644\uB8CC\uD55C \uD56D\uBAA9 \uC9C0\uC6B0\uAE30",
+    todoClearAll: "\uBAA8\uB4E0 \uD560 \uC77C \uC9C0\uC6B0\uAE30",
+    todoEmpty: "\uC544\uC9C1 \uD560 \uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
+    todoEmptyHelp: "\uC120\uD0DD \uC624\uBC84\uB808\uC774, \uCEE8\uD14D\uC2A4\uD2B8 \uBA54\uB274 \uB610\uB294 \uC5EC\uAE30\uC5D0\uC11C \uB9CC\uB4E4 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
+    todoNoSearchResults: "\uC77C\uCE58\uD558\uB294 \uD560 \uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
+    todoCreatedFromSelection: "\uC120\uD0DD\uD55C \uD14D\uC2A4\uD2B8\uC5D0\uC11C \uC0DD\uC131",
+    todoCreatedManually: "\uC218\uB3D9 \uC0DD\uC131",
+    todoSaved: "\uD560 \uC77C\uC5D0 \uCD94\uAC00\uD588\uC2B5\uB2C8\uB2E4",
+    todoTitleRequired: "\uD560 \uC77C \uBCF8\uBB38\uC744 \uC785\uB825\uD558\uC138\uC694",
+    logTodoSplit: "AI\uB85C \uD560 \uC77C\uC744 \uBD84\uD560\uD588\uC2B5\uB2C8\uB2E4",
+    messageAddToTodo: "\uB2F5\uBCC0\uC744 \uD560 \uC77C\uC5D0 \uCD94\uAC00",
+    logTodoCreated: "\uD560 \uC77C\uC744 \uB9CC\uB4E4\uC5C8\uC2B5\uB2C8\uB2E4",
+    logTodoUpdated: "\uD560 \uC77C\uC744 \uC5C5\uB370\uC774\uD2B8\uD588\uC2B5\uB2C8\uB2E4",
+    logTodoCompleted: "\uD560 \uC77C\uC744 \uC644\uB8CC\uD588\uC2B5\uB2C8\uB2E4",
+    logTodoReopened: "\uD560 \uC77C\uC744 \uB2E4\uC2DC \uC5F4\uC5C8\uC2B5\uB2C8\uB2E4",
+    logTodoDeleted: "\uD560 \uC77C\uC744 \uC0AD\uC81C\uD588\uC2B5\uB2C8\uB2E4",
+    logTodoCleared: "\uC644\uB8CC\uD55C \uD560 \uC77C\uC744 \uC9C0\uC6E0\uC2B5\uB2C8\uB2E4",
+    logTodoAllCleared: "\uBAA8\uB4E0 \uD560 \uC77C\uC744 \uC9C0\uC6E0\uC2B5\uB2C8\uB2E4",
+    addSelectionToTodo: "\uD560 \uC77C\uC5D0 \uCD94\uAC00",
     operationLogs: "\uC791\uC5C5 \uB85C\uADF8",
     operationLogsHelp: "\uC81C\uD488\uC774 \uC2E4\uD589\uD55C \uC8FC\uC694 \uC791\uC5C5\uC774 \uC2E4\uC2DC\uAC04\uC73C\uB85C \uD45C\uC2DC\uB429\uB2C8\uB2E4.",
     clearLogs: "\uB85C\uADF8 \uBE44\uC6B0\uAE30",
@@ -12640,12 +13076,8 @@ var CORE_UI_TEXT = {
     selectionFixedToolsHelp: "\uC0AC\uC774\uB4DC\uBC14 \uC9C8\uBB38 \uBC0F \uB2E4\uB978 \uB3C4\uAD6C\uBCF4\uB2E4 \uBA3C\uC800 \uD45C\uC2DC\uD560 \uACE0\uC815 \uB3C4\uAD6C\uB97C \uC120\uD0DD\uD569\uB2C8\uB2E4.",
     selectionFixedToolCopy: "\uBCF5\uC0AC",
     selectionFixedToolSearch: "\uAC80\uC0C9",
-    selectionFixedToolBookmark: "\uBD81\uB9C8\uD06C",
-    selectionFixedToolShare: "\uACF5\uC720",
     selectionFixedToolTodo: "\uD560 \uC77C",
     selectionFixedToolQrCode: "QR \uCF54\uB4DC",
-    selectionBookmark: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 \uBD81\uB9C8\uD06C",
-    selectionShare: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 \uACF5\uC720",
     selectionTodo: "\uC120\uD0DD \uD14D\uC2A4\uD2B8\uB97C \uD560 \uC77C\uC5D0 \uCD94\uAC00",
     selectionQrCode: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 QR \uCF54\uB4DC \uC0DD\uC131",
     selectionQrCodeTitle: "QR \uCF54\uB4DC",
@@ -13055,8 +13487,8 @@ function detectLatinTranslationLanguage(source) {
   scores.sort((left, right) => right.score - left.score);
   return scores[0].score >= 2 && scores[0].score > scores[1].score ? scores[0].language : "en";
 }
-function withoutFencedCodeBlocks(text) {
-  const lines = text.replace(/\r\n?/g, "\n").split("\n");
+function withoutFencedCodeBlocks(text2) {
+  const lines = text2.replace(/\r\n?/g, "\n").split("\n");
   const visibleLines = [];
   let fenceMarker = "";
   let fenceLength = 0;
@@ -13080,14 +13512,14 @@ function withoutFencedCodeBlocks(text) {
   }
   return visibleLines.join("\n");
 }
-function visibleTranslationSourceText(text) {
-  return withoutFencedCodeBlocks(text).replace(/<pre\b[^>]*>[\s\S]*?<\/pre>/gi, " ").replace(/<code\b[^>]*>[\s\S]*?<\/code>/gi, " ").replace(/(`+)(?!`)([^\n]*?)\1/g, " ").replace(
+function visibleTranslationSourceText(text2) {
+  return withoutFencedCodeBlocks(text2).replace(/<pre\b[^>]*>[\s\S]*?<\/pre>/gi, " ").replace(/<code\b[^>]*>[\s\S]*?<\/code>/gi, " ").replace(/(`+)(?!`)([^\n]*?)\1/g, " ").replace(
     /\[([^\]\n]{1,500})\]\(\s*(?:<[^>\n]+>|[^)\n]+)\s*\)/g,
     "$1"
   ).replace(/<[^>]*>/g, " ");
 }
-function detectTranslationLanguage(text) {
-  const source = visibleTranslationSourceText(text);
+function detectTranslationLanguage(text2) {
+  const source = visibleTranslationSourceText(text2);
   const latinWords = source.match(/[A-Za-zÀ-ÖØ-öø-ÿ]+(?:['’-][A-Za-zÀ-ÖØ-öø-ÿ]+)*/g) ?? [];
   const latinLetterCount = latinWords.join("").replace(/['’-]/g, "").length;
   const chineseCount = source.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g)?.length ?? 0;
@@ -13105,8 +13537,8 @@ function detectTranslationLanguage(text) {
   if (chineseCount) return "zh";
   return null;
 }
-function originalLanguageLabel(text, languageHint) {
-  const detected = detectTranslationLanguage(text);
+function originalLanguageLabel(text2, languageHint) {
+  const detected = detectTranslationLanguage(text2);
   const normalizedHint = languageHint?.trim().replace(/_/g, "-") || "";
   const primaryHint = normalizedHint.toLowerCase().split("-")[0];
   if (detected === "zh") {
@@ -13266,28 +13698,28 @@ function buildAutoTranslateInstruction(config2, sourceText = "") {
   }
 }
 function isDictionaryTranslationInput(sourceText) {
-  const text = visibleTranslationSourceText(sourceText).trim();
-  if (!text || text.length > 80 || /[\r\n]/.test(text)) return false;
-  if (/[。！？!?；;]/.test(text)) return false;
-  if (/[.!?]$/.test(text)) return false;
-  if (/[,，、]/.test(text)) return false;
-  const parts = text.match(
+  const text2 = visibleTranslationSourceText(sourceText).trim();
+  if (!text2 || text2.length > 80 || /[\r\n]/.test(text2)) return false;
+  if (/[。！？!?；;]/.test(text2)) return false;
+  if (/[.!?]$/.test(text2)) return false;
+  if (/[,，、]/.test(text2)) return false;
+  const parts = text2.match(
     /[A-Za-z]+(?:['’-][A-Za-z]+)*|[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]+|[\u3040-\u30ff\u31f0-\u31ff]+|[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af]+|\d+/g
   ) ?? [];
   if (!parts.length) return false;
   if (parts.length > 5) return false;
-  const cjkLength = (text.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g) ?? []).length;
-  const latinWords = text.match(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g) ?? [];
+  const cjkLength = (text2.match(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g) ?? []).length;
+  const latinWords = text2.match(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g) ?? [];
   if (cjkLength > 0) {
     if (cjkLength > 10) return false;
-    if (/(可以|应该|應該|需要|必须|必須|正在|已经|已經|将会|將會|不会|不會|不是|没有|沒有|怎么|怎麼|为什么|為什麼|如何|如果|因为|因為|所以|但是|不过|不過|而且|或者|以及|然后|然後|请|請)/.test(text)) {
+    if (/(可以|应该|應該|需要|必须|必須|正在|已经|已經|将会|將會|不会|不會|不是|没有|沒有|怎么|怎麼|为什么|為什麼|如何|如果|因为|因為|所以|但是|不过|不過|而且|或者|以及|然后|然後|请|請)/.test(text2)) {
       return false;
     }
-    if (cjkLength > 4 && /^(获取|取得|打开|開啟|关闭|關閉|点击|點擊|选择|選擇|输入|輸入|返回|生成|创建|建立|删除|刪除|更新|保存|儲存|翻译|翻譯|复制|複製|检查|檢查|处理|處理|显示|顯示|跳转|跳轉|运行|執行|加载|載入|使用|查看)/.test(text)) {
+    if (cjkLength > 4 && /^(获取|取得|打开|開啟|关闭|關閉|点击|點擊|选择|選擇|输入|輸入|返回|生成|创建|建立|删除|刪除|更新|保存|儲存|翻译|翻譯|复制|複製|检查|檢查|处理|處理|显示|顯示|跳转|跳轉|运行|執行|加载|載入|使用|查看)/.test(text2)) {
       return false;
     }
     if (cjkLength <= 6) return true;
-    return /(模型|算法|演算法|系统|系統|平台|框架|协议|協議|接口|介面|组件|元件|函数|函式|变量|變數|数据库|資料庫|机器学习|機器學習|深度学习|深度學習|自然语言|自然語言|用户体验|使用者體驗|项目管理|專案管理)$/.test(text);
+    return /(模型|算法|演算法|系统|系統|平台|框架|协议|協議|接口|介面|组件|元件|函数|函式|变量|變數|数据库|資料庫|机器学习|機器學習|深度学习|深度學習|自然语言|自然語言|用户体验|使用者體驗|项目管理|專案管理)$/.test(text2);
   }
   if (latinWords.length > 4) return false;
   if (latinWords.length >= 4 && /^(open|close|click|select|enter|return|create|delete|update|save|translate|copy|check|process|show|display|go|run|load|use|view)$/i.test(latinWords[0] ?? "")) {
@@ -14158,8 +14590,8 @@ function protectedTokenSource(kind, index) {
   const backtickWrapper = "`{0,3}";
   return `${backtickWrapper}(?:\\{\\{\\s*${token}\\s*\\}\\}|\\[\\s*${token}\\s*\\]|${token})${backtickWrapper}`;
 }
-function protectFencedCodeBlocks(text, codeBlocks, codeBlockSlots) {
-  const lines = text.split("\n");
+function protectFencedCodeBlocks(text2, codeBlocks, codeBlockSlots) {
+  const lines = text2.split("\n");
   const protectedLines = [];
   for (let index = 0; index < lines.length; ) {
     const opening = lines[index].match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
@@ -14211,16 +14643,16 @@ var CITATION_EXPLANATION_BEFORE_MARKER_PATTERN = new RegExp(
   ].join(""),
   "gi"
 );
-function stripTranslationTaskPreface(text) {
-  let cleaned = text;
+function stripTranslationTaskPreface(text2) {
+  let cleaned = text2;
   const prefacePattern = /^\s*(?:(?:这是(?:一个|一项)?翻译任务[。.!！]?\s*)?(?:以下是(?:根据您提供的内容进行的)?翻译|翻译(?:如下|结果)|译文如下|以下为译文)[：:。.!！]?\s*)+/i;
   while (prefacePattern.test(cleaned)) {
     cleaned = cleaned.replace(prefacePattern, "");
   }
   return cleaned.trimStart();
 }
-function stripCitationExplanationNoise(text, citationCount) {
-  let cleaned = text;
+function stripCitationExplanationNoise(text2, citationCount) {
+  let cleaned = text2;
   for (let index = 1; index <= citationCount; index += 1) {
     const token = protectedTokenSource("CITATION", index);
     const beforeToken = new RegExp(
@@ -14256,8 +14688,8 @@ function stripCitationExplanationNoise(text, citationCount) {
   }
   return cleaned;
 }
-function stripCitationMarkerExplanationNoise(text, markers) {
-  let cleaned = text;
+function stripCitationMarkerExplanationNoise(text2, markers) {
+  let cleaned = text2;
   markers.forEach((marker, index) => {
     if (!marker) return;
     const markerSource = escapeRegExp(marker);
@@ -14294,18 +14726,18 @@ function stripCitationMarkerExplanationNoise(text, markers) {
   });
   return cleaned;
 }
-function stripBrokenTranslationPlaceholderFragments(text) {
-  return text.replace(/\{+\s*WEBMIND_[A-Z0-9_]+\s*\}+/gi, "").replace(/\[\s*WEBMIND_[A-Z0-9_]+\s*\]/gi, "").replace(/WEBMIND_[A-Z0-9_]+/gi, "").replace(/\{+\s*\d+\s*\}+/g, "").replace(/\{+[ \t]*(?=$|[\r\n])/g, "").replace(/(^|[\r\n])[ \t]*\}+/g, "$1").replace(/\[\s*\d+\s*\]/g, (match) => match.trim()).replace(/[ \t]{2,}/g, " ");
+function stripBrokenTranslationPlaceholderFragments(text2) {
+  return text2.replace(/\{+\s*WEBMIND_[A-Z0-9_]+\s*\}+/gi, "").replace(/\[\s*WEBMIND_[A-Z0-9_]+\s*\]/gi, "").replace(/WEBMIND_[A-Z0-9_]+/gi, "").replace(/\{+\s*\d+\s*\}+/g, "").replace(/\{+[ \t]*(?=$|[\r\n])/g, "").replace(/(^|[\r\n])[ \t]*\}+/g, "$1").replace(/\[\s*\d+\s*\]/g, (match) => match.trim()).replace(/[ \t]{2,}/g, " ");
 }
 function isIncompleteProtectedTokenBody(value) {
   const compact = value.replace(/[\t ]/g, "").toUpperCase();
   if (!compact) return true;
   return "WEBMIND_".startsWith(compact) || compact.startsWith("WEBMIND_") && /^[A-Z0-9_]+$/.test(compact);
 }
-function stripIncompleteProtectedTokenSuffix(text) {
-  const scanStart = Math.max(0, text.length - 96);
-  for (let index = scanStart; index < text.length; index += 1) {
-    let remainder = text.slice(index);
+function stripIncompleteProtectedTokenSuffix(text2) {
+  const scanStart = Math.max(0, text2.length - 96);
+  for (let index = scanStart; index < text2.length; index += 1) {
+    let remainder = text2.slice(index);
     const backticks = remainder.match(/^`{1,3}[\t ]*/)?.[0] ?? "";
     if (backticks) remainder = remainder.slice(backticks.length);
     let hasWrapper = Boolean(backticks);
@@ -14317,19 +14749,19 @@ function stripIncompleteProtectedTokenSuffix(text) {
       hasWrapper = true;
     }
     if (hasWrapper && isIncompleteProtectedTokenBody(remainder.trimEnd())) {
-      return text.slice(0, index).trimEnd();
+      return text2.slice(0, index).trimEnd();
     }
   }
-  for (let index = text.length - 1; index >= scanStart; index -= 1) {
-    if (text[index] !== "W") continue;
-    const candidate = text.slice(index).trimEnd();
+  for (let index = text2.length - 1; index >= scanStart; index -= 1) {
+    if (text2[index] !== "W") continue;
+    const candidate = text2.slice(index).trimEnd();
     if (candidate === candidate.toUpperCase() && isIncompleteProtectedTokenBody(candidate)) {
-      return text.slice(0, index).trimEnd();
+      return text2.slice(0, index).trimEnd();
     }
   }
-  return text;
+  return text2;
 }
-function protectTranslationText(text) {
+function protectTranslationText(text2) {
   const citations = [];
   const links = [];
   const formats = [];
@@ -14338,7 +14770,7 @@ function protectTranslationText(text) {
   const codeBlockSlots = [];
   const paragraphBreaks = [];
   const withoutCodeBlocks = protectFencedCodeBlocks(
-    text.replace(/\r\n?/g, "\n"),
+    text2.replace(/\r\n?/g, "\n"),
     codeBlocks,
     codeBlockSlots
   );
@@ -14417,12 +14849,12 @@ function sourceLineMarker(line) {
   if (/^#{1,6}[\t ]+/.test(trimmed)) return "heading";
   return null;
 }
-function protectedTokenMatch(text, kind, index) {
-  const match = protectedTokenPattern(kind, index).exec(text);
+function protectedTokenMatch(text2, kind, index) {
+  const match = protectedTokenPattern(kind, index).exec(text2);
   return match ? { start: match.index, end: match.index + match[0].length } : null;
 }
-function insertMissingCodeBlockSentinels(text, missing, slots) {
-  let result = text;
+function insertMissingCodeBlockSentinels(text2, missing, slots) {
+  let result = text2;
   for (const item of missing) {
     const slot = slots[item.index];
     const previous = slot?.beforeParagraphBreaks ? protectedTokenMatch(
@@ -14453,9 +14885,9 @@ function insertMissingCodeBlockSentinels(text, missing, slots) {
   }
   return result;
 }
-function stripInventedListMarkers(text, sourceLineMarkers) {
-  if (sourceLineMarkers.length < 2) return text;
-  const lines = text.split("\n");
+function stripInventedListMarkers(text2, sourceLineMarkers) {
+  if (sourceLineMarkers.length < 2) return text2;
+  const lines = text2.split("\n");
   const ordered = lines.map((line, index) => {
     if (sourceLineMarkers[index] === void 0 || line.includes("\uE000")) {
       return null;
@@ -14509,8 +14941,8 @@ function stripInventedListMarkers(text, sourceLineMarkers) {
     (line, index) => remove.has(index) ? line.replace(/^\s*(?:\d+[.)]|[-+*])[\t ]+/, "") : line
   ).join("\n");
 }
-function restoreTranslationText(text, protection, options = {}) {
-  const visibleText = options.streaming ? stripIncompleteProtectedTokenSuffix(text) : text;
+function restoreTranslationText(text2, protection, options = {}) {
+  const visibleText = options.streaming ? stripIncompleteProtectedTokenSuffix(text2) : text2;
   let restored = stripCitationExplanationNoise(
     visibleText,
     protection.citations.length
@@ -14611,8 +15043,8 @@ function restoreTranslationText(text, protection, options = {}) {
   return restored;
 }
 var DICTIONARY_FIELD_LABEL = /[\t ]*(?:[;；|][\t ]*)?(?:\n[\t ]*)?(\*\*(?:释义|釋義|义项|義項|语域|語域|搭配|变体|變體|助记|助記|例句|Definition|Senses|Register|Collocations|Variants|Mnemonic|Examples|Definición|Acepciones|Registro|Colocaciones|Variantes|Mnemotecnia|Ejemplos|Définition|Sens|Registre|Mnémotechnique|Exemples|Bedeutungen|Kollokationen|Varianten|Merksatz|Beispiele|Definizione|Accezioni|Collocazioni|Varianti|Mnemonico|Esempi)[：:]?\*\*)/g;
-function normalizeDictionaryTranslationMarkdown(text) {
-  const normalized = text.replace(/\r\n?/g, "\n").trim();
+function normalizeDictionaryTranslationMarkdown(text2) {
+  const normalized = text2.replace(/\r\n?/g, "\n").trim();
   if (!normalized) return normalized;
   return normalized.replace(
     DICTIONARY_FIELD_LABEL,
@@ -14661,8 +15093,8 @@ function createMessage(role, content, partial2 = {}) {
     ...partial2
   };
 }
-function truncateText(text, maxChars, language) {
-  const normalized = text.replace(/\u0000/g, "").trim();
+function truncateText(text2, maxChars, language) {
+  const normalized = text2.replace(/\u0000/g, "").trim();
   if (normalized.length <= maxChars) return normalized;
   const head = Math.floor(maxChars * 0.72);
   const tail = maxChars - head;
@@ -14757,8 +15189,8 @@ async function fetchYouTubeTranscript(pageUrl, preferredLanguage, interfaceLangu
   const captions = await captionsResponse.json();
   const lines = (captions.events ?? []).filter((event) => Array.isArray(event.segs)).map(
     (event) => {
-      const text = event.segs.map((segment) => segment.utf8 ?? "").join("").replace(/\s+/g, " ").trim();
-      return text ? `[${timestamp(event.tStartMs ?? 0)}] ${text}` : "";
+      const text2 = event.segs.map((segment) => segment.utf8 ?? "").join("").replace(/\s+/g, " ").trim();
+      return text2 ? `[${timestamp(event.tStartMs ?? 0)}] ${text2}` : "";
     }
   ).filter(Boolean).join("\n");
   const title = playerResponse.videoDetails?.title ?? new URL(pageUrl).searchParams.get("v");
@@ -14776,8 +15208,6 @@ async function fetchYouTubeTranscript(pageUrl, preferredLanguage, interfaceLangu
 var SELECTION_OVERLAY_FIXED_TOOL_ORDER = [
   "copy",
   "search",
-  "bookmark",
-  "share",
   "todo",
   "qrcode"
 ];
@@ -14918,6 +15348,104 @@ var DEFAULT_SETTINGS = {
   historyLimit: 100
 };
 
+// src/shared/todos.ts
+var MAX_CONTENT_LENGTH = 2e4;
+var MAX_TITLE_LENGTH = 80;
+var MAX_URL_LENGTH = 4e3;
+var MAX_PAGE_TITLE_LENGTH = 500;
+var MAX_SELECTED_TEXT_LENGTH = 2e4;
+function text(value, maxLength) {
+  return String(value ?? "").trim().slice(0, maxLength);
+}
+function validTimestamp(value, fallback) {
+  const timestamp2 = Number(value);
+  return Number.isFinite(timestamp2) && timestamp2 > 0 ? timestamp2 : fallback;
+}
+function normalizeSource(source) {
+  if (!source || typeof source !== "object") return void 0;
+  const value = source;
+  const kind = value.kind === "selection" || value.kind === "answer" ? value.kind : "manual";
+  const normalized = {
+    kind,
+    url: text(value.url, MAX_URL_LENGTH),
+    pageTitle: text(value.pageTitle, MAX_PAGE_TITLE_LENGTH),
+    selectedText: text(value.selectedText, MAX_SELECTED_TEXT_LENGTH)
+  };
+  if (!normalized.url && !normalized.pageTitle && !normalized.selectedText) {
+    return { kind };
+  }
+  return normalized;
+}
+function todoTitleFromText(value) {
+  const normalized = value.split(/\r?\n/).map((line) => line.replace(/\s+/g, " ").trim()).find(Boolean) ?? "";
+  if (!normalized) return "";
+  return normalized.slice(0, MAX_TITLE_LENGTH);
+}
+function normalizeTodo(input) {
+  const now = Date.now();
+  const status = input.status === "completed" ? "completed" : "open";
+  const content = text(input.content, MAX_CONTENT_LENGTH);
+  if (!content) throw new Error("Todo content is required");
+  const title = todoTitleFromText(content);
+  const normalized = {
+    id: text(input.id, 120) || crypto.randomUUID(),
+    title,
+    content,
+    status,
+    inProgress: input.inProgress === true,
+    source: normalizeSource(input.source),
+    createdAt: validTimestamp(input.createdAt, now),
+    updatedAt: validTimestamp(input.updatedAt, now)
+  };
+  if (status === "completed") {
+    normalized.completedAt = validTimestamp(input.completedAt, normalized.updatedAt);
+  }
+  return normalized;
+}
+function createTodo(input) {
+  const now = Date.now();
+  return normalizeTodo({
+    ...input,
+    id: crypto.randomUUID(),
+    createdAt: now,
+    updatedAt: now
+  });
+}
+function updateTodo(item, patch) {
+  const nextStatus = patch.status === "completed" ? "completed" : patch.status === "open" ? "open" : item.status;
+  const updated = normalizeTodo({
+    ...item,
+    ...patch,
+    status: nextStatus,
+    updatedAt: Date.now(),
+    completedAt: nextStatus === "completed" ? item.completedAt || Date.now() : void 0
+  });
+  return updated;
+}
+function normalizeTodos(value) {
+  if (!Array.isArray(value)) return [];
+  const byId = /* @__PURE__ */ new Map();
+  for (const item of value) {
+    if (!item || typeof item !== "object") continue;
+    const record2 = item;
+    if (typeof record2.content !== "string" || !record2.content.trim()) continue;
+    const normalized = normalizeTodo(record2);
+    const existing = byId.get(normalized.id);
+    if (!existing || normalized.updatedAt >= existing.updatedAt) {
+      byId.set(normalized.id, normalized);
+    }
+  }
+  return sortTodos(Array.from(byId.values()));
+}
+function sortTodos(items) {
+  return [...items].sort((left, right) => {
+    const leftRank = left.status === "completed" ? 2 : left.inProgress ? 0 : 1;
+    const rightRank = right.status === "completed" ? 2 : right.inProgress ? 0 : 1;
+    if (leftRank !== rightRank) return leftRank - rightRank;
+    return right.updatedAt - left.updatedAt;
+  });
+}
+
 // src/shared/storage.ts
 var APP_LANGUAGES = /* @__PURE__ */ new Set([
   "auto",
@@ -14936,6 +15464,7 @@ var CUSTOM_TOOLS_KEY = "webmind.customTools";
 var SESSION_SECRETS_KEY = "webmind.sessionSecrets";
 var PENDING_ACTION_KEY = "webmind.pendingAction";
 var MCP_SERVERS_KEY = "webmind.mcpServers";
+var TODOS_KEY = "webmind.todos";
 var APP_LOG_LEVELS = /* @__PURE__ */ new Set([
   "debug",
   "info",
@@ -15185,6 +15714,56 @@ async function loadMcpServers() {
     await getValue("local", MCP_SERVERS_KEY, [])
   );
 }
+async function loadTodos() {
+  return normalizeTodos(await getValue("local", TODOS_KEY, []));
+}
+async function saveTodos(todos) {
+  await setValue("local", TODOS_KEY, normalizeTodos(todos));
+}
+async function createStoredTodo(input) {
+  if (!String(input.content ?? "").trim()) {
+    throw new Error("Todo content is required");
+  }
+  const todo = createTodo(input);
+  await saveTodos([...await loadTodos(), todo]);
+  return todo;
+}
+async function updateStoredTodo(id, patch) {
+  if (patch.content !== void 0 && !String(patch.content ?? "").trim()) {
+    throw new Error("Todo content is required");
+  }
+  const todos = await loadTodos();
+  const current = todos.find((item) => item.id === id);
+  if (!current) return null;
+  const updated = updateTodo(current, patch);
+  await saveTodos(todos.map((item) => item.id === id ? updated : item));
+  return updated;
+}
+async function splitStoredTodo(id, contents) {
+  const todos = await loadTodos();
+  const current = todos.find((item) => item.id === id);
+  if (!current) return [];
+  if (contents.length < 2 || contents.length > 20) {
+    throw new Error("Todo split must produce between 2 and 20 items");
+  }
+  const splitTodos = contents.map(
+    (content) => createTodo({ content, source: current.source })
+  );
+  await saveTodos([
+    ...todos.filter((item) => item.id !== id),
+    ...splitTodos
+  ]);
+  return splitTodos;
+}
+async function deleteStoredTodo(id) {
+  await saveTodos((await loadTodos()).filter((item) => item.id !== id));
+}
+async function clearCompletedTodos() {
+  await saveTodos((await loadTodos()).filter((item) => item.status !== "completed"));
+}
+async function clearAllTodos() {
+  await saveTodos([]);
+}
 async function setPendingAction(action) {
   await setValue("session", PENDING_ACTION_KEY, action);
 }
@@ -15233,8 +15812,8 @@ function broadcastProviderLog(message, level = "debug") {
   }).catch(() => void 0);
 }
 function compactText(value, limit = MODEL_LOG_PREVIEW_CHARS) {
-  const text = value.replace(/\s+/g, " ").trim();
-  return text.length > limit ? `${text.slice(0, limit)}...` : text;
+  const text2 = value.replace(/\s+/g, " ").trim();
+  return text2.length > limit ? `${text2.slice(0, limit)}...` : text2;
 }
 function requestContentPreview(messages) {
   return compactText(
@@ -16029,12 +16608,12 @@ async function streamModel(request, onDelta, signal) {
   await streamOllama(call, onDelta, signal);
 }
 async function completeModel(request, signal = new AbortController().signal) {
-  let text = "";
+  let text2 = "";
   try {
     await streamModel(request, (delta) => {
-      text += delta;
+      text2 += delta;
     }, signal);
-    return text.trim();
+    return text2.trim();
   } catch (error2) {
     if (error2 instanceof DOMException && error2.name === "AbortError") {
       const settings = await loadSettings();
@@ -26291,7 +26870,7 @@ var SSEClientTransport = class {
       };
       const response = await (this._fetch ?? fetch)(this._endpoint, init);
       if (!response.ok) {
-        const text = await response.text().catch(() => null);
+        const text2 = await response.text().catch(() => null);
         if (response.status === 401 && this._authProvider) {
           const { resourceMetadataUrl, scope } = extractWWWAuthenticateParams(response);
           this._resourceMetadataUrl = resourceMetadataUrl;
@@ -26307,7 +26886,7 @@ var SSEClientTransport = class {
           }
           return this.send(message);
         }
-        throw new Error(`Error POSTing to endpoint (HTTP ${response.status}): ${text}`);
+        throw new Error(`Error POSTing to endpoint (HTTP ${response.status}): ${text2}`);
       }
       await response.body?.cancel();
     } catch (error2) {
@@ -26619,7 +27198,7 @@ var StreamableHTTPClientTransport = class {
         this._sessionId = sessionId;
       }
       if (!response.ok) {
-        const text = await response.text().catch(() => null);
+        const text2 = await response.text().catch(() => null);
         if (response.status === 401 && this._authProvider) {
           if (this._hasCompletedAuthFlow) {
             throw new StreamableHTTPError(401, "Server returned 401 after successful authentication");
@@ -26665,7 +27244,7 @@ var StreamableHTTPClientTransport = class {
             return this.send(message);
           }
         }
-        throw new StreamableHTTPError(response.status, `Error POSTing to endpoint: ${text}`);
+        throw new StreamableHTTPError(response.status, `Error POSTing to endpoint: ${text2}`);
       }
       this._hasCompletedAuthFlow = false;
       this._lastUpscopingHeader = void 0;
@@ -26872,8 +27451,8 @@ function formatMcpToolResult(value) {
   if (result.structuredContent !== void 0) {
     parts.push(JSON.stringify(result.structuredContent));
   }
-  const text = parts.filter(Boolean).join("\n\n");
-  return `${result.isError ? "MCP tool error:\n" : ""}${text || "(empty result)"}`.slice(
+  const text2 = parts.filter(Boolean).join("\n\n");
+  return `${result.isError ? "MCP tool error:\n" : ""}${text2 || "(empty result)"}`.slice(
     0,
     MCP_MAX_RESULT_CHARS
   );
@@ -26984,9 +27563,9 @@ async function runMcpAgent(request, signal, requestApproval, reportToolEvent = (
       signal
     );
     if (!turn.toolCalls.length) {
-      const text = turn.text.trim();
-      if (!text) throw new Error("The model returned an empty MCP response");
-      return text;
+      const text2 = turn.text.trim();
+      if (!text2) throw new Error("The model returned an empty MCP response");
+      return text2;
     }
     messages.push({
       role: "assistant",
@@ -27379,6 +27958,14 @@ async function setupExtension() {
     contexts: ["selection", "editable"]
   });
   menuActions.set(askId, { action: "ask", toolId: "ask-selection" });
+  const todoId = "webmind-todo-create";
+  chrome.contextMenus.create({
+    id: todoId,
+    parentId: "webmind-root",
+    title: uiText(settings.interfaceLanguage, "addSelectionToTodo"),
+    contexts: ["selection"]
+  });
+  menuActions.set(todoId, { action: "todo" });
   const selectedIds = settings.enabledToolIds["context-menu"] ?? [];
   for (const toolId of selectedIds) {
     const tool = tools.find((item) => item.id === toolId);
@@ -27397,7 +27984,7 @@ chrome.runtime.onInstalled.addListener(() => {
   void setupExtension();
 });
 chrome.runtime.onStartup.addListener(() => {
-  void chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+  void setupExtension();
 });
 chrome.storage.onChanged.addListener((changes, areaName) => {
   if (areaName === "local" && changes["webmind.settings"]) {
@@ -27412,6 +27999,18 @@ chrome.commands.onCommand.addListener(async (command) => {
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   const menuAction = menuActions.get(String(info.menuItemId));
   if (!menuAction || !tab?.id) return;
+  if (menuAction.action === "todo") {
+    const text2 = String(info.selectionText ?? "").trim();
+    if (!text2) return;
+    const source = {
+      kind: "selection",
+      url: info.pageUrl ?? tab.url,
+      pageTitle: tab.title,
+      selectedText: text2
+    };
+    await createStoredTodo({ source, content: text2 });
+    return;
+  }
   const pending = {
     id: crypto.randomUUID(),
     action: menuAction.action,
@@ -27465,7 +28064,7 @@ chrome.runtime.onConnect.addListener((port) => {
     requests.add(request.requestId);
     const execute = async () => {
       if (request.mcpTools?.some((item) => item.toolNames.length)) {
-        const text = await runMcpAgent(
+        const text2 = await runMcpAgent(
           request,
           controller.signal,
           (approval) => new Promise((resolve, reject) => {
@@ -27517,11 +28116,11 @@ chrome.runtime.onConnect.addListener((port) => {
             });
           }
         );
-        if (text) {
+        if (text2) {
           postToPort({
             type: "chat.delta",
             requestId: request.requestId,
-            delta: text
+            delta: text2
           });
         }
         return;
@@ -27600,6 +28199,64 @@ chrome.runtime.onMessage.addListener(
       if (message.type === "pending.consume") {
         return consumePendingAction();
       }
+      if (message.type === "todo.create") {
+        const input = message.payload ?? {};
+        const todo = await createStoredTodo(input);
+        const settings = await loadSettings();
+        broadcastOperationLog(
+          uiText(settings.interfaceLanguage, "logTodoCreated"),
+          "success"
+        );
+        return todo;
+      }
+      if (message.type === "todo.list") {
+        return loadTodos();
+      }
+      if (message.type === "todo.update") {
+        const id = String(message.payload?.id ?? "");
+        const patch = message.payload?.patch ?? {};
+        const todo = await updateStoredTodo(id, patch);
+        if (todo) {
+          const settings = await loadSettings();
+          broadcastOperationLog(
+            todo.status === "completed" ? uiText(settings.interfaceLanguage, "logTodoCompleted") : patch.status === "open" ? uiText(settings.interfaceLanguage, "logTodoReopened") : uiText(settings.interfaceLanguage, "logTodoUpdated"),
+            "success"
+          );
+        }
+        return todo;
+      }
+      if (message.type === "todo.split") {
+        const id = String(message.payload?.id ?? "");
+        const contents = Array.isArray(message.payload?.contents) ? message.payload.contents.filter(
+          (content) => typeof content === "string"
+        ) : [];
+        const splitTodos = await splitStoredTodo(id, contents);
+        if (!splitTodos.length) return [];
+        const settings = await loadSettings();
+        broadcastOperationLog(
+          uiText(settings.interfaceLanguage, "logTodoSplit"),
+          "success"
+        );
+        return splitTodos;
+      }
+      if (message.type === "todo.delete") {
+        await deleteStoredTodo(String(message.payload?.id ?? ""));
+        const settings = await loadSettings();
+        broadcastOperationLog(uiText(settings.interfaceLanguage, "logTodoDeleted"), "warning");
+        return { ok: true };
+      }
+      if (message.type === "todo.clearCompleted") {
+        await clearCompletedTodos();
+        const settings = await loadSettings();
+        broadcastOperationLog(uiText(settings.interfaceLanguage, "logTodoCleared"), "warning");
+        return { ok: true };
+      }
+      if (message.type === "todo.clearAll") {
+        await clearAllTodos();
+        const settings = await loadSettings();
+        broadcastOperationLog(uiText(settings.interfaceLanguage, "logTodoAllCleared"), "warning");
+        return { ok: true };
+      }
       if (message.type === "panel.open") {
         const payload = message.payload ?? {};
         if (!sender.tab?.id) {
@@ -27663,7 +28320,7 @@ chrome.runtime.onMessage.addListener(
       }
       if (message.type === "provider.test") {
         const profileId = String(message.payload?.profileId ?? "");
-        const text = await completeModel({
+        const text2 = await completeModel({
           profileId,
           maxTokens: 16,
           temperature: 0,
@@ -27674,7 +28331,7 @@ chrome.runtime.onMessage.addListener(
             )
           ]
         });
-        return { ok: /^ok[.!]?$/i.test(text.trim()), text };
+        return { ok: /^ok[.!]?$/i.test(text2.trim()), text: text2 };
       }
       if (message.type === "provider.models") {
         const settings = await loadSettings();
@@ -27693,7 +28350,7 @@ chrome.runtime.onMessage.addListener(
       }
       if (message.type === "model.quickAction") {
         const action = String(message.payload?.action ?? "");
-        const text = String(message.payload?.text ?? "");
+        const text2 = String(message.payload?.text ?? "");
         const settings = await loadSettings();
         if (action === "ask") {
           return { text: "" };
@@ -27705,11 +28362,11 @@ chrome.runtime.onMessage.addListener(
           );
         }
         const isTranslationAction = action === "translate";
-        const dictionaryMode = isTranslationAction && isDictionaryTranslationInput(text);
-        const protectedText = isTranslationAction ? protectTranslationText(text) : null;
-        const prompt = protectedText ? buildProtectedTranslationPrompt(settings, text, protectedText.text, {
+        const dictionaryMode = isTranslationAction && isDictionaryTranslationInput(text2);
+        const protectedText = isTranslationAction ? protectTranslationText(text2) : null;
+        const prompt = protectedText ? buildProtectedTranslationPrompt(settings, text2, protectedText.text, {
           dictionaryForShortInput: true
-        }) : fillPrompt(template, { text });
+        }) : fillPrompt(template, { text: text2 });
         const result = await completeModel({
           purpose: isTranslationAction ? "translation" : "default",
           temperature: isTranslationAction ? 0 : void 0,

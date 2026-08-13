@@ -314,8 +314,6 @@ const SELECTION_OVERLAY_FIXED_TOOLS: Array<{
 }> = [
   { id: "copy", titleKey: "selectionFixedToolCopy" },
   { id: "search", titleKey: "selectionFixedToolSearch" },
-  { id: "bookmark", titleKey: "selectionFixedToolBookmark" },
-  { id: "share", titleKey: "selectionFixedToolShare" },
   { id: "todo", titleKey: "selectionFixedToolTodo" },
   { id: "qrcode", titleKey: "selectionFixedToolQrCode" }
 ];

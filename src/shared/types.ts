@@ -43,16 +43,12 @@ export type SelectionSearchOpenMode = "current" | "new-tab";
 export type SelectionOverlayFixedTool =
   | "copy"
   | "search"
-  | "bookmark"
-  | "share"
   | "todo"
   | "qrcode";
 
 export const SELECTION_OVERLAY_FIXED_TOOL_ORDER: SelectionOverlayFixedTool[] = [
   "copy",
   "search",
-  "bookmark",
-  "share",
   "todo",
   "qrcode"
 ];
@@ -205,6 +201,39 @@ export interface AppSettings {
   webSearchByDefault: boolean;
   toolResponseUseContextLanguage: boolean;
   historyLimit: number;
+}
+
+export type TodoStatus = "open" | "completed";
+export type TodoSourceKind = "manual" | "selection" | "answer";
+
+export interface TodoSource {
+  kind: TodoSourceKind;
+  url?: string;
+  pageTitle?: string;
+  selectedText?: string;
+}
+
+export interface TodoItem {
+  id: string;
+  title: string;
+  content: string;
+  status: TodoStatus;
+  inProgress: boolean;
+  source?: TodoSource;
+  createdAt: number;
+  updatedAt: number;
+  completedAt?: number;
+}
+
+export interface CreateTodoInput {
+  content: string;
+  source?: TodoSource;
+}
+
+export interface UpdateTodoInput {
+  content?: string;
+  status?: TodoStatus;
+  inProgress?: boolean;
 }
 
 export type AttachmentKind = "image" | "document" | "url";

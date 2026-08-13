@@ -10,9 +10,16 @@ import {
 import { requestOriginPermission } from "../shared/browser";
 import {
   consumePendingAction,
+  createStoredTodo,
+  deleteStoredTodo,
+  clearAllTodos,
+  clearCompletedTodos,
+  loadTodos,
   loadCustomTools,
   loadSettings,
-  setPendingAction
+  setPendingAction,
+  splitStoredTodo,
+  updateStoredTodo
 } from "../shared/storage";
 import type {
   AppLanguage,
@@ -38,6 +45,7 @@ import {
 import { searchWeb } from "../shared/webSearch";
 import { selectionSearchUrl } from "../shared/searchEngines";
 import { uiText, type UiTextKey } from "../shared/i18n";
+import type { CreateTodoInput, TodoSource, UpdateTodoInput } from "../shared/types";
 
 type MenuContext =
   | "selection"
@@ -67,7 +75,10 @@ function broadcastOperationLog(
     });
 }
 
-const menuActions = new Map<string, { action: QuickActionId; toolId: string }>();
+const menuActions = new Map<
+  string,
+  { action: QuickActionId; toolId: string } | { action: "todo" }
+>();
 const activeControllers = new Map<string, AbortController>();
 const MCP_APPROVAL_TIMEOUT_MS = 30_000;
 const pendingMcpApprovals = new Map<
@@ -144,6 +155,14 @@ async function setupExtension(): Promise<void> {
     contexts: ["selection", "editable"]
   });
   menuActions.set(askId, { action: "ask", toolId: "ask-selection" });
+  const todoId = "webmind-todo-create";
+  chrome.contextMenus.create({
+    id: todoId,
+    parentId: "webmind-root",
+    title: uiText(settings.interfaceLanguage, "addSelectionToTodo"),
+    contexts: ["selection"]
+  });
+  menuActions.set(todoId, { action: "todo" });
   const selectedIds = settings.enabledToolIds["context-menu"] ?? [];
   for (const toolId of selectedIds) {
     const tool = tools.find((item) => item.id === toolId);
@@ -164,7 +183,7 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.runtime.onStartup.addListener(() => {
-  void chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+  void setupExtension();
 });
 
 chrome.storage.onChanged.addListener((changes, areaName) => {
@@ -182,6 +201,18 @@ chrome.commands.onCommand.addListener(async (command) => {
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   const menuAction = menuActions.get(String(info.menuItemId));
   if (!menuAction || !tab?.id) return;
+  if (menuAction.action === "todo") {
+    const text = String(info.selectionText ?? "").trim();
+    if (!text) return;
+    const source: TodoSource = {
+      kind: "selection",
+      url: info.pageUrl ?? tab.url,
+      pageTitle: tab.title,
+      selectedText: text
+    };
+    await createStoredTodo({ source, content: text });
+    return;
+  }
   const pending: PendingAction = {
     id: crypto.randomUUID(),
     action: menuAction.action,
@@ -401,6 +432,70 @@ chrome.runtime.onMessage.addListener(
       }
       if (message.type === "pending.consume") {
         return consumePendingAction();
+      }
+      if (message.type === "todo.create") {
+        const input = (message.payload ?? {}) as unknown as CreateTodoInput;
+        const todo = await createStoredTodo(input);
+        const settings = await loadSettings();
+        broadcastOperationLog(
+          uiText(settings.interfaceLanguage, "logTodoCreated"),
+          "success"
+        );
+        return todo;
+      }
+      if (message.type === "todo.list") {
+        return loadTodos();
+      }
+      if (message.type === "todo.update") {
+        const id = String(message.payload?.id ?? "");
+        const patch = (message.payload?.patch ?? {}) as UpdateTodoInput;
+        const todo = await updateStoredTodo(id, patch);
+        if (todo) {
+          const settings = await loadSettings();
+          broadcastOperationLog(
+            todo.status === "completed"
+              ? uiText(settings.interfaceLanguage, "logTodoCompleted")
+              : patch.status === "open"
+                ? uiText(settings.interfaceLanguage, "logTodoReopened")
+                : uiText(settings.interfaceLanguage, "logTodoUpdated"),
+            "success"
+          );
+        }
+        return todo;
+      }
+      if (message.type === "todo.split") {
+        const id = String(message.payload?.id ?? "");
+        const contents = Array.isArray(message.payload?.contents)
+          ? message.payload.contents.filter(
+              (content): content is string => typeof content === "string"
+            )
+          : [];
+        const splitTodos = await splitStoredTodo(id, contents);
+        if (!splitTodos.length) return [];
+        const settings = await loadSettings();
+        broadcastOperationLog(
+          uiText(settings.interfaceLanguage, "logTodoSplit"),
+          "success"
+        );
+        return splitTodos;
+      }
+      if (message.type === "todo.delete") {
+        await deleteStoredTodo(String(message.payload?.id ?? ""));
+        const settings = await loadSettings();
+        broadcastOperationLog(uiText(settings.interfaceLanguage, "logTodoDeleted"), "warning");
+        return { ok: true };
+      }
+      if (message.type === "todo.clearCompleted") {
+        await clearCompletedTodos();
+        const settings = await loadSettings();
+        broadcastOperationLog(uiText(settings.interfaceLanguage, "logTodoCleared"), "warning");
+        return { ok: true };
+      }
+      if (message.type === "todo.clearAll") {
+        await clearAllTodos();
+        const settings = await loadSettings();
+        broadcastOperationLog(uiText(settings.interfaceLanguage, "logTodoAllCleared"), "warning");
+        return { ok: true };
       }
       if (message.type === "panel.open") {
         const payload = message.payload ?? {};

@@ -7,6 +7,8 @@ import {
   ChevronDown,
   ChevronRight,
   ChevronUp,
+  ChevronsLeft,
+  ChevronsRight,
   CirclePlus,
   Clock3,
   Cookie,
@@ -16,6 +18,8 @@ import {
   Globe,
   ImagePlus,
   Link2,
+  ListTree,
+  ListTodo,
   Network,
   LoaderCircle,
   MessageCirclePlus,
@@ -32,6 +36,7 @@ import {
   Send,
   Settings,
   Sparkles,
+  Hd,
   Square,
   SquareMousePointer,
   StickyNote,
@@ -48,6 +53,7 @@ import {
   useCallback,
   useEffect,
   lazy,
+  useLayoutEffect,
   useMemo,
   useRef,
   Suspense,
@@ -74,6 +80,7 @@ import {
   listConversations,
   loadCustomTools,
   loadMcpServers,
+  loadTodos,
   loadSettings,
   saveConversation,
   saveCustomTools,
@@ -125,6 +132,8 @@ import type {
   ToolDefinition,
   ToolInvocationContext,
   ToolSurface,
+  TodoItem,
+  TodoStatus,
   WebSearchResult,
   AppLanguage
 } from "../shared/types";
@@ -191,6 +200,7 @@ import {
 } from "./context";
 import { markdownPreviewSegments } from "./markdownPreview";
 import { selectionQrCodeSvg } from "../shared/selectionQrCode";
+import { filterTodos } from "../shared/todos";
 import {
   NAV_ITEMS,
   TOOL_TAB_PRIORITY,
@@ -211,7 +221,67 @@ import {
   ImmersiveTranslateIcon
 } from "./customIcons";
 
-type ViewId = "chat" | "tools" | "mcp" | "history" | "logs";
+type ViewId = "chat" | "tools" | "todos" | "mcp" | "history" | "logs";
+
+function todoSourceLabel(todo: TodoItem, language?: AppLanguage): string {
+  if (!todo.source?.url) return uiText(language, "todoCreatedManually");
+  try {
+    return todo.source.pageTitle || new URL(todo.source.url).hostname;
+  } catch {
+    return todo.source.pageTitle || uiText(language, "todoCreatedFromSelection");
+  }
+}
+
+function openTodoSource(url: string): void {
+  if (isExtensionRuntime()) {
+    void chrome.tabs.create({ url });
+    return;
+  }
+  window.open(url, "_blank", "noopener,noreferrer");
+}
+
+function TodoContentPreview({ content, language }: { content: string; language?: AppLanguage }) {
+  const [expanded, setExpanded] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
+  const measureRef = useRef<HTMLSpanElement>(null);
+
+  useLayoutEffect(() => {
+    const measure = measureRef.current;
+    if (!measure) return;
+    const update = () => {
+      const lineHeight = Number.parseFloat(getComputedStyle(measure).lineHeight);
+      setHasMore(
+        Number.isFinite(lineHeight) && measure.offsetHeight > lineHeight * 3 + 1
+      );
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(measure.parentElement ?? measure);
+    return () => observer.disconnect();
+  }, [content]);
+
+  return (
+    <div
+      className={`todo-content-preview ${expanded ? "expanded" : ""} ${hasMore ? "has-expand" : ""}`}
+    >
+      <span className="todo-content-text">{content}</span>
+      <span ref={measureRef} className="todo-content-measure" aria-hidden="true">
+        {content}
+      </span>
+      {hasMore && (
+        <button
+          className="todo-content-expand"
+          type="button"
+          title={uiText(language, expanded ? "todoContentCollapse" : "todoContentExpand")}
+          aria-label={uiText(language, expanded ? "todoContentCollapse" : "todoContentExpand")}
+          onClick={() => setExpanded((current) => !current)}
+        >
+          {expanded ? <ChevronsLeft /> : <ChevronsRight />}
+        </button>
+      )}
+    </div>
+  );
+}
 
 interface CurrentPageCookies {
   url: string;
@@ -351,6 +421,16 @@ export function App() {
   const [toolStatus, setToolStatus] = useState("");
   const [operationLogs, setOperationLogs] = useState<OperationLogEntry[]>([]);
   const [history, setHistory] = useState<Conversation[]>([]);
+  const [todos, setTodos] = useState<TodoItem[]>([]);
+  const [todoFilter, setTodoFilter] = useState<"all" | TodoStatus>("open");
+  const [todoQuery, setTodoQuery] = useState("");
+  const [expandedTodoIds, setExpandedTodoIds] = useState<Set<string>>(
+    () => new Set()
+  );
+  const [todoEditorOpen, setTodoEditorOpen] = useState(false);
+  const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
+  const [todoDraft, setTodoDraft] = useState({ content: "" });
+  const [splittingTodoId, setSplittingTodoId] = useState<string | null>(null);
   const [customTools, setCustomTools] = useState<CustomTool[]>([]);
   const [mcpServers, setMcpServers] = useState<McpServerConfig[]>([]);
   const [selectedMcpTools, setSelectedMcpTools] = useState<McpToolSelection[]>([]);
@@ -705,6 +785,171 @@ export function App() {
     setHistory(await listConversations());
   }, []);
 
+  const refreshTodos = useCallback(async () => {
+    setTodos(
+      isExtensionRuntime()
+        ? await runtimeRequest<TodoItem[]>("todo.list")
+        : await loadTodos()
+    );
+  }, []);
+
+  const openNewTodoEditor = () => {
+    setEditingTodoId(null);
+    setTodoDraft({ content: "" });
+    setTodoEditorOpen(true);
+  };
+
+  const openTodoEditor = (todo: TodoItem) => {
+    setEditingTodoId(todo.id);
+    setTodoDraft({ content: todo.content });
+    setTodoEditorOpen(true);
+  };
+
+  const toggleTodoExpanded = (todoId: string) => {
+    setExpandedTodoIds((current) => {
+      const next = new Set(current);
+      if (next.has(todoId)) next.delete(todoId);
+      else next.add(todoId);
+      return next;
+    });
+  };
+
+  const saveTodoDraft = async () => {
+    const content = todoDraft.content.trim();
+    if (!content) {
+      setNotice(t("todoTitleRequired"));
+      return;
+    }
+    try {
+      if (editingTodoId) {
+        await runtimeRequest("todo.update", {
+          id: editingTodoId,
+          patch: { content }
+        });
+      } else {
+        await runtimeRequest("todo.create", { content });
+      }
+      await refreshTodos();
+      setTodoEditorOpen(false);
+    } catch (error) {
+      setNotice(errorMessage(error));
+    }
+  };
+
+  const createAnswerTodo = async (message: ChatMessage) => {
+    const content = message.content.trim();
+    if (!content) return;
+    try {
+      await runtimeRequest("todo.create", {
+        content,
+        source: {
+          kind: "answer",
+          url: pageContext?.url ?? activeTab?.url,
+          pageTitle: pageContext?.title ?? activeTab?.title
+        }
+      });
+      await refreshTodos();
+      setNotice(t("todoSaved"));
+      appendOperationLog(t("logTodoCreated"), "success");
+    } catch (error) {
+      setNotice(errorMessage(error));
+    }
+  };
+
+  const splitTodoWithModel = async (todo: TodoItem) => {
+    if (splittingTodoId || streamingId) return;
+    const profile = requireProfile("default");
+    if (!profile) return;
+    setSplittingTodoId(todo.id);
+    setToolStatus(t("todoSplitRunning"));
+    setNotice("");
+    try {
+      const response = await runtimeRequest<{ text: string }>("model.complete", {
+        profileId: profile.id,
+        purpose: "default",
+        temperature: 0,
+        messages: [
+          createMessage("system", t("todoSplitSystemPrompt")),
+          createMessage("user", `<todo>\n${todo.content}\n</todo>`)
+        ]
+      });
+      const values = extractJsonArray<unknown>(
+        response.text,
+        settingsRef.current?.interfaceLanguage
+      );
+      const contents = values
+        .filter((value): value is string => typeof value === "string")
+        .map((value) => value.trim())
+        .filter(Boolean);
+      if (contents.length < 2) {
+        throw new Error(t("todoSplitInvalid"));
+      }
+      await runtimeRequest("todo.split", { id: todo.id, contents });
+      await refreshTodos();
+      setNotice(t("todoSplitSuccess"));
+      appendOperationLog(t("logTodoSplit"), "success");
+    } catch (error) {
+      setNotice(errorMessage(error));
+      appendOperationLog(errorMessage(error), "error");
+    } finally {
+      setSplittingTodoId(null);
+      setToolStatus("");
+    }
+  };
+
+  const toggleTodo = async (todo: TodoItem) => {
+    try {
+      await runtimeRequest("todo.update", {
+        id: todo.id,
+        patch: { status: todo.status === "open" ? "completed" : "open" }
+      });
+      await refreshTodos();
+    } catch (error) {
+      setNotice(errorMessage(error));
+    }
+  };
+
+  const toggleTodoInProgress = async (todo: TodoItem) => {
+    if (todo.status === "completed") return;
+    try {
+      await runtimeRequest("todo.update", {
+        id: todo.id,
+        patch: { inProgress: !todo.inProgress }
+      });
+      await refreshTodos();
+    } catch (error) {
+      setNotice(errorMessage(error));
+    }
+  };
+
+  const deleteTodoItem = async (todo: TodoItem) => {
+    try {
+      await runtimeRequest("todo.delete", { id: todo.id });
+      await refreshTodos();
+    } catch (error) {
+      setNotice(errorMessage(error));
+    }
+  };
+
+  const clearCompletedTodoItems = async () => {
+    try {
+      await runtimeRequest("todo.clearCompleted");
+      await refreshTodos();
+    } catch (error) {
+      setNotice(errorMessage(error));
+    }
+  };
+
+  const clearAllTodoItems = async () => {
+    try {
+      await runtimeRequest("todo.clearAll");
+      setExpandedTodoIds(new Set());
+      await refreshTodos();
+    } catch (error) {
+      setNotice(errorMessage(error));
+    }
+  };
+
   const persistCurrentConversation = useCallback(async () => {
     const currentSettings = settingsRef.current;
     if (!currentSettings?.activeProfileId) return;
@@ -1009,8 +1254,11 @@ export function App() {
       loadSettings(),
       listConversations(),
       loadCustomTools(),
-      loadMcpServers()
-    ]).then(async ([loadedSettings, loadedHistory, tools, servers]) => {
+      loadMcpServers(),
+      isExtensionRuntime()
+        ? runtimeRequest<TodoItem[]>("todo.list")
+        : loadTodos()
+    ]).then(async ([loadedSettings, loadedHistory, tools, servers, loadedTodos]) => {
       settingsRef.current = loadedSettings;
       setSettings(loadedSettings);
       setIncludePage(true);
@@ -1020,6 +1268,7 @@ export function App() {
       setHistory(loadedHistory);
       setCustomTools(tools);
       setMcpServers(servers);
+      setTodos(loadedTodos);
       await refreshActivePageContext("sidepanel-init", true, "default", true);
       appendOperationLog(
         uiText(loadedSettings.interfaceLanguage, "logSidepanelReady"),
@@ -1067,6 +1316,9 @@ export function App() {
           );
         });
       }
+      if (areaName === "local" && changes["webmind.todos"]) {
+        void refreshTodos();
+      }
       if (
         areaName === "session" &&
         changes["webmind.pendingAction"]?.newValue
@@ -1081,7 +1333,7 @@ export function App() {
     };
     chrome.storage.onChanged.addListener(listener);
     return () => chrome.storage.onChanged.removeListener(listener);
-  }, [appendOperationLog, applyPendingAction, refreshActivePageContext]);
+  }, [appendOperationLog, applyPendingAction, refreshActivePageContext, refreshTodos]);
 
   useEffect(() => {
     if (!isExtensionRuntime()) return;
@@ -4280,7 +4532,10 @@ export function App() {
         ),
         home: currentSettings.enabledToolIds.home.filter((id) => id !== toolId),
         tools: currentSettings.enabledToolIds.tools.filter((id) => id !== toolId),
-        edge: currentSettings.enabledToolIds.edge.filter((id) => id !== toolId)
+        edge: currentSettings.enabledToolIds.edge.filter((id) => id !== toolId),
+        "context-menu": currentSettings.enabledToolIds["context-menu"].filter(
+          (id) => id !== toolId
+        )
       }
     };
     settingsRef.current = nextSettings;
@@ -4437,6 +4692,7 @@ export function App() {
       logLevelWeight(entry.level) >=
       logLevelWeight(settings?.logLevel ?? "info")
   );
+  const visibleTodos = filterTodos(todos, todoFilter, todoQuery);
   const isArticlePreview = previewContext?.kind === "article";
   const previewContextText = previewContext?.text?.trim() ?? "";
   const previewContextMarkdown =
@@ -4844,6 +5100,15 @@ export function App() {
                               <button
                                 className="message-action-button icon-only"
                                 type="button"
+                                title={t("messageAddToTodo")}
+                                aria-label={t("messageAddToTodo")}
+                                onClick={() => void createAnswerTodo(message)}
+                              >
+                                <ListTodo />
+                              </button>
+                              <button
+                                className="message-action-button icon-only"
+                                type="button"
                                 title={t("toggleMessageQrCode")}
                                 aria-label={t("toggleMessageQrCode")}
                                 disabled={Boolean(messageQrCodes[message.id]?.loading)}
@@ -4940,7 +5205,7 @@ export function App() {
                                     }
                                   >
                                     <Wand2 />
-                                    <span>{t("moreTools")}</span>
+                                    <span>{t("more")}</span>
                                     <ChevronDown className="menu-chevron" />
                                   </button>
                                   {messageToolMenuId === message.id && (
@@ -5186,6 +5451,213 @@ export function App() {
           </section>
         )}
 
+        {view === "todos" && (
+          <section className="workspace-view todo-workspace">
+            <div className="view-heading">
+              <div>
+                <p className="eyebrow">{t("todoPageEyebrow")}</p>
+                <h1>{t("localTodosTitle")}</h1>
+              </div>
+              <div className="view-heading-actions">
+                <button
+                  className="icon-button"
+                  type="button"
+                  title={t("todoClearCompleted")}
+                  disabled={!todos.some((todo) => todo.status === "completed")}
+                  onClick={() => void clearCompletedTodoItems()}
+                >
+                  <Eraser />
+                </button>
+                <button
+                  className="icon-button"
+                  type="button"
+                  title={t("todoClearAll")}
+                  disabled={!todos.length}
+                  onClick={() => void clearAllTodoItems()}
+                >
+                  <Trash2 />
+                </button>
+                <button
+                  className="icon-button"
+                  type="button"
+                  title={t("todoAdd")}
+                  onClick={openNewTodoEditor}
+                >
+                  <CirclePlus />
+                </button>
+              </div>
+            </div>
+            <div className="todo-toolbar">
+              <input
+                type="search"
+                value={todoQuery}
+                placeholder={t("todoSearchPlaceholder")}
+                onChange={(event) => setTodoQuery(event.target.value)}
+              />
+              <div className="todo-filters" role="tablist" aria-label={t("todoFilter") }>
+                {(["open", "all", "completed"] as const).map((filter) => (
+                  <button
+                    key={filter}
+                    className={todoFilter === filter ? "active" : ""}
+                    type="button"
+                    role="tab"
+                    aria-selected={todoFilter === filter}
+                    onClick={() => setTodoFilter(filter)}
+                  >
+                    {t(
+                      filter === "open"
+                        ? "todoOpen"
+                        : filter === "completed"
+                          ? "todoCompleted"
+                          : "todoAll"
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {!visibleTodos.length ? (
+              <div className="simple-empty">
+                <ListTodo />
+                <strong>{todoQuery ? t("todoNoSearchResults") : t("todoEmpty")}</strong>
+                <span>{t("todoEmptyHelp")}</span>
+              </div>
+            ) : (
+              <div className="todo-list">
+                {visibleTodos.map((todo) => (
+                  <article
+                    className={`todo-row ${todo.status} ${expandedTodoIds.has(todo.id) ? "expanded" : "collapsed"}`}
+                    key={todo.id}
+                  >
+                    <div className="todo-title-row">
+                      <button
+                        className="todo-check"
+                        type="button"
+                        title={todo.status === "open" ? t("todoMarkComplete") : t("todoMarkOpen")}
+                        aria-label={todo.status === "open" ? t("todoMarkComplete") : t("todoMarkOpen")}
+                        onClick={() => void toggleTodo(todo)}
+                      >
+                        {todo.status === "completed" ? <Check /> : null}
+                      </button>
+                      <span
+                        className={`todo-status-line ${
+                          todo.status === "completed"
+                            ? "completed"
+                            : todo.inProgress
+                              ? "in-progress"
+                              : "open"
+                        }`}
+                        aria-hidden="true"
+                      />
+                      <div className="todo-content-column">
+                        <div className="todo-title-content">
+                          <button
+                            className={`todo-progress-toggle ${todo.inProgress ? "active" : ""}`}
+                            type="button"
+                            disabled={todo.status === "completed"}
+                            title={
+                              todo.status === "completed"
+                                ? t("todoInProgressDisabled")
+                                : todo.inProgress
+                                  ? t("todoMarkNotInProgress")
+                                  : t("todoMarkInProgress")
+                            }
+                            aria-label={
+                              todo.status === "completed"
+                                ? t("todoInProgressDisabled")
+                                : todo.inProgress
+                                  ? t("todoMarkNotInProgress")
+                                  : t("todoMarkInProgress")
+                            }
+                            onClick={() => void toggleTodoInProgress(todo)}
+                          >
+                            <Hd />
+                          </button>
+                          <button
+                            className="todo-title-toggle"
+                            type="button"
+                            title={todo.title}
+                            aria-expanded={expandedTodoIds.has(todo.id)}
+                            onClick={() => toggleTodoExpanded(todo.id)}
+                          >
+                            <strong>{todo.title}</strong>
+                          </button>
+                        </div>
+                        <div className="todo-source-row">
+                          {todo.source?.url ? (
+                            <button
+                              className="todo-source"
+                              type="button"
+                              title={todo.source.url}
+                              onClick={() => openTodoSource(todo.source?.url ?? "")}
+                            >
+                              {todoSourceLabel(todo, settings?.interfaceLanguage)}
+                            </button>
+                          ) : (
+                            <span className="todo-source todo-source-manual">
+                              {t("todoCreatedManually")}
+                            </span>
+                          )}
+                          <span className="todo-updated-at">
+                            {formatTime(todo.updatedAt, settings?.interfaceLanguage)}
+                          </span>
+                        </div>
+                        {expandedTodoIds.has(todo.id) && todo.content && (
+                          <TodoContentPreview
+                            content={todo.content}
+                            language={settings?.interfaceLanguage}
+                          />
+                        )}
+                      </div>
+                      <div className="todo-row-actions">
+                        <button
+                          className="icon-button mini todo-expand-toggle"
+                          type="button"
+                          aria-expanded={expandedTodoIds.has(todo.id)}
+                          title={expandedTodoIds.has(todo.id) ? t("todoCollapse") : t("todoExpand")}
+                          aria-label={expandedTodoIds.has(todo.id) ? t("todoCollapse") : t("todoExpand")}
+                          onClick={() => toggleTodoExpanded(todo.id)}
+                        >
+                          {expandedTodoIds.has(todo.id) ? <ChevronUp /> : <ChevronDown />}
+                        </button>
+                        <button
+                          className="icon-button mini"
+                          type="button"
+                          title={t("todoSplit")}
+                          aria-label={t("todoSplit")}
+                          disabled={Boolean(splittingTodoId) || Boolean(streamingId)}
+                          onClick={() => void splitTodoWithModel(todo)}
+                        >
+                          {splittingTodoId === todo.id ? (
+                            <LoaderCircle className="spin" />
+                          ) : (
+                            <ListTree />
+                          )}
+                        </button>
+                        <button
+                          className="icon-button mini"
+                          type="button"
+                          title={t("todoEdit")}
+                          onClick={() => openTodoEditor(todo)}
+                        >
+                          <PenLine />
+                        </button>
+                        <button
+                          className="icon-button mini danger"
+                          type="button"
+                          title={t("todoDelete")}
+                          onClick={() => void deleteTodoItem(todo)}
+                        >
+                          <Trash2 />
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
         {view === "mcp" && (
           <section className="workspace-view">
             <div className="view-heading">
@@ -5267,8 +5739,8 @@ export function App() {
           <section className="workspace-view">
             <div className="view-heading">
               <div>
-                <p className="eyebrow">{t("localRecords")}</p>
-                <h1>{t("historySessions")}</h1>
+                <p className="eyebrow">{t("historyPageEyebrow")}</p>
+                <h1>{t("localSessionsTitle")}</h1>
               </div>
               <div className="view-heading-actions">
                 <button
@@ -5341,8 +5813,8 @@ export function App() {
           <section className="workspace-view">
             <div className="view-heading">
               <div>
-                <p className="eyebrow">{t("operationLogs")}</p>
-                <h1>{t("operationLogs")}</h1>
+                <p className="eyebrow">{t("logsPageTitle")}</p>
+                <h1>{t("logsPageHeading")}</h1>
               </div>
               <button
                 className="icon-button"
@@ -6048,10 +6520,13 @@ export function App() {
               </label>
               <div className="cookie-preview-heading">
                 <strong>
-                  {t("cookiePreview").replace(
-                    "{count}",
-                    String(currentCookies.length)
-                  )}
+                  {t("cookiePreview")}
+                  <span className="cookie-preview-count">
+                    {t("cookiePreviewCount").replace(
+                      "{count}",
+                      String(currentCookies.length)
+                    )}
+                  </span>
                 </strong>
                 <button
                   className="secondary-button compact"
@@ -6077,6 +6552,60 @@ export function App() {
                     )}
               </pre>
             </div>
+          </section>
+        </div>
+      )}
+
+      {todoEditorOpen && (
+        <div className="modal-backdrop">
+          <section className="modal todo-editor" role="dialog" aria-modal="true">
+            <header className="modal-header">
+              <div>
+                <p className="eyebrow">{t("todosTitle")}</p>
+                <h2>{editingTodoId ? t("todoEdit") : t("todoAdd")}</h2>
+              </div>
+              <button
+                className="icon-button"
+                type="button"
+                title={t("close")}
+                onClick={() => setTodoEditorOpen(false)}
+              >
+                <X />
+              </button>
+            </header>
+            <div className="modal-body form-stack">
+              <label className="field">
+                <span className="field-label">{t("todoContent")}</span>
+                <textarea
+                  autoFocus
+                  rows={7}
+                  value={todoDraft.content}
+                  maxLength={20_000}
+                  onChange={(event) =>
+                    setTodoDraft((current) => ({
+                      ...current,
+                      content: event.target.value
+                    }))
+                  }
+                />
+              </label>
+            </div>
+            <footer className="modal-footer">
+              <button
+                className="secondary-button"
+                type="button"
+                onClick={() => setTodoEditorOpen(false)}
+              >
+                {t("cancel")}
+              </button>
+              <button
+                className="primary-button"
+                type="button"
+                onClick={() => void saveTodoDraft()}
+              >
+                {t("save")}
+              </button>
+            </footer>
           </section>
         </div>
       )}

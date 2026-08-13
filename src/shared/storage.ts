@@ -16,7 +16,13 @@ import type {
   ReasoningStrategy,
   SelectionMatchHighlightMode
 } from "./types";
+import type { CreateTodoInput, TodoItem, UpdateTodoInput } from "./types";
 import { SELECTION_OVERLAY_FIXED_TOOL_ORDER } from "./types";
+import {
+  createTodo,
+  normalizeTodos,
+  updateTodo as updateTodoItem
+} from "./todos";
 
 const APP_LANGUAGES = new Set<AppLanguage>([
   "auto",
@@ -39,6 +45,7 @@ const CUSTOM_TOOLS_KEY = "webmind.customTools";
 const SESSION_SECRETS_KEY = "webmind.sessionSecrets";
 const PENDING_ACTION_KEY = "webmind.pendingAction";
 const MCP_SERVERS_KEY = "webmind.mcpServers";
+const TODOS_KEY = "webmind.todos";
 const CHROME_SYNC_META_KEY = "webmind.chromeSync.meta";
 const CHROME_SYNC_CHUNK_PREFIX = "webmind.chromeSync.chunk.";
 const CHROME_SYNC_CHUNK_CHARS = 2400;
@@ -726,6 +733,70 @@ export async function saveMcpServers(
   servers: McpServerConfig[]
 ): Promise<void> {
   await setValue("local", MCP_SERVERS_KEY, normalizeMcpServers(servers));
+}
+
+export async function loadTodos(): Promise<TodoItem[]> {
+  return normalizeTodos(await getValue<unknown>("local", TODOS_KEY, []));
+}
+
+async function saveTodos(todos: TodoItem[]): Promise<void> {
+  await setValue("local", TODOS_KEY, normalizeTodos(todos));
+}
+
+export async function createStoredTodo(input: CreateTodoInput): Promise<TodoItem> {
+  if (!String(input.content ?? "").trim()) {
+    throw new Error("Todo content is required");
+  }
+  const todo = createTodo(input);
+  await saveTodos([...(await loadTodos()), todo]);
+  return todo;
+}
+
+export async function updateStoredTodo(
+  id: string,
+  patch: UpdateTodoInput
+): Promise<TodoItem | null> {
+  if (patch.content !== undefined && !String(patch.content ?? "").trim()) {
+    throw new Error("Todo content is required");
+  }
+  const todos = await loadTodos();
+  const current = todos.find((item) => item.id === id);
+  if (!current) return null;
+  const updated = updateTodoItem(current, patch);
+  await saveTodos(todos.map((item) => (item.id === id ? updated : item)));
+  return updated;
+}
+
+export async function splitStoredTodo(
+  id: string,
+  contents: string[]
+): Promise<TodoItem[]> {
+  const todos = await loadTodos();
+  const current = todos.find((item) => item.id === id);
+  if (!current) return [];
+  if (contents.length < 2 || contents.length > 20) {
+    throw new Error("Todo split must produce between 2 and 20 items");
+  }
+  const splitTodos = contents.map((content) =>
+    createTodo({ content, source: current.source })
+  );
+  await saveTodos([
+    ...todos.filter((item) => item.id !== id),
+    ...splitTodos
+  ]);
+  return splitTodos;
+}
+
+export async function deleteStoredTodo(id: string): Promise<void> {
+  await saveTodos((await loadTodos()).filter((item) => item.id !== id));
+}
+
+export async function clearCompletedTodos(): Promise<void> {
+  await saveTodos((await loadTodos()).filter((item) => item.status !== "completed"));
+}
+
+export async function clearAllTodos(): Promise<void> {
+  await saveTodos([]);
 }
 
 export async function setPendingAction(

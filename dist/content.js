@@ -14956,28 +14956,16 @@
   ];
   var BookOpen = createLucideIcon("book-open", __iconNode2);
 
-  // node_modules/lucide-react/dist/esm/icons/bookmark.mjs
-  var __iconNode3 = [
-    [
-      "path",
-      {
-        d: "M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z",
-        key: "oz39mx"
-      }
-    ]
-  ];
-  var Bookmark = createLucideIcon("bookmark", __iconNode3);
-
   // node_modules/lucide-react/dist/esm/icons/check.mjs
-  var __iconNode4 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-  var Check = createLucideIcon("check", __iconNode4);
+  var __iconNode3 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+  var Check = createLucideIcon("check", __iconNode3);
 
   // node_modules/lucide-react/dist/esm/icons/chevron-down.mjs
-  var __iconNode5 = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-  var ChevronDown = createLucideIcon("chevron-down", __iconNode5);
+  var __iconNode4 = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+  var ChevronDown = createLucideIcon("chevron-down", __iconNode4);
 
   // node_modules/lucide-react/dist/esm/icons/clipboard.mjs
-  var __iconNode6 = [
+  var __iconNode5 = [
     ["rect", { width: "8", height: "4", x: "8", y: "2", rx: "1", ry: "1", key: "tgr4d6" }],
     [
       "path",
@@ -14987,25 +14975,25 @@
       }
     ]
   ];
-  var Clipboard = createLucideIcon("clipboard", __iconNode6);
+  var Clipboard = createLucideIcon("clipboard", __iconNode5);
 
   // node_modules/lucide-react/dist/esm/icons/code-xml.mjs
-  var __iconNode7 = [
+  var __iconNode6 = [
     ["path", { d: "m18 16 4-4-4-4", key: "1inbqp" }],
     ["path", { d: "m6 8-4 4 4 4", key: "15zrgr" }],
     ["path", { d: "m14.5 4-5 16", key: "e7oirm" }]
   ];
-  var CodeXml = createLucideIcon("code-xml", __iconNode7);
+  var CodeXml = createLucideIcon("code-xml", __iconNode6);
 
   // node_modules/lucide-react/dist/esm/icons/copy.mjs
-  var __iconNode8 = [
+  var __iconNode7 = [
     ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
     ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
   ];
-  var Copy = createLucideIcon("copy", __iconNode8);
+  var Copy = createLucideIcon("copy", __iconNode7);
 
   // node_modules/lucide-react/dist/esm/icons/earth.mjs
-  var __iconNode9 = [
+  var __iconNode8 = [
     ["path", { d: "M21.54 15H17a2 2 0 0 0-2 2v4.54", key: "1djwo0" }],
     [
       "path",
@@ -15017,10 +15005,10 @@
     ["path", { d: "M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05", key: "14pb5j" }],
     ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
   ];
-  var Earth = createLucideIcon("earth", __iconNode9);
+  var Earth = createLucideIcon("earth", __iconNode8);
 
   // node_modules/lucide-react/dist/esm/icons/file-text.mjs
-  var __iconNode10 = [
+  var __iconNode9 = [
     [
       "path",
       {
@@ -15033,27 +15021,27 @@
     ["path", { d: "M16 13H8", key: "t4e002" }],
     ["path", { d: "M16 17H8", key: "z1uh3a" }]
   ];
-  var FileText = createLucideIcon("file-text", __iconNode10);
+  var FileText = createLucideIcon("file-text", __iconNode9);
 
   // node_modules/lucide-react/dist/esm/icons/highlighter.mjs
-  var __iconNode11 = [
+  var __iconNode10 = [
     ["path", { d: "m9 11-6 6v3h9l3-3", key: "1a3l36" }],
     ["path", { d: "m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4", key: "14a9rk" }]
   ];
-  var Highlighter = createLucideIcon("highlighter", __iconNode11);
+  var Highlighter = createLucideIcon("highlighter", __iconNode10);
 
   // node_modules/lucide-react/dist/esm/icons/image-plus.mjs
-  var __iconNode12 = [
+  var __iconNode11 = [
     ["path", { d: "M16 5h6", key: "1vod17" }],
     ["path", { d: "M19 2v6", key: "4bpg5p" }],
     ["path", { d: "M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5", key: "1ue2ih" }],
     ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }],
     ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }]
   ];
-  var ImagePlus = createLucideIcon("image-plus", __iconNode12);
+  var ImagePlus = createLucideIcon("image-plus", __iconNode11);
 
   // node_modules/lucide-react/dist/esm/icons/languages.mjs
-  var __iconNode13 = [
+  var __iconNode12 = [
     ["path", { d: "m5 8 6 6", key: "1wu5hv" }],
     ["path", { d: "m4 14 6-6 2-3", key: "1k1g8d" }],
     ["path", { d: "M2 5h12", key: "or177f" }],
@@ -15061,10 +15049,10 @@
     ["path", { d: "m22 22-5-10-5 10", key: "don7ne" }],
     ["path", { d: "M14 18h6", key: "1m8k6r" }]
   ];
-  var Languages = createLucideIcon("languages", __iconNode13);
+  var Languages = createLucideIcon("languages", __iconNode12);
 
   // node_modules/lucide-react/dist/esm/icons/lightbulb.mjs
-  var __iconNode14 = [
+  var __iconNode13 = [
     [
       "path",
       {
@@ -15075,39 +15063,39 @@
     ["path", { d: "M9 18h6", key: "x1upvd" }],
     ["path", { d: "M10 22h4", key: "ceow96" }]
   ];
-  var Lightbulb = createLucideIcon("lightbulb", __iconNode14);
+  var Lightbulb = createLucideIcon("lightbulb", __iconNode13);
 
   // node_modules/lucide-react/dist/esm/icons/list-checks.mjs
-  var __iconNode15 = [
+  var __iconNode14 = [
     ["path", { d: "M13 5h8", key: "a7qcls" }],
     ["path", { d: "M13 12h8", key: "h98zly" }],
     ["path", { d: "M13 19h8", key: "c3s6r1" }],
     ["path", { d: "m3 17 2 2 4-4", key: "1jhpwq" }],
     ["path", { d: "m3 7 2 2 4-4", key: "1obspn" }]
   ];
-  var ListChecks = createLucideIcon("list-checks", __iconNode15);
+  var ListChecks = createLucideIcon("list-checks", __iconNode14);
 
   // node_modules/lucide-react/dist/esm/icons/list-todo.mjs
-  var __iconNode16 = [
+  var __iconNode15 = [
     ["path", { d: "M13 5h8", key: "a7qcls" }],
     ["path", { d: "M13 12h8", key: "h98zly" }],
     ["path", { d: "M13 19h8", key: "c3s6r1" }],
     ["path", { d: "m3 17 2 2 4-4", key: "1jhpwq" }],
     ["rect", { x: "3", y: "4", width: "6", height: "6", rx: "1", key: "cif1o7" }]
   ];
-  var ListTodo = createLucideIcon("list-todo", __iconNode16);
+  var ListTodo = createLucideIcon("list-todo", __iconNode15);
 
   // node_modules/lucide-react/dist/esm/icons/maximize-2.mjs
-  var __iconNode17 = [
+  var __iconNode16 = [
     ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
     ["path", { d: "m21 3-7 7", key: "1l2asr" }],
     ["path", { d: "m3 21 7-7", key: "tjx5ai" }],
     ["path", { d: "M9 21H3v-6", key: "wtvkvv" }]
   ];
-  var Maximize2 = createLucideIcon("maximize-2", __iconNode17);
+  var Maximize2 = createLucideIcon("maximize-2", __iconNode16);
 
   // node_modules/lucide-react/dist/esm/icons/message-square-reply.mjs
-  var __iconNode18 = [
+  var __iconNode17 = [
     [
       "path",
       {
@@ -15118,10 +15106,10 @@
     ["path", { d: "m10 8-3 3 3 3", key: "fp6dz7" }],
     ["path", { d: "M17 14v-1a2 2 0 0 0-2-2H7", key: "1tkjnz" }]
   ];
-  var MessageSquareReply = createLucideIcon("message-square-reply", __iconNode18);
+  var MessageSquareReply = createLucideIcon("message-square-reply", __iconNode17);
 
   // node_modules/lucide-react/dist/esm/icons/message-square-text.mjs
-  var __iconNode19 = [
+  var __iconNode18 = [
     [
       "path",
       {
@@ -15133,27 +15121,27 @@
     ["path", { d: "M7 15h6", key: "d9of3u" }],
     ["path", { d: "M7 7h8", key: "af5zfr" }]
   ];
-  var MessageSquareText = createLucideIcon("message-square-text", __iconNode19);
+  var MessageSquareText = createLucideIcon("message-square-text", __iconNode18);
 
   // node_modules/lucide-react/dist/esm/icons/minimize-2.mjs
-  var __iconNode20 = [
+  var __iconNode19 = [
     ["path", { d: "m14 10 7-7", key: "oa77jy" }],
     ["path", { d: "M20 10h-6V4", key: "mjg0md" }],
     ["path", { d: "m3 21 7-7", key: "tjx5ai" }],
     ["path", { d: "M4 14h6v6", key: "rmj7iw" }]
   ];
-  var Minimize2 = createLucideIcon("minimize-2", __iconNode20);
+  var Minimize2 = createLucideIcon("minimize-2", __iconNode19);
 
   // node_modules/lucide-react/dist/esm/icons/panel-right-open.mjs
-  var __iconNode21 = [
+  var __iconNode20 = [
     ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }],
     ["path", { d: "M15 3v18", key: "14nvp0" }],
     ["path", { d: "m10 15-3-3 3-3", key: "1pgupc" }]
   ];
-  var PanelRightOpen = createLucideIcon("panel-right-open", __iconNode21);
+  var PanelRightOpen = createLucideIcon("panel-right-open", __iconNode20);
 
   // node_modules/lucide-react/dist/esm/icons/pen-line.mjs
-  var __iconNode22 = [
+  var __iconNode21 = [
     ["path", { d: "M13 21h8", key: "1jsn5i" }],
     [
       "path",
@@ -15163,18 +15151,18 @@
       }
     ]
   ];
-  var PenLine = createLucideIcon("pen-line", __iconNode22);
+  var PenLine = createLucideIcon("pen-line", __iconNode21);
 
   // node_modules/lucide-react/dist/esm/icons/presentation.mjs
-  var __iconNode23 = [
+  var __iconNode22 = [
     ["path", { d: "M2 3h20", key: "91anmk" }],
     ["path", { d: "M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3", key: "2k9sn8" }],
     ["path", { d: "m7 21 5-5 5 5", key: "bip4we" }]
   ];
-  var Presentation = createLucideIcon("presentation", __iconNode23);
+  var Presentation = createLucideIcon("presentation", __iconNode22);
 
   // node_modules/lucide-react/dist/esm/icons/qr-code.mjs
-  var __iconNode24 = [
+  var __iconNode23 = [
     ["rect", { width: "5", height: "5", x: "3", y: "3", rx: "1", key: "1tu5fj" }],
     ["rect", { width: "5", height: "5", x: "16", y: "3", rx: "1", key: "1v8r4q" }],
     ["rect", { width: "5", height: "5", x: "3", y: "16", rx: "1", key: "1x03jg" }],
@@ -15188,24 +15176,24 @@
     ["path", { d: "M21 12v.01", key: "1lwtk9" }],
     ["path", { d: "M12 21v-1", key: "1880an" }]
   ];
-  var QrCode = createLucideIcon("qr-code", __iconNode24);
+  var QrCode = createLucideIcon("qr-code", __iconNode23);
 
   // node_modules/lucide-react/dist/esm/icons/reply.mjs
-  var __iconNode25 = [
+  var __iconNode24 = [
     ["path", { d: "M20 18v-2a4 4 0 0 0-4-4H4", key: "5vmcpk" }],
     ["path", { d: "m9 17-5-5 5-5", key: "nvlc11" }]
   ];
-  var Reply = createLucideIcon("reply", __iconNode25);
+  var Reply = createLucideIcon("reply", __iconNode24);
 
   // node_modules/lucide-react/dist/esm/icons/rotate-ccw.mjs
-  var __iconNode26 = [
+  var __iconNode25 = [
     ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
     ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
   ];
-  var RotateCcw = createLucideIcon("rotate-ccw", __iconNode26);
+  var RotateCcw = createLucideIcon("rotate-ccw", __iconNode25);
 
   // node_modules/lucide-react/dist/esm/icons/scan-text.mjs
-  var __iconNode27 = [
+  var __iconNode26 = [
     ["path", { d: "M3 7V5a2 2 0 0 1 2-2h2", key: "aa7l1z" }],
     ["path", { d: "M17 3h2a2 2 0 0 1 2 2v2", key: "4qcy5o" }],
     ["path", { d: "M21 17v2a2 2 0 0 1-2 2h-2", key: "6vwrx8" }],
@@ -15214,17 +15202,17 @@
     ["path", { d: "M7 12h10", key: "b7w52i" }],
     ["path", { d: "M7 16h6", key: "1vyc9m" }]
   ];
-  var ScanText = createLucideIcon("scan-text", __iconNode27);
+  var ScanText = createLucideIcon("scan-text", __iconNode26);
 
   // node_modules/lucide-react/dist/esm/icons/search.mjs
-  var __iconNode28 = [
+  var __iconNode27 = [
     ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
     ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
   ];
-  var Search = createLucideIcon("search", __iconNode28);
+  var Search = createLucideIcon("search", __iconNode27);
 
   // node_modules/lucide-react/dist/esm/icons/send.mjs
-  var __iconNode29 = [
+  var __iconNode28 = [
     [
       "path",
       {
@@ -15234,20 +15222,10 @@
     ],
     ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
   ];
-  var Send = createLucideIcon("send", __iconNode29);
-
-  // node_modules/lucide-react/dist/esm/icons/share-2.mjs
-  var __iconNode30 = [
-    ["circle", { cx: "18", cy: "5", r: "3", key: "gq8acd" }],
-    ["circle", { cx: "6", cy: "12", r: "3", key: "w7nqdw" }],
-    ["circle", { cx: "18", cy: "19", r: "3", key: "1xt0gg" }],
-    ["line", { x1: "8.59", x2: "15.42", y1: "13.51", y2: "17.49", key: "47mynk" }],
-    ["line", { x1: "15.41", x2: "8.59", y1: "6.51", y2: "10.49", key: "1n3mei" }]
-  ];
-  var Share2 = createLucideIcon("share-2", __iconNode30);
+  var Send = createLucideIcon("send", __iconNode28);
 
   // node_modules/lucide-react/dist/esm/icons/sparkles.mjs
-  var __iconNode31 = [
+  var __iconNode29 = [
     [
       "path",
       {
@@ -15259,10 +15237,10 @@
     ["path", { d: "M22 4h-4", key: "gwowj6" }],
     ["circle", { cx: "4", cy: "20", r: "2", key: "6kqj1y" }]
   ];
-  var Sparkles = createLucideIcon("sparkles", __iconNode31);
+  var Sparkles = createLucideIcon("sparkles", __iconNode29);
 
   // node_modules/lucide-react/dist/esm/icons/square-dashed-text.mjs
-  var __iconNode32 = [
+  var __iconNode30 = [
     ["path", { d: "M14 21h1", key: "v9vybs" }],
     ["path", { d: "M14 3h1", key: "1ec4yj" }],
     ["path", { d: "M19 3a2 2 0 0 1 2 2", key: "18rm91" }],
@@ -15279,10 +15257,10 @@
     ["path", { d: "M9 21h1", key: "15o7lz" }],
     ["path", { d: "M9 3h1", key: "1yesri" }]
   ];
-  var SquareDashedText = createLucideIcon("square-dashed-text", __iconNode32);
+  var SquareDashedText = createLucideIcon("square-dashed-text", __iconNode30);
 
   // node_modules/lucide-react/dist/esm/icons/wand-sparkles.mjs
-  var __iconNode33 = [
+  var __iconNode31 = [
     [
       "path",
       {
@@ -15298,14 +15276,14 @@
     ["path", { d: "M21 16h-4", key: "1cnmox" }],
     ["path", { d: "M11 3H9", key: "1obp7u" }]
   ];
-  var WandSparkles = createLucideIcon("wand-sparkles", __iconNode33);
+  var WandSparkles = createLucideIcon("wand-sparkles", __iconNode31);
 
   // node_modules/lucide-react/dist/esm/icons/x.mjs
-  var __iconNode34 = [
+  var __iconNode32 = [
     ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
     ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
   ];
-  var X = createLucideIcon("x", __iconNode34);
+  var X = createLucideIcon("x", __iconNode32);
 
   // src/content/index.tsx
   var import_react5 = __toESM(require_react(), 1);
@@ -15397,7 +15375,8 @@
     mcpToolApprovalAllow: "Immer erlauben",
     cookieViewer: "Cookies anzeigen",
     cookieFormat: "Format",
-    cookiePreview: "Vorschau ({count} Cookies)",
+    cookiePreview: "Vorschau",
+    cookiePreviewCount: "({count} Cookies)",
     mcpToolUsed: "Verwendetes MCP-Tool",
     mcpToolNotCalled: "MCP-Tool nicht aufgerufen",
     mcpToolFailed: "MCP-Tool-Aufruf fehlgeschlagen",
@@ -15405,8 +15384,59 @@
     mcpToolBlockedUserDeny: "Nutzer hat die Berechtigung abgelehnt",
     mcpToolBlockedApprovalTimeout: "Zeitlimit f\xFCr Berechtigung abgelaufen",
     navTools: "Tools",
+    navTodos: "Aufgaben",
     navHistory: "Verlauf",
     navLogs: "Protokolle",
+    logsPageTitle: "Protokolle",
+    logsPageHeading: "Vorgangsprotokolle",
+    historyPageEyebrow: "Verlauf",
+    localSessionsTitle: "Sitzungsaufzeichnungen",
+    todoPageEyebrow: "Aufgaben",
+    localTodosTitle: "Aufgaben",
+    todosTitle: "Aufgaben",
+    todoItemsTitle: "Aufgabenliste",
+    todoAdd: "Aufgabe hinzuf\xFCgen",
+    todoEdit: "Aufgabe bearbeiten",
+    todoContent: "Inhalt",
+    todoSplit: "Mit KI aufteilen",
+    todoSplitRunning: "Aufgabe wird mit KI aufgeteilt",
+    todoSplitInvalid: "Das Modell hat nicht mindestens zwei g\xFCltige Aufgaben zur\xFCckgegeben",
+    todoSplitSuccess: "Aufgabe aufgeteilt",
+    todoSplitSystemPrompt: "Teilen Sie die vom Nutzer angegebene einzelne Aufgabe in mehrere unabh\xE4ngige, umsetzbare Aufgaben auf. Geben Sie ausschlie\xDFlich ein JSON-String-Array ohne Markdown oder Erkl\xE4rung zur\xFCck. Geben Sie mindestens 2 und h\xF6chstens 20 Eintr\xE4ge zur\xFCck. Erfinden Sie keine Aufgaben, die sich nicht aus dem Originaltext ergeben.",
+    todoSearchPlaceholder: "Aufgaben suchen",
+    todoFilter: "Aufgabenfilter",
+    todoAll: "Alle",
+    todoOpen: "Offen",
+    todoCompleted: "Erledigt",
+    todoMarkComplete: "Als erledigt markieren",
+    todoMarkOpen: "Wieder \xF6ffnen",
+    todoMarkInProgress: "Als in Bearbeitung markieren",
+    todoMarkNotInProgress: "Markierung In Bearbeitung entfernen",
+    todoInProgressDisabled: "Erledigte Aufgaben k\xF6nnen nicht als in Bearbeitung markiert werden",
+    todoExpand: "Aufgabe ausklappen",
+    todoCollapse: "Aufgabe einklappen",
+    todoContentExpand: "Inhalt ausklappen",
+    todoContentCollapse: "Inhalt einklappen",
+    todoDelete: "Aufgabe l\xF6schen",
+    todoClearCompleted: "Erledigte l\xF6schen",
+    todoClearAll: "Alle Aufgaben l\xF6schen",
+    todoEmpty: "Noch keine Aufgaben",
+    todoEmptyHelp: "Erstellen Sie eine Aufgabe aus der Auswahl, dem Kontextmen\xFC oder hier.",
+    todoNoSearchResults: "Keine passenden Aufgaben",
+    todoCreatedFromSelection: "Aus ausgew\xE4hltem Text",
+    todoCreatedManually: "Manuell erstellt",
+    todoSaved: "Zur Aufgabenliste hinzugef\xFCgt",
+    todoTitleRequired: "Geben Sie den Aufgabeninhalt ein",
+    logTodoSplit: "Aufgabe mit KI aufgeteilt",
+    messageAddToTodo: "Antwort zu Aufgaben hinzuf\xFCgen",
+    logTodoCreated: "Aufgabe erstellt",
+    logTodoUpdated: "Aufgabe aktualisiert",
+    logTodoCompleted: "Aufgabe erledigt",
+    logTodoReopened: "Aufgabe wieder ge\xF6ffnet",
+    logTodoDeleted: "Aufgabe gel\xF6scht",
+    logTodoCleared: "Erledigte Aufgaben gel\xF6scht",
+    logTodoAllCleared: "Alle Aufgaben gel\xF6scht",
+    addSelectionToTodo: "Zur Aufgabenliste hinzuf\xFCgen",
     operationLogs: "Vorgangsprotokolle",
     operationLogsHelp: "Wichtige Produktvorg\xE4nge werden hier in Echtzeit angezeigt.",
     clearLogs: "Protokolle l\xF6schen",
@@ -15690,12 +15720,8 @@
     selectionFixedToolsHelp: "W\xE4hlen Sie feste Werkzeuge, die vor der Seitenleistenfrage und anderen Werkzeugen angezeigt werden.",
     selectionFixedToolCopy: "Kopieren",
     selectionFixedToolSearch: "Suchen",
-    selectionFixedToolBookmark: "Lesezeichen",
-    selectionFixedToolShare: "Teilen",
     selectionFixedToolTodo: "Aufgabe",
     selectionFixedToolQrCode: "QR-Code",
-    selectionBookmark: "Ausgew\xE4hlten Text als Lesezeichen speichern",
-    selectionShare: "Ausgew\xE4hlten Text teilen",
     selectionTodo: "Ausgew\xE4hlten Text zu Aufgaben hinzuf\xFCgen",
     selectionQrCode: "QR-Code f\xFCr ausgew\xE4hlten Text erzeugen",
     selectionQrCodeTitle: "QR-Code",
@@ -16050,7 +16076,8 @@
     mcpToolApprovalAllow: "Permitir siempre",
     cookieViewer: "Ver cookies",
     cookieFormat: "Formato",
-    cookiePreview: "Vista previa ({count} cookies)",
+    cookiePreview: "Vista previa",
+    cookiePreviewCount: "({count} cookies)",
     mcpToolUsed: "Herramienta MCP utilizada",
     mcpToolNotCalled: "Herramienta MCP no llamada",
     mcpToolFailed: "Fall\xF3 la llamada a la herramienta MCP",
@@ -16058,8 +16085,59 @@
     mcpToolBlockedUserDeny: "El usuario deneg\xF3 la autorizaci\xF3n",
     mcpToolBlockedApprovalTimeout: "Tiempo de autorizaci\xF3n agotado",
     navTools: "Herramientas",
+    navTodos: "Tareas",
     navHistory: "Historial",
     navLogs: "Registros",
+    logsPageTitle: "Registros",
+    logsPageHeading: "Registros de operaciones",
+    historyPageEyebrow: "Historial",
+    localSessionsTitle: "Registros de sesiones",
+    todoPageEyebrow: "Tareas",
+    localTodosTitle: "Tareas",
+    todosTitle: "Tareas",
+    todoItemsTitle: "Lista de tareas",
+    todoAdd: "A\xF1adir tarea",
+    todoEdit: "Editar tarea",
+    todoContent: "Contenido",
+    todoSplit: "Dividir con IA",
+    todoSplitRunning: "Dividiendo la tarea con IA",
+    todoSplitInvalid: "El modelo no devolvi\xF3 al menos dos tareas v\xE1lidas",
+    todoSplitSuccess: "Tarea dividida",
+    todoSplitSystemPrompt: "Divide la tarea proporcionada por el usuario en varias tareas independientes y ejecutables. Devuelve \xFAnicamente una matriz JSON de cadenas, sin Markdown ni explicaciones. Devuelve entre 2 y 20 elementos. No inventes tareas que no est\xE9n respaldadas por el texto original.",
+    todoSearchPlaceholder: "Buscar tareas",
+    todoFilter: "Filtro de tareas",
+    todoAll: "Todas",
+    todoOpen: "Pendientes",
+    todoCompleted: "Completadas",
+    todoMarkComplete: "Marcar como completada",
+    todoMarkOpen: "Reabrir",
+    todoMarkInProgress: "Marcar como en curso",
+    todoMarkNotInProgress: "Quitar la marca de en curso",
+    todoInProgressDisabled: "Las tareas completadas no pueden marcarse en curso",
+    todoExpand: "Expandir tarea",
+    todoCollapse: "Contraer tarea",
+    todoContentExpand: "Expandir contenido",
+    todoContentCollapse: "Contraer contenido",
+    todoDelete: "Eliminar tarea",
+    todoClearCompleted: "Borrar completadas",
+    todoClearAll: "Borrar todas las tareas",
+    todoEmpty: "A\xFAn no hay tareas",
+    todoEmptyHelp: "Cree una tarea desde la selecci\xF3n, el men\xFA contextual o aqu\xED.",
+    todoNoSearchResults: "No hay tareas coincidentes",
+    todoCreatedFromSelection: "Del texto seleccionado",
+    todoCreatedManually: "Creada manualmente",
+    todoSaved: "A\xF1adida a tareas",
+    todoTitleRequired: "Escriba el contenido de la tarea",
+    logTodoSplit: "Tarea dividida con IA",
+    messageAddToTodo: "A\xF1adir respuesta a tareas",
+    logTodoCreated: "Tarea creada",
+    logTodoUpdated: "Tarea actualizada",
+    logTodoCompleted: "Tarea completada",
+    logTodoReopened: "Tarea reabierta",
+    logTodoDeleted: "Tarea eliminada",
+    logTodoCleared: "Tareas completadas borradas",
+    logTodoAllCleared: "Todas las tareas borradas",
+    addSelectionToTodo: "A\xF1adir a tareas",
     operationLogs: "Registros de operaciones",
     operationLogsHelp: "Aqu\xED aparecen en tiempo real las operaciones clave del producto.",
     clearLogs: "Borrar registros",
@@ -16343,12 +16421,8 @@
     selectionFixedToolsHelp: "Elija las herramientas fijas que aparecen antes de la pregunta en la barra lateral y de las dem\xE1s herramientas.",
     selectionFixedToolCopy: "Copiar",
     selectionFixedToolSearch: "Buscar",
-    selectionFixedToolBookmark: "Favorito",
-    selectionFixedToolShare: "Compartir",
     selectionFixedToolTodo: "Tarea",
     selectionFixedToolQrCode: "C\xF3digo QR",
-    selectionBookmark: "A\xF1adir el texto seleccionado a favoritos",
-    selectionShare: "Compartir el texto seleccionado",
     selectionTodo: "A\xF1adir el texto seleccionado a tareas",
     selectionQrCode: "Generar un c\xF3digo QR del texto seleccionado",
     selectionQrCodeTitle: "C\xF3digo QR",
@@ -16703,7 +16777,8 @@
     mcpToolApprovalAllow: "Toujours autoriser",
     cookieViewer: "Afficher les cookies",
     cookieFormat: "Format",
-    cookiePreview: "Aper\xE7u ({count} cookies)",
+    cookiePreview: "Aper\xE7u",
+    cookiePreviewCount: "({count} cookies)",
     mcpToolUsed: "Outil MCP utilis\xE9",
     mcpToolNotCalled: "Outil MCP non appel\xE9",
     mcpToolFailed: "\xC9chec de l'appel de l'outil MCP",
@@ -16711,8 +16786,59 @@
     mcpToolBlockedUserDeny: "L'utilisateur a refus\xE9 l'autorisation",
     mcpToolBlockedApprovalTimeout: "D\xE9lai d'autorisation expir\xE9",
     navTools: "Outils",
+    navTodos: "T\xE2ches",
     navHistory: "Historique",
     navLogs: "Journaux",
+    logsPageTitle: "Journaux",
+    logsPageHeading: "Journaux d'op\xE9rations",
+    historyPageEyebrow: "Historique",
+    localSessionsTitle: "Enregistrements de sessions",
+    todoPageEyebrow: "T\xE2ches",
+    localTodosTitle: "T\xE2ches",
+    todosTitle: "T\xE2ches",
+    todoItemsTitle: "Liste des t\xE2ches",
+    todoAdd: "Ajouter une t\xE2che",
+    todoEdit: "Modifier la t\xE2che",
+    todoContent: "Contenu",
+    todoSplit: "Diviser avec l'IA",
+    todoSplitRunning: "Division de la t\xE2che avec l'IA",
+    todoSplitInvalid: "Le mod\xE8le n'a pas renvoy\xE9 au moins deux t\xE2ches valides",
+    todoSplitSuccess: "T\xE2che divis\xE9e",
+    todoSplitSystemPrompt: "Divisez la t\xE2che fournie par l'utilisateur en plusieurs t\xE2ches ind\xE9pendantes et r\xE9alisables. Retournez uniquement un tableau JSON de cha\xEEnes, sans Markdown ni explication. Retournez entre 2 et 20 \xE9l\xE9ments. N'inventez pas de t\xE2ches qui ne sont pas fond\xE9es sur le texte original.",
+    todoSearchPlaceholder: "Rechercher des t\xE2ches",
+    todoFilter: "Filtre des t\xE2ches",
+    todoAll: "Toutes",
+    todoOpen: "\xC0 faire",
+    todoCompleted: "Termin\xE9es",
+    todoMarkComplete: "Marquer comme termin\xE9e",
+    todoMarkOpen: "Rouvrir",
+    todoMarkInProgress: "Marquer comme en cours",
+    todoMarkNotInProgress: "Retirer le marqueur En cours",
+    todoInProgressDisabled: "Une t\xE2che termin\xE9e ne peut pas \xEAtre marqu\xE9e en cours",
+    todoExpand: "D\xE9velopper la t\xE2che",
+    todoCollapse: "R\xE9duire la t\xE2che",
+    todoContentExpand: "D\xE9velopper le contenu",
+    todoContentCollapse: "R\xE9duire le contenu",
+    todoDelete: "Supprimer la t\xE2che",
+    todoClearCompleted: "Effacer les t\xE2ches termin\xE9es",
+    todoClearAll: "Effacer toutes les t\xE2ches",
+    todoEmpty: "Aucune t\xE2che pour le moment",
+    todoEmptyHelp: "Cr\xE9ez une t\xE2che depuis la s\xE9lection, le menu contextuel ou ici.",
+    todoNoSearchResults: "Aucune t\xE2che correspondante",
+    todoCreatedFromSelection: "Depuis le texte s\xE9lectionn\xE9",
+    todoCreatedManually: "Cr\xE9\xE9e manuellement",
+    todoSaved: "Ajout\xE9e aux t\xE2ches",
+    todoTitleRequired: "Saisissez le contenu de la t\xE2che",
+    logTodoSplit: "T\xE2che divis\xE9e avec l'IA",
+    messageAddToTodo: "Ajouter la r\xE9ponse aux t\xE2ches",
+    logTodoCreated: "T\xE2che cr\xE9\xE9e",
+    logTodoUpdated: "T\xE2che mise \xE0 jour",
+    logTodoCompleted: "T\xE2che termin\xE9e",
+    logTodoReopened: "T\xE2che rouverte",
+    logTodoDeleted: "T\xE2che supprim\xE9e",
+    logTodoCleared: "T\xE2ches termin\xE9es effac\xE9es",
+    logTodoAllCleared: "Toutes les t\xE2ches effac\xE9es",
+    addSelectionToTodo: "Ajouter aux t\xE2ches",
     operationLogs: "Journaux d'op\xE9rations",
     operationLogsHelp: "Les op\xE9rations cl\xE9s du produit s'affichent ici en temps r\xE9el.",
     clearLogs: "Effacer les journaux",
@@ -16996,12 +17122,8 @@
     selectionFixedToolsHelp: "Choisissez les outils fixes affich\xE9s avant la question dans la barre lat\xE9rale et les autres outils.",
     selectionFixedToolCopy: "Copier",
     selectionFixedToolSearch: "Rechercher",
-    selectionFixedToolBookmark: "Favori",
-    selectionFixedToolShare: "Partager",
     selectionFixedToolTodo: "T\xE2che",
     selectionFixedToolQrCode: "Code QR",
-    selectionBookmark: "Ajouter le texte s\xE9lectionn\xE9 aux favoris",
-    selectionShare: "Partager le texte s\xE9lectionn\xE9",
     selectionTodo: "Ajouter le texte s\xE9lectionn\xE9 aux t\xE2ches",
     selectionQrCode: "G\xE9n\xE9rer un code QR pour le texte s\xE9lectionn\xE9",
     selectionQrCodeTitle: "Code QR",
@@ -17356,7 +17478,8 @@
     mcpToolApprovalAllow: "Consenti sempre",
     cookieViewer: "Visualizza cookie",
     cookieFormat: "Formato",
-    cookiePreview: "Anteprima ({count} cookie)",
+    cookiePreview: "Anteprima",
+    cookiePreviewCount: "({count} cookie)",
     mcpToolUsed: "Strumento MCP utilizzato",
     mcpToolNotCalled: "Strumento MCP non chiamato",
     mcpToolFailed: "Chiamata allo strumento MCP non riuscita",
@@ -17364,8 +17487,59 @@
     mcpToolBlockedUserDeny: "L'utente ha rifiutato l'autorizzazione",
     mcpToolBlockedApprovalTimeout: "Tempo di autorizzazione scaduto",
     navTools: "Strumenti",
+    navTodos: "Attivit\xE0",
     navHistory: "Cronologia",
     navLogs: "Log",
+    logsPageTitle: "Log",
+    logsPageHeading: "Log delle operazioni",
+    historyPageEyebrow: "Cronologia",
+    localSessionsTitle: "Registri delle sessioni",
+    todoPageEyebrow: "Attivit\xE0",
+    localTodosTitle: "Attivit\xE0",
+    todosTitle: "Attivit\xE0",
+    todoItemsTitle: "Elenco attivit\xE0",
+    todoAdd: "Aggiungi attivit\xE0",
+    todoEdit: "Modifica attivit\xE0",
+    todoContent: "Contenuto",
+    todoSplit: "Dividi con l'IA",
+    todoSplitRunning: "Divisione dell'attivit\xE0 con l'IA",
+    todoSplitInvalid: "Il modello non ha restituito almeno due attivit\xE0 valide",
+    todoSplitSuccess: "Attivit\xE0 divisa",
+    todoSplitSystemPrompt: "Dividi l'attivit\xE0 fornita dall'utente in pi\xF9 attivit\xE0 indipendenti ed eseguibili. Restituisci solo un array JSON di stringhe, senza Markdown o spiegazioni. Restituisci da 2 a 20 elementi. Non inventare attivit\xE0 non supportate dal testo originale.",
+    todoSearchPlaceholder: "Cerca attivit\xE0",
+    todoFilter: "Filtro attivit\xE0",
+    todoAll: "Tutte",
+    todoOpen: "Aperte",
+    todoCompleted: "Completate",
+    todoMarkComplete: "Segna come completata",
+    todoMarkOpen: "Riapri",
+    todoMarkInProgress: "Segna come in corso",
+    todoMarkNotInProgress: "Rimuovi il contrassegno In corso",
+    todoInProgressDisabled: "Le attivit\xE0 completate non possono essere segnate come in corso",
+    todoExpand: "Espandi attivit\xE0",
+    todoCollapse: "Comprimi attivit\xE0",
+    todoContentExpand: "Espandi contenuto",
+    todoContentCollapse: "Comprimi contenuto",
+    todoDelete: "Elimina attivit\xE0",
+    todoClearCompleted: "Cancella completate",
+    todoClearAll: "Cancella tutte le attivit\xE0",
+    todoEmpty: "Nessuna attivit\xE0",
+    todoEmptyHelp: "Crea un'attivit\xE0 dalla selezione, dal menu contestuale o qui.",
+    todoNoSearchResults: "Nessuna attivit\xE0 corrispondente",
+    todoCreatedFromSelection: "Dal testo selezionato",
+    todoCreatedManually: "Creata manualmente",
+    todoSaved: "Aggiunta alle attivit\xE0",
+    todoTitleRequired: "Inserisci il contenuto dell'attivit\xE0",
+    logTodoSplit: "Attivit\xE0 divisa con l'IA",
+    messageAddToTodo: "Aggiungi la risposta alle attivit\xE0",
+    logTodoCreated: "Attivit\xE0 creata",
+    logTodoUpdated: "Attivit\xE0 aggiornata",
+    logTodoCompleted: "Attivit\xE0 completata",
+    logTodoReopened: "Attivit\xE0 riaperta",
+    logTodoDeleted: "Attivit\xE0 eliminata",
+    logTodoCleared: "Attivit\xE0 completate cancellate",
+    logTodoAllCleared: "Tutte le attivit\xE0 cancellate",
+    addSelectionToTodo: "Aggiungi alle attivit\xE0",
     operationLogs: "Log delle operazioni",
     operationLogsHelp: "Le operazioni principali del prodotto vengono visualizzate qui in tempo reale.",
     clearLogs: "Cancella log",
@@ -17649,12 +17823,8 @@
     selectionFixedToolsHelp: "Scegli gli strumenti fissi da mostrare prima della domanda nella barra laterale e degli altri strumenti.",
     selectionFixedToolCopy: "Copia",
     selectionFixedToolSearch: "Cerca",
-    selectionFixedToolBookmark: "Preferito",
-    selectionFixedToolShare: "Condividi",
     selectionFixedToolTodo: "Attivit\xE0",
     selectionFixedToolQrCode: "Codice QR",
-    selectionBookmark: "Aggiungi il testo selezionato ai preferiti",
-    selectionShare: "Condividi il testo selezionato",
     selectionTodo: "Aggiungi il testo selezionato alle attivit\xE0",
     selectionQrCode: "Genera un codice QR per il testo selezionato",
     selectionQrCodeTitle: "Codice QR",
@@ -18040,8 +18210,9 @@
       mcpToolApprovalAsk: "\u59CB\u7EC8\u8BE2\u95EE",
       mcpToolApprovalAllow: "\u59CB\u7EC8\u5141\u8BB8",
       cookieViewer: "\u67E5\u770B Cookie",
-      cookieFormat: "\u67E5\u770B\u683C\u5F0F",
-      cookiePreview: "\u9884\u89C8\uFF08{count} \u4E2A Cookie\uFF09",
+      cookieFormat: "\u683C\u5F0F",
+      cookiePreview: "\u9884\u89C8",
+      cookiePreviewCount: "\uFF08{count} \u4E2A Cookie\uFF09",
       mcpToolUsed: "\u5DF2\u4F7F\u7528 MCP \u5DE5\u5177",
       mcpToolNotCalled: "\u672A\u8C03\u7528 MCP \u5DE5\u5177",
       mcpToolFailed: "MCP \u5DE5\u5177\u8C03\u7528\u5931\u8D25",
@@ -18049,8 +18220,59 @@
       mcpToolBlockedUserDeny: "\u7528\u6237\u62D2\u7EDD\u6388\u6743",
       mcpToolBlockedApprovalTimeout: "\u7B49\u5F85\u6388\u6743\u8D85\u65F6",
       navTools: "\u5DE5\u5177",
+      navTodos: "\u5F85\u529E",
       navHistory: "\u5386\u53F2",
       navLogs: "\u65E5\u5FD7",
+      logsPageTitle: "\u65E5\u5FD7",
+      logsPageHeading: "\u64CD\u4F5C\u65E5\u5FD7",
+      historyPageEyebrow: "\u5386\u53F2",
+      localSessionsTitle: "\u5386\u53F2\u4F1A\u8BDD",
+      todoPageEyebrow: "\u5F85\u529E",
+      localTodosTitle: "\u5F85\u529E\u4E8B\u9879",
+      todosTitle: "\u5F85\u529E",
+      todoItemsTitle: "\u5F85\u529E\u4E8B\u9879",
+      todoAdd: "\u6DFB\u52A0\u5F85\u529E",
+      todoEdit: "\u7F16\u8F91\u5F85\u529E",
+      todoContent: "\u6B63\u6587",
+      todoSplit: "\u667A\u80FD\u62C6\u5206",
+      todoSplitRunning: "\u6B63\u5728\u667A\u80FD\u62C6\u5206\u5F85\u529E",
+      todoSplitInvalid: "\u5927\u6A21\u578B\u6CA1\u6709\u8FD4\u56DE\u81F3\u5C11\u4E24\u4E2A\u6709\u6548\u5F85\u529E",
+      todoSplitSuccess: "\u5F85\u529E\u5DF2\u62C6\u5206",
+      todoSplitSystemPrompt: "\u8BF7\u5C06\u7528\u6237\u63D0\u4F9B\u7684\u4E00\u4E2A\u5F85\u529E\u62C6\u5206\u4E3A\u591A\u4E2A\u76F8\u4E92\u72EC\u7ACB\u3001\u53EF\u6267\u884C\u7684\u5F85\u529E\u3002\u53EA\u8FD4\u56DE JSON \u5B57\u7B26\u4E32\u6570\u7EC4\uFF0C\u4E0D\u8981\u8FD4\u56DE Markdown \u6216\u5176\u4ED6\u8BF4\u660E\uFF1B\u6BCF\u4E2A\u5B57\u7B26\u4E32\u53EA\u5305\u542B\u4E00\u4E2A\u5F85\u529E\u7684\u6B63\u6587\uFF0C\u81F3\u5C11\u8FD4\u56DE 2 \u9879\uFF0C\u6700\u591A\u8FD4\u56DE 20 \u9879\u3002\u4E0D\u8981\u6DFB\u52A0\u539F\u6587\u6CA1\u6709\u4F9D\u636E\u7684\u65B0\u4EFB\u52A1\u3002",
+      todoSearchPlaceholder: "\u641C\u7D22\u5F85\u529E",
+      todoFilter: "\u5F85\u529E\u7B5B\u9009",
+      todoAll: "\u5168\u90E8",
+      todoOpen: "\u672A\u5B8C\u6210",
+      todoCompleted: "\u5DF2\u5B8C\u6210",
+      todoMarkComplete: "\u6807\u8BB0\u5B8C\u6210",
+      todoMarkOpen: "\u6062\u590D\u672A\u5B8C\u6210",
+      todoMarkInProgress: "\u6807\u8BB0\u4E3A\u8FDB\u884C\u4E2D",
+      todoMarkNotInProgress: "\u53D6\u6D88\u8FDB\u884C\u4E2D\u6807\u8BB0",
+      todoInProgressDisabled: "\u5DF2\u5B8C\u6210\u4E8B\u9879\u4E0D\u53EF\u6807\u8BB0\u4E3A\u8FDB\u884C\u4E2D",
+      todoExpand: "\u5C55\u5F00\u5F85\u529E",
+      todoCollapse: "\u6298\u53E0\u5F85\u529E",
+      todoContentExpand: "\u5C55\u5F00\u5185\u5BB9",
+      todoContentCollapse: "\u6298\u53E0\u5185\u5BB9",
+      todoDelete: "\u5220\u9664\u5F85\u529E",
+      todoClearCompleted: "\u6E05\u7406\u5DF2\u5B8C\u6210",
+      todoClearAll: "\u6E05\u9664\u5168\u90E8\u5F85\u529E",
+      todoEmpty: "\u8FD8\u6CA1\u6709\u5F85\u529E",
+      todoEmptyHelp: "\u53EF\u4EE5\u4ECE\u5212\u8BCD\u6D6E\u5C42\u3001\u53F3\u952E\u83DC\u5355\u6216\u8FD9\u91CC\u521B\u5EFA\u5F85\u529E\u3002",
+      todoNoSearchResults: "\u6CA1\u6709\u5339\u914D\u7684\u5F85\u529E",
+      todoCreatedFromSelection: "\u6765\u81EA\u9009\u4E2D\u6587\u672C",
+      todoCreatedManually: "\u624B\u52A8\u521B\u5EFA",
+      todoSaved: "\u5DF2\u52A0\u5165\u5F85\u529E",
+      todoTitleRequired: "\u8BF7\u586B\u5199\u5F85\u529E\u6B63\u6587",
+      logTodoSplit: "\u5DF2\u667A\u80FD\u62C6\u5206\u5F85\u529E",
+      messageAddToTodo: "\u5C06\u56DE\u7B54\u52A0\u5165\u5F85\u529E",
+      logTodoCreated: "\u5DF2\u521B\u5EFA\u5F85\u529E",
+      logTodoUpdated: "\u5DF2\u66F4\u65B0\u5F85\u529E",
+      logTodoCompleted: "\u5DF2\u5B8C\u6210\u5F85\u529E",
+      logTodoReopened: "\u5DF2\u6062\u590D\u5F85\u529E",
+      logTodoDeleted: "\u5DF2\u5220\u9664\u5F85\u529E",
+      logTodoCleared: "\u5DF2\u6E05\u7406\u5B8C\u6210\u5F85\u529E",
+      logTodoAllCleared: "\u5DF2\u6E05\u9664\u5168\u90E8\u5F85\u529E",
+      addSelectionToTodo: "\u52A0\u5165\u5F85\u529E",
       operationLogs: "\u64CD\u4F5C\u65E5\u5FD7",
       operationLogsHelp: "\u4EA7\u54C1\u6267\u884C\u7684\u5173\u952E\u64CD\u4F5C\u4F1A\u5B9E\u65F6\u663E\u793A\u5728\u8FD9\u91CC\u3002",
       clearLogs: "\u6E05\u7A7A\u65E5\u5FD7",
@@ -18333,12 +18555,8 @@
       selectionFixedToolsHelp: "\u9009\u62E9\u5728\u4FA7\u8FB9\u680F\u63D0\u95EE\u548C\u5176\u4ED6\u5DE5\u5177\u4E4B\u524D\u663E\u793A\u7684\u56FA\u5B9A\u5DE5\u5177\u3002",
       selectionFixedToolCopy: "\u590D\u5236",
       selectionFixedToolSearch: "\u641C\u7D22",
-      selectionFixedToolBookmark: "\u6536\u85CF",
-      selectionFixedToolShare: "\u5206\u4EAB",
       selectionFixedToolTodo: "\u5F85\u529E",
       selectionFixedToolQrCode: "\u4E8C\u7EF4\u7801",
-      selectionBookmark: "\u6536\u85CF\u6240\u9009\u6587\u672C",
-      selectionShare: "\u5206\u4EAB\u6240\u9009\u6587\u672C",
       selectionTodo: "\u5C06\u6240\u9009\u6587\u672C\u52A0\u5165\u5F85\u529E",
       selectionQrCode: "\u4E3A\u6240\u9009\u6587\u672C\u751F\u6210\u4E8C\u7EF4\u7801",
       selectionQrCodeTitle: "\u4E8C\u7EF4\u7801",
@@ -18691,8 +18909,9 @@
       mcpToolApprovalAsk: "\u59CB\u7D42\u8A62\u554F",
       mcpToolApprovalAllow: "\u59CB\u7D42\u5141\u8A31",
       cookieViewer: "\u67E5\u770B Cookie",
-      cookieFormat: "\u67E5\u770B\u683C\u5F0F",
-      cookiePreview: "\u9810\u89BD\uFF08{count} \u500B Cookie\uFF09",
+      cookieFormat: "\u683C\u5F0F",
+      cookiePreview: "\u9810\u89BD",
+      cookiePreviewCount: "\uFF08{count} \u500B Cookie\uFF09",
       mcpToolUsed: "\u5DF2\u4F7F\u7528 MCP \u5DE5\u5177",
       mcpToolNotCalled: "\u672A\u547C\u53EB MCP \u5DE5\u5177",
       mcpToolFailed: "MCP \u5DE5\u5177\u547C\u53EB\u5931\u6557",
@@ -18700,8 +18919,59 @@
       mcpToolBlockedUserDeny: "\u4F7F\u7528\u8005\u62D2\u7D55\u6388\u6B0A",
       mcpToolBlockedApprovalTimeout: "\u7B49\u5F85\u6388\u6B0A\u903E\u6642",
       navTools: "\u5DE5\u5177",
+      navTodos: "\u5F85\u8FA6",
       navHistory: "\u6B77\u53F2",
       navLogs: "\u65E5\u8A8C",
+      logsPageTitle: "\u65E5\u8A8C",
+      logsPageHeading: "\u64CD\u4F5C\u65E5\u8A8C",
+      historyPageEyebrow: "\u6B77\u53F2",
+      localSessionsTitle: "\u6703\u8A71\u8A18\u9304",
+      todoPageEyebrow: "\u5F85\u8FA6",
+      localTodosTitle: "\u5F85\u8FA6\u4E8B\u9805",
+      todosTitle: "\u5F85\u8FA6",
+      todoItemsTitle: "\u5F85\u8FA6\u4E8B\u9805",
+      todoAdd: "\u65B0\u589E\u5F85\u8FA6",
+      todoEdit: "\u7DE8\u8F2F\u5F85\u8FA6",
+      todoContent: "\u6B63\u6587",
+      todoSplit: "\u667A\u6167\u62C6\u5206",
+      todoSplitRunning: "\u6B63\u5728\u667A\u6167\u62C6\u5206\u5F85\u8FA6",
+      todoSplitInvalid: "\u5927\u6A21\u578B\u6C92\u6709\u8FD4\u56DE\u81F3\u5C11\u5169\u500B\u6709\u6548\u5F85\u8FA6",
+      todoSplitSuccess: "\u5F85\u8FA6\u5DF2\u62C6\u5206",
+      todoSplitSystemPrompt: "\u8ACB\u5C07\u4F7F\u7528\u8005\u63D0\u4F9B\u7684\u4E00\u500B\u5F85\u8FA6\u62C6\u5206\u70BA\u591A\u500B\u76F8\u4E92\u7368\u7ACB\u3001\u53EF\u57F7\u884C\u7684\u5F85\u8FA6\u3002\u53EA\u8FD4\u56DE JSON \u5B57\u4E32\u9663\u5217\uFF0C\u4E0D\u8981\u8FD4\u56DE Markdown \u6216\u5176\u4ED6\u8AAA\u660E\uFF1B\u6BCF\u500B\u5B57\u4E32\u53EA\u5305\u542B\u4E00\u500B\u5F85\u8FA6\u7684\u6B63\u6587\uFF0C\u81F3\u5C11\u8FD4\u56DE 2 \u9805\uFF0C\u6700\u591A\u8FD4\u56DE 20 \u9805\u3002\u4E0D\u8981\u6DFB\u52A0\u539F\u6587\u6C92\u6709\u4F9D\u64DA\u7684\u65B0\u4EFB\u52D9\u3002",
+      todoSearchPlaceholder: "\u641C\u5C0B\u5F85\u8FA6",
+      todoFilter: "\u5F85\u8FA6\u7BE9\u9078",
+      todoAll: "\u5168\u90E8",
+      todoOpen: "\u672A\u5B8C\u6210",
+      todoCompleted: "\u5DF2\u5B8C\u6210",
+      todoMarkComplete: "\u6A19\u8A18\u5B8C\u6210",
+      todoMarkOpen: "\u6062\u5FA9\u672A\u5B8C\u6210",
+      todoMarkInProgress: "\u6A19\u8A18\u70BA\u9032\u884C\u4E2D",
+      todoMarkNotInProgress: "\u53D6\u6D88\u9032\u884C\u4E2D\u6A19\u8A18",
+      todoInProgressDisabled: "\u5DF2\u5B8C\u6210\u4E8B\u9805\u4E0D\u53EF\u6A19\u8A18\u70BA\u9032\u884C\u4E2D",
+      todoExpand: "\u5C55\u958B\u5F85\u8FA6",
+      todoCollapse: "\u647A\u758A\u5F85\u8FA6",
+      todoContentExpand: "\u5C55\u958B\u5167\u5BB9",
+      todoContentCollapse: "\u647A\u758A\u5167\u5BB9",
+      todoDelete: "\u522A\u9664\u5F85\u8FA6",
+      todoClearCompleted: "\u6E05\u7406\u5DF2\u5B8C\u6210",
+      todoClearAll: "\u6E05\u9664\u5168\u90E8\u5F85\u8FA6",
+      todoEmpty: "\u9084\u6C92\u6709\u5F85\u8FA6",
+      todoEmptyHelp: "\u53EF\u4EE5\u5F9E\u5283\u8A5E\u6D6E\u5C64\u3001\u53F3\u9375\u9078\u55AE\u6216\u9019\u88E1\u5EFA\u7ACB\u5F85\u8FA6\u3002",
+      todoNoSearchResults: "\u6C92\u6709\u7B26\u5408\u7684\u5F85\u8FA6",
+      todoCreatedFromSelection: "\u4F86\u81EA\u9078\u53D6\u6587\u5B57",
+      todoCreatedManually: "\u624B\u52D5\u5EFA\u7ACB",
+      todoSaved: "\u5DF2\u52A0\u5165\u5F85\u8FA6",
+      todoTitleRequired: "\u8ACB\u586B\u5BEB\u5F85\u8FA6\u6B63\u6587",
+      logTodoSplit: "\u5DF2\u667A\u6167\u62C6\u5206\u5F85\u8FA6",
+      messageAddToTodo: "\u5C07\u56DE\u7B54\u52A0\u5165\u5F85\u8FA6",
+      logTodoCreated: "\u5DF2\u5EFA\u7ACB\u5F85\u8FA6",
+      logTodoUpdated: "\u5DF2\u66F4\u65B0\u5F85\u8FA6",
+      logTodoCompleted: "\u5DF2\u5B8C\u6210\u5F85\u8FA6",
+      logTodoReopened: "\u5DF2\u6062\u5FA9\u5F85\u8FA6",
+      logTodoDeleted: "\u5DF2\u522A\u9664\u5F85\u8FA6",
+      logTodoCleared: "\u5DF2\u6E05\u7406\u5B8C\u6210\u5F85\u8FA6",
+      logTodoAllCleared: "\u5DF2\u6E05\u9664\u5168\u90E8\u5F85\u8FA6",
+      addSelectionToTodo: "\u52A0\u5165\u5F85\u8FA6",
       operationLogs: "\u64CD\u4F5C\u65E5\u8A8C",
       operationLogsHelp: "\u7522\u54C1\u57F7\u884C\u7684\u95DC\u9375\u64CD\u4F5C\u6703\u5373\u6642\u986F\u793A\u5728\u9019\u88E1\u3002",
       clearLogs: "\u6E05\u7A7A\u65E5\u8A8C",
@@ -18984,12 +19254,8 @@
       selectionFixedToolsHelp: "\u9078\u64C7\u5728\u5074\u908A\u6B04\u63D0\u554F\u548C\u5176\u4ED6\u5DE5\u5177\u4E4B\u524D\u986F\u793A\u7684\u56FA\u5B9A\u5DE5\u5177\u3002",
       selectionFixedToolCopy: "\u8907\u88FD",
       selectionFixedToolSearch: "\u641C\u5C0B",
-      selectionFixedToolBookmark: "\u6536\u85CF",
-      selectionFixedToolShare: "\u5206\u4EAB",
       selectionFixedToolTodo: "\u5F85\u8FA6",
       selectionFixedToolQrCode: "\u4E8C\u7DAD\u78BC",
-      selectionBookmark: "\u6536\u85CF\u9078\u53D6\u6587\u5B57",
-      selectionShare: "\u5206\u4EAB\u9078\u53D6\u6587\u5B57",
       selectionTodo: "\u5C07\u9078\u53D6\u6587\u5B57\u52A0\u5165\u5F85\u8FA6",
       selectionQrCode: "\u70BA\u9078\u53D6\u6587\u5B57\u7522\u751F\u4E8C\u7DAD\u78BC",
       selectionQrCodeTitle: "\u4E8C\u7DAD\u78BC",
@@ -19343,7 +19609,8 @@
       mcpToolApprovalAllow: "Always Allow",
       cookieViewer: "View Cookies",
       cookieFormat: "Format",
-      cookiePreview: "Preview ({count} cookies)",
+      cookiePreview: "Preview",
+      cookiePreviewCount: "({count} cookies)",
       mcpToolUsed: "MCP tool used",
       mcpToolNotCalled: "MCP tool not called",
       mcpToolFailed: "MCP tool call failed",
@@ -19351,8 +19618,59 @@
       mcpToolBlockedUserDeny: "User denied authorization",
       mcpToolBlockedApprovalTimeout: "Authorization timed out",
       navTools: "Tools",
+      navTodos: "To-do",
       navHistory: "History",
       navLogs: "Logs",
+      logsPageTitle: "Logs",
+      logsPageHeading: "Operation Logs",
+      historyPageEyebrow: "History",
+      localSessionsTitle: "Session Records",
+      todoPageEyebrow: "To-do",
+      localTodosTitle: "To-dos",
+      todosTitle: "To-do",
+      todoItemsTitle: "To-dos",
+      todoAdd: "Add To-do",
+      todoEdit: "Edit To-do",
+      todoContent: "Body",
+      todoSplit: "Split with AI",
+      todoSplitRunning: "Splitting to-do with AI",
+      todoSplitInvalid: "The model did not return at least two valid to-dos",
+      todoSplitSuccess: "To-do split successfully",
+      todoSplitSystemPrompt: "Split the single to-do provided by the user into multiple independent, actionable to-dos. Return only a JSON array of strings, with no Markdown or explanation. Return at least 2 and at most 20 items. Do not invent tasks that are not supported by the original text.",
+      todoSearchPlaceholder: "Search to-dos",
+      todoFilter: "To-do filter",
+      todoAll: "All",
+      todoOpen: "Open",
+      todoCompleted: "Completed",
+      todoMarkComplete: "Mark complete",
+      todoMarkOpen: "Reopen",
+      todoMarkInProgress: "Mark as in progress",
+      todoMarkNotInProgress: "Remove in-progress mark",
+      todoInProgressDisabled: "Completed to-dos cannot be marked in progress",
+      todoExpand: "Expand to-do",
+      todoCollapse: "Collapse to-do",
+      todoContentExpand: "Expand content",
+      todoContentCollapse: "Collapse content",
+      todoDelete: "Delete to-do",
+      todoClearCompleted: "Clear completed",
+      todoClearAll: "Clear all to-dos",
+      todoEmpty: "No to-dos yet",
+      todoEmptyHelp: "Create one from the selection overlay, context menu, or here.",
+      todoNoSearchResults: "No matching to-dos",
+      todoCreatedFromSelection: "From selected text",
+      todoCreatedManually: "Created manually",
+      todoSaved: "Added to to-dos",
+      todoTitleRequired: "Enter to-do content",
+      logTodoSplit: "To-do split with AI",
+      messageAddToTodo: "Add answer to to-dos",
+      logTodoCreated: "To-do created",
+      logTodoUpdated: "To-do updated",
+      logTodoCompleted: "To-do completed",
+      logTodoReopened: "To-do reopened",
+      logTodoDeleted: "To-do deleted",
+      logTodoCleared: "Completed to-dos cleared",
+      logTodoAllCleared: "All to-dos cleared",
+      addSelectionToTodo: "Add to to-dos",
       operationLogs: "Operation Logs",
       operationLogsHelp: "Key product operations appear here in real time.",
       clearLogs: "Clear Logs",
@@ -19635,12 +19953,8 @@
       selectionFixedToolsHelp: "Choose fixed tools shown before the sidebar question and other tools.",
       selectionFixedToolCopy: "Copy",
       selectionFixedToolSearch: "Search",
-      selectionFixedToolBookmark: "Bookmark",
-      selectionFixedToolShare: "Share",
       selectionFixedToolTodo: "To-do",
       selectionFixedToolQrCode: "QR code",
-      selectionBookmark: "Bookmark selected text",
-      selectionShare: "Share selected text",
       selectionTodo: "Add selected text to to-do",
       selectionQrCode: "Generate QR code for selected text",
       selectionQrCodeTitle: "QR Code",
@@ -19994,7 +20308,8 @@
       mcpToolApprovalAllow: "\u5E38\u306B\u8A31\u53EF",
       cookieViewer: "Cookie \u3092\u8868\u793A",
       cookieFormat: "\u8868\u793A\u5F62\u5F0F",
-      cookiePreview: "\u30D7\u30EC\u30D3\u30E5\u30FC\uFF08{count} \u500B\u306E Cookie\uFF09",
+      cookiePreview: "\u30D7\u30EC\u30D3\u30E5\u30FC",
+      cookiePreviewCount: "\uFF08{count} \u500B\u306E Cookie\uFF09",
       mcpToolUsed: "\u4F7F\u7528\u3057\u305F MCP \u30C4\u30FC\u30EB",
       mcpToolNotCalled: "MCP \u30C4\u30FC\u30EB\u306F\u672A\u5B9F\u884C",
       mcpToolFailed: "MCP \u30C4\u30FC\u30EB\u306E\u547C\u3073\u51FA\u3057\u306B\u5931\u6557",
@@ -20002,8 +20317,59 @@
       mcpToolBlockedUserDeny: "\u30E6\u30FC\u30B6\u30FC\u304C\u8A31\u53EF\u3092\u62D2\u5426",
       mcpToolBlockedApprovalTimeout: "\u8A31\u53EF\u5F85\u3061\u304C\u30BF\u30A4\u30E0\u30A2\u30A6\u30C8",
       navTools: "\u30C4\u30FC\u30EB",
+      navTodos: "ToDo",
       navHistory: "\u5C65\u6B74",
       navLogs: "\u30ED\u30B0",
+      logsPageTitle: "\u30ED\u30B0",
+      logsPageHeading: "\u64CD\u4F5C\u30ED\u30B0",
+      historyPageEyebrow: "\u5C65\u6B74",
+      localSessionsTitle: "\u30BB\u30C3\u30B7\u30E7\u30F3\u8A18\u9332",
+      todoPageEyebrow: "ToDo",
+      localTodosTitle: "ToDo\u4E00\u89A7",
+      todosTitle: "ToDo",
+      todoItemsTitle: "ToDo\u4E00\u89A7",
+      todoAdd: "ToDo\u3092\u8FFD\u52A0",
+      todoEdit: "ToDo\u3092\u7DE8\u96C6",
+      todoContent: "\u672C\u6587",
+      todoSplit: "AI\u3067\u5206\u5272",
+      todoSplitRunning: "AI\u3067ToDo\u3092\u5206\u5272\u4E2D",
+      todoSplitInvalid: "\u30E2\u30C7\u30EB\u304C\u6709\u52B9\u306AToDo\u30922\u4EF6\u4EE5\u4E0A\u8FD4\u3057\u307E\u305B\u3093\u3067\u3057\u305F",
+      todoSplitSuccess: "ToDo\u3092\u5206\u5272\u3057\u307E\u3057\u305F",
+      todoSplitSystemPrompt: "\u30E6\u30FC\u30B6\u30FC\u304C\u63D0\u4F9B\u3057\u305F1\u4EF6\u306EToDo\u3092\u3001\u72EC\u7ACB\u3057\u305F\u5B9F\u884C\u53EF\u80FD\u306A\u8907\u6570\u306EToDo\u306B\u5206\u5272\u3057\u3066\u304F\u3060\u3055\u3044\u3002Markdown\u3084\u8AAC\u660E\u306F\u8FD4\u3055\u305A\u3001JSON\u6587\u5B57\u5217\u914D\u5217\u3060\u3051\u3092\u8FD4\u3057\u3066\u304F\u3060\u3055\u3044\u30022\u4EF6\u4EE5\u4E0A20\u4EF6\u4EE5\u4E0B\u306B\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u5143\u306E\u6587\u7AE0\u304B\u3089\u6839\u62E0\u306E\u306A\u3044\u65B0\u3057\u3044\u30BF\u30B9\u30AF\u3092\u8FFD\u52A0\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002",
+      todoSearchPlaceholder: "ToDo\u3092\u691C\u7D22",
+      todoFilter: "ToDo\u30D5\u30A3\u30EB\u30BF\u30FC",
+      todoAll: "\u3059\u3079\u3066",
+      todoOpen: "\u672A\u5B8C\u4E86",
+      todoCompleted: "\u5B8C\u4E86",
+      todoMarkComplete: "\u5B8C\u4E86\u306B\u3059\u308B",
+      todoMarkOpen: "\u672A\u5B8C\u4E86\u306B\u623B\u3059",
+      todoMarkInProgress: "\u9032\u884C\u4E2D\u306B\u3059\u308B",
+      todoMarkNotInProgress: "\u9032\u884C\u4E2D\u30DE\u30FC\u30AF\u3092\u89E3\u9664",
+      todoInProgressDisabled: "\u5B8C\u4E86\u6E08\u307FToDo\u306F\u9032\u884C\u4E2D\u306B\u3067\u304D\u307E\u305B\u3093",
+      todoExpand: "ToDo\u3092\u5C55\u958B",
+      todoCollapse: "ToDo\u3092\u6298\u308A\u305F\u305F\u3080",
+      todoContentExpand: "\u5185\u5BB9\u3092\u5C55\u958B",
+      todoContentCollapse: "\u5185\u5BB9\u3092\u6298\u308A\u305F\u305F\u3080",
+      todoDelete: "ToDo\u3092\u524A\u9664",
+      todoClearCompleted: "\u5B8C\u4E86\u6E08\u307F\u3092\u524A\u9664",
+      todoClearAll: "\u3059\u3079\u3066\u306EToDo\u3092\u524A\u9664",
+      todoEmpty: "ToDo\u306F\u307E\u3060\u3042\u308A\u307E\u305B\u3093",
+      todoEmptyHelp: "\u9078\u629E\u7BC4\u56F2\u3001\u53F3\u30AF\u30EA\u30C3\u30AF\u30E1\u30CB\u30E5\u30FC\u3001\u307E\u305F\u306F\u3053\u3053\u304B\u3089\u4F5C\u6210\u3067\u304D\u307E\u3059\u3002",
+      todoNoSearchResults: "\u4E00\u81F4\u3059\u308BToDo\u306F\u3042\u308A\u307E\u305B\u3093",
+      todoCreatedFromSelection: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u304B\u3089\u4F5C\u6210",
+      todoCreatedManually: "\u624B\u52D5\u3067\u4F5C\u6210",
+      todoSaved: "ToDo\u306B\u8FFD\u52A0\u3057\u307E\u3057\u305F",
+      todoTitleRequired: "ToDo\u306E\u672C\u6587\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044",
+      logTodoSplit: "AI\u3067ToDo\u3092\u5206\u5272\u3057\u307E\u3057\u305F",
+      messageAddToTodo: "\u56DE\u7B54\u3092ToDo\u306B\u8FFD\u52A0",
+      logTodoCreated: "ToDo\u3092\u4F5C\u6210\u3057\u307E\u3057\u305F",
+      logTodoUpdated: "ToDo\u3092\u66F4\u65B0\u3057\u307E\u3057\u305F",
+      logTodoCompleted: "ToDo\u3092\u5B8C\u4E86\u3057\u307E\u3057\u305F",
+      logTodoReopened: "ToDo\u3092\u672A\u5B8C\u4E86\u306B\u623B\u3057\u307E\u3057\u305F",
+      logTodoDeleted: "ToDo\u3092\u524A\u9664\u3057\u307E\u3057\u305F",
+      logTodoCleared: "\u5B8C\u4E86\u6E08\u307FToDo\u3092\u524A\u9664\u3057\u307E\u3057\u305F",
+      logTodoAllCleared: "\u3059\u3079\u3066\u306EToDo\u3092\u524A\u9664\u3057\u307E\u3057\u305F",
+      addSelectionToTodo: "ToDo\u306B\u8FFD\u52A0",
       operationLogs: "\u64CD\u4F5C\u30ED\u30B0",
       operationLogsHelp: "\u88FD\u54C1\u304C\u5B9F\u884C\u3057\u305F\u4E3B\u306A\u64CD\u4F5C\u304C\u30EA\u30A2\u30EB\u30BF\u30A4\u30E0\u3067\u8868\u793A\u3055\u308C\u307E\u3059\u3002",
       clearLogs: "\u30ED\u30B0\u3092\u6D88\u53BB",
@@ -20286,12 +20652,8 @@
       selectionFixedToolsHelp: "\u30B5\u30A4\u30C9\u30D0\u30FC\u3078\u306E\u8CEA\u554F\u3068\u305D\u306E\u4ED6\u306E\u30C4\u30FC\u30EB\u3088\u308A\u524D\u306B\u8868\u793A\u3059\u308B\u56FA\u5B9A\u30C4\u30FC\u30EB\u3092\u9078\u629E\u3057\u307E\u3059\u3002",
       selectionFixedToolCopy: "\u30B3\u30D4\u30FC",
       selectionFixedToolSearch: "\u691C\u7D22",
-      selectionFixedToolBookmark: "\u304A\u6C17\u306B\u5165\u308A",
-      selectionFixedToolShare: "\u5171\u6709",
       selectionFixedToolTodo: "ToDo",
       selectionFixedToolQrCode: "QR\u30B3\u30FC\u30C9",
-      selectionBookmark: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u3092\u304A\u6C17\u306B\u5165\u308A\u306B\u8FFD\u52A0",
-      selectionShare: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u3092\u5171\u6709",
       selectionTodo: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u3092ToDo\u306B\u8FFD\u52A0",
       selectionQrCode: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u306EQR\u30B3\u30FC\u30C9\u3092\u751F\u6210",
       selectionQrCodeTitle: "QR\u30B3\u30FC\u30C9",
@@ -20645,7 +21007,8 @@
       mcpToolApprovalAllow: "\uD56D\uC0C1 \uD5C8\uC6A9",
       cookieViewer: "Cookie \uBCF4\uAE30",
       cookieFormat: "\uD45C\uC2DC \uD615\uC2DD",
-      cookiePreview: "\uBBF8\uB9AC\uBCF4\uAE30 ({count}\uAC1C Cookie)",
+      cookiePreview: "\uBBF8\uB9AC\uBCF4\uAE30",
+      cookiePreviewCount: "({count}\uAC1C Cookie)",
       mcpToolUsed: "\uC0AC\uC6A9\uD55C MCP \uB3C4\uAD6C",
       mcpToolNotCalled: "MCP \uB3C4\uAD6C\uB97C \uD638\uCD9C\uD558\uC9C0 \uC54A\uC74C",
       mcpToolFailed: "MCP \uB3C4\uAD6C \uD638\uCD9C \uC2E4\uD328",
@@ -20653,8 +21016,59 @@
       mcpToolBlockedUserDeny: "\uC0AC\uC6A9\uC790\uAC00 \uAD8C\uD55C\uC744 \uAC70\uBD80\uD568",
       mcpToolBlockedApprovalTimeout: "\uAD8C\uD55C \uB300\uAE30 \uC2DC\uAC04\uC774 \uCD08\uACFC\uB428",
       navTools: "\uB3C4\uAD6C",
+      navTodos: "\uD560 \uC77C",
       navHistory: "\uAE30\uB85D",
       navLogs: "\uB85C\uADF8",
+      logsPageTitle: "\uB85C\uADF8",
+      logsPageHeading: "\uC791\uC5C5 \uB85C\uADF8",
+      historyPageEyebrow: "\uAE30\uB85D",
+      localSessionsTitle: "\uC138\uC158 \uAE30\uB85D",
+      todoPageEyebrow: "\uD560 \uC77C",
+      localTodosTitle: "\uD560 \uC77C",
+      todosTitle: "\uD560 \uC77C",
+      todoItemsTitle: "\uD560 \uC77C \uBAA9\uB85D",
+      todoAdd: "\uD560 \uC77C \uCD94\uAC00",
+      todoEdit: "\uD560 \uC77C \uD3B8\uC9D1",
+      todoContent: "\uBCF8\uBB38",
+      todoSplit: "AI\uB85C \uBD84\uD560",
+      todoSplitRunning: "AI\uB85C \uD560 \uC77C\uC744 \uBD84\uD560\uD558\uB294 \uC911",
+      todoSplitInvalid: "\uBAA8\uB378\uC774 \uC720\uD6A8\uD55C \uD560 \uC77C\uC744 \uB450 \uAC1C \uC774\uC0C1 \uBC18\uD658\uD558\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4",
+      todoSplitSuccess: "\uD560 \uC77C\uC744 \uBD84\uD560\uD588\uC2B5\uB2C8\uB2E4",
+      todoSplitSystemPrompt: "\uC0AC\uC6A9\uC790\uAC00 \uC81C\uACF5\uD55C \uD558\uB098\uC758 \uD560 \uC77C\uC744 \uC11C\uB85C \uB3C5\uB9BD\uC801\uC774\uACE0 \uC2E4\uD589 \uAC00\uB2A5\uD55C \uC5EC\uB7EC \uD560 \uC77C\uB85C \uB098\uB204\uC138\uC694. Markdown\uC774\uB098 \uC124\uBA85 \uC5C6\uC774 JSON \uBB38\uC790\uC5F4 \uBC30\uC5F4\uB9CC \uBC18\uD658\uD558\uC138\uC694. 2\uAC1C \uC774\uC0C1 20\uAC1C \uC774\uD558\uB85C \uBC18\uD658\uD558\uACE0, \uC6D0\uBB38\uC5D0 \uADFC\uAC70\uD558\uC9C0 \uC54A\uC740 \uC0C8 \uC791\uC5C5\uC740 \uB9CC\uB4E4\uC9C0 \uB9C8\uC138\uC694.",
+      todoSearchPlaceholder: "\uD560 \uC77C \uAC80\uC0C9",
+      todoFilter: "\uD560 \uC77C \uD544\uD130",
+      todoAll: "\uC804\uCCB4",
+      todoOpen: "\uBBF8\uC644\uB8CC",
+      todoCompleted: "\uC644\uB8CC",
+      todoMarkComplete: "\uC644\uB8CC\uB85C \uD45C\uC2DC",
+      todoMarkOpen: "\uBBF8\uC644\uB8CC\uB85C \uB418\uB3CC\uB9AC\uAE30",
+      todoMarkInProgress: "\uC9C4\uD589 \uC911\uC73C\uB85C \uD45C\uC2DC",
+      todoMarkNotInProgress: "\uC9C4\uD589 \uC911 \uD45C\uC2DC \uD574\uC81C",
+      todoInProgressDisabled: "\uC644\uB8CC\uD55C \uD560 \uC77C\uC740 \uC9C4\uD589 \uC911\uC73C\uB85C \uD45C\uC2DC\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4",
+      todoExpand: "\uD560 \uC77C \uD3BC\uCE58\uAE30",
+      todoCollapse: "\uD560 \uC77C \uC811\uAE30",
+      todoContentExpand: "\uB0B4\uC6A9 \uD3BC\uCE58\uAE30",
+      todoContentCollapse: "\uB0B4\uC6A9 \uC811\uAE30",
+      todoDelete: "\uD560 \uC77C \uC0AD\uC81C",
+      todoClearCompleted: "\uC644\uB8CC\uD55C \uD56D\uBAA9 \uC9C0\uC6B0\uAE30",
+      todoClearAll: "\uBAA8\uB4E0 \uD560 \uC77C \uC9C0\uC6B0\uAE30",
+      todoEmpty: "\uC544\uC9C1 \uD560 \uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
+      todoEmptyHelp: "\uC120\uD0DD \uC624\uBC84\uB808\uC774, \uCEE8\uD14D\uC2A4\uD2B8 \uBA54\uB274 \uB610\uB294 \uC5EC\uAE30\uC5D0\uC11C \uB9CC\uB4E4 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
+      todoNoSearchResults: "\uC77C\uCE58\uD558\uB294 \uD560 \uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
+      todoCreatedFromSelection: "\uC120\uD0DD\uD55C \uD14D\uC2A4\uD2B8\uC5D0\uC11C \uC0DD\uC131",
+      todoCreatedManually: "\uC218\uB3D9 \uC0DD\uC131",
+      todoSaved: "\uD560 \uC77C\uC5D0 \uCD94\uAC00\uD588\uC2B5\uB2C8\uB2E4",
+      todoTitleRequired: "\uD560 \uC77C \uBCF8\uBB38\uC744 \uC785\uB825\uD558\uC138\uC694",
+      logTodoSplit: "AI\uB85C \uD560 \uC77C\uC744 \uBD84\uD560\uD588\uC2B5\uB2C8\uB2E4",
+      messageAddToTodo: "\uB2F5\uBCC0\uC744 \uD560 \uC77C\uC5D0 \uCD94\uAC00",
+      logTodoCreated: "\uD560 \uC77C\uC744 \uB9CC\uB4E4\uC5C8\uC2B5\uB2C8\uB2E4",
+      logTodoUpdated: "\uD560 \uC77C\uC744 \uC5C5\uB370\uC774\uD2B8\uD588\uC2B5\uB2C8\uB2E4",
+      logTodoCompleted: "\uD560 \uC77C\uC744 \uC644\uB8CC\uD588\uC2B5\uB2C8\uB2E4",
+      logTodoReopened: "\uD560 \uC77C\uC744 \uB2E4\uC2DC \uC5F4\uC5C8\uC2B5\uB2C8\uB2E4",
+      logTodoDeleted: "\uD560 \uC77C\uC744 \uC0AD\uC81C\uD588\uC2B5\uB2C8\uB2E4",
+      logTodoCleared: "\uC644\uB8CC\uD55C \uD560 \uC77C\uC744 \uC9C0\uC6E0\uC2B5\uB2C8\uB2E4",
+      logTodoAllCleared: "\uBAA8\uB4E0 \uD560 \uC77C\uC744 \uC9C0\uC6E0\uC2B5\uB2C8\uB2E4",
+      addSelectionToTodo: "\uD560 \uC77C\uC5D0 \uCD94\uAC00",
       operationLogs: "\uC791\uC5C5 \uB85C\uADF8",
       operationLogsHelp: "\uC81C\uD488\uC774 \uC2E4\uD589\uD55C \uC8FC\uC694 \uC791\uC5C5\uC774 \uC2E4\uC2DC\uAC04\uC73C\uB85C \uD45C\uC2DC\uB429\uB2C8\uB2E4.",
       clearLogs: "\uB85C\uADF8 \uBE44\uC6B0\uAE30",
@@ -20937,12 +21351,8 @@
       selectionFixedToolsHelp: "\uC0AC\uC774\uB4DC\uBC14 \uC9C8\uBB38 \uBC0F \uB2E4\uB978 \uB3C4\uAD6C\uBCF4\uB2E4 \uBA3C\uC800 \uD45C\uC2DC\uD560 \uACE0\uC815 \uB3C4\uAD6C\uB97C \uC120\uD0DD\uD569\uB2C8\uB2E4.",
       selectionFixedToolCopy: "\uBCF5\uC0AC",
       selectionFixedToolSearch: "\uAC80\uC0C9",
-      selectionFixedToolBookmark: "\uBD81\uB9C8\uD06C",
-      selectionFixedToolShare: "\uACF5\uC720",
       selectionFixedToolTodo: "\uD560 \uC77C",
       selectionFixedToolQrCode: "QR \uCF54\uB4DC",
-      selectionBookmark: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 \uBD81\uB9C8\uD06C",
-      selectionShare: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 \uACF5\uC720",
       selectionTodo: "\uC120\uD0DD \uD14D\uC2A4\uD2B8\uB97C \uD560 \uC77C\uC5D0 \uCD94\uAC00",
       selectionQrCode: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 QR \uCF54\uB4DC \uC0DD\uC131",
       selectionQrCodeTitle: "QR \uCF54\uB4DC",
@@ -23102,8 +23512,6 @@
   var SELECTION_OVERLAY_FIXED_TOOL_ORDER = [
     "copy",
     "search",
-    "bookmark",
-    "share",
     "todo",
     "qrcode"
   ];
@@ -33743,6 +34151,7 @@ ${text2}`;
     const [resultBusy, setResultBusy] = (0, import_react5.useState)(false);
     const [copied, setCopied] = (0, import_react5.useState)(false);
     const [selectionCopied, setSelectionCopied] = (0, import_react5.useState)(false);
+    const [todoCreated, setTodoCreated] = (0, import_react5.useState)(false);
     const [selectionQrCode, setSelectionQrCode] = (0, import_react5.useState)(null);
     const [hoverOpen, setHoverOpen] = (0, import_react5.useState)(false);
     const [hoverDefinition, setHoverDefinition] = (0, import_react5.useState)(null);
@@ -35851,6 +36260,28 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       if (!snapshot?.text.trim()) return;
       await runtimeRequest2("selection.search", { query: snapshot.text });
     };
+    const createTodoFromSelection = async () => {
+      if (!snapshot?.text.trim()) return;
+      try {
+        await runtimeRequest2("todo.create", {
+          content: snapshot.text,
+          source: {
+            kind: "selection",
+            url: location.href,
+            pageTitle: document.title,
+            selectedText: snapshot.text
+          }
+        });
+        showPageTooltip(contentText("todoSaved"), snapshot.rect);
+        setTodoCreated(true);
+        window.setTimeout(() => setTodoCreated(false), 1200);
+      } catch (requestError) {
+        showPageTooltip(
+          requestError instanceof Error ? requestError.message : String(requestError),
+          snapshot.rect
+        );
+      }
+    };
     const showSelectionQrCode = async () => {
       if (!snapshot?.text.trim()) return;
       setHoverOpen(false);
@@ -35877,20 +36308,10 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Search, {}),
           onClick: searchSelection
         },
-        bookmark: {
-          title: t("selectionBookmark"),
-          icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Bookmark, {}),
-          onClick: () => void 0
-        },
-        share: {
-          title: t("selectionShare"),
-          icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Share2, {}),
-          onClick: () => void 0
-        },
         todo: {
           title: t("selectionTodo"),
-          icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ListTodo, {}),
-          onClick: () => void 0
+          icon: todoCreated ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Check, {}) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ListTodo, {}),
+          onClick: createTodoFromSelection
         },
         qrcode: {
           title: t("selectionQrCode"),
