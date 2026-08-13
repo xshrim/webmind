@@ -192,7 +192,10 @@ function normalizeEnabledToolIds(
 ): AppSettings["enabledToolIds"] {
   return {
     ...DEFAULT_SETTINGS.enabledToolIds,
-    ...(stored ?? {})
+    ...(stored ?? {}),
+    "context-menu": Array.isArray(stored?.["context-menu"])
+      ? stored["context-menu"]
+      : DEFAULT_SETTINGS.enabledToolIds["context-menu"]
   };
 }
 

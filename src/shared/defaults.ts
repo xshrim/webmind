@@ -29,6 +29,14 @@ const DEFAULT_HOME_TOOL_IDS = [
 ];
 const DEFAULT_TOOLS_TAB_IDS = TOOL_IDS.filter((id) => id !== "ask-selection");
 const DEFAULT_EDGE_TOOL_IDS = ["summary"];
+const DEFAULT_CONTEXT_MENU_TOOL_IDS = [
+  "translate-text",
+  "summary",
+  "explain",
+  "concise",
+  "study-notes",
+  "explain-code"
+];
 
 export const PROVIDER_DEFAULTS: Record<
   ProviderKind,
@@ -261,7 +269,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
     selection: [...DEFAULT_SELECTION_TOOL_IDS],
     home: [...DEFAULT_HOME_TOOL_IDS],
     tools: [...DEFAULT_TOOLS_TAB_IDS],
-    edge: [...DEFAULT_EDGE_TOOL_IDS]
+    edge: [...DEFAULT_EDGE_TOOL_IDS],
+    "context-menu": [...DEFAULT_CONTEXT_MENU_TOOL_IDS]
   },
   chromeSyncEnabled: false,
   searchAnswerEnabled: false,
@@ -279,7 +288,10 @@ export function defaultEnabledToolIds(
     selection: DEFAULT_SELECTION_TOOL_IDS.filter((id) => available.has(id)),
     home: DEFAULT_HOME_TOOL_IDS.filter((id) => available.has(id)),
     tools: toolIds.filter((id) => id !== "ask-selection"),
-    edge: DEFAULT_EDGE_TOOL_IDS.filter((id) => available.has(id))
+    edge: DEFAULT_EDGE_TOOL_IDS.filter((id) => available.has(id)),
+    "context-menu": DEFAULT_CONTEXT_MENU_TOOL_IDS.filter((id) =>
+      available.has(id)
+    )
   };
 }
 

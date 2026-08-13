@@ -98,7 +98,12 @@ export type HoverDefinitionMode = "off" | "zh" | "en" | "both";
 export type HoverDefinitionShortcut = ImmersiveShortcut;
 export type HoverDefinitionStyle = "none" | "highlight" | "underline";
 export type SelectionOverlayShortcut = HoverDefinitionShortcut;
-export type ToolSurface = "selection" | "home" | "tools" | "edge";
+export type ToolSurface =
+  | "selection"
+  | "home"
+  | "tools"
+  | "edge"
+  | "context-menu";
 export type ModelPurpose = "default" | "translation" | "vision";
 export type DefaultContextScope = "none" | "article" | "page";
 export type McpToolApprovalMode = "deny" | "ask" | "allow";
@@ -355,6 +360,7 @@ export type QuickActionId =
 export interface PendingAction {
   id: string;
   action: QuickActionId;
+  toolId?: string;
   createdAt: number;
   contextScope?: "page" | "article" | "selection";
   text?: string;

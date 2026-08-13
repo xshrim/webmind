@@ -201,6 +201,11 @@ const TOOL_SURFACES: Array<{
     id: "edge",
     titleKey: "toolSurfaceEdge",
     descriptionKey: "toolSurfaceEdgeHelp"
+  },
+  {
+    id: "context-menu",
+    titleKey: "toolSurfaceContextMenu",
+    descriptionKey: "toolSurfaceContextMenuHelp"
   }
 ];
 
@@ -1306,9 +1311,9 @@ export function SettingsApp() {
 
   const toolsForSurface = (surface: ToolSurface): ToolDefinition[] =>
     availableTools.filter((tool) => {
-          if (tool.id === "ask-selection") return false;
-          return true;
-        });
+      if (tool.id === "ask-selection") return false;
+      return true;
+    });
 
   const exportData = async () => {
     if (!settings) return;

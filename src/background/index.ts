@@ -25,7 +25,7 @@ import type {
   ProviderProfile,
   QuickActionId
 } from "../shared/types";
-import { findTool, toolPromptWithContext } from "../shared/tools";
+import { allTools, findTool, toolPromptWithContext } from "../shared/tools";
 import { modelPurposeForToolId } from "../shared/models";
 import {
   buildProtectedTranslationPrompt,
@@ -67,59 +67,7 @@ function broadcastOperationLog(
     });
 }
 
-const MENU_ITEMS: Array<{
-  id: string;
-  titleKey: UiTextKey;
-  action: QuickActionId;
-  contexts: MenuContext[];
-}> = [
-  {
-    id: "webmind-ask",
-    titleKey: "contextMenuAsk",
-    action: "ask",
-    contexts: ["selection"]
-  },
-  {
-    id: "webmind-summarize",
-    titleKey: "contextMenuSummarize",
-    action: "summarize",
-    contexts: ["selection"]
-  },
-  {
-    id: "webmind-explain",
-    titleKey: "contextMenuExplain",
-    action: "explain",
-    contexts: ["selection"]
-  },
-  {
-    id: "webmind-translate",
-    titleKey: "contextMenuTranslate",
-    action: "translate",
-    contexts: ["selection"]
-  },
-  {
-    id: "webmind-rewrite",
-    titleKey: "contextMenuRewrite",
-    action: "rewrite",
-    contexts: ["selection", "editable"]
-  },
-  {
-    id: "webmind-reply",
-    titleKey: "contextMenuReply",
-    action: "reply",
-    contexts: ["selection", "editable"]
-  },
-  {
-    id: "webmind-image",
-    titleKey: "contextMenuAnalyzeImage",
-    action: "ask",
-    contexts: ["image"]
-  }
-];
-
-const menuActions = new Map(
-  MENU_ITEMS.map((item) => [item.id, item.action])
-);
+const menuActions = new Map<string, { action: QuickActionId; toolId: string }>();
 const activeControllers = new Map<string, AbortController>();
 const MCP_APPROVAL_TIMEOUT_MS = 30_000;
 const pendingMcpApprovals = new Map<
@@ -178,17 +126,36 @@ async function fetchImageAsAttachment(
 
 async function setupExtension(): Promise<void> {
   const settings = await loadSettings();
+  const customTools = await loadCustomTools();
+  const tools = allTools(customTools, settings);
   await chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
   await chrome.contextMenus.removeAll();
-  for (const item of MENU_ITEMS) {
+  menuActions.clear();
+  chrome.contextMenus.create({
+    id: "webmind-root",
+    title: uiText(settings.interfaceLanguage, "webmindContextMenu"),
+    contexts: ["selection", "editable"]
+  });
+  const askId = "webmind-tool-ask-selection";
+  chrome.contextMenus.create({
+    id: askId,
+    parentId: "webmind-root",
+    title: uiText(settings.interfaceLanguage, "contextMenuAsk"),
+    contexts: ["selection", "editable"]
+  });
+  menuActions.set(askId, { action: "ask", toolId: "ask-selection" });
+  const selectedIds = settings.enabledToolIds["context-menu"] ?? [];
+  for (const toolId of selectedIds) {
+    const tool = tools.find((item) => item.id === toolId);
+    if (!tool || tool.id === "ask-selection") continue;
+    const id = `webmind-tool-${tool.id}`;
     chrome.contextMenus.create({
-      id: item.id,
-      title: uiText(settings.interfaceLanguage, item.titleKey),
-      contexts: item.contexts as [
-        MenuContext,
-        ...MenuContext[]
-      ]
+      id,
+      parentId: "webmind-root",
+      title: tool.title,
+      contexts: ["selection", "editable"]
     });
+    menuActions.set(id, { action: "ask", toolId: tool.id });
   }
 }
 
@@ -213,12 +180,14 @@ chrome.commands.onCommand.addListener(async (command) => {
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  const action = menuActions.get(String(info.menuItemId));
-  if (!action || !tab?.id) return;
+  const menuAction = menuActions.get(String(info.menuItemId));
+  if (!menuAction || !tab?.id) return;
   const pending: PendingAction = {
     id: crypto.randomUUID(),
-    action,
+    action: menuAction.action,
+    toolId: menuAction.toolId,
     createdAt: Date.now(),
+    contextScope: info.selectionText ? "selection" : undefined,
     text: info.selectionText,
     imageUrl: info.srcUrl,
     pageTitle: tab.title,

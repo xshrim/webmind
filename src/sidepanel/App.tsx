@@ -829,8 +829,14 @@ export function App() {
       };
       setComposer(actionQuestions[pending.action]);
     }
+    if (pending.toolId) {
+      const tool = availableTools.find((item) => item.id === pending.toolId);
+      if (tool) {
+        await executeTool(tool, { hideToolsUntilResponse: true });
+      }
+    }
     setView("chat");
-  }, [activeTab?.id, appendOperationLog]);
+  }, [activeTab?.id, appendOperationLog, availableTools]);
 
   const refreshActivePageContext = useCallback(
     async (
