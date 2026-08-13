@@ -688,24 +688,25 @@ function ProviderEditor({
             </label>
 
             <label className="field">
-              <span className="field-label">{t("providerModel")}</span>
-              <div className="model-input-row">
-                <input
-                  value={draft.model}
-                  onChange={(event) => update("model", event.target.value)}
-                  placeholder={t("providerModelPlaceholder")}
-                  list={modelListId}
-                />
+              <span className="field-label">
+                {t("providerModel")}
                 <button
-                  className="secondary-button compact icon-only"
+                  className="field-label-action"
                   type="button"
                   title={t("fetchModels")}
+                  aria-label={t("fetchModels")}
                   disabled={modelsBusy}
                   onClick={() => void fetchModels()}
                 >
                   <RefreshCw className={modelsBusy ? "spin" : ""} />
                 </button>
-              </div>
+              </span>
+              <input
+                value={draft.model}
+                onChange={(event) => update("model", event.target.value)}
+                placeholder={t("providerModelPlaceholder")}
+                list={modelListId}
+              />
               <datalist id={modelListId}>
                 {modelOptions.map((model) => (
                   <option key={model} value={model} />
