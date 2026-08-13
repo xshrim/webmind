@@ -40,14 +40,14 @@ npm run check
 
 ## 关键文件
 
-- `src/shared/defaults.ts`：产品名称、模型引擎默认值、默认设置、各位置默认启用工具。
+- `src/shared/defaults.ts`：产品名称、模型引擎默认值、默认设置、各入口默认启用工具；`enabledToolIds.context-menu` 控制右键菜单工具。
 - `src/shared/prompts.ts`：内置工具定义和核心提示词构造，包括自动翻译和沉浸阅读。
 - `src/shared/tools.ts`：内置/自定义工具合并、模板填充、上下文注入，以及仅对工具生效的回答语言约束。
 - `src/shared/utils.ts`：共享工具函数、正文 citation 说明清洗、翻译占位符保护与还原、消息辅助函数。
 - `src/shared/i18n.ts`：语言候选、浏览器语言解析、Prompt 指令语言解析和九种语言的类型完整性组装；`src/shared/locales/{es,fr,de,it}.ts` 分别维护西班牙语、法语、德语、意大利语的完整静态界面词条。
 - `src/shared/storage.ts`：设置、工具、历史、本地存储和 Chrome 同步存储；负责将缺失或非法的 `mcpToolApprovalMode` 归一化为 `ask`，并使同文高亮和链接选择在缺失配置时分别回退到 `off` 与 `false`。
 - `src/shared/models.ts`：默认、翻译、视觉三类模型用途的路由逻辑。
-- `src/background/index.ts`：扩展消息路由、工具执行、快捷动作、搜索、图片获取/截图、打开侧边栏；维护 MCP 审批 Promise、30 秒超时和 `mcp.tool.status` Port 事件。
+- `src/background/index.ts`：扩展消息路由、工具执行、动态右键菜单、快捷动作、搜索、图片获取/截图、打开侧边栏；维护 MCP 审批 Promise、30 秒超时和 `mcp.tool.status` Port 事件。
 - `src/background/providers.ts`：各模型接口的流式请求和兼容处理。
 - `src/background/mcpClient.ts`：基于官方 MCP SDK 的 SSE/Streamable HTTP 连接、工具发现和调用结果格式化。
 - `src/background/mcpAgent.ts`：普通对话的原生模型 tool-calling 循环、工具选择校验、逐次审批和步数/数量限制；每次调用前强制执行全局 MCP 授权模式，并回传结构化工具状态。
@@ -60,7 +60,8 @@ npm run check
 - `src/sidepanel/App.tsx`：侧边栏聊天、工具、历史、日志、上下文处理、工具调用气泡、模型流式回答；将 `mcp.tool.status` 挂到对应助手消息，在模型正文前渲染默认折叠的 MCP 结果色带，并记录 MCP 授权、调用状态和 Server 生命周期日志。
 - `src/sidepanel/toolIcons.tsx`：侧边栏内置工具和自定义工具图标渲染；新版 lucide 动态图标通过 `lucide-react/dynamic` 懒加载。
 - `src/sidepanel/customIcons.tsx`：沉浸翻译、沉浸阅读等非 lucide 内联图标。
-- `src/options/SettingsApp.tsx`：设置页面，包括主题下方的 MCP 工具执行授权模式、划词浮层内的同文高亮，以及快捷工具配置块中的链接选择。
+- `src/options/SettingsApp.tsx`：设置页面，包括 MCP 工具授权、划词浮层、链接选择，以及“工具启用 -> 右键菜单”工具选择器。
+- `src/content/floatingResult.ts`：划词结果、二维码和图片识别弹窗的候选位置优先级与视口兜底。
 - `vite.config.ts`：生产构建入口和手动 chunk 拆分；lucide 动态图标按首字母拆成 `lucide-icons-*` chunk。
 - `scripts/build-extension.mjs`：将构建产物整理到最终扩展目录 `dist/`。
 
@@ -79,6 +80,11 @@ npm run check
 - 模型预设包括 OpenAI 兼容、Grok、DeepSeek、Kimi、Qwen、智谱 GLM、MiMo、LongCat、MiniMax、Doubao Seed、OpenRouter、硅基流动、Anthropic、Gemini、Ollama。
 - 单个模型可以被标记为默认、翻译、视觉；但所有模型中每种角色最多只能有一个。没有翻译或视觉模型时，回退到默认/当前模型。
 - 划词浮层包含固定按钮：在侧边栏提问、复制所选文本；其他工具按钮可配置。
+- 划词浮层的“侧边栏提问”按钮永远是第一项；设置页可配置复制、搜索、收藏、分享、待办和二维码。二维码已实现，收藏、分享和待办仍是占位入口。
+- 划词弹窗位置严格按下方左对齐、下方居中、右侧居中、上方左对齐、上方居中、下方右对齐、左侧居中、上方右对齐的顺序选择；全部被视口裁切时使用视口内兜底位置。
+- 回答操作栏的二维码按钮为显示/隐藏切换：首次点击本地生成二维码，再次点击移除；不会修改 `ChatMessage`、历史记录或模型输入。
+- 截图按钮进入页面截图选择模式，当前支持选择区域作为图片附件；滚动长截图尚未实现。
+- 设置页“工具启用”新增“右键菜单”入口。后台动态创建 WebMind 子菜单，固定第一项为“侧边栏提问”，其余项目读取 `enabledToolIds.context-menu` 的选中项和顺序；右键选中文本会强制作为工具上下文。
 - 快捷工具包含打开侧边栏、沉浸翻译、沉浸阅读、总结摘要、还原页面等。
 - 搜索结果页回答窗口支持主流搜索引擎，并使用 DuckDuckGo 搜索结果作为参考上下文。
 - 自动回复会在网页文本输入框中显示小图标，并避开搜索引擎输入框。
@@ -142,7 +148,9 @@ npm run check
 - `autoScrollDuringStreaming`：`true`
 - `modelThinkingTimeoutSeconds`：`0`，表示不限制
 - `mcpToolApprovalMode`：`ask`，即始终询问
-- `historyLimit`：`60`
+- `reasoningEnabledByDefault`：`false`
+- `historyLimit`：`100`
+- `enabledToolIds["context-menu"]`：`translate-text`、`summary`、`explain`、`concise`、`study-notes`、`explain-code`
 
 上下文下拉框只有四项：无上下文、当前页面、当前正文、当前选中。“框选正文”不是上下文类型，而是自定义当前正文的操作；手动框选后可使用“还原正文”恢复自动识别结果。
 
@@ -175,11 +183,15 @@ npm run check
 - MCP 授权必须在后台 `runMcpAgent()` 的每次工具调用前读取 `loadSettings()` 后执行，不能只依赖侧边栏状态。`allow` 只绕过审批，不得绕过 `mcpTools` 的已启用/已发现校验。
 - Port 协议中 `mcp.approval.required` 请求用户决定；`mcp.tool.status` 回传 `McpToolEvent`。事件状态为 `called`、`blocked`、`failed`；阻止原因只能是 `global-deny`、`user-deny` 或 `approval-timeout`。事件必须以 `requestId` 绑定助手消息，审批关联使用 `approvalId`。
 - 审批超时为 `30_000ms`。`pendingMcpApprovals` 删除条目后才解析为 `deny-timeout`，因此超时与用户迟到点击按先到者生效；超时不得中止整轮聊天。取消或 Port 断开仍通过 `AbortController` 拒绝等待中的审批。
+- 右键菜单由后台在扩展安装、启动和设置变化时重建；右键菜单中的工具标题来自当前语言和自定义工具配置。Chrome 菜单只支持扩展声明的菜单上下文，不能替代网页自身的原生菜单项。
 
 ## 最近完成的功能与修复
 
 - 2026-08-13：MCP 选择器新增 Server 折叠层级、加大复选框和可点击区域；已选时网络图标 tooltip 显示 Server 与工具总数。MCP 授权弹窗改为拒绝按钮与三种允许范围的分组布局，并增加销毁性工具风险提示。
 - 2026-08-13：MCP 返回结果由单独状态展示改为嵌入同一助手消息的结果色带，成功、失败、拒绝和超时均携带详情，默认折叠；协议 `isError` 也归类为失败。日志补齐授权决定、调用状态与 Server 生命周期事件，且不记录敏感内容。
+- 2026-08-13：新增右键菜单工具配置；后台动态创建 WebMind 子菜单，固定“侧边栏提问”为第一项，其他工具按设置页选择和顺序执行，并强制使用右键选中文本上下文。
+- 2026-08-13：回答二维码支持显示/隐藏切换；划词弹窗统一采用严格候选位置优先级；联网搜索按钮使用 `Globe` 图标。
+- 2026-08-13：设置页搜索引擎和搜索打开方式移入通用配置；工具、历史、日志页标题和右键菜单文案同步更新。
 - 2026-08-13：添加 Cookie 查看器；添加链接文字横向拖动选择；添加同文高亮与右侧定位标记。链接选择和同文高亮默认均不启用。
 - `bd092f3 feat: add MCP authorization modes and tool status`：新增 `mcpToolApprovalMode` 设置及多语言文案；后台在每次调用前强制执行全局授权；审批 30 秒超时后继续让模型回答；通过 `mcp.tool.status` 将调用、拒绝、超时和失败状态绑定并渲染到助手回答。测试补充了授权模式归一化。
 - 已完成核心模块的第一轮拆分，正文识别、翻译 DOM、选择处理、快捷键、附件和侧边栏展示等能力已移出部分核心文件；当前仍需继续拆分大文件。
@@ -247,6 +259,7 @@ npm run check
 - PDF worker chunk 较大。当前 Vite 构建能通过并输出较大的 `vendor-pdf`/worker chunk，这是预期现象，除非后续重新设计 PDF 处理方式。
 - MCP 当前只覆盖 Tools，不支持 Resources、Prompts、Sampling、Roots 或 Elicitation；图片/音频/资源结果以文本标记传回模型。MCP Server 配置和自定义请求头只保存在 local storage，不参与 Chrome Sync；每次操作会重新建立连接，并受 15 秒发现、60 秒调用和 60000 字符结果上限约束。
 - MCP 工具调用依赖实际模型的原生 tool-calling 能力。未启用工具时继续使用原有流式路径；启用后模型决策轮次是非流式的，可能增加请求次数和延迟。全局模式默认询问，也可直接拒绝或直接允许；始终允许会跳过审批，Server 本身仍可能访问本机或内网资源，使用者应只添加可信 Server。
+- 右键菜单工具依赖 `selection` 或 `editable` 上下文；图片、视频、链接等其他 Chrome 菜单上下文目前不会单独生成专用工具菜单项。收藏、分享和待办按钮目前只有视觉入口，没有具体业务实现。
 - 同文高亮不匹配当前原生 Selection 的浏览器绘制样式；当前选区仍由浏览器控制。此处已放弃通过 `::selection` 强行统一样式，以避免性能和兼容性问题。
 
 ## 未完成问题
@@ -277,7 +290,7 @@ npm run build
 git diff --check
 ```
 
-测试结果：`24` 个测试文件、`194` 个测试通过；TypeScript 类型检查和构建均成功，已生成未打包扩展目录 `dist/`。以上是代码级验证，尚未替代真实 Chrome 手工验证。
+测试结果：`26` 个测试文件、`211` 个测试通过；TypeScript 类型检查和构建均成功，已生成未打包扩展目录 `dist/`。以上是代码级验证，尚未替代真实 Chrome 手工验证。
 
 ## 最近手工验证重点
 
