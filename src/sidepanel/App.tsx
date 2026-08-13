@@ -13,7 +13,7 @@ import {
   Copy,
   Eraser,
   FileText,
-  Globe2,
+  Globe,
   ImagePlus,
   Link2,
   Network,
@@ -526,8 +526,14 @@ export function App() {
     [customTools, settings]
   );
   const t = (key: UiTextKey) => uiText(settings?.interfaceLanguage, key);
-  const addMessageQrCode = (message: ChatMessage) => {
-    if (messageQrCodes[message.id]) return;
+  const toggleMessageQrCode = (message: ChatMessage) => {
+    if (messageQrCodes[message.id]) {
+      setMessageQrCodes((current) => {
+        const { [message.id]: _hidden, ...remaining } = current;
+        return remaining;
+      });
+      return;
+    }
     setMessageQrCodes((current) => ({
       ...current,
       [message.id]: { loading: true }
@@ -4832,10 +4838,10 @@ export function App() {
                               <button
                                 className="message-action-button icon-only"
                                 type="button"
-                                title={t("messageQrCode")}
-                                aria-label={t("messageQrCode")}
+                                title={t("toggleMessageQrCode")}
+                                aria-label={t("toggleMessageQrCode")}
                                 disabled={Boolean(messageQrCodes[message.id]?.loading)}
-                                onClick={() => addMessageQrCode(message)}
+                                onClick={() => toggleMessageQrCode(message)}
                               >
                                 <QrCode />
                               </button>
@@ -5809,7 +5815,7 @@ export function App() {
                     })
                   }
                 >
-                  <Globe2 />
+                  <Globe />
                 </button>
                 <div
                   className="icon-menu-shell mcp-menu-shell"

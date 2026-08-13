@@ -387,6 +387,7 @@ export const itUiText = {
   selectionQrCodeTitle: "Codice QR",
   selectionQrCodeError: "Impossibile generare il codice QR. Riduci il testo selezionato e riprova.",
   messageQrCode: "Genera codice QR della risposta",
+  toggleMessageQrCode: "Mostra/nascondi codice QR della risposta",
   messageQrCodeTitle: "Codice QR della risposta",
   messageQrCodeError: "Impossibile generare il codice QR. Riduci la risposta e riprova.",
   selectionSearchCustomUrl: "URL di ricerca personalizzato",

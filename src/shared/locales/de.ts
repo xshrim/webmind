@@ -387,6 +387,7 @@ export const deUiText = {
   selectionQrCodeTitle: "QR-Code",
   selectionQrCodeError: "QR-Code konnte nicht erzeugt werden. Kürzen Sie den ausgewählten Text und versuchen Sie es erneut.",
   messageQrCode: "Antwort-QR-Code erzeugen",
+  toggleMessageQrCode: "Antwort-QR-Code ein-/ausblenden",
   messageQrCodeTitle: "Antwort-QR-Code",
   messageQrCodeError: "QR-Code konnte nicht erzeugt werden. Kürzen Sie die Antwort und versuchen Sie es erneut.",
   selectionSearchCustomUrl: "Benutzerdefinierte Such-URL",

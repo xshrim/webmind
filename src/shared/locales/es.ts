@@ -387,6 +387,7 @@ export const esUiText = {
   selectionQrCodeTitle: "Código QR",
   selectionQrCodeError: "No se pudo generar un código QR. Acorte el texto seleccionado e inténtelo de nuevo.",
   messageQrCode: "Generar código QR de la respuesta",
+  toggleMessageQrCode: "Mostrar/ocultar código QR de la respuesta",
   messageQrCodeTitle: "Código QR de la respuesta",
   messageQrCodeError: "No se pudo generar un código QR. Acorte la respuesta e inténtelo de nuevo.",
   selectionSearchCustomUrl: "URL de búsqueda personalizada",
