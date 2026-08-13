@@ -114,10 +114,10 @@ const CORE_UI_TEXT = {
     languageSettingHelp: "影响界面文字、内置工具名称和默认提示词。",
     translationLanguageSetting: "译文语言",
     translationLanguageSettingHelp:
-      "自动时会根据内容语言在界面语言和英文之间切换；手动选择则始终翻译为所选语言。",
+      "基于上下文语言和界面语言自动判断或手动指定。",
     defaultContextScopeSetting: "默认上下文",
     defaultContextScopeHelp:
-      "对话、工具、沉浸翻译和沉浸阅读默认携带的上下文。",
+      "对话/工具/沉浸翻译和阅读默认携带的上下文。",
     immersiveTranslationParagraphShortcut: "当前段落沉浸翻译快捷键",
     immersiveTranslationPageShortcut: "当前上下文沉浸翻译快捷键",
     immersiveTranslationModeToggleShortcut: "译文显示模式切换快捷键",
@@ -153,7 +153,7 @@ const CORE_UI_TEXT = {
     allowOnce: "本次允许",
     allowRound: "本轮允许",
     allowSession: "会话允许",
-    mcpToolApprovalMode: "MCP 工具执行授权模式",
+    mcpToolApprovalMode: "MCP工具授权模式",
     mcpToolApprovalModeHelp:
       "控制已启用 MCP 工具的全局执行授权；始终询问时可在对话中按本次、本轮或会话授权。",
     mcpToolApprovalDeny: "始终拒绝",
@@ -767,10 +767,10 @@ const CORE_UI_TEXT = {
     languageSettingHelp: "影響介面文字、內建工具名稱和預設提示詞。",
     translationLanguageSetting: "譯文語言",
     translationLanguageSettingHelp:
-      "自動時會在介面語言和英文之間切換；手動選擇則始終翻譯為所選語言。",
+      "根據上下文語言和介面語言自動判斷，或手動指定。",
     defaultContextScopeSetting: "預設上下文",
     defaultContextScopeHelp:
-      "對話、工具、沉浸翻譯和沉浸閱讀預設攜帶的上下文。",
+      "對話/工具/沉浸翻譯和閱讀預設攜帶的上下文。",
     immersiveTranslationParagraphShortcut: "目前段落沉浸翻譯快捷鍵",
     immersiveTranslationPageShortcut: "目前上下文沉浸翻譯快捷鍵",
     immersiveTranslationModeToggleShortcut: "譯文顯示模式切換快捷鍵",
@@ -806,7 +806,7 @@ const CORE_UI_TEXT = {
     allowOnce: "本次允許",
     allowRound: "本輪允許",
     allowSession: "會話允許",
-    mcpToolApprovalMode: "MCP 工具執行授權模式",
+    mcpToolApprovalMode: "MCP工具授權模式",
     mcpToolApprovalModeHelp:
       "控制已啟用 MCP 工具的全域執行授權；始終詢問時可在對話中按本次、本輪或會話授權。",
     mcpToolApprovalDeny: "始終拒絕",
@@ -1420,7 +1420,7 @@ const CORE_UI_TEXT = {
     languageSettingHelp: "Affects UI text, built-in tool names, and default prompts.",
     translationLanguageSetting: "Translation Language",
     translationLanguageSettingHelp:
-      "Auto switches between the interface language and English based on the content language; a manual choice always translates into the selected language.",
+      "Automatically determine the translation language from the context and interface languages, or specify it manually.",
     defaultContextScopeSetting: "Default Context",
     defaultContextScopeHelp:
       "The context attached by default to chats, tools, immersive translation, and immersive reading.",
@@ -1459,7 +1459,7 @@ const CORE_UI_TEXT = {
     allowOnce: "Allow This Call",
     allowRound: "Allow This Turn",
     allowSession: "Allow This Session",
-    mcpToolApprovalMode: "MCP Tool Authorization",
+    mcpToolApprovalMode: "MCP Tool Authorization Mode",
     mcpToolApprovalModeHelp:
       "Controls global authorization for enabled MCP tools. When set to ask, chat approvals may apply to one call, one turn, or this session.",
     mcpToolApprovalDeny: "Always Deny",
@@ -2079,7 +2079,7 @@ const CORE_UI_TEXT = {
     languageSettingHelp: "UI テキスト、内蔵ツール名、既定プロンプトに反映されます。",
     translationLanguageSetting: "翻訳言語",
     translationLanguageSettingHelp:
-      "自動の場合は表示言語と英語を切り替えます。手動選択では常に選択した言語に翻訳します。",
+      "コンテキストと言語表示の言語に基づいて自動判定するか、手動で指定します。",
     defaultContextScopeSetting: "既定のコンテキスト",
     defaultContextScopeHelp:
       "チャット、ツール、イマーシブ翻訳、イマーシブ読書で既定で添付されるコンテキストです。",
@@ -2118,7 +2118,7 @@ const CORE_UI_TEXT = {
     allowOnce: "今回のみ許可",
     allowRound: "このターンで許可",
     allowSession: "セッションで許可",
-    mcpToolApprovalMode: "MCP ツール実行の許可モード",
+    mcpToolApprovalMode: "MCP ツール許可モード",
     mcpToolApprovalModeHelp:
       "有効な MCP ツールに対するグローバルな実行許可を制御します。確認する場合は、今回、このターン、またはセッションに許可できます。",
     mcpToolApprovalDeny: "常に拒否",
@@ -2733,7 +2733,7 @@ const CORE_UI_TEXT = {
     languageSettingHelp: "UI 텍스트, 내장 도구 이름, 기본 프롬프트에 적용됩니다.",
     translationLanguageSetting: "번역 언어",
     translationLanguageSettingHelp:
-      "자동이면 인터페이스 언어와 영어 사이를 전환합니다. 수동 선택은 항상 선택한 언어로 번역합니다.",
+      "문맥 언어와 인터페이스 언어를 바탕으로 자동 판단하거나 수동으로 지정합니다.",
     defaultContextScopeSetting: "기본 컨텍스트",
     defaultContextScopeHelp:
       "대화, 도구, 몰입 번역 및 몰입 읽기에 기본으로 첨부되는 컨텍스트입니다.",
@@ -2772,7 +2772,7 @@ const CORE_UI_TEXT = {
     allowOnce: "이번 호출 허용",
     allowRound: "이번 턴 허용",
     allowSession: "세션 허용",
-    mcpToolApprovalMode: "MCP 도구 실행 권한 모드",
+    mcpToolApprovalMode: "MCP 도구 권한 모드",
     mcpToolApprovalModeHelp:
       "활성화된 MCP 도구의 전역 실행 권한을 제어합니다. 항상 묻기에서는 이번 호출, 이번 턴 또는 세션 단위로 허용할 수 있습니다.",
     mcpToolApprovalDeny: "항상 거부",
