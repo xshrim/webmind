@@ -942,6 +942,12 @@ svg {
   gap: 15px;
 }
 
+.general-toggle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+}
+
 .settings-card {
   min-width: 0;
   overflow: hidden;
@@ -1533,7 +1539,7 @@ svg {
 .effect-check-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 4px 8px;
+  gap: 2px 5px;
 }
 
 .article-rule-list {
@@ -4285,6 +4291,10 @@ button.prompt-row:hover {
   }
 
   .general-preference-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .general-toggle-grid {
     grid-template-columns: 1fr;
   }
 

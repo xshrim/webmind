@@ -1991,24 +1991,36 @@ export function SettingsApp() {
               <div className="card-body">
                 <div className="field">
                   <span className="field-label">{t("immersiveReadingStrategy")}</span>
-                  {IMMERSIVE_READING_STRATEGIES.map((strategy) => (
-                    <label className="tool-check-row compact" key={strategy.id}>
-                      <input
-                        type="radio"
-                        checked={settings.immersiveReadingStrategy === strategy.id}
-                        onChange={() =>
+                  <div className="segmented">
+                    {IMMERSIVE_READING_STRATEGIES.map((strategy) => (
+                      <button
+                        className={
+                          settings.immersiveReadingStrategy === strategy.id
+                            ? "active"
+                            : ""
+                        }
+                        key={strategy.id}
+                        type="button"
+                        onClick={() =>
                           void updatePreference(
                             "immersiveReadingStrategy",
                             strategy.id
                           )
                         }
-                      />
-                      <span>
-                        <strong>{t(strategy.titleKey)}</strong>
-                        <small>{t(strategy.descriptionKey)}</small>
-                      </span>
-                    </label>
-                  ))}
+                      >
+                        {t(strategy.titleKey)}
+                      </button>
+                    ))}
+                  </div>
+                  <small>
+                    {t(
+                      IMMERSIVE_READING_STRATEGIES.find(
+                        (strategy) =>
+                          strategy.id === settings.immersiveReadingStrategy
+                      )?.descriptionKey ??
+                        "immersiveReadingStrategyLocalFirstHelp"
+                    )}
+                  </small>
                 </div>
                 <label className="field">
                   <span className="field-label">
@@ -2309,99 +2321,105 @@ export function SettingsApp() {
                     <small>{t("mcpToolApprovalModeHelp")}</small>
                   </div>
                 </div>
-                <label className="toggle-row">
-                  <input
-                    type="checkbox"
-                    checked={settings.autoScrollDuringStreaming}
-                    onChange={(event) =>
-                      void updatePreference(
-                        "autoScrollDuringStreaming",
-                        event.target.checked
-                      )
-                    }
-                  />
-                  <span>
-                    <strong>{t("autoScrollDuringStreaming")}</strong>
-                    <small>{t("autoScrollDuringStreamingHelp")}</small>
-                  </span>
-                </label>
-                <label className="toggle-row">
-                  <input
-                    type="checkbox"
-                    checked={settings.searchAnswerEnabled}
-                    onChange={(event) =>
-                      void updateSearchAnswerEnabled(event.target.checked)
-                    }
-                  />
-                  <span>
-                    <strong>{t("searchAnswerSetting")}</strong>
-                    <small>{t("searchAnswerSettingHelp")}</small>
-                  </span>
-                </label>
-                <label className="toggle-row">
-                  <input
-                    type="checkbox"
-                    checked={settings.includePageByDefault}
-                    onChange={(event) =>
-                      void updatePreference(
-                        "includePageByDefault",
-                        event.target.checked
-                      )
-                    }
-                  />
-                  <span>
-                    <strong>{t("includePageByDefault")}</strong>
-                    <small>{t("includePageByDefaultHelp")}</small>
-                  </span>
-                </label>
-                <label className="toggle-row">
-                  <input
-                    type="checkbox"
-                    checked={settings.reasoningEnabledByDefault}
-                    onChange={(event) =>
-                      void updatePreference(
-                        "reasoningEnabledByDefault",
-                        event.target.checked
-                      )
-                    }
-                  />
-                  <span>
-                    <strong>{t("reasoningEnabledByDefault")}</strong>
-                    <small>{t("reasoningEnabledByDefaultHelp")}</small>
-                  </span>
-                </label>
-                <label className="toggle-row">
-                  <input
-                    type="checkbox"
-                    checked={settings.webSearchByDefault}
-                    onChange={(event) =>
-                      void updatePreference(
-                        "webSearchByDefault",
-                        event.target.checked
-                      )
-                    }
-                  />
-                  <span>
-                    <strong>{t("webSearchByDefault")}</strong>
-                    <small>{t("webSearchByDefaultHelp")}</small>
-                  </span>
-                </label>
-                <label className="toggle-row">
-                  <input
-                    type="checkbox"
-                    checked={settings.toolResponseUseContextLanguage}
-                    onChange={(event) =>
-                      void updatePreference(
-                        "toolResponseUseContextLanguage",
-                        event.target.checked
-                      )
-                    }
-                  />
-                  <span>
-                    <strong>{t("toolResponseUseContextLanguage")}</strong>
-                    <small>{t("toolResponseUseContextLanguageHelp")}</small>
-                  </span>
-                </label>
+                <div className="general-toggle-grid">
+                  <label className="toggle-row">
+                    <input
+                      type="checkbox"
+                      checked={settings.autoScrollDuringStreaming}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "autoScrollDuringStreaming",
+                          event.target.checked
+                        )
+                      }
+                    />
+                    <span>
+                      <strong>{t("autoScrollDuringStreaming")}</strong>
+                      <small>{t("autoScrollDuringStreamingHelp")}</small>
+                    </span>
+                  </label>
+                  <label className="toggle-row">
+                    <input
+                      type="checkbox"
+                      checked={settings.toolResponseUseContextLanguage}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "toolResponseUseContextLanguage",
+                          event.target.checked
+                        )
+                      }
+                    />
+                    <span>
+                      <strong>{t("toolResponseUseContextLanguage")}</strong>
+                      <small>{t("toolResponseUseContextLanguageHelp")}</small>
+                    </span>
+                  </label>
+                </div>
+                <div className="general-toggle-grid">
+                  <label className="toggle-row">
+                    <input
+                      type="checkbox"
+                      checked={settings.reasoningEnabledByDefault}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "reasoningEnabledByDefault",
+                          event.target.checked
+                        )
+                      }
+                    />
+                    <span>
+                      <strong>{t("reasoningEnabledByDefault")}</strong>
+                      <small>{t("reasoningEnabledByDefaultHelp")}</small>
+                    </span>
+                  </label>
+                  <label className="toggle-row">
+                    <input
+                      type="checkbox"
+                      checked={settings.webSearchByDefault}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "webSearchByDefault",
+                          event.target.checked
+                        )
+                      }
+                    />
+                    <span>
+                      <strong>{t("webSearchByDefault")}</strong>
+                      <small>{t("webSearchByDefaultHelp")}</small>
+                    </span>
+                  </label>
+                </div>
+                <div className="general-toggle-grid">
+                  <label className="toggle-row">
+                    <input
+                      type="checkbox"
+                      checked={settings.includePageByDefault}
+                      onChange={(event) =>
+                        void updatePreference(
+                          "includePageByDefault",
+                          event.target.checked
+                        )
+                      }
+                    />
+                    <span>
+                      <strong>{t("includePageByDefault")}</strong>
+                      <small>{t("includePageByDefaultHelp")}</small>
+                    </span>
+                  </label>
+                  <label className="toggle-row">
+                    <input
+                      type="checkbox"
+                      checked={settings.searchAnswerEnabled}
+                      onChange={(event) =>
+                        void updateSearchAnswerEnabled(event.target.checked)
+                      }
+                    />
+                    <span>
+                      <strong>{t("searchAnswerSetting")}</strong>
+                      <small>{t("searchAnswerSettingHelp")}</small>
+                    </span>
+                  </label>
+                </div>
                 <div className="form-grid">
                   <label className="field">
                     <span className="field-label">{t("modelThinkingTimeout")}</span>
