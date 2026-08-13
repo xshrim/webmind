@@ -952,6 +952,15 @@ svg {
   gap: 10px;
 }
 
+.selection-fixed-tool-option {
+  align-items: center;
+  gap: 6px;
+}
+
+.selection-fixed-tool-option input {
+  margin: 0;
+}
+
 .settings-card {
   min-width: 0;
   overflow: hidden;

@@ -1660,7 +1660,10 @@ export function SettingsApp() {
                   <span className="field-label">{t("selectionFixedTools")}</span>
                   <div className="selection-fixed-tools-grid">
                     {SELECTION_OVERLAY_FIXED_TOOLS.map((tool) => (
-                      <label className="toggle-row" key={tool.id}>
+                      <label
+                        className="toggle-row selection-fixed-tool-option"
+                        key={tool.id}
+                      >
                         <input
                           type="checkbox"
                           checked={settings.selectionOverlayFixedTools.includes(tool.id)}

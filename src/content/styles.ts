@@ -22,7 +22,7 @@ export const SHADOW_STYLES = `
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 2px;
+    gap: 0;
     width: max-content;
     max-width: min(430px, calc(100vw - 20px));
     min-height: 40px;

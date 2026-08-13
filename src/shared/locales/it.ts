@@ -371,7 +371,7 @@ export const itUiText = {
   searchSelection: "Cerca il testo selezionato",
   selectionSearchEngine: "Motore di ricerca della selezione",
   selectionSearchEngineHelp: "Il motore usato dal pulsante di ricerca della barra di selezione.",
-  selectionFixedTools: "Strumenti fissi",
+  selectionFixedTools: "Strumenti fissi della selezione",
   selectionFixedToolsHelp: "Scegli gli strumenti fissi da mostrare prima della domanda nella barra laterale e degli altri strumenti.",
   selectionFixedToolCopy: "Copia",
   selectionFixedToolSearch: "Cerca",

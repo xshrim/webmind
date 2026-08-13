@@ -371,7 +371,7 @@ export const esUiText = {
   searchSelection: "Buscar texto seleccionado",
   selectionSearchEngine: "Motor de búsqueda para la selección",
   selectionSearchEngineHelp: "El motor que usa el botón de búsqueda de la barra de selección.",
-  selectionFixedTools: "Herramientas fijas",
+  selectionFixedTools: "Herramientas fijas de selección",
   selectionFixedToolsHelp: "Elija las herramientas fijas que aparecen antes de la pregunta en la barra lateral y de las demás herramientas.",
   selectionFixedToolCopy: "Copiar",
   selectionFixedToolSearch: "Buscar",

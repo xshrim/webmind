@@ -371,7 +371,7 @@ export const deUiText = {
   searchSelection: "Ausgewählten Text suchen",
   selectionSearchEngine: "Suchmaschine für Auswahl",
   selectionSearchEngineHelp: "Die Suchmaschine für die Suchschaltfläche der Auswahlleiste.",
-  selectionFixedTools: "Feste Werkzeuge",
+  selectionFixedTools: "Feste Auswahlwerkzeuge",
   selectionFixedToolsHelp: "Wählen Sie feste Werkzeuge, die vor der Seitenleistenfrage und anderen Werkzeugen angezeigt werden.",
   selectionFixedToolCopy: "Kopieren",
   selectionFixedToolSearch: "Suchen",
