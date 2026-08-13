@@ -28510,21 +28510,33 @@ ${index}. ${content.trim()}
         Math.min(viewportHeight - actualHeight - margin, Math.round(top))
       )
     });
-    const centeredLeft = target.left + (target.width - actualWidth) / 2;
-    const centeredTop = target.top + (target.height - actualHeight) / 2;
-    if (target.bottom + gap + actualHeight <= viewportHeight - margin) {
-      return clamp2(centeredLeft, target.bottom + gap);
-    }
-    if (target.right + gap + actualWidth <= viewportWidth - margin) {
-      return clamp2(target.right + gap, centeredTop);
-    }
-    if (target.left - gap - actualWidth >= margin) {
-      return clamp2(target.left - gap - actualWidth, centeredTop);
-    }
-    if (target.top - gap - actualHeight >= margin) {
-      return clamp2(centeredLeft, target.top - gap - actualHeight);
-    }
-    return clamp2(centeredLeft, target.bottom + gap);
+    const fits = (left, top) => left >= margin && top >= margin && left + actualWidth <= viewportWidth - margin && top + actualHeight <= viewportHeight - margin;
+    const belowLeft = target.left;
+    const belowCenter = target.left + (target.width - actualWidth) / 2;
+    const rightCenter = target.right + gap;
+    const aboveLeft = target.left;
+    const belowRight = target.right - actualWidth;
+    const leftCenter = target.left - gap - actualWidth;
+    const aboveRight = belowRight;
+    const centerTop = target.top + (target.height - actualHeight) / 2;
+    const belowTop = target.bottom + gap;
+    const aboveTop = target.top - gap - actualHeight;
+    const candidates = [
+      [belowLeft, belowTop],
+      [belowCenter, belowTop],
+      [rightCenter, centerTop],
+      [aboveLeft, aboveTop],
+      [belowCenter, aboveTop],
+      [belowRight, belowTop],
+      [leftCenter, centerTop],
+      [aboveRight, aboveTop]
+    ];
+    const available = candidates.find(([left, top]) => fits(left, top));
+    if (available) return clamp2(available[0], available[1]);
+    return clamp2(
+      (viewportWidth - actualWidth) / 2,
+      (viewportHeight - actualHeight) / 2
+    );
   }
 
   // src/content/linkTextSelection.ts

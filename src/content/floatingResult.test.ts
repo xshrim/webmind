@@ -36,9 +36,9 @@ describe("floating result dismissal", () => {
     ).toBe(false);
   });
 
-  it("prefers lower, right, left, then upper placement", () => {
+  it("follows the requested placement priority", () => {
     expect(candidateFloatingResultPosition(anchor(100, 100), 100, 100, 400, 400)).toEqual({
-      left: 60,
+      left: 100,
       top: 130
     });
     expect(candidateFloatingResultPosition(anchor(100, 280), 100, 100, 400, 400)).toEqual({
@@ -46,12 +46,18 @@ describe("floating result dismissal", () => {
       top: 240
     });
     expect(candidateFloatingResultPosition(anchor(280, 280), 100, 100, 400, 400)).toEqual({
-      left: 170,
-      top: 240
-    });
-    expect(candidateFloatingResultPosition(anchor(100, 280), 300, 100, 400, 400)).toEqual({
-      left: 10,
+      left: 280,
       top: 170
     });
+    expect(candidateFloatingResultPosition(anchor(100, 280), 300, 100, 400, 400)).toEqual({
+      left: 50,
+      top: 150
+    });
+  });
+
+  it("does not choose a partially clipped prioritized placement", () => {
+    expect(
+      candidateFloatingResultPosition(anchor(190, 190), 180, 180, 400, 400)
+    ).toEqual({ left: 110, top: 110 });
   });
 });
