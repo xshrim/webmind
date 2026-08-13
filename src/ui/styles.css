@@ -936,6 +936,12 @@ svg {
   min-width: 0;
 }
 
+.general-preference-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+
 .settings-card {
   min-width: 0;
   overflow: hidden;
@@ -4275,6 +4281,10 @@ button.prompt-row:hover {
   }
 
   .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .general-preference-grid {
     grid-template-columns: 1fr;
   }
 

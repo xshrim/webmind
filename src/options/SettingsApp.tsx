@@ -2226,86 +2226,88 @@ export function SettingsApp() {
                     </small>
                   </label>
                 </div>
-                <div className="field">
-                  <span className="field-label">
-                    {uiText(
-                      settings.interfaceLanguage,
-                      "defaultContextScopeSetting"
-                    )}
-                  </span>
-                  <div className="segmented">
-                    {([
-                      ["article", "currentBody"],
-                      ["page", "currentPage"]
-                    ] as const).map(([scope, labelKey]) => (
-                      <button
-                        key={scope}
-                        className={
-                          settings.defaultContextScope === scope
-                            ? "active"
-                            : ""
-                        }
-                        type="button"
-                        onClick={() =>
-                          void updatePreference(
-                            "defaultContextScope",
-                            scope as DefaultContextScope
-                          )
-                        }
-                      >
-                        {uiText(settings.interfaceLanguage, labelKey)}
-                      </button>
-                    ))}
+                <div className="general-preference-grid">
+                  <div className="field">
+                    <span className="field-label">{t("appearanceTheme")}</span>
+                    <div className="segmented">
+                      {(["system", "light", "dark"] as const).map((theme) => (
+                        <button
+                          key={theme}
+                          className={settings.theme === theme ? "active" : ""}
+                          type="button"
+                          onClick={() => void updatePreference("theme", theme)}
+                        >
+                          {theme === "system"
+                            ? t("themeSystem")
+                            : theme === "light"
+                              ? t("themeLight")
+                              : t("themeDark")}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  <small>
-                    {uiText(
-                      settings.interfaceLanguage,
-                      "defaultContextScopeHelp"
-                    )}
-                  </small>
-                </div>
-                <div className="field">
-                  <span className="field-label">{t("appearanceTheme")}</span>
-                  <div className="segmented">
-                    {(["system", "light", "dark"] as const).map((theme) => (
-                      <button
-                        key={theme}
-                        className={settings.theme === theme ? "active" : ""}
-                        type="button"
-                        onClick={() => void updatePreference("theme", theme)}
-                      >
-                        {theme === "system"
-                          ? t("themeSystem")
-                          : theme === "light"
-                            ? t("themeLight")
-                            : t("themeDark")}
-                      </button>
-                    ))}
+                  <div className="field">
+                    <span className="field-label">
+                      {uiText(
+                        settings.interfaceLanguage,
+                        "defaultContextScopeSetting"
+                      )}
+                    </span>
+                    <div className="segmented">
+                      {([
+                        ["article", "currentBody"],
+                        ["page", "currentPage"]
+                      ] as const).map(([scope, labelKey]) => (
+                        <button
+                          key={scope}
+                          className={
+                            settings.defaultContextScope === scope
+                              ? "active"
+                              : ""
+                          }
+                          type="button"
+                          onClick={() =>
+                            void updatePreference(
+                              "defaultContextScope",
+                              scope as DefaultContextScope
+                            )
+                          }
+                        >
+                          {uiText(settings.interfaceLanguage, labelKey)}
+                        </button>
+                      ))}
+                    </div>
+                    <small>
+                      {uiText(
+                        settings.interfaceLanguage,
+                        "defaultContextScopeHelp"
+                      )}
+                    </small>
                   </div>
-                </div>
-                <div className="field">
-                  <span className="field-label">{t("mcpToolApprovalMode")}</span>
-                  <div className="segmented segmented-wrap">
-                    {([
-                      ["deny", "mcpToolApprovalDeny"],
-                      ["ask", "mcpToolApprovalAsk"],
-                      ["allow", "mcpToolApprovalAllow"]
-                    ] as const).map(([mode, label]) => (
-                      <button
-                        key={mode}
-                        className={
-                          settings.mcpToolApprovalMode === mode ? "active" : ""
-                        }
-                        type="button"
-                        onClick={() =>
-                          void updatePreference("mcpToolApprovalMode", mode)
-                        }
-                      >
-                        {t(label)}
-                      </button>
-                    ))}
+                  <div className="field">
+                    <span className="field-label">{t("mcpToolApprovalMode")}</span>
+                    <div className="segmented segmented-wrap">
+                      {([
+                        ["deny", "mcpToolApprovalDeny"],
+                        ["ask", "mcpToolApprovalAsk"],
+                        ["allow", "mcpToolApprovalAllow"]
+                      ] as const).map(([mode, label]) => (
+                        <button
+                          key={mode}
+                          className={
+                            settings.mcpToolApprovalMode === mode ? "active" : ""
+                          }
+                          type="button"
+                          onClick={() =>
+                            void updatePreference("mcpToolApprovalMode", mode)
+                          }
+                        >
+                          {t(label)}
+                        </button>
+                      ))}
+                    </div>
+                    <small>{t("mcpToolApprovalModeHelp")}</small>
                   </div>
-                  <small>{t("mcpToolApprovalModeHelp")}</small>
                 </div>
                 <label className="toggle-row">
                   <input
