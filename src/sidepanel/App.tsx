@@ -2197,10 +2197,6 @@ export function App() {
         return;
       }
 
-      const pendingSelection = pendingSelectionContextRef.current;
-      if (pendingSelection && (!url || pendingSelection.url === url)) {
-        return;
-      }
       pendingSelectionContextRef.current = null;
       setSelectionContext(null);
       const selectionOverride = selectionOverrideRef.current;
