@@ -15628,6 +15628,13 @@
     edgeQuickToolsEnableHelp: "Deaktivieren Sie diese Option, um das Men\xFC am rechten Rand auf Webseiten auszublenden.",
     edgeQuickToolsBlacklistHelp: "Bei \xDCbereinstimmung erscheinen die Schnellwerkzeuge am rechten Rand nicht.",
     quickToolsBlacklistHelp: "Bei \xDCbereinstimmung werden die Linkauswahl, das Randmen\xFC, die Textextraktion aus Bildern und die automatische Antwort auf der Seite deaktiviert.",
+    githubCloneUrl: "GitHub-Klon-URL",
+    githubSshCloneUrlRewrite: "Port 443 f\xFCr GitHub-SSH-Klone verwenden",
+    githubSshCloneUrlRewriteHelp: "Schreibt die SSH-Klon-URL im Code-Men\xFC eines GitHub-Repositorys als URI mit ssh.github.com:443 um.",
+    githubSshCloneUrlRewriteOff: "Deaktiviert",
+    githubSshCloneUrlRewriteTextOnly: "Nur Textfeld",
+    githubSshCloneUrlRewriteCopyOnly: "Nur Kopierbutton",
+    githubSshCloneUrlRewriteAll: "Beide aktivieren",
     immersiveTranslation: "Immersive \xDCbersetzung",
     immersiveTranslationHelp: "Steuert, wie \xFCbersetzter Text in die Seite zur\xFCckgeschrieben wird.",
     immersiveTranslationAutoWhitelist: "Whitelist f\xFCr automatische \xDCbersetzung",
@@ -16329,6 +16336,13 @@
     edgeQuickToolsEnableHelp: "Desactiva esta opci\xF3n para ocultar el men\xFA del borde derecho en las p\xE1ginas web.",
     edgeQuickToolsBlacklistHelp: "Si se cumple la regla, no aparecer\xE1n las herramientas r\xE1pidas del borde derecho.",
     quickToolsBlacklistHelp: "Si se cumple la regla, la selecci\xF3n de enlaces, el men\xFA lateral, la extracci\xF3n de texto de im\xE1genes y la respuesta autom\xE1tica se desactivar\xE1n en la p\xE1gina.",
+    githubCloneUrl: "URL de clonaci\xF3n de GitHub",
+    githubSshCloneUrlRewrite: "Usar el puerto 443 para SSH de GitHub",
+    githubSshCloneUrlRewriteHelp: "En el men\xFA Code de un repositorio de GitHub, cambia la URL SSH a una URI de ssh.github.com:443.",
+    githubSshCloneUrlRewriteOff: "Desactivado",
+    githubSshCloneUrlRewriteTextOnly: "Solo cuadro de texto",
+    githubSshCloneUrlRewriteCopyOnly: "Solo bot\xF3n de copiar",
+    githubSshCloneUrlRewriteAll: "Activar ambos",
     immersiveTranslation: "Traducci\xF3n inmersiva",
     immersiveTranslationHelp: "Controla c\xF3mo se escribe el texto traducido en la p\xE1gina.",
     immersiveTranslationAutoWhitelist: "Lista blanca de traducci\xF3n autom\xE1tica",
@@ -17030,6 +17044,13 @@
     edgeQuickToolsEnableHelp: "D\xE9sactivez cette option pour masquer le menu du bord droit sur les pages web.",
     edgeQuickToolsBlacklistHelp: "En cas de correspondance, les outils rapides du bord droit ne s'afficheront pas.",
     quickToolsBlacklistHelp: "En cas de correspondance, la s\xE9lection des liens, le menu lat\xE9ral, l'extraction de texte des images et la r\xE9ponse automatique seront tous d\xE9sactiv\xE9s sur la page.",
+    githubCloneUrl: "URL de clonage GitHub",
+    githubSshCloneUrlRewrite: "Utiliser le port 443 pour SSH GitHub",
+    githubSshCloneUrlRewriteHelp: "Dans le menu Code d'un d\xE9p\xF4t GitHub, remplace l'URL SSH par une URI ssh.github.com:443.",
+    githubSshCloneUrlRewriteOff: "D\xE9sactiv\xE9",
+    githubSshCloneUrlRewriteTextOnly: "Champ texte uniquement",
+    githubSshCloneUrlRewriteCopyOnly: "Bouton copier uniquement",
+    githubSshCloneUrlRewriteAll: "Activer les deux",
     immersiveTranslation: "Traduction immersive",
     immersiveTranslationHelp: "Contr\xF4le la mani\xE8re dont le texte traduit est r\xE9ins\xE9r\xE9 dans la page.",
     immersiveTranslationAutoWhitelist: "Liste blanche de traduction automatique",
@@ -17731,6 +17752,13 @@
     edgeQuickToolsEnableHelp: "Disattiva questa opzione per nascondere il menu sul bordo destro delle pagine web.",
     edgeQuickToolsBlacklistHelp: "In caso di corrispondenza, gli strumenti rapidi sul bordo destro non verranno visualizzati.",
     quickToolsBlacklistHelp: "In caso di corrispondenza, la selezione dei link, il menu laterale, l'estrazione di testo dalle immagini e la risposta automatica verranno disabilitati nella pagina.",
+    githubCloneUrl: "URL di clonazione GitHub",
+    githubSshCloneUrlRewrite: "Usa la porta 443 per SSH GitHub",
+    githubSshCloneUrlRewriteHelp: "Nel menu Code di un repository GitHub, riscrive l'URL SSH come URI ssh.github.com:443.",
+    githubSshCloneUrlRewriteOff: "Disabilitato",
+    githubSshCloneUrlRewriteTextOnly: "Solo campo di testo",
+    githubSshCloneUrlRewriteCopyOnly: "Solo pulsante copia",
+    githubSshCloneUrlRewriteAll: "Abilita entrambi",
     immersiveTranslation: "Traduzione immersiva",
     immersiveTranslationHelp: "Controlla la modalit\xE0 di inserimento del testo tradotto nella pagina.",
     immersiveTranslationAutoWhitelist: "Lista consentiti per la traduzione automatica",
@@ -18464,6 +18492,13 @@
       edgeQuickToolsEnableHelp: "\u5173\u95ED\u540E\u7F51\u9875\u53F3\u4FA7\u4E0D\u4F1A\u663E\u793A\u8D34\u8FB9\u83DC\u5355\u3002",
       edgeQuickToolsBlacklistHelp: "\u547D\u4E2D\u540E\u9875\u9762\u53F3\u4FA7\u5FEB\u6377\u5DE5\u5177\u4E0D\u4F1A\u663E\u793A\u3002",
       quickToolsBlacklistHelp: "\u547D\u4E2D\u540E\u94FE\u63A5\u9009\u62E9\u3001\u8D34\u8FB9\u83DC\u5355\u3001\u56FE\u6587\u63D0\u53D6\u548C\u81EA\u52A8\u56DE\u590D\u90FD\u4E0D\u4F1A\u5728\u9875\u9762\u4E2D\u751F\u6548\u3002",
+      githubCloneUrl: "GitHub \u514B\u9686\u5730\u5740",
+      githubSshCloneUrlRewrite: "GitHub\u514B\u9686SSH\u4F7F\u7528443\u7AEF\u53E3",
+      githubSshCloneUrlRewriteHelp: "\u5728 GitHub \u4ED3\u5E93\u7684 Code \u83DC\u5355\u4E2D\uFF0C\u5C06 SSH \u514B\u9686\u5730\u5740\u6539\u4E3A ssh.github.com:443 URI\u3002",
+      githubSshCloneUrlRewriteOff: "\u4E0D\u542F\u7528",
+      githubSshCloneUrlRewriteTextOnly: "\u4EC5\u6587\u672C\u6846\u542F\u7528",
+      githubSshCloneUrlRewriteCopyOnly: "\u4EC5\u590D\u5236\u6309\u94AE\u542F\u7528",
+      githubSshCloneUrlRewriteAll: "\u5B8C\u5168\u542F\u7528",
       immersiveTranslation: "\u6C89\u6D78\u7FFB\u8BD1",
       immersiveTranslationHelp: "\u63A7\u5236\u8BD1\u6587\u5199\u56DE\u9875\u9762\u540E\u7684\u5448\u73B0\u65B9\u5F0F\u3002",
       immersiveTranslationAutoWhitelist: "\u81EA\u52A8\u6C89\u6D78\u7FFB\u8BD1\u767D\u540D\u5355",
@@ -19163,6 +19198,13 @@
       edgeQuickToolsEnableHelp: "\u95DC\u9589\u5F8C\u7DB2\u9801\u53F3\u5074\u4E0D\u6703\u986F\u793A\u8CBC\u908A\u9078\u55AE\u3002",
       edgeQuickToolsBlacklistHelp: "\u547D\u4E2D\u5F8C\u9801\u9762\u53F3\u5074\u5FEB\u6377\u5DE5\u5177\u4E0D\u6703\u986F\u793A\u3002",
       quickToolsBlacklistHelp: "\u547D\u4E2D\u5F8C\u9023\u7D50\u9078\u53D6\u3001\u8CBC\u908A\u9078\u55AE\u3001\u5716\u6587\u63D0\u53D6\u548C\u81EA\u52D5\u56DE\u8986\u90FD\u4E0D\u6703\u5728\u9801\u9762\u4E2D\u751F\u6548\u3002",
+      githubCloneUrl: "GitHub \u8907\u88FD\u4F4D\u5740",
+      githubSshCloneUrlRewrite: "GitHub \u8907\u88FD SSH \u4F7F\u7528 443 \u9023\u63A5\u57E0",
+      githubSshCloneUrlRewriteHelp: "\u5728 GitHub \u5132\u5B58\u5EAB\u7684 Code \u9078\u55AE\u4E2D\uFF0C\u5C07 SSH \u8907\u88FD\u4F4D\u5740\u6539\u70BA ssh.github.com:443 URI\u3002",
+      githubSshCloneUrlRewriteOff: "\u4E0D\u555F\u7528",
+      githubSshCloneUrlRewriteTextOnly: "\u50C5\u6587\u5B57\u65B9\u584A\u555F\u7528",
+      githubSshCloneUrlRewriteCopyOnly: "\u50C5\u8907\u88FD\u6309\u9215\u555F\u7528",
+      githubSshCloneUrlRewriteAll: "\u5B8C\u5168\u555F\u7528",
       immersiveTranslation: "\u6C89\u6D78\u7FFB\u8B6F",
       immersiveTranslationHelp: "\u63A7\u5236\u8B6F\u6587\u5BEB\u56DE\u9801\u9762\u5F8C\u7684\u5448\u73FE\u65B9\u5F0F\u3002",
       immersiveTranslationAutoWhitelist: "\u81EA\u52D5\u6C89\u6D78\u7FFB\u8B6F\u767D\u540D\u55AE",
@@ -19862,6 +19904,13 @@
       edgeQuickToolsEnableHelp: "Turn this off to hide the right-edge menu on webpages.",
       edgeQuickToolsBlacklistHelp: "When matched, the right-edge quick tools will not appear.",
       quickToolsBlacklistHelp: "When matched, link selection, the edge menu, image text extraction, and auto reply will all be disabled on the page.",
+      githubCloneUrl: "GitHub Clone URL",
+      githubSshCloneUrlRewrite: "Use Port 443 for GitHub SSH Clone",
+      githubSshCloneUrlRewriteHelp: "In a GitHub repository Code menu, rewrite the SSH clone URL as an ssh.github.com:443 URI.",
+      githubSshCloneUrlRewriteOff: "Disabled",
+      githubSshCloneUrlRewriteTextOnly: "Text Field Only",
+      githubSshCloneUrlRewriteCopyOnly: "Copy Button Only",
+      githubSshCloneUrlRewriteAll: "Enable Both",
       immersiveTranslation: "Immersive Translation",
       immersiveTranslationHelp: "Controls how translated text is written back into the page.",
       immersiveTranslationAutoWhitelist: "Auto-translate Whitelist",
@@ -20561,6 +20610,13 @@
       edgeQuickToolsEnableHelp: "\u30AA\u30D5\u306B\u3059\u308B\u3068\u30DA\u30FC\u30B8\u53F3\u7AEF\u306E\u30E1\u30CB\u30E5\u30FC\u306F\u8868\u793A\u3055\u308C\u307E\u305B\u3093\u3002",
       edgeQuickToolsBlacklistHelp: "\u4E00\u81F4\u3057\u305F\u30DA\u30FC\u30B8\u3067\u306F\u53F3\u7AEF\u306E\u30AF\u30A4\u30C3\u30AF\u30C4\u30FC\u30EB\u3092\u8868\u793A\u3057\u307E\u305B\u3093\u3002",
       quickToolsBlacklistHelp: "\u4E00\u81F4\u3057\u305F\u30DA\u30FC\u30B8\u3067\u306F\u3001\u30EA\u30F3\u30AF\u9078\u629E\u3001\u7AEF\u306E\u30E1\u30CB\u30E5\u30FC\u3001\u753B\u50CF\u30C6\u30AD\u30B9\u30C8\u62BD\u51FA\u3001\u81EA\u52D5\u8FD4\u4FE1\u304C\u3059\u3079\u3066\u7121\u52B9\u306B\u306A\u308A\u307E\u3059\u3002",
+      githubCloneUrl: "GitHub \u30AF\u30ED\u30FC\u30F3 URL",
+      githubSshCloneUrlRewrite: "GitHub SSH \u30AF\u30ED\u30FC\u30F3\u306B\u30DD\u30FC\u30C8 443 \u3092\u4F7F\u7528",
+      githubSshCloneUrlRewriteHelp: "GitHub \u30EA\u30DD\u30B8\u30C8\u30EA\u306E Code \u30E1\u30CB\u30E5\u30FC\u3067\u3001SSH \u30AF\u30ED\u30FC\u30F3 URL \u3092 ssh.github.com:443 URI \u306B\u66F8\u304D\u63DB\u3048\u307E\u3059\u3002",
+      githubSshCloneUrlRewriteOff: "\u7121\u52B9",
+      githubSshCloneUrlRewriteTextOnly: "\u30C6\u30AD\u30B9\u30C8\u6B04\u306E\u307F\u6709\u52B9",
+      githubSshCloneUrlRewriteCopyOnly: "\u30B3\u30D4\u30FC\u30DC\u30BF\u30F3\u306E\u307F\u6709\u52B9",
+      githubSshCloneUrlRewriteAll: "\u4E21\u65B9\u6709\u52B9",
       immersiveTranslation: "\u30A4\u30DE\u30FC\u30B7\u30D6\u7FFB\u8A33",
       immersiveTranslationHelp: "\u7FFB\u8A33\u6587\u3092\u30DA\u30FC\u30B8\u3078\u66F8\u304D\u623B\u3057\u305F\u5F8C\u306E\u8868\u793A\u65B9\u6CD5\u3092\u5236\u5FA1\u3057\u307E\u3059\u3002",
       immersiveTranslationAutoWhitelist: "\u81EA\u52D5\u30A4\u30DE\u30FC\u30B7\u30D6\u7FFB\u8A33\u30DB\u30EF\u30A4\u30C8\u30EA\u30B9\u30C8",
@@ -21260,6 +21316,13 @@
       edgeQuickToolsEnableHelp: "\uB044\uBA74 \uC6F9\uD398\uC774\uC9C0 \uC624\uB978\uCABD \uAC00\uC7A5\uC790\uB9AC \uBA54\uB274\uAC00 \uD45C\uC2DC\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
       edgeQuickToolsBlacklistHelp: "\uC77C\uCE58\uD558\uB294 \uD398\uC774\uC9C0\uC5D0\uC11C\uB294 \uC624\uB978\uCABD \uBE60\uB978 \uB3C4\uAD6C\uAC00 \uD45C\uC2DC\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
       quickToolsBlacklistHelp: "\uC77C\uCE58\uD558\uB294 \uD398\uC774\uC9C0\uC5D0\uC11C\uB294 \uB9C1\uD06C \uC120\uD0DD, \uAC00\uC7A5\uC790\uB9AC \uBA54\uB274, \uC774\uBBF8\uC9C0 \uD14D\uC2A4\uD2B8 \uCD94\uCD9C, \uC790\uB3D9 \uB2F5\uC7A5\uC774 \uBAA8\uB450 \uBE44\uD65C\uC131\uD654\uB429\uB2C8\uB2E4.",
+      githubCloneUrl: "GitHub \uD074\uB860 URL",
+      githubSshCloneUrlRewrite: "GitHub SSH \uD074\uB860\uC5D0 \uD3EC\uD2B8 443 \uC0AC\uC6A9",
+      githubSshCloneUrlRewriteHelp: "GitHub \uC800\uC7A5\uC18C\uC758 Code \uBA54\uB274\uC5D0\uC11C SSH \uD074\uB860 URL\uC744 ssh.github.com:443 URI\uB85C \uBC14\uAFC9\uB2C8\uB2E4.",
+      githubSshCloneUrlRewriteOff: "\uC0AC\uC6A9 \uC548 \uD568",
+      githubSshCloneUrlRewriteTextOnly: "\uD14D\uC2A4\uD2B8 \uC0C1\uC790\uB9CC \uC0AC\uC6A9",
+      githubSshCloneUrlRewriteCopyOnly: "\uBCF5\uC0AC \uBC84\uD2BC\uB9CC \uC0AC\uC6A9",
+      githubSshCloneUrlRewriteAll: "\uBAA8\uB450 \uC0AC\uC6A9",
       immersiveTranslation: "\uBAB0\uC785 \uBC88\uC5ED",
       immersiveTranslationHelp: "\uBC88\uC5ED\uBB38\uC744 \uD398\uC774\uC9C0\uC5D0 \uB2E4\uC2DC \uC4F4 \uB4A4\uC758 \uD45C\uC2DC \uBC29\uC2DD\uC744 \uC81C\uC5B4\uD569\uB2C8\uB2E4.",
       immersiveTranslationAutoWhitelist: "\uC790\uB3D9 \uBAB0\uC785 \uBC88\uC5ED \uD654\uC774\uD2B8\uB9AC\uC2A4\uD2B8",
@@ -23573,6 +23636,7 @@
     selectionSearchOpenMode: "new-tab",
     selectionMatchHighlightMode: "off",
     linkTextSelectionEnabled: false,
+    githubSshCloneUrlRewriteMode: "off",
     immersiveTranslationStyle: "bilingual",
     immersiveTranslationDisplayStyle: "default",
     immersiveTranslationTextEffects: ["light"],
@@ -23678,6 +23742,12 @@
     "off",
     "ignore-case",
     "case-sensitive"
+  ]);
+  var GITHUB_SSH_CLONE_URL_REWRITE_MODES = /* @__PURE__ */ new Set([
+    "off",
+    "text-only",
+    "copy-only",
+    "text-and-copy"
   ]);
   function normalizeImmersiveShortcut(value, fallback) {
     return IMMERSIVE_SHORTCUTS.has(value) ? value : fallback;
@@ -23787,6 +23857,9 @@
         stored.selectionMatchHighlightMode
       ) ? stored.selectionMatchHighlightMode : DEFAULT_SETTINGS.selectionMatchHighlightMode,
       linkTextSelectionEnabled: stored.linkTextSelectionEnabled ?? DEFAULT_SETTINGS.linkTextSelectionEnabled,
+      githubSshCloneUrlRewriteMode: GITHUB_SSH_CLONE_URL_REWRITE_MODES.has(
+        stored.githubSshCloneUrlRewriteMode
+      ) ? stored.githubSshCloneUrlRewriteMode : stored.githubSshCloneUrlRewriteEnabled === true ? "text-and-copy" : DEFAULT_SETTINGS.githubSshCloneUrlRewriteMode,
       immersiveTranslationStyle: stored.immersiveTranslationStyle ?? DEFAULT_SETTINGS.immersiveTranslationStyle,
       immersiveTranslationDisplayStyle: stored.immersiveTranslationDisplayStyle ?? DEFAULT_SETTINGS.immersiveTranslationDisplayStyle,
       immersiveTranslationTextEffects: stored.immersiveTranslationTextEffects ?? DEFAULT_SETTINGS.immersiveTranslationTextEffects,
@@ -29312,6 +29385,195 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
     scheduleRefresh();
   }
 
+  // src/content/githubSshCloneUrl.ts
+  var GITHUB_SSH_CLONE_URL_PATTERN = /^git@github\.com:([^/\s]+)\/([^/\s]+)\.git$/;
+  function githubSshCloneUrl(value) {
+    const match = value.trim().match(GITHUB_SSH_CLONE_URL_PATTERN);
+    if (!match) return null;
+    return `ssh://git@ssh.github.com:443/${match[1]}/${match[2]}.git`;
+  }
+  function isGithubRepositoryPath(hostname, pathname) {
+    if (hostname !== "github.com") return false;
+    return pathname.split("/").filter(Boolean).length >= 2;
+  }
+
+  // src/content/githubCloneRewrite.ts
+  var CLONE_VALUE_ATTRIBUTES = [
+    "value",
+    "data-clipboard-text",
+    "data-copy-text",
+    "data-copy-value"
+  ];
+  var CLONE_VALUE_SELECTOR = [
+    "input",
+    "textarea",
+    "clipboard-copy",
+    "[data-copy-feedback]",
+    ...CLONE_VALUE_ATTRIBUTES.map((attribute) => `[${attribute}]`)
+  ].join(", ");
+  var CLONE_TEXT_SELECTOR = "code, span, div, p, pre";
+  var CLONE_UI_SELECTOR = [
+    "details[id*='clone']",
+    "[role='dialog']",
+    "[role='menu']",
+    "[role='tabpanel']",
+    "[data-portal-root]",
+    "[data-overlay-root]",
+    "#__primerPortalRoot__",
+    "[data-component*='Overlay']",
+    "[popover]",
+    "[data-target*='get-repo']",
+    "[data-target*='clone']",
+    "[data-testid*='clone']",
+    "[aria-label*='Clone this repository']",
+    "[aria-label*='clone this repository']"
+  ].join(", ");
+  var PAGE_BRIDGE_ENABLED_ATTRIBUTE = "data-webmind-github-ssh-clone-rewrite";
+  function setGithubCloneUrlRewriteBridgeEnabled(enabled2) {
+    document.documentElement.toggleAttribute(PAGE_BRIDGE_ENABLED_ATTRIBUTE, enabled2);
+  }
+  function stringValue(element) {
+    const candidate = element;
+    return typeof candidate.value === "string" ? candidate.value : void 0;
+  }
+  function setStringValue(element, value) {
+    element.value = value;
+  }
+  function recordElement(rewritten, element) {
+    const existing = rewritten.get(element);
+    if (existing) return existing;
+    const record = {};
+    rewritten.set(element, record);
+    return record;
+  }
+  function recordAttribute(record, attribute, value) {
+    const attributes = record.attributes ?? /* @__PURE__ */ new Map();
+    record.attributes = attributes;
+    if (!attributes.has(attribute)) attributes.set(attribute, value);
+  }
+  function cloneContainers(root) {
+    const containers = Array.from(root.querySelectorAll(CLONE_UI_SELECTOR));
+    if (root instanceof Element && root.matches(CLONE_UI_SELECTOR)) {
+      containers.unshift(root);
+    }
+    return [...new Set(containers)];
+  }
+  function elementsMatching(container, selector) {
+    const elements = Array.from(container.querySelectorAll(selector));
+    if (container.matches(selector)) elements.unshift(container);
+    return elements;
+  }
+  function rewriteValueElement(element, rewritten) {
+    let changed = false;
+    for (const attribute of CLONE_VALUE_ATTRIBUTES) {
+      const attributeValue = element.getAttribute(attribute);
+      const nextValue = attributeValue ? githubSshCloneUrl(attributeValue) : null;
+      if (!nextValue) continue;
+      const record = recordElement(rewritten, element);
+      recordAttribute(record, attribute, attributeValue);
+      element.setAttribute(attribute, nextValue);
+      changed = true;
+    }
+    const propertyValue = stringValue(element);
+    const rewrittenPropertyValue = propertyValue ? githubSshCloneUrl(propertyValue) : null;
+    if (rewrittenPropertyValue) {
+      const record = recordElement(rewritten, element);
+      if (!record.propertyValueCaptured) {
+        record.propertyValue = propertyValue;
+        record.propertyValueCaptured = true;
+      }
+      setStringValue(element, rewrittenPropertyValue);
+      changed = true;
+    }
+    return changed;
+  }
+  function rewriteTextElement(element, rewritten) {
+    if (element.childElementCount > 0) return false;
+    const textContent = element.textContent;
+    const rewrittenText = textContent ? githubSshCloneUrl(textContent) : null;
+    if (!rewrittenText) return false;
+    const record = recordElement(rewritten, element);
+    if (!record.textContentCaptured) {
+      record.textContent = textContent;
+      record.textContentCaptured = true;
+    }
+    element.textContent = rewrittenText;
+    return true;
+  }
+  function rewriteGithubCloneUrlElements(root = document, rewritten = /* @__PURE__ */ new Map()) {
+    let count = 0;
+    const processed = /* @__PURE__ */ new Set();
+    for (const container of cloneContainers(root)) {
+      for (const element of elementsMatching(container, CLONE_VALUE_SELECTOR)) {
+        if (!processed.has(element) && rewriteValueElement(element, rewritten)) {
+          count += 1;
+        }
+        processed.add(element);
+      }
+      for (const element of elementsMatching(container, CLONE_TEXT_SELECTOR)) {
+        if (!processed.has(element) && rewriteTextElement(element, rewritten)) {
+          count += 1;
+        }
+        processed.add(element);
+      }
+    }
+    return count;
+  }
+  function restoreGithubCloneUrlElements(rewritten) {
+    for (const [element, record] of rewritten) {
+      for (const [attribute, value] of record.attributes ?? []) {
+        if (value === null) {
+          element.removeAttribute(attribute);
+        } else {
+          element.setAttribute(attribute, value);
+        }
+      }
+      if (record.propertyValueCaptured && record.propertyValue !== void 0) {
+        setStringValue(element, record.propertyValue);
+      }
+      if (record.textContentCaptured) {
+        element.textContent = record.textContent ?? null;
+      }
+    }
+  }
+  function startGithubCloneUrlRewrite() {
+    if (!isGithubRepositoryPath(location.hostname, location.pathname)) return null;
+    const rewritten = /* @__PURE__ */ new Map();
+    let frameId2 = null;
+    const refresh = () => {
+      if (frameId2 !== null) {
+        window.cancelAnimationFrame(frameId2);
+        frameId2 = null;
+      }
+      rewriteGithubCloneUrlElements(document, rewritten);
+    };
+    const scheduleRefresh2 = () => {
+      if (frameId2 !== null) return;
+      frameId2 = window.requestAnimationFrame(() => {
+        frameId2 = null;
+        refresh();
+      });
+    };
+    const observer = new MutationObserver(scheduleRefresh2);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: [...CLONE_VALUE_ATTRIBUTES],
+      characterData: true,
+      childList: true,
+      subtree: true
+    });
+    scheduleRefresh2();
+    return {
+      refresh,
+      dispose() {
+        if (frameId2 !== null) window.cancelAnimationFrame(frameId2);
+        observer.disconnect();
+        restoreGithubCloneUrlElements(rewritten);
+        rewritten.clear();
+      }
+    };
+  }
+
   // src/content/toolIcons.tsx
   var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
   function extensionAssetUrl(path) {
@@ -33492,9 +33754,29 @@ Please report this to https://github.com/markedjs/marked.`, e) {
   var retainedPageSelection = null;
   var hoverDefinitionDictionaryPromise = null;
   var englishWordFrequencyPromise = null;
+  var githubCloneUrlRewriter = null;
   var HOVER_DEFINITION_HIGHLIGHT_NAME = "webmind-hover-definition";
   function contentText(key) {
     return uiText(settings?.interfaceLanguage, key);
+  }
+  function syncGithubCloneUrlRewrite() {
+    const mode = settings?.githubSshCloneUrlRewriteMode ?? "off";
+    const isGithubRepository = isGithubRepositoryPath(
+      location.hostname,
+      location.pathname
+    );
+    const shouldRewrite = (mode === "text-only" || mode === "text-and-copy") && isGithubRepository;
+    setGithubCloneUrlRewriteBridgeEnabled(
+      (mode === "copy-only" || mode === "text-and-copy") && isGithubRepository
+    );
+    if (!shouldRewrite) {
+      githubCloneUrlRewriter?.dispose();
+      githubCloneUrlRewriter = null;
+      return;
+    }
+    if (!githubCloneUrlRewriter) {
+      githubCloneUrlRewriter = startGithubCloneUrlRewrite();
+    }
   }
   function nextTranslationBlockId() {
     return `md-${Date.now()}-${translationSequence++}`;
@@ -36937,6 +37219,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       selectionMatchHighlightMode(),
       settings.selectionOverlayMinChars
     );
+    syncGithubCloneUrlRewrite();
     const host = document.createElement("div");
     host.id = "webmind-root";
     assistantHost = host;
@@ -37038,6 +37321,8 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
     document.addEventListener("mouseup", handleSelectionEnd);
     document.addEventListener("pointerup", handleSelectionEnd, true);
     document.addEventListener("keyup", handleSelectionEnd);
+    document.addEventListener("turbo:load", syncGithubCloneUrlRewrite);
+    window.addEventListener("popstate", syncGithubCloneUrlRewrite);
     chrome.storage.onChanged.addListener((changes, areaName) => {
       if (areaName !== "local" || !changes["webmind.settings"]) return;
       settings = {
@@ -37049,6 +37334,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
         selectionMatchHighlightMode(),
         settings.selectionOverlayMinChars
       );
+      syncGithubCloneUrlRewrite();
       if (!selectionOverlayEnabled() || !selectionOverlayShortcutActive()) {
         showSelection?.(null);
       } else {

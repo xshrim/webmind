@@ -88,6 +88,22 @@ describe("settings normalization", () => {
     ).toBe("baidu");
   });
 
+  it("normalizes the GitHub SSH clone rewrite mode", () => {
+    expect(normalizeSettings().githubSshCloneUrlRewriteMode).toBe("off");
+    expect(
+      normalizeSettings({ githubSshCloneUrlRewriteMode: "text-only" })
+        .githubSshCloneUrlRewriteMode
+    ).toBe("text-only");
+    expect(
+      normalizeSettings({ githubSshCloneUrlRewriteMode: "copy-only" })
+        .githubSshCloneUrlRewriteMode
+    ).toBe("copy-only");
+    expect(
+      normalizeSettings({ githubSshCloneUrlRewriteMode: "text-and-copy" })
+        .githubSshCloneUrlRewriteMode
+    ).toBe("text-and-copy");
+  });
+
   it("drops removed selection fixed tools from stored settings", () => {
     expect(
       normalizeSettings({

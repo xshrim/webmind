@@ -236,6 +236,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   selectionSearchOpenMode: "new-tab",
   selectionMatchHighlightMode: "off",
   linkTextSelectionEnabled: false,
+  githubSshCloneUrlRewriteMode: "off",
   immersiveTranslationStyle: "bilingual",
   immersiveTranslationDisplayStyle: "default",
   immersiveTranslationTextEffects: ["light"],

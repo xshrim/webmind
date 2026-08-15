@@ -8,7 +8,7 @@
 - 项目类型：Manifest V3 Chrome 扩展。
 - 最终制品：未打包扩展目录 `dist/`，不要打包成 `.crx`。
 - 核心目标：实现一个浏览器 AI 助手，功能工作流参考 MaxAI 一类产品的公开能力，但不包含登录、订阅、购买方案；用户自行添加模型引擎和凭证。
-- 本交接文档日期：2026-08-13。
+- 本交接文档日期：2026-08-15。
 
 ## 如何继续开发
 
@@ -45,14 +45,17 @@ npm run check
 - `src/shared/tools.ts`：内置/自定义工具合并、模板填充、上下文注入，以及仅对工具生效的回答语言约束。
 - `src/shared/utils.ts`：共享工具函数、正文 citation 说明清洗、翻译占位符保护与还原、消息辅助函数。
 - `src/shared/i18n.ts`：语言候选、浏览器语言解析、Prompt 指令语言解析和九种语言的类型完整性组装；`src/shared/locales/{es,fr,de,it}.ts` 分别维护西班牙语、法语、德语、意大利语的完整静态界面词条。
-- `src/shared/storage.ts`：设置、工具、历史、本地存储和 Chrome 同步存储；负责将缺失或非法的 `mcpToolApprovalMode` 归一化为 `ask`，并使同文高亮和链接选择在缺失配置时分别回退到 `off` 与 `false`。
+- `src/shared/storage.ts`：设置、工具、历史、本地存储和 Chrome 同步存储；负责将缺失或非法的 `mcpToolApprovalMode` 归一化为 `ask`，使同文高亮和链接选择在缺失配置时分别回退到 `off` 与 `false`，并归一化 `githubSshCloneUrlRewriteMode` 的 `off | text-only | copy-only | text-and-copy` 四态值；此前临时布尔值为 `true` 时映射为 `text-and-copy`。
 - `src/shared/todos.ts`：待办标题生成、字段截断、记录归一化、去重、排序、筛选和搜索等纯逻辑。
 - `src/shared/models.ts`：默认、翻译、视觉三类模型用途的路由逻辑。
 - `src/background/index.ts`：扩展消息路由、工具执行、动态右键菜单、快捷动作、搜索、图片获取/截图、打开侧边栏；维护 MCP 审批 Promise、30 秒超时和 `mcp.tool.status` Port 事件。
 - `src/background/providers.ts`：各模型接口的流式请求和兼容处理。
 - `src/background/mcpClient.ts`：基于官方 MCP SDK 的 SSE/Streamable HTTP 连接、工具发现和调用结果格式化。
 - `src/background/mcpAgent.ts`：普通对话的原生模型 tool-calling 循环、工具选择校验、逐次审批和步数/数量限制；每次调用前强制执行全局 MCP 授权模式，并回传结构化工具状态。
-- `src/content/index.tsx`：网页注入能力，包括划词浮层、快捷工具、沉浸翻译、沉浸阅读、悬停释义、自动回复、图文提取、搜索页回答窗口；初始化时按设置启动链接文字选择和同文高亮。
+- `src/content/index.tsx`：网页注入能力，包括划词浮层、快捷工具、沉浸翻译、沉浸阅读、悬停释义、自动回复、图文提取、搜索页回答窗口；初始化时按设置启动链接文字选择、同文高亮及 GitHub Clone 文本框改写，并按模式打开/关闭 GitHub 剪贴板 bridge。
+- `src/content/githubSshCloneUrl.ts`：GitHub SSH SCP 地址到 `ssh://git@ssh.github.com:443/...` 的严格纯转换，以及 GitHub 仓库页面路径判定；不处理 HTTPS、非 `github.com` 域名或已改写地址。
+- `src/content/githubCloneRewrite.ts`：普通 content script 中对 GitHub 动态 React/Primer Clone 菜单、弹层和 Portal 的可见 SSH 地址改写。
+- `src/content/githubCloneBridge.ts`：GitHub 专用 MAIN world、`document_start` 剪贴板 bridge；仅在根元素 `data-webmind-github-ssh-clone-rewrite` 开关存在时改写 `Clipboard.writeText` 或选择型复制结果。
 - `src/content/linkTextSelection.ts`：链接内文字的横向拖动选择、纵向拖动保持原行为，以及选择后阻止误导航；不再兼容 Google News 一类空链接覆盖层。
 - `src/content/selectionHighlighter.ts`：同文高亮的 CSS Highlight API 匹配与右侧滚动条定位短标记；不包裹或修改网页原始文本节点。
 - `src/shared/cookiePreview.ts`：当前页面 Cookie 的 JSON、Netscape、HTTP、cURL 预览格式化。
@@ -65,7 +68,8 @@ npm run check
 - `src/options/SettingsApp.tsx`：设置页面，包括 MCP 工具授权、划词浮层、链接选择，以及“工具启用 -> 右键菜单”工具选择器。
 - `src/content/floatingResult.ts`：划词结果、二维码和图片识别弹窗的候选位置优先级与视口兜底。
 - `vite.config.ts`：生产构建入口和手动 chunk 拆分；lucide 动态图标按首字母拆成 `lucide-icons-*` chunk。
-- `scripts/build-extension.mjs`：将构建产物整理到最终扩展目录 `dist/`。
+- `public/manifest.json`：除普通 content script 外，声明 GitHub 专用的 `githubCloneBridge.js`，以 `MAIN` world 和 `document_start` 注入。
+- `scripts/build-extension.mjs`：将后台、普通 content script 与 GitHub MAIN world bridge 的构建产物整理到最终扩展目录 `dist/`。
 
 ## 当前产品能力
 
@@ -76,6 +80,7 @@ npm run check
 - MCP 操作日志记录授权范围、调用成功/失败/未执行、Server 保存/刷新/删除；仅记录 Server/工具名称、状态和数量，不得记录工具参数、返回正文、Cookie、请求头、模型上下文或附件内容。
 - Cookie 查看器位于侧边栏右上角设置图标左侧；后台 `cookies.current` 用 Chrome `cookies` API 获取当前标签 URL 对应 Cookie，格式化与复制均在侧边栏完成。
 - 链接选择默认关闭（`linkTextSelectionEnabled: false`），位于“快捷工具 -> 链接选择”，并复用快捷工具 URL 黑名单。横向拖动链接文字走选择并防止松开后的导航；普通点击和纵向拖动保持页面原行为。
+- GitHub 仓库的 Code 菜单支持 SSH 443 端口改写，设置位于“页面功能 -> 快捷工具 -> GitHub克隆SSH使用443端口”。`githubSshCloneUrlRewriteMode` 有 `off`、`text-only`、`copy-only`、`text-and-copy` 四态，分别对应不启用、仅文本框启用、仅复制按钮启用、完全启用。只把 `git@github.com:owner/repository.git` 改为 `ssh://git@ssh.github.com:443/owner/repository.git`；显示层在普通 content script 中处理，实际复制由 MAIN world 的 `githubCloneBridge.js` 在文档开始时处理。它不配置 SSH 密钥、`~/.ssh/config` 或 Git 配置，也不改写 HTTPS、GitHub Enterprise、GitLab 或 Bitbucket。
 - 同文高亮默认关闭（`selectionMatchHighlightMode: "off"`），位于“划词浮层”，与划词浮层共用最少触发字符数和 URL 黑名单。匹配项用 Logo 珊瑚红 `#e8533f`，右侧定位标记用青绿色 `#178f7c`；为性能和原生选区兼容性，不要求当前浏览器选区与其他匹配项样式一致。
 - 待办第一阶段使用独立 `TodoItem` 和 `webmind.todos` local storage。划词浮层“待办”、WebMind 右键菜单“加入待办”和回答操作栏均可立即创建待办，正文首行生成标题，完整文本保存到 `content` 字段，并记录来源页面标题/URL；创建和编辑均只提供一个正文输入框，保存前清理正文首尾的空行和空格，派生标题最多 80 个字符。当前数据模型不兼容旧的独立标题或 `note` 字段格式，没有正文的记录会被丢弃。列表按进行中、未完成、已完成分组，每组内按最近更新时间优先。侧边栏待办页位于 MCP 与历史之间，提供搜索、全部/未完成/已完成筛选、编辑、完成/恢复、进行中标记、删除、清除全部、清理已完成和来源跳转。每项默认折叠，折叠时只显示标题行和来源行，展开后显示最多三行正文预览；超过三行的正文在省略位置显示可点击的 `>`，展开全文后在末尾显示 `<`；标题行左侧依次为独立复选框和进行中图标，来源行和正文预览与进行中图标左对齐，右侧为折叠、智能拆分、编辑、删除按钮。右侧四个按钮采用每个 20px 宽、零间距的紧凑布局，标题同步预留 80px，避免省略号与按钮重叠。智能拆分调用当前默认模型，要求返回 2 到 20 个 JSON 字符串待办，后台一次性创建子待办并删除原待办，模型失败、结果无效或存储失败时保留原待办。完成事项的进行中图标置灰且不可点击，恢复未完成后重新可操作；点击标题区域空白处也可展开或折叠。
 - 上下文下拉框只有：无上下文、当前页面、当前正文、当前选中；默认上下文来自 `defaultContextScope`，当前真实默认值是当前正文。
@@ -119,6 +124,7 @@ npm run check
 - `selectionOverlayMinChars`：`2`
 - `selectionMatchHighlightMode`：`off`
 - `linkTextSelectionEnabled`：`false`
+- `githubSshCloneUrlRewriteMode`：`off`
 - `edgeQuickToolsEnabled`：`false`
 - `inputAutoReplyEnabled`：`false`
 - `inputAutoReplyDisableSingleLine`：`true`
@@ -170,6 +176,7 @@ npm run check
 - 不要再增加“隐藏工具”设定；还原页面、沉浸翻译、沉浸阅读等固定按钮应直接调用对应功能。
 - 不要重新引入 `ModelDock` 或旧的 storage key、port name 等命名；产品名和内部命名应统一为 WebMind。
 - `dist/` 是最终给 Chrome 加载的目录，但代码源头是 `src/`。
+- `githubCloneBridge.ts` 和 `public/manifest.json` 的改动必须在 Chrome 重载未打包扩展后，再完整刷新 GitHub 页面验证。MAIN world bridge 必须维持 GitHub 域专用、`document_start` 注入，并通过文档根元素属性开关控制；不得扩大为对所有网站生效的全局剪贴板 monkey patch。
 - 翻译相关逻辑应尽量复用共享提示词和翻译保护工具，不要在 content、sidepanel、background 中重复拼接不同版本。
 - 工具输出语言约束统一由 `src/shared/tools.ts` 的 `toolPromptWithContext` 追加，只接入工具调用路径，不要放入普通对话的 system message。开启配置时，`originalLanguageLabel` 结合实际上下文文本和 `PageContext.language`/页面语言提示生成具体语言名，并将规则放在最终 prompt 末尾；模板的书写语言不算显式要求，只有明确要求“使用某语言回答”时才覆盖。自动翻译、PDF/字幕翻译和代码解释继续使用各自专用提示词。
 - 侧边栏普通对话和非翻译工具把页面/正文/选区当作参考上下文，走 `resolveRichContext`、`buildSystemMessage` 或 `toolPromptWithContext`；自动翻译/文档翻译把当前上下文当作待处理原文，必须走翻译保护和专用 prompt，不要为了“统一路径”把翻译工具模板、标题、URL 或 system 上下文混进译文输入。
@@ -191,6 +198,7 @@ npm run check
 
 ## 最近完成的功能与修复
 
+- 2026-08-15：GitHub 仓库 Code 菜单新增“GitHub克隆SSH使用443端口”四态设置：不启用、仅文本框启用、仅复制按钮启用、完全启用。普通 content script 改写动态 Clone UI，GitHub 专用 MAIN world `document_start` bridge 改写真实剪贴板内容；最终行为已在 Chrome 手工确认。
 - 2026-08-13：MCP 选择器新增 Server 折叠层级、加大复选框和可点击区域；已选时网络图标 tooltip 显示 Server 与工具总数。MCP 授权弹窗改为拒绝按钮与三种允许范围的分组布局，并增加销毁性工具风险提示。
 - 2026-08-13：MCP 返回结果由单独状态展示改为嵌入同一助手消息的结果色带，成功、失败、拒绝和超时均携带详情，默认折叠；协议 `isError` 也归类为失败。日志补齐授权决定、调用状态与 Server 生命周期事件，且不记录敏感内容。
 - 2026-08-13：新增右键菜单工具配置；后台动态创建 WebMind 子菜单，固定“侧边栏提问”为第一项，其他工具按设置页选择和顺序执行，并强制使用右键选中文本上下文。
@@ -288,16 +296,14 @@ npm run check
 
 ## 最后一次验证结果
 
-2026-08-13，以下命令均通过：
+2026-08-15，以下命令均通过：
 
 ```bash
-npm run typecheck
-npm run test
-npm run build
+npm run check
 git diff --check
 ```
 
-测试结果：`27` 个测试文件、`224` 个测试通过；TypeScript 类型检查和构建均成功，已生成未打包扩展目录 `dist/`。以上是代码级验证，尚未替代真实 Chrome 手工验证。
+测试结果：`28` 个测试文件、`228` 个测试通过。`npm run check` 已完成 TypeScript 类型检查、测试和构建，并生成最新未打包扩展目录 `dist/`；代码级验证不替代真实 Chrome 手工测试。GitHub SSH Clone 的最终复制行为已完成手工确认。
 
 ## 最近手工验证重点
 
@@ -339,3 +345,4 @@ git diff --check
 - 右键菜单回归：重载扩展或重启 Chrome 后，不刷新网页标签页，直接打开 WebMind 子菜单并执行“侧边栏提问”和一个配置工具；删除一个自定义工具后确认其不再出现在划词浮层、侧边栏、快捷工具和右键菜单配置中。
 - 待办回归：分别从划词浮层、网页右键菜单和回答操作栏创建待办，确认回答待办记录当前页面来源；在侧边栏待办页验证其位于 MCP 与历史之间，默认折叠时只显示标题/来源，标题区域空白处可展开/折叠且右侧有紧凑排列的折叠、智能拆分、编辑、删除按钮；验证标题超过 80 个字符时单行省略且不与按钮重叠。对超过三行的正文验证 `>` 展开全文、末尾 `<` 收起到三行，并验证搜索、全部/未完成/已完成筛选、编辑、完成/恢复、删除、清除全部、清理已完成和来源跳转。配置默认模型后验证智能拆分生成多个子待办并删除原待办；让模型返回无效结果或制造请求/存储失败，确认原待办仍保留。重启扩展后确认待办仍在，普通对话上下文、历史和 MCP 日志不包含待办正文。
 - 页面增强回归：确认 Cookie 查看器只读取当前 URL Cookie，四种格式可复制；确认链接选择默认关闭，启用后横向拖动可选择文字而普通点击/纵向拖动不变；确认同文高亮默认关闭，启用后分别验证大小写敏感/忽略大小写、珊瑚红匹配项和青绿色定位标记。
+- GitHub SSH Clone 回归：重载 `dist/` 后完整刷新 GitHub 仓库页面，在 Code 菜单切换 SSH；分别验证不启用、仅文本框启用、仅复制按钮启用、完全启用四种状态下的文本框内容和实际剪贴板内容。文本框或复制内容启用时，应为 `ssh://git@ssh.github.com:443/owner/repository.git`。

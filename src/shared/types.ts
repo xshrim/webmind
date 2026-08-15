@@ -56,6 +56,11 @@ export type SelectionMatchHighlightMode =
   | "off"
   | "ignore-case"
   | "case-sensitive";
+export type GithubSshCloneUrlRewriteMode =
+  | "off"
+  | "text-only"
+  | "copy-only"
+  | "text-and-copy";
 export type ImmersiveTranslationStyle = "translation-only" | "bilingual";
 export type ImmersiveTranslationDisplayStyle =
   | "default"
@@ -165,6 +170,7 @@ export interface AppSettings {
   selectionSearchOpenMode: SelectionSearchOpenMode;
   selectionMatchHighlightMode: SelectionMatchHighlightMode;
   linkTextSelectionEnabled: boolean;
+  githubSshCloneUrlRewriteMode: GithubSshCloneUrlRewriteMode;
   immersiveTranslationStyle: ImmersiveTranslationStyle;
   immersiveTranslationDisplayStyle: ImmersiveTranslationDisplayStyle;
   immersiveTranslationTextEffects: ImmersiveTranslationTextEffect[];

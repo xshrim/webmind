@@ -14,7 +14,8 @@ import type {
   McpServerConfig,
   McpToolApprovalMode,
   ReasoningStrategy,
-  SelectionMatchHighlightMode
+  SelectionMatchHighlightMode,
+  GithubSshCloneUrlRewriteMode
 } from "./types";
 import type { CreateTodoInput, TodoItem, UpdateTodoInput } from "./types";
 import { SELECTION_OVERLAY_FIXED_TOOL_ORDER } from "./types";
@@ -101,6 +102,13 @@ const SELECTION_MATCH_HIGHLIGHT_MODES = new Set<SelectionMatchHighlightMode>([
   "off",
   "ignore-case",
   "case-sensitive"
+]);
+
+const GITHUB_SSH_CLONE_URL_REWRITE_MODES = new Set<GithubSshCloneUrlRewriteMode>([
+  "off",
+  "text-only",
+  "copy-only",
+  "text-and-copy"
 ]);
 
 function normalizeImmersiveShortcut(
@@ -328,6 +336,14 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
     linkTextSelectionEnabled:
       stored.linkTextSelectionEnabled ??
       DEFAULT_SETTINGS.linkTextSelectionEnabled,
+    githubSshCloneUrlRewriteMode: GITHUB_SSH_CLONE_URL_REWRITE_MODES.has(
+      stored.githubSshCloneUrlRewriteMode as GithubSshCloneUrlRewriteMode
+    )
+      ? (stored.githubSshCloneUrlRewriteMode as GithubSshCloneUrlRewriteMode)
+      : (stored as { githubSshCloneUrlRewriteEnabled?: unknown })
+            .githubSshCloneUrlRewriteEnabled === true
+        ? "text-and-copy"
+        : DEFAULT_SETTINGS.githubSshCloneUrlRewriteMode,
     immersiveTranslationStyle:
       stored.immersiveTranslationStyle ??
       DEFAULT_SETTINGS.immersiveTranslationStyle,

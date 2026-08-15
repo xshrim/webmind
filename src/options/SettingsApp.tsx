@@ -53,6 +53,7 @@ import type {
   AppLanguage,
   CustomTool,
   DefaultContextScope,
+  GithubSshCloneUrlRewriteMode,
   HoverDefinitionMode,
   HoverDefinitionStyle,
   ImmersiveShortcut,
@@ -306,6 +307,20 @@ const SELECTION_MATCH_HIGHLIGHT_MODES: Array<{
     titleKey: "selectionMatchHighlightCaseSensitive"
   },
   { id: "ignore-case", titleKey: "selectionMatchHighlightIgnoreCase" }
+];
+
+const GITHUB_SSH_CLONE_URL_REWRITE_MODES: Array<{
+  id: GithubSshCloneUrlRewriteMode;
+  titleKey:
+    | "githubSshCloneUrlRewriteOff"
+    | "githubSshCloneUrlRewriteTextOnly"
+    | "githubSshCloneUrlRewriteCopyOnly"
+    | "githubSshCloneUrlRewriteAll";
+}> = [
+  { id: "off", titleKey: "githubSshCloneUrlRewriteOff" },
+  { id: "text-only", titleKey: "githubSshCloneUrlRewriteTextOnly" },
+  { id: "copy-only", titleKey: "githubSshCloneUrlRewriteCopyOnly" },
+  { id: "text-and-copy", titleKey: "githubSshCloneUrlRewriteAll" }
 ];
 
 const SELECTION_OVERLAY_FIXED_TOOLS: Array<{
@@ -1807,6 +1822,33 @@ export function SettingsApp() {
                       <small>{t("linkTextSelectionHelp")}</small>
                     </span>
                   </label>
+                </div>
+                <div className="field">
+                  <span className="field-label">
+                    {t("githubSshCloneUrlRewrite")}
+                  </span>
+                  <div className="segmented segmented-wrap">
+                    {GITHUB_SSH_CLONE_URL_REWRITE_MODES.map((mode) => (
+                      <button
+                        key={mode.id}
+                        className={
+                          settings.githubSshCloneUrlRewriteMode === mode.id
+                            ? "active"
+                            : ""
+                        }
+                        type="button"
+                        onClick={() =>
+                          void updatePreference(
+                            "githubSshCloneUrlRewriteMode",
+                            mode.id
+                          )
+                        }
+                      >
+                        {t(mode.titleKey)}
+                      </button>
+                    ))}
+                  </div>
+                  <small>{t("githubSshCloneUrlRewriteHelp")}</small>
                 </div>
                 <div className="field">
                   <span className="field-label">{t("edgeDockMenu")}</span>

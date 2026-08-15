@@ -118,6 +118,12 @@ import {
 } from "./floatingResult";
 import { setLinkTextSelectionEnabled } from "./linkTextSelection";
 import { setSelectionMatchHighlightMode } from "./selectionHighlighter";
+import {
+  setGithubCloneUrlRewriteBridgeEnabled,
+  startGithubCloneUrlRewrite,
+  type GithubCloneUrlRewriter
+} from "./githubCloneRewrite";
+import { isGithubRepositoryPath } from "./githubSshCloneUrl";
 import { ToolIcon } from "./toolIcons";
 import type {
   AppSettings,
@@ -247,10 +253,32 @@ let retainedPageSelection: { text: string; range: Range | null } | null = null;
 let hoverDefinitionDictionaryPromise: Promise<HoverDefinitionDictionary> | null =
   null;
 let englishWordFrequencyPromise: Promise<EnglishWordFrequencyIndex> | null = null;
+let githubCloneUrlRewriter: GithubCloneUrlRewriter | null = null;
 const HOVER_DEFINITION_HIGHLIGHT_NAME = "webmind-hover-definition";
 
 function contentText(key: UiTextKey): string {
   return uiText(settings?.interfaceLanguage, key);
+}
+
+function syncGithubCloneUrlRewrite(): void {
+  const mode = settings?.githubSshCloneUrlRewriteMode ?? "off";
+  const isGithubRepository = isGithubRepositoryPath(
+    location.hostname,
+    location.pathname
+  );
+  const shouldRewrite =
+    (mode === "text-only" || mode === "text-and-copy") && isGithubRepository;
+  setGithubCloneUrlRewriteBridgeEnabled(
+    (mode === "copy-only" || mode === "text-and-copy") && isGithubRepository
+  );
+  if (!shouldRewrite) {
+    githubCloneUrlRewriter?.dispose();
+    githubCloneUrlRewriter = null;
+    return;
+  }
+  if (!githubCloneUrlRewriter) {
+    githubCloneUrlRewriter = startGithubCloneUrlRewrite();
+  }
 }
 
 function nextTranslationBlockId(): string {
@@ -4242,6 +4270,7 @@ async function initialize(): Promise<void> {
     selectionMatchHighlightMode(),
     settings.selectionOverlayMinChars
   );
+  syncGithubCloneUrlRewrite();
   const host = document.createElement("div");
   host.id = "webmind-root";
   assistantHost = host;
@@ -4373,6 +4402,9 @@ async function initialize(): Promise<void> {
   document.addEventListener("pointerup", handleSelectionEnd, true);
   document.addEventListener("keyup", handleSelectionEnd);
 
+  document.addEventListener("turbo:load", syncGithubCloneUrlRewrite);
+  window.addEventListener("popstate", syncGithubCloneUrlRewrite);
+
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName !== "local" || !changes["webmind.settings"]) return;
     settings = {
@@ -4384,6 +4416,7 @@ async function initialize(): Promise<void> {
       selectionMatchHighlightMode(),
       settings.selectionOverlayMinChars
     );
+    syncGithubCloneUrlRewrite();
     if (!selectionOverlayEnabled() || !selectionOverlayShortcutActive()) {
       showSelection?.(null);
     } else {
