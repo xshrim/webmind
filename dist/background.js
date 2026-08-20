@@ -27412,6 +27412,7 @@ var StreamableHTTPClientTransport = class {
 };
 
 // src/background/mcpClient.ts
+config({ jitless: true });
 var MCP_CONNECT_TIMEOUT_MS = 15e3;
 var MCP_CALL_TIMEOUT_MS = 6e4;
 var MCP_MAX_TOOLS = 80;

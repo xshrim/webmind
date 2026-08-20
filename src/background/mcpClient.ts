@@ -1,9 +1,12 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+import { config as configureZod } from "zod/v4";
 import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import type { McpServerConfig, McpToolInfo } from "../shared/types";
 import { parseCustomHeaders } from "../shared/utils";
+
+configureZod({ jitless: true });
 
 const MCP_CONNECT_TIMEOUT_MS = 15_000;
 const MCP_CALL_TIMEOUT_MS = 60_000;
