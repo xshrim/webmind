@@ -1634,7 +1634,7 @@ svg {
 .panel-shell {
   display: flex;
   width: 100%;
-  min-width: 300px;
+  min-width: 250px;
   height: 100vh;
   min-height: 500px;
   flex-direction: column;
@@ -4766,5 +4766,57 @@ button.prompt-row:hover {
     border-bottom: 0;
     border-left: 0;
     border-radius: 8px 8px 0 0;
+  }
+}
+
+@media (max-width: 300px) {
+  .panel-header {
+    gap: 2px;
+    padding-right: 4px;
+    padding-left: 4px;
+  }
+
+  .brand-compact {
+    gap: 1px;
+  }
+
+  .brand-tool-button,
+  .header-actions .icon-button {
+    width: 24px;
+    height: 24px;
+  }
+
+  .header-actions {
+    gap: 0;
+  }
+
+  .provider-select {
+    width: 72px;
+    min-width: 72px;
+    padding-right: 18px;
+    padding-left: 4px;
+  }
+
+  .composer-toolbar {
+    gap: 3px;
+    padding-right: 3px;
+    padding-left: 3px;
+  }
+
+  .composer-tools {
+    gap: 1px;
+  }
+
+  .composer-tools .icon-button.mini {
+    width: 22px;
+    height: 24px;
+  }
+
+  .context-select {
+    width: 52px;
+    max-width: 52px;
+    gap: 4px;
+    padding-right: 4px;
+    padding-left: 4px;
   }
 }

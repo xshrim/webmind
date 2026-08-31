@@ -29038,7 +29038,8 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
   var LINK_SELECTION_DRAG_THRESHOLD = 4;
   var listenersAttached = false;
   var pointerState = null;
-  function clearLinkTextSelectingMarker(activationTarget = pointerState?.activationTarget ?? null) {
+  var clickSuppression = null;
+  function clearLinkTextSelectingMarker(activationTarget = pointerState?.activationTarget ?? clickSuppression?.activationTarget ?? null) {
     activationTarget?.removeAttribute(LINK_TEXT_SELECTING_ATTRIBUTE);
   }
   function shouldBlockLinkDragTarget(target) {
@@ -29068,6 +29069,10 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
   }
   function trackLinkSelectionStart(event) {
     clearLinkTextSelectingMarker();
+    if (clickSuppression) {
+      window.clearTimeout(clickSuppression.timer);
+      clickSuppression = null;
+    }
     const activationTarget = selectionActivationTarget(event.target);
     if (event.button !== 0 || !activationTarget) {
       pointerState = null;
@@ -29104,12 +29109,36 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
     }
   }
   function clearLinkSelectionPointerState() {
-    window.setTimeout(() => {
-      clearLinkTextSelectingMarker();
+    const current = pointerState;
+    if (current?.intent === "horizontal") {
+      clearLinkTextSelectingMarker(current.activationTarget);
       pointerState = null;
-    }, 0);
+      if (clickSuppression) window.clearTimeout(clickSuppression.timer);
+      const timer = window.setTimeout(() => {
+        if (clickSuppression?.timer !== timer) return;
+        clickSuppression = null;
+      }, 500);
+      clickSuppression = {
+        activationTarget: current.activationTarget,
+        timer
+      };
+      return;
+    }
+    clearLinkTextSelectingMarker();
+    pointerState = null;
   }
   function suppressLinkClickAfterSelection(event) {
+    const suppression = clickSuppression;
+    if (suppression) {
+      clickSuppression = null;
+      window.clearTimeout(suppression.timer);
+      const selection2 = window.getSelection();
+      if (isSelectionActivationTarget(suppression.activationTarget, event.target) && selection2 && !selection2.isCollapsed && Boolean(selection2.toString().trim())) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+      return;
+    }
     if (pointerState?.intent !== "horizontal" || !isSelectionActivationTarget(pointerState.activationTarget, event.target)) {
       return;
     }
@@ -29117,6 +29146,7 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
     if (!selection || selection.isCollapsed || !selection.toString().trim()) return;
     event.preventDefault();
     event.stopImmediatePropagation();
+    clearLinkTextSelectingMarker(pointerState.activationTarget);
     pointerState = null;
   }
   function setLinkTextSelectionEnabled(enabled2) {
@@ -29125,6 +29155,8 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
       existing?.remove();
       clearLinkTextSelectingMarker();
       pointerState = null;
+      if (clickSuppression) window.clearTimeout(clickSuppression.timer);
+      clickSuppression = null;
       if (listenersAttached) {
         document.removeEventListener("dragstart", blockLinkDrag, true);
         document.removeEventListener("mousedown", trackLinkSelectionStart, true);

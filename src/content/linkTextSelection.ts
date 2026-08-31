@@ -23,11 +23,18 @@ interface LinkSelectionPointerState {
   startY: number;
 }
 
+interface LinkSelectionClickSuppression {
+  activationTarget: Element;
+  timer: number;
+}
+
 let listenersAttached = false;
 let pointerState: LinkSelectionPointerState | null = null;
+let clickSuppression: LinkSelectionClickSuppression | null = null;
 
 function clearLinkTextSelectingMarker(
-  activationTarget: Element | null = pointerState?.activationTarget ?? null
+  activationTarget: Element | null =
+    pointerState?.activationTarget ?? clickSuppression?.activationTarget ?? null
 ): void {
   activationTarget?.removeAttribute(LINK_TEXT_SELECTING_ATTRIBUTE);
 }
@@ -88,6 +95,10 @@ function blockLinkDrag(event: DragEvent): void {
 
 function trackLinkSelectionStart(event: MouseEvent): void {
   clearLinkTextSelectingMarker();
+  if (clickSuppression) {
+    window.clearTimeout(clickSuppression.timer);
+    clickSuppression = null;
+  }
   const activationTarget = selectionActivationTarget(event.target);
   if (event.button !== 0 || !activationTarget) {
     pointerState = null;
@@ -131,13 +142,42 @@ function trackLinkSelectionMove(event: MouseEvent): void {
 }
 
 function clearLinkSelectionPointerState(): void {
-  window.setTimeout(() => {
-    clearLinkTextSelectingMarker();
+  const current = pointerState;
+  if (current?.intent === "horizontal") {
+    clearLinkTextSelectingMarker(current.activationTarget);
     pointerState = null;
-  }, 0);
+    if (clickSuppression) window.clearTimeout(clickSuppression.timer);
+    const timer = window.setTimeout(() => {
+      if (clickSuppression?.timer !== timer) return;
+      clickSuppression = null;
+    }, 500);
+    clickSuppression = {
+      activationTarget: current.activationTarget,
+      timer
+    };
+    return;
+  }
+  clearLinkTextSelectingMarker();
+  pointerState = null;
 }
 
 function suppressLinkClickAfterSelection(event: MouseEvent): void {
+  const suppression = clickSuppression;
+  if (suppression) {
+    clickSuppression = null;
+    window.clearTimeout(suppression.timer);
+    const selection = window.getSelection();
+    if (
+      isSelectionActivationTarget(suppression.activationTarget, event.target) &&
+      selection &&
+      !selection.isCollapsed &&
+      Boolean(selection.toString().trim())
+    ) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+    return;
+  }
   if (
     pointerState?.intent !== "horizontal" ||
     !isSelectionActivationTarget(pointerState.activationTarget, event.target)
@@ -148,6 +188,7 @@ function suppressLinkClickAfterSelection(event: MouseEvent): void {
   if (!selection || selection.isCollapsed || !selection.toString().trim()) return;
   event.preventDefault();
   event.stopImmediatePropagation();
+  clearLinkTextSelectingMarker(pointerState.activationTarget);
   pointerState = null;
 }
 
@@ -157,6 +198,8 @@ export function setLinkTextSelectionEnabled(enabled: boolean): void {
     existing?.remove();
     clearLinkTextSelectingMarker();
     pointerState = null;
+    if (clickSuppression) window.clearTimeout(clickSuppression.timer);
+    clickSuppression = null;
     if (listenersAttached) {
       document.removeEventListener("dragstart", blockLinkDrag, true);
       document.removeEventListener("mousedown", trackLinkSelectionStart, true);
