@@ -143,6 +143,7 @@ import {
   buildPageTranslationUserPrompt,
   buildProtectedTranslationInput,
   buildProtectedTranslationInstruction,
+  copyableChatMessageText,
   createMessage,
   errorMessage,
   extractPageTranslationEntries,
@@ -606,6 +607,11 @@ export function App() {
     [customTools, settings]
   );
   const t = (key: UiTextKey) => uiText(settings?.interfaceLanguage, key);
+  const copyMessage = async (message: ChatMessage) => {
+    await navigator.clipboard.writeText(copyableChatMessageText(message));
+    setCopiedMessageId(message.id);
+    window.setTimeout(() => setCopiedMessageId(null), 1400);
+  };
   const toggleMessageQrCode = (message: ChatMessage) => {
     if (messageQrCodes[message.id]) {
       setMessageQrCodes((current) => {
@@ -618,7 +624,7 @@ export function App() {
       ...current,
       [message.id]: { loading: true }
     }));
-    void selectionQrCodeSvg(message.content).then(
+    void selectionQrCodeSvg(copyableChatMessageText(message)).then(
       (svg) =>
         setMessageQrCodes((current) => ({
           ...current,
@@ -1001,7 +1007,7 @@ export function App() {
         url: pending.pageUrl,
         text: pending.text ?? "",
         markdown: pending.markdown ?? pending.text ?? "",
-        selection: pending.text
+        selection: pending.copyText ?? pending.text
       };
       if (next.kind === "selection" && pending.text?.trim()) {
         // Supersede any page-context request started while the panel opened.
@@ -2443,6 +2449,7 @@ export function App() {
       const version = ++selectionContextVersionRef.current;
       const payload = message.payload ?? {};
       const text = String(payload.text ?? "").trim();
+      const copyText = String(payload.copyText ?? text);
       const markdown = String(payload.markdown ?? text).trim();
       const url = String(payload.url ?? senderTab.url ?? activeTab.url ?? "");
       const title = String(
@@ -2474,7 +2481,7 @@ export function App() {
           url,
           text,
           markdown,
-          selection: text,
+          selection: copyText,
           description: t("selectionDescription").replace(
             "{count}",
             String(text.length)
@@ -2656,7 +2663,8 @@ export function App() {
         purpose?: ModelPurpose;
       } = {}
     ): Promise<boolean> => {
-      const text = (textOverride ?? composer).trim();
+      const inputText = textOverride ?? composer;
+      const text = inputText.trim();
       const requestAttachments = options.attachmentsOverride ?? attachments;
       const imageAttachments = requestAttachments.filter(
         (attachment) => (attachment.kind ?? "image") === "image"
@@ -2833,7 +2841,7 @@ export function App() {
         : undefined;
       const userMessage = createMessage("user", userContent, {
         attachments: requestAttachments,
-        inputText: text,
+        inputText,
         reasoningEnabled:
           reasoningEnabled && profile.reasoningStrategy !== "none",
         modelContent,
@@ -3378,13 +3386,14 @@ export function App() {
     if (messageIndex < 0) return;
     const message = current[messageIndex];
     if (message.role !== "user") return;
-    const editedText = editingMessageText.trim();
+    const editedInputText = editingMessageText;
+    const editedText = editedInputText.trim();
     const editedAttachments = message.attachments ?? [];
     if (!editedText && !editedAttachments.length) return;
 
     setEditingMessageSubmitting(true);
     try {
-      await sendMessage(editedText, {
+      await sendMessage(editedInputText, {
         attachmentsOverride: editedAttachments,
         historyOverride: current.slice(0, messageIndex),
         disableMcp: Boolean(message.toolInvocation),
@@ -4967,16 +4976,7 @@ export function App() {
                                   : t("copyContent")
                               }
                               aria-label={t("copyContent")}
-                              onClick={async () => {
-                                await navigator.clipboard.writeText(
-                                  message.content
-                                );
-                                setCopiedMessageId(message.id);
-                                window.setTimeout(
-                                  () => setCopiedMessageId(null),
-                                  1400
-                                );
-                              }}
+                              onClick={() => void copyMessage(message)}
                             >
                               {copiedMessageId === message.id ? (
                                 <Check />
@@ -5080,16 +5080,7 @@ export function App() {
                                     : t("copyContent")
                                 }
                                 aria-label={t("copyContent")}
-                                onClick={async () => {
-                                  await navigator.clipboard.writeText(
-                                    message.content
-                                  );
-                                  setCopiedMessageId(message.id);
-                                  window.setTimeout(
-                                    () => setCopiedMessageId(null),
-                                    1400
-                                  );
-                                }}
+                                onClick={() => void copyMessage(message)}
                               >
                                 {copiedMessageId === message.id ? (
                                   <Check />

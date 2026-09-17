@@ -832,6 +832,14 @@ export function createMessage(
   };
 }
 
+export function copyableChatMessageText(
+  message: Pick<ChatMessage, "role" | "content" | "inputText">
+): string {
+  return message.role === "user" && message.inputText
+    ? message.inputText
+    : message.content;
+}
+
 export function toModelMessage(message: ChatMessage): ChatMessage {
   const { modelContent, ...visibleMessage } = message;
   return modelContent

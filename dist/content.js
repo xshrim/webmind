@@ -25778,6 +25778,9 @@ ${index}. ${content.trim()}
     }
     return cleanCitationExplanationText(selection.toString().replace(/\r\n?/g, "\n").replace(/[^\S\n]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim());
   }
+  function selectionTextForCopy(selection) {
+    return selection?.rangeCount ? selection.toString() : "";
+  }
   function selectionMarkdownWithLayout(selection) {
     if (!selection?.rangeCount) return "";
     try {
@@ -25815,16 +25818,27 @@ ${index}. ${content.trim()}
     }
     return selectionTextWithLayout(window.getSelection());
   }
+  function pageSelectionTextForCopy() {
+    const active = document.activeElement;
+    if (active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement) {
+      const start = active.selectionStart ?? 0;
+      const end = active.selectionEnd ?? start;
+      return active.value.slice(start, end);
+    }
+    return selectionTextForCopy(window.getSelection());
+  }
   function selectedInputText(target) {
     if (!(target instanceof HTMLInputElement) && !(target instanceof HTMLTextAreaElement)) {
       return null;
     }
     const start = target.selectionStart ?? 0;
     const end = target.selectionEnd ?? start;
-    const text2 = target.value.slice(start, end).trim();
+    const copyText2 = target.value.slice(start, end);
+    const text2 = copyText2.trim();
     if (!text2) return null;
     return {
       text: text2,
+      copyText: copyText2,
       rect: target.getBoundingClientRect(),
       editable: { element: target, start, end }
     };
@@ -25849,6 +25863,7 @@ ${index}. ${content.trim()}
     const editableElement = container?.closest("[contenteditable='true']");
     return {
       text: text2.slice(0, 12e3),
+      copyText: selectionTextForCopy(selection),
       rect,
       range,
       editable: editableElement ? { element: editableElement, range } : void 0
@@ -27893,7 +27908,7 @@ ${index}. ${content.trim()}
         url: location.href,
         text: truncateText(selection, 2e4, language),
         markdown: truncateText(selectionMarkdown || selection, 2e4, language),
-        selection,
+        selection: pageSelectionTextForCopy() || selection,
         description: uiText(language, "selectionDescription").replace(
           "{count}",
           String(selection.length)
@@ -34177,6 +34192,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     selectionReportTimer = window.setTimeout(() => {
       selectionReportTimer = null;
       const text2 = pageSelectionText().trim().slice(0, 12e3);
+      const copyText2 = pageSelectionTextForCopy();
       const markdown = pageSelectionMarkdown().trim().slice(0, 12e3);
       if (text2) {
         const selection = window.getSelection();
@@ -34202,6 +34218,7 @@ ${text2}`;
             payload: {
               hasSelection: Boolean(text2),
               text: text2,
+              copyText: copyText2,
               markdown,
               title: document.title || location.hostname,
               url: location.href
@@ -35248,6 +35265,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
             createdAt: Date.now(),
             contextScope: "selection",
             text: snapshot.text,
+            copyText: snapshot.copyText,
             markdown: pageSelectionMarkdown(),
             pageTitle: document.title,
             pageUrl: location.href
@@ -36411,7 +36429,7 @@ ${t("currentResultLabel")}\uFF1A` : "",
         "image.captureVisible"
       ).catch(() => null);
       const targetRect = target.element.getBoundingClientRect();
-      setSnapshot({ text: "", rect: targetRect });
+      setSnapshot({ text: "", copyText: "", rect: targetRect });
       setActiveTool(imageTextExtractionTool);
       setSelectedResultToolId("");
       setResultPositionOverride(null);
@@ -36457,7 +36475,7 @@ ${t("currentResultLabel")}\uFF1A` : "",
         if (imageTextRunRef.current !== runId) return;
         setResult(text2);
         setSnapshot(
-          (current) => current ? { ...current, text: text2 } : { text: text2, rect: targetRect }
+          (current) => current ? { ...current, text: text2, copyText: text2 } : { text: text2, copyText: text2, rect: targetRect }
         );
       } catch (requestError) {
         if (imageTextRunRef.current === runId) {
@@ -36601,7 +36619,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       setHoverOpen(false);
       setResultPositionOverride(null);
       try {
-        setSelectionQrCode({ svg: await selectionQrCodeSvg(snapshot.text), error: "" });
+        setSelectionQrCode({ svg: await selectionQrCodeSvg(snapshot.copyText), error: "" });
       } catch {
         setSelectionQrCode({ svg: "", error: t("selectionQrCodeError") });
       }
@@ -36612,7 +36630,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           title: uiText(activeSettings?.interfaceLanguage, "copySelection"),
           icon: selectionCopied ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Check, {}) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Copy, {}),
           onClick: async () => {
-            await copyText(snapshot?.text ?? "");
+            await copyText(snapshot?.copyText ?? "");
             setSelectionCopied(true);
             window.setTimeout(() => setSelectionCopied(false), 1200);
           }

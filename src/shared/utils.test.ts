@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   alignPageTranslations,
   cleanCitationExplanationText,
+  copyableChatMessageText,
   extractJsonArray,
   extractPageTranslationEntries,
   isPointInsideAnyRect,
@@ -54,6 +55,18 @@ describe("shared utilities", () => {
     expect(toModelMessage(message).content).toContain("Full page text");
     expect(toModelMessage(message).modelContent).toBeUndefined();
     expect(message.content).toBe("自动翻译");
+  });
+
+  it("uses the exact user input as the copy source", () => {
+    const inputText = "  first line\n    indented line\n\n  final line  ";
+    expect(
+      copyableChatMessageText(
+        createMessage("user", inputText.trim(), { inputText })
+      )
+    ).toBe(inputText);
+    expect(
+      copyableChatMessageText(createMessage("assistant", inputText))
+    ).toBe(inputText);
   });
 
   it("requires the pointer to be inside a text rectangle", () => {

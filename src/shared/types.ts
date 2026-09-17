@@ -399,6 +399,7 @@ export interface PendingAction {
   createdAt: number;
   contextScope?: "page" | "article" | "selection";
   text?: string;
+  copyText?: string;
   markdown?: string;
   imageUrl?: string;
   pageTitle?: string;

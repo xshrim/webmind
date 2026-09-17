@@ -11,4 +11,11 @@ describe("selectionQrCodeSvg", () => {
       "Selected text is empty"
     );
   });
+
+  it("encodes whitespace instead of normalizing it", async () => {
+    const raw = "  first line\n    indented line  ";
+    await expect(selectionQrCodeSvg(raw)).resolves.not.toBe(
+      await selectionQrCodeSvg(raw.trim())
+    );
+  });
 });

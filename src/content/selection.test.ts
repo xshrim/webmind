@@ -2,8 +2,18 @@ import { describe, expect, it } from "vitest";
 import {
   hasBlockCodeMetadata,
   markdownCodeFence,
-  markdownLinkLabel
+  markdownLinkLabel,
+  selectionTextForCopy
 } from "./selection";
+
+describe("selectionTextForCopy", () => {
+  it("preserves selected multiline whitespace and indentation", () => {
+    const selected = "  first line\n    indented line\n\n  final line  ";
+    expect(
+      selectionTextForCopy({ rangeCount: 1, toString: () => selected } as Selection)
+    ).toBe(selected);
+  });
+});
 
 describe("markdownLinkLabel", () => {
   it("collapses multiline link text into a valid inline label", () => {

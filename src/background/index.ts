@@ -220,6 +220,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     createdAt: Date.now(),
     contextScope: info.selectionText ? "selection" : undefined,
     text: info.selectionText,
+    copyText: info.selectionText,
     imageUrl: info.srcUrl,
     pageTitle: tab.title,
     pageUrl: info.pageUrl ?? tab.url

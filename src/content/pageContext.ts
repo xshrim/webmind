@@ -15,6 +15,7 @@ import {
   markdownFromElement,
   pageSelectionMarkdown,
   pageSelectionText,
+  pageSelectionTextForCopy,
   textFromElement
 } from "./selection";
 import { urlMatchesWhitelist } from "./urlRules";
@@ -2428,7 +2429,7 @@ export function extractPageContext(
       url: location.href,
       text: truncateText(selection, 20000, language),
       markdown: truncateText(selectionMarkdown || selection, 20000, language),
-      selection,
+      selection: pageSelectionTextForCopy() || selection,
       description: uiText(language, "selectionDescription").replace(
         "{count}",
         String(selection.length)

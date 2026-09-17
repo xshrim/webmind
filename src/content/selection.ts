@@ -3,6 +3,7 @@ import { cleanCitationExplanationText } from "../shared/utils";
 
 export interface SelectionSnapshot {
   text: string;
+  copyText: string;
   rect: DOMRect;
   range?: Range;
   editable?:
@@ -472,6 +473,10 @@ export function selectionTextWithLayout(selection: Selection | null): string {
     .trim());
 }
 
+export function selectionTextForCopy(selection: Selection | null): string {
+  return selection?.rangeCount ? selection.toString() : "";
+}
+
 export function selectionMarkdownWithLayout(selection: Selection | null): string {
   if (!selection?.rangeCount) return "";
   try {
@@ -522,6 +527,19 @@ export function pageSelectionText(): string {
   return selectionTextWithLayout(window.getSelection());
 }
 
+export function pageSelectionTextForCopy(): string {
+  const active = document.activeElement;
+  if (
+    active instanceof HTMLInputElement ||
+    active instanceof HTMLTextAreaElement
+  ) {
+    const start = active.selectionStart ?? 0;
+    const end = active.selectionEnd ?? start;
+    return active.value.slice(start, end);
+  }
+  return selectionTextForCopy(window.getSelection());
+}
+
 export function selectedInputText(
   target: EventTarget | null
 ): SelectionSnapshot | null {
@@ -533,10 +551,12 @@ export function selectedInputText(
   }
   const start = target.selectionStart ?? 0;
   const end = target.selectionEnd ?? start;
-  const text = target.value.slice(start, end).trim();
+  const copyText = target.value.slice(start, end);
+  const text = copyText.trim();
   if (!text) return null;
   return {
     text,
+    copyText,
     rect: target.getBoundingClientRect(),
     editable: { element: target, start, end }
   };
@@ -576,6 +596,7 @@ export function currentSelection(
   const editableElement = container?.closest<HTMLElement>("[contenteditable='true']");
   return {
     text: text.slice(0, 12000),
+    copyText: selectionTextForCopy(selection),
     rect,
     range,
     editable: editableElement

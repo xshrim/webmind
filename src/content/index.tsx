@@ -83,6 +83,7 @@ import {
   editableText,
   pageSelectionMarkdown,
   pageSelectionText,
+  pageSelectionTextForCopy,
   replaceSelection,
   setEditableText,
   textFromElement,
@@ -755,6 +756,7 @@ function scheduleSelectionContextReport(): void {
   selectionReportTimer = window.setTimeout(() => {
     selectionReportTimer = null;
     const text = pageSelectionText().trim().slice(0, 12000);
+    const copyText = pageSelectionTextForCopy();
     const markdown = pageSelectionMarkdown().trim().slice(0, 12000);
     if (text) {
       const selection = window.getSelection();
@@ -785,6 +787,7 @@ function scheduleSelectionContextReport(): void {
           payload: {
             hasSelection: Boolean(text),
             text,
+            copyText,
             markdown,
             title: document.title || location.hostname,
             url: location.href
@@ -2083,6 +2086,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
           createdAt: Date.now(),
           contextScope: "selection",
           text: snapshot.text,
+          copyText: snapshot.copyText,
           markdown: pageSelectionMarkdown(),
           pageTitle: document.title,
           pageUrl: location.href
@@ -3386,7 +3390,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
       "image.captureVisible"
     ).catch(() => null);
     const targetRect = target.element.getBoundingClientRect();
-    setSnapshot({ text: "", rect: targetRect });
+    setSnapshot({ text: "", copyText: "", rect: targetRect });
     setActiveTool(imageTextExtractionTool);
     setSelectedResultToolId("");
     setResultPositionOverride(null);
@@ -3432,7 +3436,9 @@ function SelectionAssistant({ query }: { query: string | null }) {
       if (imageTextRunRef.current !== runId) return;
       setResult(text);
       setSnapshot((current) =>
-        current ? { ...current, text } : { text, rect: targetRect }
+        current
+          ? { ...current, text, copyText: text }
+          : { text, copyText: text, rect: targetRect }
       );
     } catch (requestError) {
       if (imageTextRunRef.current === runId) {
@@ -3597,7 +3603,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
     setHoverOpen(false);
     setResultPositionOverride(null);
     try {
-      setSelectionQrCode({ svg: await selectionQrCodeSvg(snapshot.text), error: "" });
+      setSelectionQrCode({ svg: await selectionQrCodeSvg(snapshot.copyText), error: "" });
     } catch {
       setSelectionQrCode({ svg: "", error: t("selectionQrCodeError") });
     }
@@ -3611,7 +3617,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
         title: uiText(activeSettings?.interfaceLanguage, "copySelection"),
         icon: selectionCopied ? <Check /> : <Copy />,
         onClick: async () => {
-          await copyText(snapshot?.text ?? "");
+          await copyText(snapshot?.copyText ?? "");
           setSelectionCopied(true);
           window.setTimeout(() => setSelectionCopied(false), 1200);
         }
