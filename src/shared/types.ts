@@ -197,6 +197,7 @@ export interface AppSettings {
   edgeQuickToolUrlBlacklist: string[];
   inputAutoReplyEnabled: boolean;
   inputAutoReplyDisableSingleLine: boolean;
+  pictureInPictureVideoButtonEnabled: boolean;
   imageTextExtractionEnabled: boolean;
   imageTextExtractionMinSize: number;
   articleExtractionRules: ArticleExtractionRule[];

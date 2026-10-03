@@ -39,6 +39,18 @@ describe("settings normalization", () => {
     expect(sortedKeys(normalizeSettings())).toEqual(sortedKeys(DEFAULT_SETTINGS));
   });
 
+  it("defaults video picture-in-picture and image text extraction to disabled", () => {
+    expect(normalizeSettings().pictureInPictureVideoButtonEnabled).toBe(false);
+    expect(normalizeSettings().imageTextExtractionEnabled).toBe(false);
+  });
+
+  it("preserves an explicit video picture-in-picture choice", () => {
+    expect(
+      normalizeSettings({ pictureInPictureVideoButtonEnabled: true })
+        .pictureInPictureVideoButtonEnabled
+    ).toBe(true);
+  });
+
   it("keeps explicit settings export schema identifiers centralized", () => {
     expect(SETTINGS_EXPORT_FORMAT).toBe("webmind-settings");
     expect(SETTINGS_EXPORT_VERSION).toBe(3);

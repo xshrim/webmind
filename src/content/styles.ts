@@ -9,6 +9,7 @@ export const SHADOW_STYLES = `
     --md-muted: #62706c;
     --md-accent: #e8533f;
     --md-teal: #178f7c;
+    --md-page-action-muted: #d4d8d6;
     --md-shadow: 0 14px 38px rgba(15, 26, 23, .18);
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     font-size: 14px;
@@ -396,33 +397,67 @@ export const SHADOW_STYLES = `
     border-radius: 50%;
     animation: md-spin .8s linear infinite;
   }
-  .md-auto-reply-button {
+  .md-page-action-button {
     position: fixed;
     z-index: 2147483645;
     display: grid;
-    width: 16px;
-    height: 16px;
     place-items: center;
     padding: 0;
-    border: 1px solid color-mix(in srgb, var(--md-accent) 42%, var(--md-border));
-    border-radius: 50%;
-    color: var(--md-accent);
-    background: color-mix(in srgb, var(--md-bg) 88%, var(--md-accent));
-    box-shadow: 0 2px 6px rgba(15, 26, 23, .14);
+    border: 0;
+    border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    color: var(--md-page-action-muted);
+    background: transparent;
+    box-shadow: none;
+    outline: none;
+    opacity: .45;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      color .15s ease,
+      opacity .15s ease,
+      transform .15s ease,
+      box-shadow .15s ease;
   }
-  .md-auto-reply-button:hover {
-    border-color: var(--md-teal);
-    color: var(--md-teal);
-    background: color-mix(in srgb, var(--md-bg) 84%, var(--md-teal));
+  .md-auto-reply-button { width: 16px; height: 16px; }
+  .md-video-pip-button {
+    width: 22px;
+    height: 22px;
   }
-  .md-auto-reply-button:disabled {
+  .md-page-action-button:hover,
+  .md-page-action-button:focus-visible {
+    color: var(--md-accent);
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  .md-page-action-button:focus,
+  .md-page-action-button:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+  .md-page-action-button:active {
+    color: var(--md-accent);
+    opacity: 1;
+    transform: scale(.9);
+  }
+  .md-page-action-button:disabled {
     cursor: wait;
-    opacity: .86;
+    opacity: .68;
+    transform: none;
+  }
+  .md-video-pip-button svg {
+    width: 13px;
+    height: 13px;
+    stroke-width: 2.1;
   }
   .md-auto-reply-button.error {
-    border-color: #b33427;
     color: #b33427;
+  }
+  .md-page-action-button.error:hover,
+  .md-page-action-button.error:focus-visible,
+  .md-page-action-button.error:active {
+    color: var(--md-accent);
   }
   .md-auto-reply-button svg {
     width: 10px;
@@ -434,6 +469,12 @@ export const SHADOW_STYLES = `
     width: 10px;
     height: 10px;
     object-fit: contain;
+    filter: grayscale(1) brightness(1.45);
+  }
+  .md-page-action-button:hover .webmind-logo-icon,
+  .md-page-action-button:focus-visible .webmind-logo-icon,
+  .md-page-action-button:active .webmind-logo-icon {
+    filter: none;
   }
   .md-auto-reply-button .md-mini-spinner {
     width: 10px;
@@ -826,6 +867,7 @@ export const SHADOW_STYLES = `
       --md-border: #3a4743;
       --md-text: #f2f5f4;
       --md-muted: #a7b1ae;
+      --md-page-action-muted: #e2e8e5;
       --md-shadow: 0 16px 42px rgba(0, 0, 0, .42);
     }
   }

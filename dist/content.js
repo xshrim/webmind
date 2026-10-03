@@ -15153,16 +15153,23 @@
   ];
   var PenLine = createLucideIcon("pen-line", __iconNode21);
 
-  // node_modules/lucide-react/dist/esm/icons/presentation.mjs
+  // node_modules/lucide-react/dist/esm/icons/picture-in-picture-2.mjs
   var __iconNode22 = [
+    ["path", { d: "M21 9V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h4", key: "daa4of" }],
+    ["rect", { width: "10", height: "7", x: "12", y: "13", rx: "2", key: "1nb8gs" }]
+  ];
+  var PictureInPicture2 = createLucideIcon("picture-in-picture-2", __iconNode22);
+
+  // node_modules/lucide-react/dist/esm/icons/presentation.mjs
+  var __iconNode23 = [
     ["path", { d: "M2 3h20", key: "91anmk" }],
     ["path", { d: "M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3", key: "2k9sn8" }],
     ["path", { d: "m7 21 5-5 5 5", key: "bip4we" }]
   ];
-  var Presentation = createLucideIcon("presentation", __iconNode22);
+  var Presentation = createLucideIcon("presentation", __iconNode23);
 
   // node_modules/lucide-react/dist/esm/icons/qr-code.mjs
-  var __iconNode23 = [
+  var __iconNode24 = [
     ["rect", { width: "5", height: "5", x: "3", y: "3", rx: "1", key: "1tu5fj" }],
     ["rect", { width: "5", height: "5", x: "16", y: "3", rx: "1", key: "1v8r4q" }],
     ["rect", { width: "5", height: "5", x: "3", y: "16", rx: "1", key: "1x03jg" }],
@@ -15176,24 +15183,24 @@
     ["path", { d: "M21 12v.01", key: "1lwtk9" }],
     ["path", { d: "M12 21v-1", key: "1880an" }]
   ];
-  var QrCode = createLucideIcon("qr-code", __iconNode23);
+  var QrCode = createLucideIcon("qr-code", __iconNode24);
 
   // node_modules/lucide-react/dist/esm/icons/reply.mjs
-  var __iconNode24 = [
+  var __iconNode25 = [
     ["path", { d: "M20 18v-2a4 4 0 0 0-4-4H4", key: "5vmcpk" }],
     ["path", { d: "m9 17-5-5 5-5", key: "nvlc11" }]
   ];
-  var Reply = createLucideIcon("reply", __iconNode24);
+  var Reply = createLucideIcon("reply", __iconNode25);
 
   // node_modules/lucide-react/dist/esm/icons/rotate-ccw.mjs
-  var __iconNode25 = [
+  var __iconNode26 = [
     ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
     ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
   ];
-  var RotateCcw = createLucideIcon("rotate-ccw", __iconNode25);
+  var RotateCcw = createLucideIcon("rotate-ccw", __iconNode26);
 
   // node_modules/lucide-react/dist/esm/icons/scan-text.mjs
-  var __iconNode26 = [
+  var __iconNode27 = [
     ["path", { d: "M3 7V5a2 2 0 0 1 2-2h2", key: "aa7l1z" }],
     ["path", { d: "M17 3h2a2 2 0 0 1 2 2v2", key: "4qcy5o" }],
     ["path", { d: "M21 17v2a2 2 0 0 1-2 2h-2", key: "6vwrx8" }],
@@ -15202,17 +15209,17 @@
     ["path", { d: "M7 12h10", key: "b7w52i" }],
     ["path", { d: "M7 16h6", key: "1vyc9m" }]
   ];
-  var ScanText = createLucideIcon("scan-text", __iconNode26);
+  var ScanText = createLucideIcon("scan-text", __iconNode27);
 
   // node_modules/lucide-react/dist/esm/icons/search.mjs
-  var __iconNode27 = [
+  var __iconNode28 = [
     ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
     ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
   ];
-  var Search = createLucideIcon("search", __iconNode27);
+  var Search = createLucideIcon("search", __iconNode28);
 
   // node_modules/lucide-react/dist/esm/icons/send.mjs
-  var __iconNode28 = [
+  var __iconNode29 = [
     [
       "path",
       {
@@ -15222,10 +15229,10 @@
     ],
     ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
   ];
-  var Send = createLucideIcon("send", __iconNode28);
+  var Send = createLucideIcon("send", __iconNode29);
 
   // node_modules/lucide-react/dist/esm/icons/sparkles.mjs
-  var __iconNode29 = [
+  var __iconNode30 = [
     [
       "path",
       {
@@ -15237,10 +15244,10 @@
     ["path", { d: "M22 4h-4", key: "gwowj6" }],
     ["circle", { cx: "4", cy: "20", r: "2", key: "6kqj1y" }]
   ];
-  var Sparkles = createLucideIcon("sparkles", __iconNode29);
+  var Sparkles = createLucideIcon("sparkles", __iconNode30);
 
   // node_modules/lucide-react/dist/esm/icons/square-dashed-text.mjs
-  var __iconNode30 = [
+  var __iconNode31 = [
     ["path", { d: "M14 21h1", key: "v9vybs" }],
     ["path", { d: "M14 3h1", key: "1ec4yj" }],
     ["path", { d: "M19 3a2 2 0 0 1 2 2", key: "18rm91" }],
@@ -15257,10 +15264,10 @@
     ["path", { d: "M9 21h1", key: "15o7lz" }],
     ["path", { d: "M9 3h1", key: "1yesri" }]
   ];
-  var SquareDashedText = createLucideIcon("square-dashed-text", __iconNode30);
+  var SquareDashedText = createLucideIcon("square-dashed-text", __iconNode31);
 
   // node_modules/lucide-react/dist/esm/icons/wand-sparkles.mjs
-  var __iconNode31 = [
+  var __iconNode32 = [
     [
       "path",
       {
@@ -15276,14 +15283,14 @@
     ["path", { d: "M21 16h-4", key: "1cnmox" }],
     ["path", { d: "M11 3H9", key: "1obp7u" }]
   ];
-  var WandSparkles = createLucideIcon("wand-sparkles", __iconNode31);
+  var WandSparkles = createLucideIcon("wand-sparkles", __iconNode32);
 
   // node_modules/lucide-react/dist/esm/icons/x.mjs
-  var __iconNode32 = [
+  var __iconNode33 = [
     ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
     ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
   ];
-  var X = createLucideIcon("x", __iconNode32);
+  var X = createLucideIcon("x", __iconNode33);
 
   // src/content/index.tsx
   var import_react5 = __toESM(require_react(), 1);
@@ -15498,6 +15505,7 @@
     newChat: "Neuer Chat",
     send: "Senden",
     stop: "Stopp",
+    pictureInPicture: "Bild-in-Bild",
     restorePage: "Seite wiederherstellen",
     chooseModel: "Modell ausw\xE4hlen",
     currentModelEngine: "Aktuelle Modell-Engine",
@@ -15565,6 +15573,7 @@
     articleExtractionRuleInvalid: "Geben Sie ein URL-Muster f\xFCr die Seite und einen Selektor ein",
     selectingBodyRange: "Auswahl des Bereichs f\xFCr den Hauptinhalt",
     manualBodySelectionHint: "Bereich mit Mausrad/Pfeiltasten anpassen, zum Best\xE4tigen klicken, Esc zum Abbrechen",
+    pictureInPictureSelectionHint: "Element mit Mausrad/Pfeiltasten anpassen, zum Best\xE4tigen klicken, Esc zum Abbrechen",
     manualBodySelectionCancelled: "Auswahl des Bereichs f\xFCr den Hauptinhalt abgebrochen",
     noneContext: "Kein Kontext",
     webSearch: "Websuche",
@@ -15697,6 +15706,9 @@
     autoReplyAll: "Alle Textfelder",
     autoReplyHelp: "Zeigt ein kleines Symbol in bearbeitbaren Feldern an und entwirft eine kurze Antwort unter Verwendung der aktuellen Seite.",
     autoReplyBlacklistHelp: "Bei \xDCbereinstimmung wird die Option f\xFCr die automatische Antwort in bearbeitbaren Feldern auf der Seite nicht angezeigt.",
+    pictureInPictureVideoButton: "Video-Bild-in-Bild",
+    pictureInPictureVideoButtonOff: "Deaktiviert",
+    pictureInPictureVideoButtonOn: "Aktiviert",
     imageTextExtraction: "Textextraktion aus Bildern",
     imageTextExtractionHelp: "Zeigt beim Bewegen des Mauszeigers \xFCber Bilder eine Option zur Textextraktion an.",
     imageTextExtractionOff: "Deaktiviert",
@@ -16206,6 +16218,7 @@
     newChat: "Nuevo chat",
     send: "Enviar",
     stop: "Detener",
+    pictureInPicture: "Imagen en imagen",
     restorePage: "Restaurar p\xE1gina",
     chooseModel: "Elegir modelo",
     currentModelEngine: "Motor del modelo actual",
@@ -16273,6 +16286,7 @@
     articleExtractionRuleInvalid: "Introduce un patr\xF3n de URL de p\xE1gina y un selector",
     selectingBodyRange: "Selecci\xF3n del contenido principal",
     manualBodySelectionHint: "La rueda o las teclas de flecha ajustan el rango; haga clic para confirmar o pulse Esc para cancelar",
+    pictureInPictureSelectionHint: "La rueda o las teclas de flecha ajustan el elemento; haga clic para confirmar o pulse Esc para cancelar",
     manualBodySelectionCancelled: "Selecci\xF3n del contenido principal cancelada",
     noneContext: "Sin contexto",
     webSearch: "B\xFAsqueda web",
@@ -16405,6 +16419,9 @@
     autoReplyAll: "Todos los campos de texto",
     autoReplyHelp: "Muestra un icono peque\xF1o en los campos editables y redacta una respuesta breve utilizando la p\xE1gina actual.",
     autoReplyBlacklistHelp: "Si hay coincidencia, los campos editables de la p\xE1gina no mostrar\xE1n la opci\xF3n de respuesta autom\xE1tica.",
+    pictureInPictureVideoButton: "Imagen en imagen de v\xEDdeo",
+    pictureInPictureVideoButtonOff: "Desactivado",
+    pictureInPictureVideoButtonOn: "Activado",
     imageTextExtraction: "Extracci\xF3n de texto de im\xE1genes",
     imageTextExtractionHelp: "Muestra una opci\xF3n de extracci\xF3n de texto al pasar el cursor sobre las im\xE1genes.",
     imageTextExtractionOff: "Desactivado",
@@ -16914,6 +16931,7 @@
     newChat: "Nouvelle conversation",
     send: "Envoyer",
     stop: "Arr\xEAter",
+    pictureInPicture: "Image dans l'image",
     restorePage: "Restaurer la page",
     chooseModel: "Choisir un mod\xE8le",
     currentModelEngine: "Moteur du mod\xE8le actuel",
@@ -16981,6 +16999,7 @@
     articleExtractionRuleInvalid: "Saisissez un mod\xE8le d'URL de page et un s\xE9lecteur",
     selectingBodyRange: "S\xE9lection du contenu principal",
     manualBodySelectionHint: "Molette/touches fl\xE9ch\xE9es pour ajuster la plage, clic pour confirmer, \xC9chap pour annuler",
+    pictureInPictureSelectionHint: "Molette/touches fl\xE9ch\xE9es pour ajuster l'\xE9l\xE9ment, clic pour confirmer, \xC9chap pour annuler",
     manualBodySelectionCancelled: "S\xE9lection du contenu principal annul\xE9e",
     noneContext: "Aucun contexte",
     webSearch: "Recherche Web",
@@ -17113,6 +17132,9 @@
     autoReplyAll: "Tous les champs de texte",
     autoReplyHelp: "Affiche une petite ic\xF4ne dans les champs modifiables et r\xE9dige une r\xE9ponse succincte \xE0 partir de la page actuelle.",
     autoReplyBlacklistHelp: "En cas de correspondance, l'option de r\xE9ponse automatique ne s'affichera pas pour les champs modifiables de la page.",
+    pictureInPictureVideoButton: "Image dans l\u2019image vid\xE9o",
+    pictureInPictureVideoButtonOff: "D\xE9sactiv\xE9",
+    pictureInPictureVideoButtonOn: "Activ\xE9",
     imageTextExtraction: "Extraction de texte depuis une image",
     imageTextExtractionHelp: "Affiche une option d'extraction de texte au survol des images.",
     imageTextExtractionOff: "D\xE9sactiv\xE9",
@@ -17622,6 +17644,7 @@
     newChat: "Nuova chat",
     send: "Invia",
     stop: "Interrompi",
+    pictureInPicture: "Picture-in-picture",
     restorePage: "Ripristina pagina",
     chooseModel: "Scegli modello",
     currentModelEngine: "Motore del modello attuale",
@@ -17689,6 +17712,7 @@
     articleExtractionRuleInvalid: "Inserisci un pattern URL della pagina e un selettore",
     selectingBodyRange: "Selezione del contenuto principale",
     manualBodySelectionHint: "Rotellina/tasti freccia per regolare l'intervallo, clic per confermare, Esc per annullare",
+    pictureInPictureSelectionHint: "Rotellina/tasti freccia per regolare l'elemento, clic per confermare, Esc per annullare",
     manualBodySelectionCancelled: "Selezione del contenuto principale annullata",
     noneContext: "Nessun contesto",
     webSearch: "Ricerca web",
@@ -17821,6 +17845,9 @@
     autoReplyAll: "Tutti i campi di testo",
     autoReplyHelp: "Mostra una piccola icona nei campi modificabili e redige una breve risposta utilizzando la pagina corrente.",
     autoReplyBlacklistHelp: "Se la condizione \xE8 soddisfatta, i campi modificabili nella pagina non mostreranno l'opzione di risposta automatica.",
+    pictureInPictureVideoButton: "Picture-in-picture video",
+    pictureInPictureVideoButtonOff: "Disattivata",
+    pictureInPictureVideoButtonOn: "Attivata",
     imageTextExtraction: "Estrazione testo da immagini",
     imageTextExtractionHelp: "Mostra un'opzione per l'estrazione del testo al passaggio del mouse sulle immagini.",
     imageTextExtractionOff: "Disabilitata",
@@ -18362,6 +18389,7 @@
       newChat: "\u65B0\u5BF9\u8BDD",
       send: "\u53D1\u9001",
       stop: "\u505C\u6B62",
+      pictureInPicture: "\u753B\u4E2D\u753B",
       restorePage: "\u8FD8\u539F\u9875\u9762",
       chooseModel: "\u9009\u62E9\u6A21\u578B",
       currentModelEngine: "\u5F53\u524D\u6A21\u578B\u5F15\u64CE",
@@ -18429,6 +18457,7 @@
       articleExtractionRuleInvalid: "\u8BF7\u586B\u5199\u9875\u9762\u5730\u5740\u548C selector",
       selectingBodyRange: "\u6B63\u5728\u9009\u62E9\u6B63\u6587\u8303\u56F4",
       manualBodySelectionHint: "\u6EDA\u8F6E/\u65B9\u5411\u952E\u8C03\u6574\u8303\u56F4\uFF0C\u70B9\u51FB\u786E\u8BA4\uFF0CESC\u53D6\u6D88",
+      pictureInPictureSelectionHint: "\u6EDA\u8F6E/\u65B9\u5411\u952E\u8C03\u6574\u5143\u7D20\uFF0C\u70B9\u51FB\u786E\u8BA4\uFF0CESC\u53D6\u6D88",
       manualBodySelectionCancelled: "\u5DF2\u53D6\u6D88\u6B63\u6587\u6846\u9009",
       noneContext: "\u65E0\u4E0A\u4E0B\u6587",
       webSearch: "\u7F51\u9875\u641C\u7D22",
@@ -18561,6 +18590,9 @@
       autoReplyAll: "\u6240\u6709\u6587\u672C\u6846\u542F\u7528",
       autoReplyHelp: "\u5728\u53EF\u7F16\u8F91\u6587\u672C\u6846\u53F3\u4E0A\u89D2\u663E\u793A\u5C0F\u56FE\u6807\uFF0C\u70B9\u51FB\u540E\u53C2\u8003\u5F53\u524D\u9875\u9762\u751F\u6210\u7B80\u77ED\u56DE\u590D\u3002",
       autoReplyBlacklistHelp: "\u547D\u4E2D\u540E\u7F51\u9875\u8F93\u5165\u6846\u4E0D\u4F1A\u663E\u793A\u81EA\u52A8\u56DE\u590D\u5165\u53E3\u3002",
+      pictureInPictureVideoButton: "\u89C6\u9891\u753B\u4E2D\u753B",
+      pictureInPictureVideoButtonOff: "\u4E0D\u542F\u7528",
+      pictureInPictureVideoButtonOn: "\u542F\u7528",
       imageTextExtraction: "\u56FE\u6587\u63D0\u53D6",
       imageTextExtractionHelp: "\u9F20\u6807\u60AC\u505C\u56FE\u7247\u540E\u663E\u793A\u6587\u5B57\u63D0\u53D6\u5165\u53E3\u3002",
       imageTextExtractionOff: "\u4E0D\u542F\u7528",
@@ -19068,6 +19100,7 @@
       newChat: "\u65B0\u5C0D\u8A71",
       send: "\u9001\u51FA",
       stop: "\u505C\u6B62",
+      pictureInPicture: "\u756B\u4E2D\u756B",
       restorePage: "\u9084\u539F\u9801\u9762",
       chooseModel: "\u9078\u64C7\u6A21\u578B",
       currentModelEngine: "\u76EE\u524D\u6A21\u578B\u5F15\u64CE",
@@ -19135,6 +19168,7 @@
       articleExtractionRuleInvalid: "\u8ACB\u586B\u5BEB\u9801\u9762\u5730\u5740\u548C selector",
       selectingBodyRange: "\u6B63\u5728\u9078\u53D6\u6B63\u6587\u7BC4\u570D",
       manualBodySelectionHint: "\u6EFE\u8F2A/\u65B9\u5411\u9375\u8ABF\u6574\u7BC4\u570D\uFF0C\u9EDE\u64CA\u78BA\u8A8D\uFF0CESC\u53D6\u6D88",
+      pictureInPictureSelectionHint: "\u6EFE\u8F2A/\u65B9\u5411\u9375\u8ABF\u6574\u5143\u7D20\uFF0C\u9EDE\u64CA\u78BA\u8A8D\uFF0CESC\u53D6\u6D88",
       manualBodySelectionCancelled: "\u5DF2\u53D6\u6D88\u6B63\u6587\u6846\u9078",
       noneContext: "\u7121\u4E0A\u4E0B\u6587",
       webSearch: "\u7DB2\u9801\u641C\u5C0B",
@@ -19267,6 +19301,9 @@
       autoReplyAll: "\u6240\u6709\u6587\u5B57\u6846\u555F\u7528",
       autoReplyHelp: "\u5728\u53EF\u7DE8\u8F2F\u6587\u5B57\u6846\u53F3\u4E0A\u89D2\u986F\u793A\u5C0F\u5716\u793A\uFF0C\u9EDE\u64CA\u5F8C\u53C3\u8003\u76EE\u524D\u9801\u9762\u751F\u6210\u7C21\u77ED\u56DE\u8986\u3002",
       autoReplyBlacklistHelp: "\u547D\u4E2D\u5F8C\u7DB2\u9801\u8F38\u5165\u6846\u4E0D\u6703\u986F\u793A\u81EA\u52D5\u56DE\u8986\u5165\u53E3\u3002",
+      pictureInPictureVideoButton: "\u5F71\u7247\u5B50\u6BCD\u756B\u9762",
+      pictureInPictureVideoButtonOff: "\u4E0D\u555F\u7528",
+      pictureInPictureVideoButtonOn: "\u555F\u7528",
       imageTextExtraction: "\u5716\u6587\u63D0\u53D6",
       imageTextExtractionHelp: "\u6ED1\u9F20\u61F8\u505C\u5716\u7247\u5F8C\u986F\u793A\u6587\u5B57\u63D0\u53D6\u5165\u53E3\u3002",
       imageTextExtractionOff: "\u4E0D\u555F\u7528",
@@ -19774,6 +19811,7 @@
       newChat: "New Chat",
       send: "Send",
       stop: "Stop",
+      pictureInPicture: "Picture-in-Picture",
       restorePage: "Restore Page",
       chooseModel: "Choose Model",
       currentModelEngine: "Current Model Engine",
@@ -19841,6 +19879,7 @@
       articleExtractionRuleInvalid: "Enter both a page URL pattern and selector",
       selectingBodyRange: "Selecting body range",
       manualBodySelectionHint: "Wheel/arrow keys adjust range, click to confirm, Esc to cancel",
+      pictureInPictureSelectionHint: "Wheel/arrow keys adjust the element, click to confirm, Esc to cancel",
       manualBodySelectionCancelled: "Body range selection cancelled",
       noneContext: "No Context",
       webSearch: "Web Search",
@@ -19973,6 +20012,9 @@
       autoReplyAll: "All Text Fields",
       autoReplyHelp: "Shows a small icon in editable fields and drafts a brief reply using the current page.",
       autoReplyBlacklistHelp: "When matched, editable fields on the page will not show the auto-reply entry.",
+      pictureInPictureVideoButton: "Video Picture-in-Picture",
+      pictureInPictureVideoButtonOff: "Disabled",
+      pictureInPictureVideoButtonOn: "Enabled",
       imageTextExtraction: "Image Text Extraction",
       imageTextExtractionHelp: "Show a text-extraction entry when hovering over images.",
       imageTextExtractionOff: "Disabled",
@@ -20480,6 +20522,7 @@
       newChat: "\u65B0\u3057\u3044\u30C1\u30E3\u30C3\u30C8",
       send: "\u9001\u4FE1",
       stop: "\u505C\u6B62",
+      pictureInPicture: "\u30D4\u30AF\u30C1\u30E3\u30FC \u30A4\u30F3 \u30D4\u30AF\u30C1\u30E3\u30FC",
       restorePage: "\u30DA\u30FC\u30B8\u3092\u5FA9\u5143",
       chooseModel: "\u30E2\u30C7\u30EB\u3092\u9078\u629E",
       currentModelEngine: "\u73FE\u5728\u306E\u30E2\u30C7\u30EB\u30A8\u30F3\u30B8\u30F3",
@@ -20547,6 +20590,7 @@
       articleExtractionRuleInvalid: "\u30DA\u30FC\u30B8 URL \u3068 selector \u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044",
       selectingBodyRange: "\u672C\u6587\u7BC4\u56F2\u3092\u9078\u629E\u4E2D",
       manualBodySelectionHint: "\u30DB\u30A4\u30FC\u30EB/\u77E2\u5370\u30AD\u30FC\u3067\u7BC4\u56F2\u8ABF\u6574\u3001\u30AF\u30EA\u30C3\u30AF\u3067\u78BA\u5B9A\u3001Esc \u3067\u30AD\u30E3\u30F3\u30BB\u30EB",
+      pictureInPictureSelectionHint: "\u30DB\u30A4\u30FC\u30EB/\u77E2\u5370\u30AD\u30FC\u3067\u8981\u7D20\u3092\u8ABF\u6574\u3001\u30AF\u30EA\u30C3\u30AF\u3067\u78BA\u5B9A\u3001Esc \u3067\u30AD\u30E3\u30F3\u30BB\u30EB",
       manualBodySelectionCancelled: "\u672C\u6587\u7BC4\u56F2\u306E\u9078\u629E\u3092\u30AD\u30E3\u30F3\u30BB\u30EB\u3057\u307E\u3057\u305F",
       noneContext: "\u30B3\u30F3\u30C6\u30AD\u30B9\u30C8\u306A\u3057",
       webSearch: "\u30A6\u30A7\u30D6\u691C\u7D22",
@@ -20679,6 +20723,9 @@
       autoReplyAll: "\u3059\u3079\u3066\u306E\u30C6\u30AD\u30B9\u30C8\u30D5\u30A3\u30FC\u30EB\u30C9",
       autoReplyHelp: "\u7DE8\u96C6\u53EF\u80FD\u306A\u5165\u529B\u6B04\u306E\u53F3\u4E0A\u306B\u5C0F\u3055\u306A\u30A2\u30A4\u30B3\u30F3\u3092\u8868\u793A\u3057\u3001\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u3092\u53C2\u8003\u306B\u77ED\u3044\u8FD4\u4FE1\u3092\u4F5C\u6210\u3057\u307E\u3059\u3002",
       autoReplyBlacklistHelp: "\u4E00\u81F4\u3057\u305F\u30DA\u30FC\u30B8\u3067\u306F\u5165\u529B\u6B04\u306B\u81EA\u52D5\u8FD4\u4FE1\u306E\u5165\u53E3\u3092\u8868\u793A\u3057\u307E\u305B\u3093\u3002",
+      pictureInPictureVideoButton: "\u52D5\u753B\u306E\u30D4\u30AF\u30C1\u30E3\u30FC\u30A4\u30F3\u30D4\u30AF\u30C1\u30E3\u30FC",
+      pictureInPictureVideoButtonOff: "\u7121\u52B9",
+      pictureInPictureVideoButtonOn: "\u6709\u52B9",
       imageTextExtraction: "\u753B\u50CF\u30C6\u30AD\u30B9\u30C8\u62BD\u51FA",
       imageTextExtractionHelp: "\u753B\u50CF\u306B\u30DB\u30D0\u30FC\u3057\u305F\u3068\u304D\u306B\u30C6\u30AD\u30B9\u30C8\u62BD\u51FA\u306E\u5165\u53E3\u3092\u8868\u793A\u3057\u307E\u3059\u3002",
       imageTextExtractionOff: "\u7121\u52B9",
@@ -21186,6 +21233,7 @@
       newChat: "\uC0C8 \uB300\uD654",
       send: "\uBCF4\uB0B4\uAE30",
       stop: "\uC911\uC9C0",
+      pictureInPicture: "\uD654\uBA74 \uC18D \uD654\uBA74",
       restorePage: "\uD398\uC774\uC9C0 \uBCF5\uC6D0",
       chooseModel: "\uBAA8\uB378 \uC120\uD0DD",
       currentModelEngine: "\uD604\uC7AC \uBAA8\uB378 \uC5D4\uC9C4",
@@ -21253,6 +21301,7 @@
       articleExtractionRuleInvalid: "\uD398\uC774\uC9C0 URL\uACFC selector\uB97C \uC785\uB825\uD558\uC138\uC694",
       selectingBodyRange: "\uBCF8\uBB38 \uBC94\uC704 \uC120\uD0DD \uC911",
       manualBodySelectionHint: "\uD720/\uD654\uC0B4\uD45C \uD0A4\uB85C \uBC94\uC704 \uC870\uC815, \uD074\uB9AD\uC73C\uB85C \uD655\uC815, Esc\uB85C \uCDE8\uC18C",
+      pictureInPictureSelectionHint: "\uD720/\uD654\uC0B4\uD45C \uD0A4\uB85C \uC694\uC18C \uC870\uC815, \uD074\uB9AD\uC73C\uB85C \uD655\uC815, Esc\uB85C \uCDE8\uC18C",
       manualBodySelectionCancelled: "\uBCF8\uBB38 \uBC94\uC704 \uC120\uD0DD\uC744 \uCDE8\uC18C\uD588\uC2B5\uB2C8\uB2E4",
       noneContext: "\uCEE8\uD14D\uC2A4\uD2B8 \uC5C6\uC74C",
       webSearch: "\uC6F9 \uAC80\uC0C9",
@@ -21385,6 +21434,9 @@
       autoReplyAll: "\uBAA8\uB4E0 \uD14D\uC2A4\uD2B8 \uC785\uB825\uB780",
       autoReplyHelp: "\uD3B8\uC9D1 \uAC00\uB2A5\uD55C \uC785\uB825\uB780 \uC624\uB978\uCABD \uC704\uC5D0 \uC791\uC740 \uC544\uC774\uCF58\uC744 \uD45C\uC2DC\uD558\uACE0, \uD604\uC7AC \uD398\uC774\uC9C0\uB97C \uCC38\uACE0\uD574 \uC9E7\uC740 \uB2F5\uC7A5\uC744 \uC0DD\uC131\uD569\uB2C8\uB2E4.",
       autoReplyBlacklistHelp: "\uC77C\uCE58\uD558\uB294 \uD398\uC774\uC9C0\uC5D0\uC11C\uB294 \uC785\uB825\uB780\uC5D0 \uC790\uB3D9 \uB2F5\uC7A5 \uC9C4\uC785\uC810\uC774 \uD45C\uC2DC\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
+      pictureInPictureVideoButton: "\uB3D9\uC601\uC0C1 \uD654\uBA74 \uC18D \uD654\uBA74",
+      pictureInPictureVideoButtonOff: "\uC0AC\uC6A9 \uC548 \uD568",
+      pictureInPictureVideoButtonOn: "\uC0AC\uC6A9",
       imageTextExtraction: "\uC774\uBBF8\uC9C0 \uD14D\uC2A4\uD2B8 \uCD94\uCD9C",
       imageTextExtractionHelp: "\uC774\uBBF8\uC9C0\uC5D0 \uB9C8\uC6B0\uC2A4\uB97C \uC62C\uB9AC\uBA74 \uD14D\uC2A4\uD2B8 \uCD94\uCD9C \uC9C4\uC785\uC810\uC744 \uD45C\uC2DC\uD569\uB2C8\uB2E4.",
       imageTextExtractionOff: "\uC0AC\uC6A9 \uC548 \uD568",
@@ -23663,6 +23715,7 @@
     edgeQuickToolUrlBlacklist: [],
     inputAutoReplyEnabled: false,
     inputAutoReplyDisableSingleLine: true,
+    pictureInPictureVideoButtonEnabled: false,
     imageTextExtractionEnabled: false,
     imageTextExtractionMinSize: 160,
     articleExtractionRules: [],
@@ -23902,6 +23955,7 @@
       edgeQuickToolsEnabled: stored.edgeQuickToolsEnabled ?? DEFAULT_SETTINGS.edgeQuickToolsEnabled,
       edgeQuickToolBottom: stored.edgeQuickToolBottom ?? DEFAULT_SETTINGS.edgeQuickToolBottom,
       selectionOverlayUrlBlacklist: stored.selectionOverlayUrlBlacklist ?? [],
+      pictureInPictureVideoButtonEnabled: stored.pictureInPictureVideoButtonEnabled ?? false,
       imageTextExtractionEnabled: stored.imageTextExtractionEnabled ?? false,
       imageTextExtractionMinSize: stored.imageTextExtractionMinSize ?? 160,
       articleExtractionRules: normalizeArticleExtractionRules(
@@ -32776,6 +32830,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     --md-muted: #62706c;
     --md-accent: #e8533f;
     --md-teal: #178f7c;
+    --md-page-action-muted: #d4d8d6;
     --md-shadow: 0 14px 38px rgba(15, 26, 23, .18);
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     font-size: 14px;
@@ -33163,33 +33218,67 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     border-radius: 50%;
     animation: md-spin .8s linear infinite;
   }
-  .md-auto-reply-button {
+  .md-page-action-button {
     position: fixed;
     z-index: 2147483645;
     display: grid;
-    width: 16px;
-    height: 16px;
     place-items: center;
     padding: 0;
-    border: 1px solid color-mix(in srgb, var(--md-accent) 42%, var(--md-border));
-    border-radius: 50%;
-    color: var(--md-accent);
-    background: color-mix(in srgb, var(--md-bg) 88%, var(--md-accent));
-    box-shadow: 0 2px 6px rgba(15, 26, 23, .14);
+    border: 0;
+    border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    color: var(--md-page-action-muted);
+    background: transparent;
+    box-shadow: none;
+    outline: none;
+    opacity: .45;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      color .15s ease,
+      opacity .15s ease,
+      transform .15s ease,
+      box-shadow .15s ease;
   }
-  .md-auto-reply-button:hover {
-    border-color: var(--md-teal);
-    color: var(--md-teal);
-    background: color-mix(in srgb, var(--md-bg) 84%, var(--md-teal));
+  .md-auto-reply-button { width: 16px; height: 16px; }
+  .md-video-pip-button {
+    width: 22px;
+    height: 22px;
   }
-  .md-auto-reply-button:disabled {
+  .md-page-action-button:hover,
+  .md-page-action-button:focus-visible {
+    color: var(--md-accent);
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  .md-page-action-button:focus,
+  .md-page-action-button:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+  .md-page-action-button:active {
+    color: var(--md-accent);
+    opacity: 1;
+    transform: scale(.9);
+  }
+  .md-page-action-button:disabled {
     cursor: wait;
-    opacity: .86;
+    opacity: .68;
+    transform: none;
+  }
+  .md-video-pip-button svg {
+    width: 13px;
+    height: 13px;
+    stroke-width: 2.1;
   }
   .md-auto-reply-button.error {
-    border-color: #b33427;
     color: #b33427;
+  }
+  .md-page-action-button.error:hover,
+  .md-page-action-button.error:focus-visible,
+  .md-page-action-button.error:active {
+    color: var(--md-accent);
   }
   .md-auto-reply-button svg {
     width: 10px;
@@ -33201,6 +33290,12 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     width: 10px;
     height: 10px;
     object-fit: contain;
+    filter: grayscale(1) brightness(1.45);
+  }
+  .md-page-action-button:hover .webmind-logo-icon,
+  .md-page-action-button:focus-visible .webmind-logo-icon,
+  .md-page-action-button:active .webmind-logo-icon {
+    filter: none;
   }
   .md-auto-reply-button .md-mini-spinner {
     width: 10px;
@@ -33593,6 +33688,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
       --md-border: #3a4743;
       --md-text: #f2f5f4;
       --md-muted: #a7b1ae;
+      --md-page-action-muted: #e2e8e5;
       --md-shadow: 0 16px 42px rgba(0, 0, 0, .42);
     }
   }
@@ -33781,6 +33877,655 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     }
   }
 	`;
+
+  // src/content/pictureInPicture.ts
+  function rectRight(rect) {
+    return rect.left + rect.width;
+  }
+  function rectBottom(rect) {
+    return rect.top + rect.height;
+  }
+  var PICTURE_IN_PICTURE_UI_CLASS = "webmind-pip-picker-ui";
+  var NON_RENDERED_TAGS = /* @__PURE__ */ new Set([
+    "html",
+    "body",
+    "head",
+    "script",
+    "style",
+    "noscript",
+    "template",
+    "meta",
+    "link",
+    "title"
+  ]);
+  var cancelSelection = null;
+  function isElementNode(value) {
+    return Boolean(
+      value && typeof value === "object" && value.nodeType === Node.ELEMENT_NODE && typeof value.tagName === "string"
+    );
+  }
+  function isIframeElement(value) {
+    return isElementNode(value) && value.tagName.toLowerCase() === "iframe";
+  }
+  function shadowRootOf(element) {
+    const shadowRoot = element.shadowRoot;
+    return shadowRoot ?? null;
+  }
+  function isShadowRootNode(value) {
+    return Boolean(
+      value && typeof value === "object" && value.nodeType === Node.DOCUMENT_FRAGMENT_NODE && "host" in value
+    );
+  }
+  function isPictureInPictureWindowApi(value) {
+    return Boolean(
+      value && typeof value === "object" && typeof value.requestWindow === "function"
+    );
+  }
+  function pictureInPictureWindowFor(sourceWindow) {
+    const sourceApi = sourceWindow ? sourceWindow.documentPictureInPicture : null;
+    if (isPictureInPictureWindowApi(sourceApi)) return sourceApi;
+    const topApi = window.documentPictureInPicture;
+    return isPictureInPictureWindowApi(topApi) ? topApi : null;
+  }
+  function isVideoElement(element) {
+    return element.tagName.toLowerCase() === "video";
+  }
+  function isWebMindElement(element) {
+    return Boolean(
+      element.closest(
+        `#webmind-root, .webmind-root, .webmind-translation, .webmind-reading, .webmind-immersive-reading-token, .${PICTURE_IN_PICTURE_UI_CLASS}`
+      )
+    );
+  }
+  function elementIsVisible(element) {
+    const tagName = element.tagName.toLowerCase();
+    if (NON_RENDERED_TAGS.has(tagName) || isWebMindElement(element)) return false;
+    const ownerWindow = element.ownerDocument.defaultView;
+    if (!ownerWindow) return false;
+    const style = ownerWindow.getComputedStyle(element);
+    if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) {
+      return false;
+    }
+    const rect = element.getBoundingClientRect();
+    return rect.width >= 8 && rect.height >= 8 && element.getClientRects().length > 0;
+  }
+  function pickerCandidatesFromEvent2(event) {
+    const path = event.composedPath();
+    if (path.some(
+      (item) => isElementNode(item) && isWebMindElement(item)
+    )) {
+      return [];
+    }
+    const candidates = [];
+    for (const item of path) {
+      if (!isElementNode(item) || !elementIsVisible(item)) continue;
+      candidates.push(item);
+    }
+    return Array.from(new Set(candidates));
+  }
+  function elementLabel(element, level) {
+    const tag = element.tagName.toLowerCase();
+    const id = element.id ? `#${element.id}` : "";
+    const className = typeof element.className === "string" ? element.className.split(/\s+/).filter((name) => name && !name.startsWith("webmind-")).slice(0, 2).map((name) => `.${name}`).join("") : "";
+    const rect = element.getBoundingClientRect();
+    return `${tag}${id}${className} \xB7 L${level + 1} \xB7 ${Math.round(
+      rect.width
+    )}\xD7${Math.round(rect.height)}`;
+  }
+  function rectWithinTopViewport(element) {
+    const sourceWindow = element.ownerDocument.defaultView;
+    if (!sourceWindow) return null;
+    const sourceRect = element.getBoundingClientRect();
+    let left = sourceRect.left;
+    let top = sourceRect.top;
+    let frameWindow = sourceWindow;
+    while (frameWindow !== window) {
+      const frame = frameWindow.frameElement;
+      if (!isIframeElement(frame)) break;
+      const frameRect = frame.getBoundingClientRect();
+      left += frameRect.left + frame.clientLeft;
+      top += frameRect.top + frame.clientTop;
+      frameWindow = frame.ownerDocument.defaultView ?? window;
+    }
+    return {
+      left,
+      top,
+      width: sourceRect.width,
+      height: sourceRect.height
+    };
+  }
+  function collectDocumentContexts() {
+    const contexts = [];
+    const seenDocuments = /* @__PURE__ */ new Set();
+    const visitRoot = (root) => {
+      for (const element of Array.from(root.querySelectorAll("*"))) {
+        if (isIframeElement(element)) {
+          try {
+            if (element.contentDocument) visitDocument(element.contentDocument);
+          } catch {
+          }
+        }
+        const shadowRoot = shadowRootOf(element);
+        if (shadowRoot) {
+          visitRoot(shadowRoot);
+        }
+      }
+    };
+    const visitDocument = (nextDocument) => {
+      if (seenDocuments.has(nextDocument)) return;
+      const nextWindow = nextDocument.defaultView;
+      if (!nextWindow) return;
+      seenDocuments.add(nextDocument);
+      contexts.push({ document: nextDocument, window: nextWindow });
+      visitRoot(nextDocument);
+    };
+    visitDocument(document);
+    return contexts;
+  }
+  function styledElementOf(element) {
+    const style = element.style;
+    return style && typeof style.setProperty === "function" ? element : null;
+  }
+  function snapshotComputedStyle(root) {
+    const sourceWindow = root.ownerDocument.defaultView;
+    const element = styledElementOf(root);
+    if (!sourceWindow || !element) return [];
+    const computed = sourceWindow.getComputedStyle(element);
+    const declarations = [];
+    for (const property of Array.from(computed)) {
+      const value = computed.getPropertyValue(property);
+      if (!value) continue;
+      declarations.push([
+        property,
+        value,
+        computed.getPropertyPriority(property)
+      ]);
+    }
+    return [{
+      element,
+      originalStyle: element.getAttribute("style"),
+      declarations
+    }];
+  }
+  function applyComputedStyles(snapshots) {
+    for (const snapshot of snapshots) {
+      for (const [property, value, priority] of snapshot.declarations) {
+        snapshot.element.style.setProperty(property, value, priority);
+      }
+    }
+  }
+  function restoreInlineStyles(snapshots) {
+    for (const snapshot of snapshots) {
+      if (snapshot.originalStyle === null) {
+        snapshot.element.removeAttribute("style");
+      } else {
+        snapshot.element.setAttribute("style", snapshot.originalStyle);
+      }
+    }
+  }
+  function copyElementAttributes(source, target) {
+    for (const attribute of Array.from(source.attributes)) {
+      if (attribute.name === "style") continue;
+      target.setAttribute(attribute.name, attribute.value);
+    }
+  }
+  function copyStylesToPictureInPictureWindow(sourceDocument, sourceRoot, targetDocument) {
+    if (sourceDocument.documentElement) {
+      copyElementAttributes(
+        sourceDocument.documentElement,
+        targetDocument.documentElement
+      );
+    }
+    if (sourceDocument.body) {
+      copyElementAttributes(sourceDocument.body, targetDocument.body);
+    }
+    const base = targetDocument.createElement("base");
+    base.href = sourceDocument.baseURI;
+    targetDocument.head.append(base);
+    const styleNodes = [
+      ...Array.from(sourceDocument.querySelectorAll("style, link[rel='stylesheet']")),
+      ...isShadowRootNode(sourceRoot) ? Array.from(sourceRoot.querySelectorAll("style, link[rel='stylesheet']")) : []
+    ];
+    for (const node of Array.from(new Set(styleNodes))) {
+      const clone2 = node.cloneNode(true);
+      if (node.tagName.toLowerCase() === "link") {
+        const href = node.href;
+        if (href) clone2.setAttribute("href", href);
+      }
+      targetDocument.head.append(clone2);
+    }
+    const defaultStyle = targetDocument.createElement("style");
+    defaultStyle.textContent = "html, body { width: 100%; height: 100%; margin: 0; min-width: 0; min-height: 0; overflow: hidden; }";
+    targetDocument.head.append(defaultStyle);
+  }
+  function pictureInPictureError(language) {
+    return new Error(uiText(language, "unsupportedQuickAction"));
+  }
+  async function openPictureInPicture(target, language) {
+    const sourceDocument = target.ownerDocument;
+    const sourceWindow = sourceDocument.defaultView;
+    if (!sourceWindow) throw pictureInPictureError(language);
+    if (isVideoElement(target)) {
+      if (!sourceDocument.pictureInPictureEnabled || target.disablePictureInPicture || typeof target.requestPictureInPicture !== "function") {
+        throw pictureInPictureError(language);
+      }
+      if (sourceDocument.pictureInPictureElement === target) {
+        await sourceDocument.exitPictureInPicture();
+      } else {
+        await target.requestPictureInPicture();
+      }
+      return { kind: "video" };
+    }
+    const pictureInPictureWindow = pictureInPictureWindowFor(sourceWindow);
+    if (!pictureInPictureWindow || !target.parentNode) {
+      throw pictureInPictureError(language);
+    }
+    const rect = target.getBoundingClientRect();
+    const width = Math.max(160, Math.min(960, Math.round(rect.width || 420)));
+    const height = Math.max(120, Math.min(720, Math.round(rect.height || 280)));
+    const pictureInPictureWindowPromise = pictureInPictureWindow.requestWindow({
+      width,
+      height
+    });
+    const nextWindow = await pictureInPictureWindowPromise;
+    const styleSnapshots = snapshotComputedStyle(target);
+    const sourceRoot = target.getRootNode();
+    copyStylesToPictureInPictureWindow(sourceDocument, sourceRoot, nextWindow.document);
+    if (nextWindow.closed || !target.parentNode) return { kind: "element" };
+    const placeholder = sourceDocument.createComment("webmind-picture-in-picture");
+    target.parentNode.replaceChild(placeholder, target);
+    const stage = nextWindow.document.createElement("div");
+    Object.assign(stage.style, {
+      position: "absolute",
+      width: `${Math.max(1, rect.width)}px`,
+      height: `${Math.max(1, rect.height)}px`,
+      transformOrigin: "top left"
+    });
+    stage.append(target);
+    nextWindow.document.body.replaceChildren(stage);
+    nextWindow.document.documentElement.style.overflow = "hidden";
+    nextWindow.document.body.style.overflow = "hidden";
+    applyComputedStyles(styleSnapshots);
+    const fitContent = () => {
+      const scale = Math.min(
+        nextWindow.innerWidth / Math.max(1, rect.width),
+        nextWindow.innerHeight / Math.max(1, rect.height)
+      );
+      stage.style.left = `${Math.max(0, (nextWindow.innerWidth - rect.width * scale) / 2)}px`;
+      stage.style.top = `${Math.max(0, (nextWindow.innerHeight - rect.height * scale) / 2)}px`;
+      stage.style.transform = `scale(${scale})`;
+    };
+    fitContent();
+    nextWindow.addEventListener("resize", fitContent);
+    let restored = false;
+    const restore = () => {
+      if (restored) return;
+      restored = true;
+      nextWindow.removeEventListener("resize", fitContent);
+      if (placeholder.isConnected) {
+        placeholder.replaceWith(target);
+      } else if (target.isConnected) {
+        target.remove();
+      } else if (sourceDocument.body) {
+        sourceDocument.body.append(target);
+      }
+      restoreInlineStyles(styleSnapshots);
+    };
+    nextWindow.addEventListener("pagehide", restore, { once: true });
+    return { kind: "element" };
+  }
+  function startPictureInPictureSelection(language) {
+    cancelSelection?.();
+    const contexts = collectDocumentContexts();
+    return new Promise((resolve, reject) => {
+      let settled = false;
+      const overlays = [];
+      const badges = [];
+      const cleanupCallbacks = [];
+      const states = contexts.map(() => ({
+        candidates: [],
+        level: 0,
+        current: null
+      }));
+      const updateOverlay = (index, context) => {
+        const state = states[index];
+        const overlay = overlays[index];
+        const badge = badges[index];
+        state.current = state.candidates[state.level] ?? null;
+        if (!state.current) {
+          overlay.style.display = "none";
+          badge.style.display = "none";
+          return;
+        }
+        const rect = state.current.getBoundingClientRect();
+        const width = Math.max(
+          0,
+          Math.min(context.window.innerWidth, rect.right) - Math.max(0, rect.left)
+        );
+        const height = Math.max(
+          0,
+          Math.min(context.window.innerHeight, rect.bottom) - Math.max(0, rect.top)
+        );
+        Object.assign(overlay.style, {
+          display: "block",
+          left: `${Math.max(0, rect.left)}px`,
+          top: `${Math.max(0, rect.top)}px`,
+          width: `${width}px`,
+          height: `${height}px`
+        });
+        Object.assign(badge.style, {
+          display: "block",
+          left: `${Math.min(
+            context.window.innerWidth - 16,
+            Math.max(8, rect.left)
+          )}px`,
+          top: `${Math.min(
+            context.window.innerHeight - 80,
+            Math.max(8, rect.top - 56)
+          )}px`
+        });
+        badge.textContent = [
+          elementLabel(state.current, state.level),
+          uiText(language, "pictureInPictureSelectionHint")
+        ].join("\n");
+      };
+      const cleanup = () => {
+        for (const cleanupCallback of cleanupCallbacks) cleanupCallback();
+        overlays.forEach((overlay) => overlay.remove());
+        badges.forEach((badge) => badge.remove());
+        cancelSelection = null;
+      };
+      const finish = (element) => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        if (!element) {
+          resolve(null);
+          return;
+        }
+        void openPictureInPicture(element, language).then(resolve, reject);
+      };
+      contexts.forEach((context, index) => {
+        const overlay = context.document.createElement("div");
+        const badge = context.document.createElement("div");
+        overlay.className = PICTURE_IN_PICTURE_UI_CLASS;
+        badge.className = PICTURE_IN_PICTURE_UI_CLASS;
+        Object.assign(overlay.style, {
+          position: "fixed",
+          zIndex: "2147483646",
+          pointerEvents: "none",
+          border: "2px solid #178f7c",
+          background: "rgba(23, 143, 124, 0.08)",
+          boxShadow: "0 0 0 9999px rgba(15, 26, 23, 0.08)",
+          display: "none"
+        });
+        Object.assign(badge.style, {
+          position: "fixed",
+          zIndex: "2147483647",
+          maxWidth: "min(620px, calc(100vw - 16px))",
+          padding: "7px 9px",
+          border: "1px solid #d8ddda",
+          borderRadius: "6px",
+          color: "#17201e",
+          background: "#ffffff",
+          boxShadow: "0 10px 28px rgba(15, 26, 23, 0.2)",
+          font: "12px/1.4 Inter, ui-sans-serif, system-ui, sans-serif",
+          pointerEvents: "none",
+          whiteSpace: "pre-wrap",
+          overflowWrap: "anywhere",
+          display: "block",
+          left: "8px",
+          top: "8px"
+        });
+        context.document.documentElement.append(overlay, badge);
+        overlays[index] = overlay;
+        badges[index] = badge;
+        const onPointerMove = (event) => {
+          const state = states[index];
+          state.candidates = pickerCandidatesFromEvent2(event);
+          state.level = 0;
+          updateOverlay(index, context);
+        };
+        const onWheel = (event) => {
+          const state = states[index];
+          if (!state.candidates.length) return;
+          event.preventDefault();
+          event.stopPropagation();
+          state.level = Math.max(
+            0,
+            Math.min(
+              state.candidates.length - 1,
+              state.level + (event.deltaY > 0 ? 1 : -1)
+            )
+          );
+          updateOverlay(index, context);
+        };
+        const onKeyDown = (event) => {
+          if (event.key === "Escape") {
+            event.preventDefault();
+            event.stopPropagation();
+            finish(null);
+            return;
+          }
+          const state = states[index];
+          if (!state.candidates.length) return;
+          if (event.key === "ArrowRight" || event.key === "ArrowUp") {
+            event.preventDefault();
+            event.stopPropagation();
+            state.level = Math.min(state.candidates.length - 1, state.level + 1);
+            updateOverlay(index, context);
+          } else if (event.key === "ArrowLeft" || event.key === "ArrowDown") {
+            event.preventDefault();
+            event.stopPropagation();
+            state.level = Math.max(0, state.level - 1);
+            updateOverlay(index, context);
+          }
+        };
+        const onClick = (event) => {
+          if (!event.isTrusted || event.button !== 0 || event.detail === 0) return;
+          const eventPath = event.composedPath();
+          if (eventPath.some((item) => isElementNode(item) && isWebMindElement(item))) {
+            return;
+          }
+          const state = states[index];
+          if (!state.current || !eventPath.includes(state.current)) return;
+          event.preventDefault();
+          event.stopPropagation();
+          finish(state.current);
+        };
+        const update = () => updateOverlay(index, context);
+        context.window.addEventListener("pointermove", onPointerMove, true);
+        context.window.addEventListener("wheel", onWheel, {
+          capture: true,
+          passive: false
+        });
+        context.window.addEventListener("keydown", onKeyDown, true);
+        context.window.addEventListener("click", onClick, true);
+        context.window.addEventListener("scroll", update, true);
+        context.window.addEventListener("resize", update);
+        cleanupCallbacks.push(() => {
+          context.window.removeEventListener("pointermove", onPointerMove, true);
+          context.window.removeEventListener("wheel", onWheel, true);
+          context.window.removeEventListener("keydown", onKeyDown, true);
+          context.window.removeEventListener("click", onClick, true);
+          context.window.removeEventListener("scroll", update, true);
+          context.window.removeEventListener("resize", update);
+        });
+      });
+      cancelSelection = () => finish(null);
+      badges[0].textContent = uiText(language, "pictureInPicture");
+    });
+  }
+  function cancelPictureInPictureSelection() {
+    if (!cancelSelection) return { ok: false };
+    cancelSelection();
+    return { ok: true };
+  }
+  function scanNestedRoots(root, registerDocument, registerShadowRoot, registerVideo, registerFrame) {
+    for (const element of Array.from(root.querySelectorAll("*"))) {
+      if (element.tagName.toLowerCase() === "video") {
+        registerVideo(element);
+      }
+      if (isIframeElement(element)) registerFrame(element);
+      const shadowRoot = shadowRootOf(element);
+      if (shadowRoot) {
+        registerShadowRoot(shadowRoot);
+        scanNestedRoots(
+          shadowRoot,
+          registerDocument,
+          registerShadowRoot,
+          registerVideo,
+          registerFrame
+        );
+      }
+    }
+  }
+  function topViewportRect(video) {
+    const rect = rectWithinTopViewport(video);
+    if (!rect || rect.width < 24 || rect.height < 24) return null;
+    if (rectRight(rect) < 0 || rectBottom(rect) < 0 || rect.left > window.innerWidth || rect.top > window.innerHeight) {
+      return null;
+    }
+    return rect;
+  }
+  function observePictureInPictureVideos(onChange) {
+    const videos = /* @__PURE__ */ new Set();
+    const documents = /* @__PURE__ */ new Set();
+    const roots = /* @__PURE__ */ new Set();
+    const observers = [];
+    const frameListeners = /* @__PURE__ */ new Map();
+    const videoListeners = /* @__PURE__ */ new Map();
+    const ids = /* @__PURE__ */ new WeakMap();
+    let nextId = 1;
+    let refreshFrame = null;
+    let stopped = false;
+    const emit = () => {
+      if (stopped) return;
+      const targets = Array.from(videos).filter((video) => video.isConnected && !video.disablePictureInPicture).map((video) => {
+        const rect = topViewportRect(video);
+        if (!rect) return null;
+        const ownerDocument = video.ownerDocument;
+        if (!ownerDocument.pictureInPictureEnabled) return null;
+        return {
+          id: ids.get(video) ?? "",
+          video,
+          rect,
+          active: ownerDocument.pictureInPictureElement === video
+        };
+      }).filter((target) => Boolean(target));
+      onChange(targets);
+    };
+    const scheduleEmit = () => {
+      if (refreshFrame !== null || stopped) return;
+      refreshFrame = window.requestAnimationFrame(() => {
+        refreshFrame = null;
+        emit();
+      });
+    };
+    const registerVideo = (video) => {
+      if (videos.has(video)) return;
+      videos.add(video);
+      ids.set(video, `webmind-pip-video-${nextId++}`);
+      const update = () => scheduleEmit();
+      [
+        "enterpictureinpicture",
+        "leavepictureinpicture",
+        "loadedmetadata",
+        "durationchange",
+        "emptied"
+      ].forEach((eventName) => video.addEventListener(eventName, update));
+      videoListeners.set(video, () => {
+        [
+          "enterpictureinpicture",
+          "leavepictureinpicture",
+          "loadedmetadata",
+          "durationchange",
+          "emptied"
+        ].forEach((eventName) => video.removeEventListener(eventName, update));
+      });
+    };
+    const registerFrame = (frame) => {
+      if (frameListeners.has(frame)) return;
+      const onLoad = () => {
+        try {
+          if (frame.contentDocument) registerDocument(frame.contentDocument);
+        } catch {
+        }
+        scheduleEmit();
+      };
+      frame.addEventListener("load", onLoad);
+      frameListeners.set(frame, () => frame.removeEventListener("load", onLoad));
+      try {
+        if (frame.contentDocument) registerDocument(frame.contentDocument);
+      } catch {
+      }
+    };
+    const registerShadowRoot = (shadowRoot) => {
+      registerRoot(shadowRoot);
+    };
+    const scan = (root) => {
+      scanNestedRoots(
+        root,
+        registerDocument,
+        registerShadowRoot,
+        registerVideo,
+        registerFrame
+      );
+      scheduleEmit();
+    };
+    const registerRoot = (root) => {
+      if (roots.has(root)) return;
+      roots.add(root);
+      const observer = new MutationObserver((records) => {
+        for (const record of records) {
+          for (const node of Array.from(record.addedNodes)) {
+            if (isElementNode(node)) {
+              if (node.tagName.toLowerCase() === "video") {
+                registerVideo(node);
+              }
+              if (isIframeElement(node)) registerFrame(node);
+              const shadowRoot = shadowRootOf(node);
+              if (shadowRoot) {
+                registerShadowRoot(shadowRoot);
+              }
+              scan(node);
+            }
+          }
+        }
+        scheduleEmit();
+      });
+      observer.observe(root, { childList: true, subtree: true });
+      observers.push(observer);
+      scan(root);
+    };
+    const registerDocument = (nextDocument) => {
+      if (documents.has(nextDocument)) return;
+      documents.add(nextDocument);
+      const nextWindow = nextDocument.defaultView;
+      registerRoot(nextDocument);
+      if (!nextWindow) return;
+      const update = () => scheduleEmit();
+      nextWindow.addEventListener("scroll", update, true);
+      nextWindow.addEventListener("resize", update);
+      observers.push({
+        disconnect: () => {
+          nextWindow.removeEventListener("scroll", update, true);
+          nextWindow.removeEventListener("resize", update);
+        }
+      });
+    };
+    registerDocument(document);
+    emit();
+    return () => {
+      stopped = true;
+      if (refreshFrame !== null) window.cancelAnimationFrame(refreshFrame);
+      observers.forEach((observer) => observer.disconnect());
+      frameListeners.forEach((cleanup) => cleanup());
+      videoListeners.forEach((cleanup) => cleanup());
+      videos.clear();
+      onChange([]);
+    };
+  }
 
   // src/content/index.tsx
   var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
@@ -34503,6 +35248,7 @@ ${text2}`;
     const [imageTextTarget, setImageTextTarget] = (0, import_react5.useState)(null);
     const [imageTextVisible, setImageTextVisible] = (0, import_react5.useState)(false);
     const [imageTextBusy, setImageTextBusy] = (0, import_react5.useState)(false);
+    const [pictureInPictureVideos, setPictureInPictureVideos] = (0, import_react5.useState)([]);
     const [resultPositionOverride, setResultPositionOverride] = (0, import_react5.useState)(null);
     const [searchAnswer, setSearchAnswer] = (0, import_react5.useState)({
       text: "",
@@ -34624,6 +35370,10 @@ ${text2}`;
       setSearchAnswerPosition(null);
       searchAnswerKeyRef.current = "";
     }, [query]);
+    (0, import_react5.useEffect)(
+      () => observePictureInPictureVideos(setPictureInPictureVideos),
+      []
+    );
     (0, import_react5.useLayoutEffect)(() => {
       showSelection = (next) => {
         if (activeToolRef.current) return;
@@ -36489,6 +37239,13 @@ ${t("currentResultLabel")}\uFF1A` : "",
         }
       }
     };
+    const runVideoPictureInPicture = (target) => {
+      void openPictureInPicture(target.video, activeSettings?.interfaceLanguage).catch(
+        (requestError) => {
+          showPageTooltip(errorMessage(requestError));
+        }
+      );
+    };
     const runAutoReply = async () => {
       const target = autoReplyTarget;
       if (!target || autoReplyBusy || !target.element.isConnected) return;
@@ -36665,10 +37422,38 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       );
     };
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+      activeSettings?.pictureInPictureVideoButtonEnabled !== false && pictureInPictureVideos.map((target) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        "button",
+        {
+          className: `md-page-action-button md-video-pip-button ${target.active ? "active" : ""}`,
+          type: "button",
+          title: t("pictureInPicture"),
+          "aria-label": t("pictureInPicture"),
+          style: {
+            left: Math.max(4, Math.min(window.innerWidth - 24, target.rect.left + 4)),
+            top: Math.max(4, Math.min(window.innerHeight - 24, target.rect.top + 4))
+          },
+          onPointerDown: (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+          },
+          onMouseDown: (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+          },
+          onClick: (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            runVideoPictureInPicture(target);
+          },
+          children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PictureInPicture2, {})
+        },
+        target.id
+      )),
       autoReplyPosition && inputAutoReplyEnabled && !autoReplyBlocked && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
         "button",
         {
-          className: `md-auto-reply-button ${autoReplyBusy ? "busy" : ""} ${autoReplyError ? "error" : ""}`,
+          className: `md-page-action-button md-auto-reply-button ${autoReplyBusy ? "busy" : ""} ${autoReplyError ? "error" : ""}`,
           type: "button",
           title: autoReplyError || t("generateShortAutoReply"),
           "aria-label": t("generateShortAutoReply"),
@@ -36706,7 +37491,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       imageTextButtonPosition && imageTextVisible && imageTextExtractionEnabled && !imageTextExtractionBlocked && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
         "button",
         {
-          className: `md-auto-reply-button md-image-text-button ${imageTextBusy ? "busy" : ""}`,
+          className: `md-page-action-button md-auto-reply-button md-image-text-button ${imageTextBusy ? "busy" : ""}`,
           type: "button",
           title: t("extractImageText"),
           "aria-label": t("extractImageText"),
@@ -37412,6 +38197,12 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       }
       if (message.type === "page.screenshot.select") {
         return selectScreenshotArea();
+      }
+      if (message.type === "page.pictureInPicture.pick") {
+        return startPictureInPictureSelection(settings?.interfaceLanguage);
+      }
+      if (message.type === "page.pictureInPicture.pick.cancel") {
+        return cancelPictureInPictureSelection();
       }
       if (message.type === "page.article.pick") {
         return startManualArticleSelection(settings?.interfaceLanguage);

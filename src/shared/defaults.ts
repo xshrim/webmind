@@ -263,6 +263,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   edgeQuickToolUrlBlacklist: [],
   inputAutoReplyEnabled: false,
   inputAutoReplyDisableSingleLine: true,
+  pictureInPictureVideoButtonEnabled: false,
   imageTextExtractionEnabled: false,
   imageTextExtractionMinSize: 160,
   articleExtractionRules: [],

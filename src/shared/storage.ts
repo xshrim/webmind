@@ -418,6 +418,8 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
     edgeQuickToolBottom:
       stored.edgeQuickToolBottom ?? DEFAULT_SETTINGS.edgeQuickToolBottom,
     selectionOverlayUrlBlacklist: stored.selectionOverlayUrlBlacklist ?? [],
+    pictureInPictureVideoButtonEnabled:
+      stored.pictureInPictureVideoButtonEnabled ?? false,
     imageTextExtractionEnabled: stored.imageTextExtractionEnabled ?? false,
     imageTextExtractionMinSize: stored.imageTextExtractionMinSize ?? 160,
     articleExtractionRules: normalizeArticleExtractionRules(

@@ -1870,6 +1870,35 @@ export function SettingsApp() {
                   </label>
                 </div>
                 <div className="field">
+                  <span className="field-label">
+                    {t("pictureInPictureVideoButton")}
+                  </span>
+                  <div className="segmented segmented-wrap">
+                    {([
+                      [false, t("pictureInPictureVideoButtonOff")],
+                      [true, t("pictureInPictureVideoButtonOn")]
+                    ] as const).map(([enabled, label]) => (
+                      <button
+                        key={String(enabled)}
+                        className={
+                          settings.pictureInPictureVideoButtonEnabled === enabled
+                            ? "active"
+                            : ""
+                        }
+                        type="button"
+                        onClick={() =>
+                          void updatePreference(
+                            "pictureInPictureVideoButtonEnabled",
+                            enabled
+                          )
+                        }
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="field">
                   <span className="field-label">{t("imageTextExtraction")}</span>
                   <div className="segmented segmented-wrap">
                     {([

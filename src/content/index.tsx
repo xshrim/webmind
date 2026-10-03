@@ -7,6 +7,7 @@ import {
   FileText,
   Highlighter,
   PanelRightOpen,
+  PictureInPicture2,
   RotateCcw,
   Search,
   Send,
@@ -173,6 +174,13 @@ import {
 } from "../shared/immersiveWorkflow";
 import { Markdown } from "../ui/Markdown";
 import { PAGE_STYLES, SHADOW_STYLES } from "./styles";
+import {
+  cancelPictureInPictureSelection,
+  observePictureInPictureVideos,
+  openPictureInPicture,
+  startPictureInPictureSelection,
+  type PictureInPictureVideoTarget
+} from "./pictureInPicture";
 
 const IMMERSIVE_READING_BATCH_SIZE = 20;
 const IMMERSIVE_TRANSLATION_BATCH_SIZE = 10;
@@ -1175,6 +1183,9 @@ function SelectionAssistant({ query }: { query: string | null }) {
     useState<ImageTextTarget | null>(null);
   const [imageTextVisible, setImageTextVisible] = useState(false);
   const [imageTextBusy, setImageTextBusy] = useState(false);
+  const [pictureInPictureVideos, setPictureInPictureVideos] = useState<
+    PictureInPictureVideoTarget[]
+  >([]);
   const [resultPositionOverride, setResultPositionOverride] = useState<{
     left: number;
     top: number;
@@ -1331,6 +1342,11 @@ function SelectionAssistant({ query }: { query: string | null }) {
     setSearchAnswerPosition(null);
     searchAnswerKeyRef.current = "";
   }, [query]);
+
+  useEffect(
+    () => observePictureInPictureVideos(setPictureInPictureVideos),
+    []
+  );
 
   useLayoutEffect(() => {
     showSelection = (next) => {
@@ -3453,6 +3469,14 @@ function SelectionAssistant({ query }: { query: string | null }) {
     }
   };
 
+  const runVideoPictureInPicture = (target: PictureInPictureVideoTarget) => {
+    void openPictureInPicture(target.video, activeSettings?.interfaceLanguage).catch(
+      (requestError) => {
+        showPageTooltip(errorMessage(requestError));
+      }
+    );
+  };
+
   const runAutoReply = async () => {
     const target = autoReplyTarget;
     if (!target || autoReplyBusy || !target.element.isConnected) return;
@@ -3654,9 +3678,38 @@ function SelectionAssistant({ query }: { query: string | null }) {
 
   return (
     <>
+      {activeSettings?.pictureInPictureVideoButtonEnabled !== false &&
+        pictureInPictureVideos.map((target) => (
+          <button
+            key={target.id}
+            className={`md-page-action-button md-video-pip-button ${target.active ? "active" : ""}`}
+            type="button"
+            title={t("pictureInPicture")}
+            aria-label={t("pictureInPicture")}
+            style={{
+              left: Math.max(4, Math.min(window.innerWidth - 24, target.rect.left + 4)),
+              top: Math.max(4, Math.min(window.innerHeight - 24, target.rect.top + 4))
+            }}
+            onPointerDown={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+            }}
+            onMouseDown={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+            }}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              runVideoPictureInPicture(target);
+            }}
+          >
+            <PictureInPicture2 />
+          </button>
+        ))}
       {autoReplyPosition && inputAutoReplyEnabled && !autoReplyBlocked && (
         <button
-          className={`md-auto-reply-button ${
+          className={`md-page-action-button md-auto-reply-button ${
             autoReplyBusy ? "busy" : ""
           } ${autoReplyError ? "error" : ""}`}
           type="button"
@@ -3703,7 +3756,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
         imageTextExtractionEnabled &&
         !imageTextExtractionBlocked && (
           <button
-            className={`md-auto-reply-button md-image-text-button ${
+            className={`md-page-action-button md-auto-reply-button md-image-text-button ${
               imageTextBusy ? "busy" : ""
             }`}
             type="button"
@@ -4457,6 +4510,12 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     }
     if (message.type === "page.screenshot.select") {
       return selectScreenshotArea();
+    }
+    if (message.type === "page.pictureInPicture.pick") {
+      return startPictureInPictureSelection(settings?.interfaceLanguage);
+    }
+    if (message.type === "page.pictureInPicture.pick.cancel") {
+      return cancelPictureInPictureSelection();
     }
     if (message.type === "page.article.pick") {
       return startManualArticleSelection(settings?.interfaceLanguage);

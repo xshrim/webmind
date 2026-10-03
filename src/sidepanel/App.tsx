@@ -26,6 +26,7 @@ import {
   MessageSquareText,
   Paperclip,
   PanelTop,
+  PictureInPicture2,
   PenLine,
   Presentation,
   QrCode,
@@ -415,6 +416,7 @@ export function App() {
   const [contextError, setContextError] = useState("");
   const [contextLoading, setContextLoading] = useState(true);
   const [articlePicking, setArticlePicking] = useState(false);
+  const [pictureInPicturePicking, setPictureInPicturePicking] = useState(false);
   const [articlePruning, setArticlePruning] = useState(false);
   const [bodyPreviewExpanded, setBodyPreviewExpanded] = useState(false);
   const [streamingId, setStreamingId] = useState<string | null>(null);
@@ -540,6 +542,11 @@ export function App() {
     id: string;
     tabId: number;
   } | null>(null);
+  const pictureInPicturePickingRef = useRef(false);
+  const pictureInPicturePickRunRef = useRef<{
+    id: string;
+    tabId: number;
+  } | null>(null);
   const contextModeRef = useRef<ContextMode>("page");
   const demoTimerRef = useRef<number | null>(null);
   const immersiveRunRef = useRef<{
@@ -577,6 +584,25 @@ export function App() {
       void sendToTab(targetTabId, { type: "page.article.pick.cancel" }).catch(
         () => undefined
       );
+    }
+  }, []);
+
+  const cancelPictureInPicturePicking = useCallback((tabId?: number) => {
+    if (
+      !pictureInPicturePickingRef.current &&
+      !pictureInPicturePickRunRef.current
+    ) {
+      return;
+    }
+    const targetTabId = tabId ?? pictureInPicturePickRunRef.current?.tabId;
+    pictureInPicturePickRunRef.current = null;
+    pictureInPicturePickingRef.current = false;
+    setPictureInPicturePicking(false);
+    setToolStatus("");
+    if (targetTabId) {
+      void sendToTab(targetTabId, {
+        type: "page.pictureInPicture.pick.cancel"
+      }).catch(() => undefined);
     }
   }, []);
 
@@ -745,6 +771,10 @@ export function App() {
   }, [articlePicking]);
 
   useEffect(() => {
+    pictureInPicturePickingRef.current = pictureInPicturePicking;
+  }, [pictureInPicturePicking]);
+
+  useEffect(() => {
     selectionContextRef.current = selectionContext;
   }, [selectionContext]);
 
@@ -758,11 +788,18 @@ export function App() {
     ) {
       cancelArticlePicking(previousTabId);
     }
+    if (
+      pictureInPicturePickingRef.current &&
+      previousTabId !== null &&
+      previousTabId !== nextTabId
+    ) {
+      cancelPictureInPicturePicking(previousTabId);
+    }
     if (previousTabId !== null && previousTabId !== nextTabId) {
       selectionOverrideRef.current = null;
     }
     activeTabIdRef.current = nextTabId;
-  }, [activeTab?.id, cancelArticlePicking]);
+  }, [activeTab?.id, cancelArticlePicking, cancelPictureInPicturePicking]);
 
   useEffect(() => {
     if (!articlePicking || !activeTab?.id) return;
@@ -776,6 +813,19 @@ export function App() {
     window.addEventListener("keydown", onKeyDown, true);
     return () => window.removeEventListener("keydown", onKeyDown, true);
   }, [activeTab?.id, articlePicking, cancelArticlePicking]);
+
+  useEffect(() => {
+    if (!pictureInPicturePicking || !activeTab?.id) return;
+    const tabId = activeTab.id;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      event.stopPropagation();
+      cancelPictureInPicturePicking(tabId);
+    };
+    window.addEventListener("keydown", onKeyDown, true);
+    return () => window.removeEventListener("keydown", onKeyDown, true);
+  }, [activeTab?.id, pictureInPicturePicking, cancelPictureInPicturePicking]);
 
   const toolsFor = useCallback(
     (surface: ToolSurface): ToolDefinition[] => {
@@ -2146,6 +2196,41 @@ export function App() {
         articlePickRunRef.current = null;
         articlePickingRef.current = false;
         setArticlePicking(false);
+        setToolStatus("");
+      }
+    }
+  };
+
+  const pickPictureInPictureElement = async () => {
+    const tabId = activeTab?.id;
+    if (!tabId) {
+      setNotice(t("noReadableTab"));
+      return;
+    }
+    cancelPictureInPicturePicking(tabId);
+    const run = { id: crypto.randomUUID(), tabId };
+    pictureInPicturePickRunRef.current = run;
+    pictureInPicturePickingRef.current = true;
+    setPictureInPicturePicking(true);
+    setToolStatus(t("pictureInPicture"));
+    setNotice("");
+    try {
+      const result = await sendToTab<{ kind: "video" | "element" } | null>(
+        tabId,
+        { type: "page.pictureInPicture.pick" },
+        settingsRef.current?.interfaceLanguage
+      );
+      if (pictureInPicturePickRunRef.current?.id !== run.id || !result) return;
+      appendOperationLog(t("pictureInPicture"), "success");
+    } catch (error) {
+      if (pictureInPicturePickRunRef.current?.id !== run.id) return;
+      setNotice(errorMessage(error));
+      appendOperationLog(errorMessage(error), "error");
+    } finally {
+      if (pictureInPicturePickRunRef.current?.id === run.id) {
+        pictureInPicturePickRunRef.current = null;
+        pictureInPicturePickingRef.current = false;
+        setPictureInPicturePicking(false);
         setToolStatus("");
       }
     }
@@ -4807,6 +4892,16 @@ export function App() {
           <strong>WebMind</strong>
         </div>
         <div className="header-actions">
+          <button
+            className="brand-tool-button"
+            type="button"
+            title={t("pictureInPicture")}
+            aria-label={t("pictureInPicture")}
+            disabled={pictureInPicturePicking}
+            onClick={() => void pickPictureInPictureElement()}
+          >
+            <PictureInPicture2 />
+          </button>
           <button
             className="icon-button"
             type="button"
