@@ -56,6 +56,14 @@ type MenuContext =
   | "video"
   | "audio";
 
+function downloadFileName(value: string): string | undefined {
+  const normalized = value
+    .replace(/[\\/:*?"<>|]+/g, "-")
+    .replace(/\s+/g, " ")
+    .trim();
+  return normalized || undefined;
+}
+
 function broadcastOperationLog(
   message: string,
   level: AppLogLevel = "info"
@@ -720,6 +728,18 @@ chrome.runtime.onMessage.addListener(
             format: "png"
           })
         };
+      }
+      if (message.type === "media.download") {
+        const url = String(message.payload?.url ?? "").trim();
+        if (!/^https?:/i.test(url)) {
+          throw new Error("Only HTTP(S) media URLs can be downloaded here");
+        }
+        const downloadId = await chrome.downloads.download({
+          url,
+          filename: downloadFileName(String(message.payload?.name ?? "")),
+          saveAs: false
+        });
+        return { downloadId };
       }
       if (message.type === "cookies.current") {
         const [tab] = await chrome.tabs.query({

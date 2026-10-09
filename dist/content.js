@@ -15381,6 +15381,7 @@
     mcpToolApprovalAsk: "Immer nachfragen",
     mcpToolApprovalAllow: "Immer erlauben",
     cookieViewer: "Cookies anzeigen",
+    forceCopy: "Kopieren erzwingen",
     cookieFormat: "Format",
     cookiePreview: "Vorschau",
     cookiePreviewCount: "({count} Cookies)",
@@ -15392,6 +15393,7 @@
     mcpToolBlockedApprovalTimeout: "Zeitlimit f\xFCr Berechtigung abgelaufen",
     navTools: "Tools",
     navTodos: "Aufgaben",
+    navMedia: "Medien",
     navHistory: "Verlauf",
     navLogs: "Protokolle",
     logsPageTitle: "Protokolle",
@@ -15716,6 +15718,10 @@
     imageTextExtractionMinSize: "Minimale Bildgr\xF6\xDFe",
     imageTextExtractionMinSizeHelp: "Den Eintrag nur anzeigen, wenn die angezeigte Breite und H\xF6he mindestens diesen Pixelwert erreichen.",
     imageTextExtractionBlacklistHelp: "Bei \xDCbereinstimmung wird der Eintrag zur Textextraktion f\xFCr Bilder auf der Seite nicht angezeigt.",
+    mediaPreDetection: "Medienvorerkennung",
+    mediaPreDetectionOff: "Deaktiviert",
+    mediaPreDetectionOn: "Aktiviert",
+    mediaPreDetectionHelp: "Bilder, Audio und Videos nach dem Laden der Seite automatisch erkennen.",
     hoverDefinition: "Definitionen beim \xDCberfahren mit der Maus",
     hoverDefinitionHelp: "Integriertes Offline-W\xF6rterbuch verwenden, um eine kurze einzeilige Definition anzuzeigen, wenn der Mauszeiger auf einem chinesischen Begriff oder englischen Wort ruht.",
     hoverDefinitionOff: "Deaktiviert",
@@ -15969,6 +15975,19 @@
     extractImageText: "Text aus Bild extrahieren",
     extractingImageText: "Text aus Bild wird extrahiert\u2026",
     imageTextExtractionResult: "Textextraktion aus Bild",
+    mediaPageEyebrow: "Medien",
+    mediaPageTitle: "Medienressourcen",
+    mediaDetect: "Medien erkennen",
+    mediaDetecting: "Medien werden erkannt\u2026",
+    mediaImages: "Bilder",
+    mediaAudio: "Audio",
+    mediaVideo: "Video",
+    mediaCount: "{count} Ressourcen",
+    mediaEmpty: "Keine Medienressourcen gefunden",
+    mediaEmptyHelp: "Mit Erkennen die aktuelle Seite erneut scannen.",
+    mediaDownload: "Herunterladen",
+    mediaDownloadSelected: "Auswahl herunterladen",
+    mediaSelectAll: "Alle Medienressourcen ausw\xE4hlen",
     imageTextExtractionPrompt: "Extrahieren Sie den gesamten sichtbaren Text aus diesem Bild. Behalten Sie die Originalsprache bei und \xFCbersetzen Sie nicht; bewahren Sie Zeilenumbr\xFCche, Leserichtung, Listen und Tabellenstruktur so weit wie m\xF6glich. Geben Sie nur den extrahierten Text aus und f\xFCgen Sie keine Erkl\xE4rungen hinzu.",
     noImageTextFound: "Kein verwertbarer Text erkannt",
     retryAnswer: "Antwort erneut versuchen",
@@ -16094,6 +16113,7 @@
     mcpToolApprovalAsk: "Preguntar siempre",
     mcpToolApprovalAllow: "Permitir siempre",
     cookieViewer: "Ver cookies",
+    forceCopy: "Forzar copia",
     cookieFormat: "Formato",
     cookiePreview: "Vista previa",
     cookiePreviewCount: "({count} cookies)",
@@ -16105,6 +16125,7 @@
     mcpToolBlockedApprovalTimeout: "Tiempo de autorizaci\xF3n agotado",
     navTools: "Herramientas",
     navTodos: "Tareas",
+    navMedia: "Medios",
     navHistory: "Historial",
     navLogs: "Registros",
     logsPageTitle: "Registros",
@@ -16429,6 +16450,10 @@
     imageTextExtractionMinSize: "Tama\xF1o m\xEDnimo de imagen",
     imageTextExtractionMinSizeHelp: "Mostrar la opci\xF3n solo cuando tanto el ancho como el alto mostrados tengan al menos esta cantidad de p\xEDxeles.",
     imageTextExtractionBlacklistHelp: "Si se cumple la condici\xF3n, las im\xE1genes de la p\xE1gina no mostrar\xE1n la opci\xF3n de extracci\xF3n de texto.",
+    mediaPreDetection: "Detecci\xF3n previa de medios",
+    mediaPreDetectionOff: "Desactivado",
+    mediaPreDetectionOn: "Activado",
+    mediaPreDetectionHelp: "Detectar autom\xE1ticamente im\xE1genes, audio y v\xEDdeo cuando termine de cargar la p\xE1gina.",
     hoverDefinition: "Definiciones al pasar el cursor",
     hoverDefinitionHelp: "Usar el diccionario integrado sin conexi\xF3n para mostrar una definici\xF3n concisa de una l\xEDnea al colocar el puntero sobre un t\xE9rmino en chino o una palabra en ingl\xE9s.",
     hoverDefinitionOff: "Desactivado",
@@ -16682,6 +16707,19 @@
     extractImageText: "Extraer texto de la imagen",
     extractingImageText: "Extrayendo texto de la imagen\u2026",
     imageTextExtractionResult: "Extracci\xF3n de texto de imagen",
+    mediaPageEyebrow: "Medios",
+    mediaPageTitle: "Recursos multimedia",
+    mediaDetect: "Detectar medios",
+    mediaDetecting: "Detectando medios\u2026",
+    mediaImages: "Im\xE1genes",
+    mediaAudio: "Audio",
+    mediaVideo: "V\xEDdeo",
+    mediaCount: "{count} recursos",
+    mediaEmpty: "No se encontraron recursos multimedia",
+    mediaEmptyHelp: "Pulsa detectar para volver a escanear la p\xE1gina actual.",
+    mediaDownload: "Descargar",
+    mediaDownloadSelected: "Descargar seleccionados",
+    mediaSelectAll: "Seleccionar todos los recursos multimedia",
     imageTextExtractionPrompt: "Extraer todo el texto visible de esta imagen. Mantener el idioma original y no traducir; conservar los saltos de l\xEDnea, el orden de lectura, las listas y la estructura de la tabla en la medida de lo posible. Mostrar \xFAnicamente el texto extra\xEDdo y no a\xF1adir explicaciones.",
     noImageTextFound: "No se reconoci\xF3 texto utilizable",
     retryAnswer: "Reintentar respuesta",
@@ -16807,6 +16845,7 @@
     mcpToolApprovalAsk: "Toujours demander",
     mcpToolApprovalAllow: "Toujours autoriser",
     cookieViewer: "Afficher les cookies",
+    forceCopy: "Forcer la copie",
     cookieFormat: "Format",
     cookiePreview: "Aper\xE7u",
     cookiePreviewCount: "({count} cookies)",
@@ -16818,6 +16857,7 @@
     mcpToolBlockedApprovalTimeout: "D\xE9lai d'autorisation expir\xE9",
     navTools: "Outils",
     navTodos: "T\xE2ches",
+    navMedia: "M\xE9dias",
     navHistory: "Historique",
     navLogs: "Journaux",
     logsPageTitle: "Journaux",
@@ -17142,6 +17182,10 @@
     imageTextExtractionMinSize: "Taille minimale de l'image",
     imageTextExtractionMinSizeHelp: "N'afficher l'option que si la largeur et la hauteur affich\xE9es atteignent au moins ce nombre de pixels.",
     imageTextExtractionBlacklistHelp: "Si cette condition est remplie, l'option d'extraction de texte ne s'affichera pas pour les images de la page.",
+    mediaPreDetection: "Pr\xE9-d\xE9tection des m\xE9dias",
+    mediaPreDetectionOff: "D\xE9sactiv\xE9",
+    mediaPreDetectionOn: "Activ\xE9",
+    mediaPreDetectionHelp: "D\xE9tecter automatiquement les images, les sons et les vid\xE9os apr\xE8s le chargement de la page.",
     hoverDefinition: "D\xE9finitions au survol",
     hoverDefinitionHelp: "Utiliser le dictionnaire hors ligne int\xE9gr\xE9 pour afficher une d\xE9finition concise sur une ligne au survol d'un terme chinois ou d'un mot anglais.",
     hoverDefinitionOff: "D\xE9sactiv\xE9",
@@ -17395,6 +17439,19 @@
     extractImageText: "Extraire le texte de l'image",
     extractingImageText: "Extraction du texte de l'image\u2026",
     imageTextExtractionResult: "Extraction de texte d'image",
+    mediaPageEyebrow: "M\xE9dias",
+    mediaPageTitle: "Ressources multim\xE9dias",
+    mediaDetect: "D\xE9tecter les m\xE9dias",
+    mediaDetecting: "D\xE9tection des m\xE9dias\u2026",
+    mediaImages: "Images",
+    mediaAudio: "Audio",
+    mediaVideo: "Vid\xE9o",
+    mediaCount: "{count} ressources",
+    mediaEmpty: "Aucune ressource m\xE9dia trouv\xE9e",
+    mediaEmptyHelp: "Cliquez sur d\xE9tecter pour analyser \xE0 nouveau la page.",
+    mediaDownload: "T\xE9l\xE9charger",
+    mediaDownloadSelected: "T\xE9l\xE9charger la s\xE9lection",
+    mediaSelectAll: "S\xE9lectionner toutes les ressources multim\xE9dias",
     imageTextExtractionPrompt: "Extraire tout le texte visible de cette image. Conserver la langue d'origine sans traduire ; pr\xE9server autant que possible les sauts de ligne, l'ordre de lecture, les listes et la structure des tableaux. Afficher uniquement le texte extrait, sans explications.",
     noImageTextFound: "Aucun texte exploitable n'a \xE9t\xE9 reconnu",
     retryAnswer: "R\xE9essayer",
@@ -17520,6 +17577,7 @@
     mcpToolApprovalAsk: "Chiedi sempre",
     mcpToolApprovalAllow: "Consenti sempre",
     cookieViewer: "Visualizza cookie",
+    forceCopy: "Forza copia",
     cookieFormat: "Formato",
     cookiePreview: "Anteprima",
     cookiePreviewCount: "({count} cookie)",
@@ -17531,6 +17589,7 @@
     mcpToolBlockedApprovalTimeout: "Tempo di autorizzazione scaduto",
     navTools: "Strumenti",
     navTodos: "Attivit\xE0",
+    navMedia: "Media",
     navHistory: "Cronologia",
     navLogs: "Log",
     logsPageTitle: "Log",
@@ -17855,6 +17914,10 @@
     imageTextExtractionMinSize: "Dimensione minima dell'immagine",
     imageTextExtractionMinSizeHelp: "Mostra la voce solo quando sia la larghezza che l'altezza visualizzate raggiungono almeno questo numero di pixel.",
     imageTextExtractionBlacklistHelp: "In caso di corrispondenza, le immagini sulla pagina non mostreranno la voce per l'estrazione del testo.",
+    mediaPreDetection: "Pre-rilevamento media",
+    mediaPreDetectionOff: "Disattivato",
+    mediaPreDetectionOn: "Attivato",
+    mediaPreDetectionHelp: "Rileva automaticamente immagini, audio e video al termine del caricamento della pagina.",
     hoverDefinition: "Definizioni al passaggio del mouse",
     hoverDefinitionHelp: "Usa il dizionario offline integrato per mostrare una definizione concisa su una riga quando il puntatore si sofferma su un termine cinese o una parola inglese.",
     hoverDefinitionOff: "Disabilitato",
@@ -18108,6 +18171,19 @@
     extractImageText: "Estrai testo dall'immagine",
     extractingImageText: "Estrazione testo dall'immagine\u2026",
     imageTextExtractionResult: "Estrazione testo dall'immagine",
+    mediaPageEyebrow: "Media",
+    mediaPageTitle: "Risorse multimediali",
+    mediaDetect: "Rileva media",
+    mediaDetecting: "Rilevamento media\u2026",
+    mediaImages: "Immagini",
+    mediaAudio: "Audio",
+    mediaVideo: "Video",
+    mediaCount: "{count} risorse",
+    mediaEmpty: "Nessuna risorsa multimediale trovata",
+    mediaEmptyHelp: "Premi rileva per analizzare di nuovo la pagina corrente.",
+    mediaDownload: "Scarica",
+    mediaDownloadSelected: "Scarica selezionati",
+    mediaSelectAll: "Seleziona tutte le risorse multimediali",
     imageTextExtractionPrompt: "Estrai tutto il testo visibile da questa immagine. Mantieni la lingua originale senza tradurre; preserva il pi\xF9 possibile le interruzioni di riga, l'ordine di lettura, gli elenchi e la struttura delle tabelle. Fornisci in output solo il testo estratto senza aggiungere spiegazioni.",
     noImageTextFound: "Nessun testo utilizzabile riconosciuto",
     retryAnswer: "Riprova a generare la risposta",
@@ -18265,6 +18341,7 @@
       mcpToolApprovalAsk: "\u59CB\u7EC8\u8BE2\u95EE",
       mcpToolApprovalAllow: "\u59CB\u7EC8\u5141\u8BB8",
       cookieViewer: "\u67E5\u770B Cookie",
+      forceCopy: "\u5F3A\u5236\u590D\u5236",
       cookieFormat: "\u683C\u5F0F",
       cookiePreview: "\u9884\u89C8",
       cookiePreviewCount: "\uFF08{count} \u4E2A Cookie\uFF09",
@@ -18276,6 +18353,7 @@
       mcpToolBlockedApprovalTimeout: "\u7B49\u5F85\u6388\u6743\u8D85\u65F6",
       navTools: "\u5DE5\u5177",
       navTodos: "\u5F85\u529E",
+      navMedia: "\u5A92\u4F53",
       navHistory: "\u5386\u53F2",
       navLogs: "\u65E5\u5FD7",
       logsPageTitle: "\u65E5\u5FD7",
@@ -18600,6 +18678,10 @@
       imageTextExtractionMinSize: "\u6700\u5C0F\u56FE\u7247\u5C3A\u5BF8",
       imageTextExtractionMinSizeHelp: "\u4EC5\u5F53\u56FE\u7247\u663E\u793A\u5BBD\u5EA6\u548C\u9AD8\u5EA6\u90FD\u4E0D\u5C0F\u4E8E\u8BE5\u50CF\u7D20\u503C\u65F6\u663E\u793A\u5165\u53E3\u3002",
       imageTextExtractionBlacklistHelp: "\u547D\u4E2D\u540E\u7F51\u9875\u56FE\u7247\u4E0D\u4F1A\u663E\u793A\u56FE\u6587\u63D0\u53D6\u5165\u53E3\u3002",
+      mediaPreDetection: "\u5A92\u4F53\u9884\u63A2\u6D4B",
+      mediaPreDetectionOff: "\u4E0D\u542F\u7528",
+      mediaPreDetectionOn: "\u542F\u7528",
+      mediaPreDetectionHelp: "\u7F51\u9875\u5B8C\u6210\u52A0\u8F7D\u540E\u81EA\u52A8\u63A2\u6D4B\u56FE\u7247\u3001\u97F3\u9891\u548C\u89C6\u9891\u8D44\u6E90\u3002",
       hoverDefinition: "\u60AC\u505C\u91CA\u4E49",
       hoverDefinitionHelp: "\u9F20\u6807\u505C\u7559\u5728\u4E2D\u6587\u8BCD\u8BED\u6216\u82F1\u6587\u5355\u8BCD\u4E0A\u65F6\uFF0C\u4F7F\u7528\u5185\u7F6E\u7684\u79BB\u7EBF\u8BCD\u5178\uFF0C\u4EE5\u5355\u884C\u63D0\u793A\u663E\u793A\u7B80\u660E\u91CA\u4E49\u3002",
       hoverDefinitionOff: "\u4E0D\u542F\u7528",
@@ -18852,6 +18934,19 @@
       extractImageText: "\u63D0\u53D6\u56FE\u7247\u6587\u5B57",
       extractingImageText: "\u6B63\u5728\u63D0\u53D6\u56FE\u7247\u6587\u5B57\u2026",
       imageTextExtractionResult: "\u56FE\u6587\u63D0\u53D6",
+      mediaPageEyebrow: "\u5A92\u4F53",
+      mediaPageTitle: "\u5A92\u4F53\u8D44\u6E90",
+      mediaDetect: "\u63A2\u6D4B\u5A92\u4F53",
+      mediaDetecting: "\u6B63\u5728\u63A2\u6D4B\u5A92\u4F53\u2026",
+      mediaImages: "\u56FE\u7247",
+      mediaAudio: "\u97F3\u9891",
+      mediaVideo: "\u89C6\u9891",
+      mediaCount: "{count} \u4E2A\u8D44\u6E90",
+      mediaEmpty: "\u672A\u53D1\u73B0\u5A92\u4F53\u8D44\u6E90",
+      mediaEmptyHelp: "\u70B9\u51FB\u63A2\u6D4B\u6309\u94AE\u91CD\u65B0\u626B\u63CF\u5F53\u524D\u9875\u9762\u3002",
+      mediaDownload: "\u4E0B\u8F7D",
+      mediaDownloadSelected: "\u4E0B\u8F7D\u9009\u4E2D\u9879",
+      mediaSelectAll: "\u5168\u9009\u5A92\u4F53\u8D44\u6E90",
       imageTextExtractionPrompt: "\u8BF7\u63D0\u53D6\u8FD9\u5F20\u56FE\u7247\u4E2D\u6240\u6709\u53EF\u89C1\u6587\u5B57\u3002\u4FDD\u6301\u539F\u6587\u8BED\u8A00\uFF0C\u4E0D\u8981\u7FFB\u8BD1\uFF1B\u5C3D\u91CF\u4FDD\u7559\u6362\u884C\u3001\u9605\u8BFB\u987A\u5E8F\u3001\u5217\u8868\u548C\u8868\u683C\u7ED3\u6784\u3002\u53EA\u8F93\u51FA\u63D0\u53D6\u5230\u7684\u6587\u5B57\uFF0C\u4E0D\u8981\u89E3\u91CA\u3002",
       noImageTextFound: "\u672A\u8BC6\u522B\u5230\u53EF\u7528\u6587\u5B57",
       retryAnswer: "\u91CD\u65B0\u56DE\u7B54",
@@ -18976,6 +19071,7 @@
       mcpToolApprovalAsk: "\u59CB\u7D42\u8A62\u554F",
       mcpToolApprovalAllow: "\u59CB\u7D42\u5141\u8A31",
       cookieViewer: "\u67E5\u770B Cookie",
+      forceCopy: "\u5F37\u5236\u8907\u88FD",
       cookieFormat: "\u683C\u5F0F",
       cookiePreview: "\u9810\u89BD",
       cookiePreviewCount: "\uFF08{count} \u500B Cookie\uFF09",
@@ -18987,6 +19083,7 @@
       mcpToolBlockedApprovalTimeout: "\u7B49\u5F85\u6388\u6B0A\u903E\u6642",
       navTools: "\u5DE5\u5177",
       navTodos: "\u5F85\u8FA6",
+      navMedia: "\u5A92\u9AD4",
       navHistory: "\u6B77\u53F2",
       navLogs: "\u65E5\u8A8C",
       logsPageTitle: "\u65E5\u8A8C",
@@ -19311,6 +19408,10 @@
       imageTextExtractionMinSize: "\u6700\u5C0F\u5716\u7247\u5C3A\u5BF8",
       imageTextExtractionMinSizeHelp: "\u50C5\u7576\u5716\u7247\u986F\u793A\u5BEC\u5EA6\u548C\u9AD8\u5EA6\u90FD\u4E0D\u5C0F\u65BC\u6B64\u50CF\u7D20\u503C\u6642\u986F\u793A\u5165\u53E3\u3002",
       imageTextExtractionBlacklistHelp: "\u547D\u4E2D\u5F8C\u7DB2\u9801\u5716\u7247\u4E0D\u6703\u986F\u793A\u5716\u6587\u63D0\u53D6\u5165\u53E3\u3002",
+      mediaPreDetection: "\u5A92\u9AD4\u9810\u63A2\u6E2C",
+      mediaPreDetectionOff: "\u4E0D\u555F\u7528",
+      mediaPreDetectionOn: "\u555F\u7528",
+      mediaPreDetectionHelp: "\u7DB2\u9801\u5B8C\u6210\u8F09\u5165\u5F8C\u81EA\u52D5\u63A2\u6E2C\u5716\u7247\u3001\u97F3\u8A0A\u548C\u5F71\u7247\u8CC7\u6E90\u3002",
       hoverDefinition: "\u61F8\u505C\u91CB\u7FA9",
       hoverDefinitionHelp: "\u6ED1\u9F20\u505C\u7559\u5728\u4E2D\u6587\u8A5E\u8A9E\u6216\u82F1\u6587\u55AE\u5B57\u4E0A\u6642\uFF0C\u4F7F\u7528\u5167\u5EFA\u7684\u96E2\u7DDA\u8A5E\u5178\uFF0C\u4EE5\u55AE\u884C\u63D0\u793A\u986F\u793A\u7C21\u660E\u91CB\u7FA9\u3002",
       hoverDefinitionOff: "\u4E0D\u555F\u7528",
@@ -19563,6 +19664,19 @@
       extractImageText: "\u63D0\u53D6\u5716\u7247\u6587\u5B57",
       extractingImageText: "\u6B63\u5728\u63D0\u53D6\u5716\u7247\u6587\u5B57\u2026",
       imageTextExtractionResult: "\u5716\u6587\u63D0\u53D6",
+      mediaPageEyebrow: "\u5A92\u9AD4",
+      mediaPageTitle: "\u5A92\u9AD4\u8CC7\u6E90",
+      mediaDetect: "\u63A2\u6E2C\u5A92\u9AD4",
+      mediaDetecting: "\u6B63\u5728\u63A2\u6E2C\u5A92\u9AD4\u2026",
+      mediaImages: "\u5716\u7247",
+      mediaAudio: "\u97F3\u8A0A",
+      mediaVideo: "\u5F71\u7247",
+      mediaCount: "{count} \u500B\u8CC7\u6E90",
+      mediaEmpty: "\u672A\u767C\u73FE\u5A92\u9AD4\u8CC7\u6E90",
+      mediaEmptyHelp: "\u9EDE\u64CA\u63A2\u6E2C\u6309\u9215\u91CD\u65B0\u6383\u63CF\u76EE\u524D\u9801\u9762\u3002",
+      mediaDownload: "\u4E0B\u8F09",
+      mediaDownloadSelected: "\u4E0B\u8F09\u9078\u53D6\u9805\u76EE",
+      mediaSelectAll: "\u5168\u9078\u5A92\u9AD4\u8CC7\u6E90",
       imageTextExtractionPrompt: "\u8ACB\u63D0\u53D6\u9019\u5F35\u5716\u7247\u4E2D\u6240\u6709\u53EF\u898B\u6587\u5B57\u3002\u4FDD\u6301\u539F\u6587\u8A9E\u8A00\uFF0C\u4E0D\u8981\u7FFB\u8B6F\uFF1B\u76E1\u91CF\u4FDD\u7559\u63DB\u884C\u3001\u95B1\u8B80\u9806\u5E8F\u3001\u5217\u8868\u548C\u8868\u683C\u7D50\u69CB\u3002\u53EA\u8F38\u51FA\u63D0\u53D6\u5230\u7684\u6587\u5B57\uFF0C\u4E0D\u8981\u89E3\u91CB\u3002",
       noImageTextFound: "\u672A\u8B58\u5225\u5230\u53EF\u7528\u6587\u5B57",
       retryAnswer: "\u91CD\u65B0\u56DE\u7B54",
@@ -19687,6 +19801,7 @@
       mcpToolApprovalAsk: "Always Ask",
       mcpToolApprovalAllow: "Always Allow",
       cookieViewer: "View Cookies",
+      forceCopy: "Force Copy",
       cookieFormat: "Format",
       cookiePreview: "Preview",
       cookiePreviewCount: "({count} cookies)",
@@ -19698,6 +19813,7 @@
       mcpToolBlockedApprovalTimeout: "Authorization timed out",
       navTools: "Tools",
       navTodos: "To-do",
+      navMedia: "Media",
       navHistory: "History",
       navLogs: "Logs",
       logsPageTitle: "Logs",
@@ -20022,6 +20138,10 @@
       imageTextExtractionMinSize: "Minimum Image Size",
       imageTextExtractionMinSizeHelp: "Only show the entry when both displayed width and height are at least this many pixels.",
       imageTextExtractionBlacklistHelp: "When matched, images on the page will not show the text-extraction entry.",
+      mediaPreDetection: "Media pre-detection",
+      mediaPreDetectionOff: "Disabled",
+      mediaPreDetectionOn: "Enabled",
+      mediaPreDetectionHelp: "Detect image, audio, and video resources after the page finishes loading.",
       hoverDefinition: "Hover Definitions",
       hoverDefinitionHelp: "Use the built-in offline dictionary to show a concise one-line definition when the pointer rests on a Chinese term or English word.",
       hoverDefinitionOff: "Disabled",
@@ -20274,6 +20394,19 @@
       extractImageText: "Extract Image Text",
       extractingImageText: "Extracting image text\u2026",
       imageTextExtractionResult: "Image Text Extraction",
+      mediaPageEyebrow: "Media",
+      mediaPageTitle: "Media Resources",
+      mediaDetect: "Detect media",
+      mediaDetecting: "Detecting media\u2026",
+      mediaImages: "Images",
+      mediaAudio: "Audio",
+      mediaVideo: "Video",
+      mediaCount: "{count} resources",
+      mediaEmpty: "No media resources found",
+      mediaEmptyHelp: "Select detect to scan the current page again.",
+      mediaDownload: "Download",
+      mediaDownloadSelected: "Download selected",
+      mediaSelectAll: "Select all media resources",
       imageTextExtractionPrompt: "Extract all visible text from this image. Keep the original language and do not translate; preserve line breaks, reading order, lists, and table structure as much as possible. Output only the extracted text and do not explain.",
       noImageTextFound: "No usable text was recognized",
       retryAnswer: "Retry answer",
@@ -20398,6 +20531,7 @@
       mcpToolApprovalAsk: "\u5E38\u306B\u78BA\u8A8D",
       mcpToolApprovalAllow: "\u5E38\u306B\u8A31\u53EF",
       cookieViewer: "Cookie \u3092\u8868\u793A",
+      forceCopy: "\u5F37\u5236\u30B3\u30D4\u30FC",
       cookieFormat: "\u8868\u793A\u5F62\u5F0F",
       cookiePreview: "\u30D7\u30EC\u30D3\u30E5\u30FC",
       cookiePreviewCount: "\uFF08{count} \u500B\u306E Cookie\uFF09",
@@ -20409,6 +20543,7 @@
       mcpToolBlockedApprovalTimeout: "\u8A31\u53EF\u5F85\u3061\u304C\u30BF\u30A4\u30E0\u30A2\u30A6\u30C8",
       navTools: "\u30C4\u30FC\u30EB",
       navTodos: "ToDo",
+      navMedia: "\u30E1\u30C7\u30A3\u30A2",
       navHistory: "\u5C65\u6B74",
       navLogs: "\u30ED\u30B0",
       logsPageTitle: "\u30ED\u30B0",
@@ -20733,6 +20868,10 @@
       imageTextExtractionMinSize: "\u6700\u5C0F\u753B\u50CF\u30B5\u30A4\u30BA",
       imageTextExtractionMinSizeHelp: "\u8868\u793A\u4E0A\u306E\u5E45\u3068\u9AD8\u3055\u304C\u3069\u3061\u3089\u3082\u3053\u306E\u30D4\u30AF\u30BB\u30EB\u5024\u4EE5\u4E0A\u306E\u753B\u50CF\u3060\u3051\u306B\u5165\u53E3\u3092\u8868\u793A\u3057\u307E\u3059\u3002",
       imageTextExtractionBlacklistHelp: "\u4E00\u81F4\u3057\u305F\u30DA\u30FC\u30B8\u3067\u306F\u753B\u50CF\u306B\u30C6\u30AD\u30B9\u30C8\u62BD\u51FA\u306E\u5165\u53E3\u3092\u8868\u793A\u3057\u307E\u305B\u3093\u3002",
+      mediaPreDetection: "\u30E1\u30C7\u30A3\u30A2\u5148\u884C\u691C\u51FA",
+      mediaPreDetectionOff: "\u7121\u52B9",
+      mediaPreDetectionOn: "\u6709\u52B9",
+      mediaPreDetectionHelp: "\u30DA\u30FC\u30B8\u306E\u8AAD\u307F\u8FBC\u307F\u5B8C\u4E86\u5F8C\u306B\u753B\u50CF\u3001\u97F3\u58F0\u3001\u52D5\u753B\u3092\u81EA\u52D5\u691C\u51FA\u3057\u307E\u3059\u3002",
       hoverDefinition: "\u30DB\u30D0\u30FC\u8F9E\u66F8",
       hoverDefinitionHelp: "\u4E2D\u56FD\u8A9E\u306E\u8A9E\u53E5\u307E\u305F\u306F\u82F1\u5358\u8A9E\u306B\u30DE\u30A6\u30B9\u3092\u7F6E\u304F\u3068\u3001\u5185\u8535\u306E\u30AA\u30D5\u30E9\u30A4\u30F3\u8F9E\u66F8\u3092\u4F7F\u7528\u3057\u3066\u7C21\u6F54\u306A\u610F\u5473\u30921\u884C\u3067\u8868\u793A\u3057\u307E\u3059\u3002",
       hoverDefinitionOff: "\u7121\u52B9",
@@ -20985,6 +21124,19 @@
       extractImageText: "\u753B\u50CF\u306E\u6587\u5B57\u3092\u62BD\u51FA",
       extractingImageText: "\u753B\u50CF\u306E\u6587\u5B57\u3092\u62BD\u51FA\u4E2D\u2026",
       imageTextExtractionResult: "\u753B\u50CF\u30C6\u30AD\u30B9\u30C8\u62BD\u51FA",
+      mediaPageEyebrow: "\u30E1\u30C7\u30A3\u30A2",
+      mediaPageTitle: "\u30E1\u30C7\u30A3\u30A2\u30EA\u30BD\u30FC\u30B9",
+      mediaDetect: "\u30E1\u30C7\u30A3\u30A2\u3092\u691C\u51FA",
+      mediaDetecting: "\u30E1\u30C7\u30A3\u30A2\u3092\u691C\u51FA\u4E2D\u2026",
+      mediaImages: "\u753B\u50CF",
+      mediaAudio: "\u97F3\u58F0",
+      mediaVideo: "\u52D5\u753B",
+      mediaCount: "{count} \u4EF6\u306E\u30EA\u30BD\u30FC\u30B9",
+      mediaEmpty: "\u30E1\u30C7\u30A3\u30A2\u30EA\u30BD\u30FC\u30B9\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093",
+      mediaEmptyHelp: "\u691C\u51FA\u30DC\u30BF\u30F3\u3067\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u3092\u518D\u30B9\u30AD\u30E3\u30F3\u3057\u307E\u3059\u3002",
+      mediaDownload: "\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9",
+      mediaDownloadSelected: "\u9078\u629E\u9805\u76EE\u3092\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9",
+      mediaSelectAll: "\u30E1\u30C7\u30A3\u30A2\u30EA\u30BD\u30FC\u30B9\u3092\u3059\u3079\u3066\u9078\u629E",
       imageTextExtractionPrompt: "\u3053\u306E\u753B\u50CF\u306B\u5199\u3063\u3066\u3044\u308B\u53EF\u8996\u30C6\u30AD\u30B9\u30C8\u3092\u3059\u3079\u3066\u62BD\u51FA\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u5143\u306E\u8A00\u8A9E\u3092\u7DAD\u6301\u3057\u3001\u7FFB\u8A33\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002\u6539\u884C\u3001\u8AAD\u307F\u9806\u3001\u7B87\u6761\u66F8\u304D\u3001\u8868\u69CB\u9020\u3092\u3067\u304D\u308B\u3060\u3051\u4FDD\u3061\u3001\u62BD\u51FA\u3057\u305F\u6587\u5B57\u3060\u3051\u3092\u51FA\u529B\u3057\u3066\u8AAC\u660E\u306F\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002",
       noImageTextFound: "\u5229\u7528\u53EF\u80FD\u306A\u6587\u5B57\u304C\u8A8D\u8B58\u3055\u308C\u307E\u305B\u3093\u3067\u3057\u305F",
       retryAnswer: "\u518D\u56DE\u7B54",
@@ -21109,6 +21261,7 @@
       mcpToolApprovalAsk: "\uD56D\uC0C1 \uBB3B\uAE30",
       mcpToolApprovalAllow: "\uD56D\uC0C1 \uD5C8\uC6A9",
       cookieViewer: "Cookie \uBCF4\uAE30",
+      forceCopy: "\uAC15\uC81C \uBCF5\uC0AC",
       cookieFormat: "\uD45C\uC2DC \uD615\uC2DD",
       cookiePreview: "\uBBF8\uB9AC\uBCF4\uAE30",
       cookiePreviewCount: "({count}\uAC1C Cookie)",
@@ -21120,6 +21273,7 @@
       mcpToolBlockedApprovalTimeout: "\uAD8C\uD55C \uB300\uAE30 \uC2DC\uAC04\uC774 \uCD08\uACFC\uB428",
       navTools: "\uB3C4\uAD6C",
       navTodos: "\uD560 \uC77C",
+      navMedia: "\uBBF8\uB514\uC5B4",
       navHistory: "\uAE30\uB85D",
       navLogs: "\uB85C\uADF8",
       logsPageTitle: "\uB85C\uADF8",
@@ -21444,6 +21598,10 @@
       imageTextExtractionMinSize: "\uCD5C\uC18C \uC774\uBBF8\uC9C0 \uD06C\uAE30",
       imageTextExtractionMinSizeHelp: "\uD45C\uC2DC\uB41C \uB108\uBE44\uC640 \uB192\uC774\uAC00 \uBAA8\uB450 \uC774 \uD53D\uC140 \uAC12 \uC774\uC0C1\uC778 \uC774\uBBF8\uC9C0\uC5D0\uB9CC \uC9C4\uC785\uC810\uC744 \uD45C\uC2DC\uD569\uB2C8\uB2E4.",
       imageTextExtractionBlacklistHelp: "\uC77C\uCE58\uD558\uB294 \uD398\uC774\uC9C0\uC5D0\uC11C\uB294 \uC774\uBBF8\uC9C0\uC5D0 \uD14D\uC2A4\uD2B8 \uCD94\uCD9C \uC9C4\uC785\uC810\uC774 \uD45C\uC2DC\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
+      mediaPreDetection: "\uBBF8\uB514\uC5B4 \uC0AC\uC804 \uD0D0\uC9C0",
+      mediaPreDetectionOff: "\uC0AC\uC6A9 \uC548 \uD568",
+      mediaPreDetectionOn: "\uC0AC\uC6A9",
+      mediaPreDetectionHelp: "\uD398\uC774\uC9C0 \uB85C\uB4DC\uAC00 \uB05D\uB098\uBA74 \uC774\uBBF8\uC9C0, \uC624\uB514\uC624, \uB3D9\uC601\uC0C1 \uB9AC\uC18C\uC2A4\uB97C \uC790\uB3D9\uC73C\uB85C \uD0D0\uC9C0\uD569\uB2C8\uB2E4.",
       hoverDefinition: "\uB9C8\uC6B0\uC2A4 \uC624\uBC84 \uB73B\uD480\uC774",
       hoverDefinitionHelp: "\uC911\uAD6D\uC5B4 \uC5B4\uAD6C\uB098 \uC601\uC5B4 \uB2E8\uC5B4 \uC704\uC5D0 \uB9C8\uC6B0\uC2A4\uB97C \uC7A0\uC2DC \uB450\uBA74 \uB0B4\uC7A5 \uC624\uD504\uB77C\uC778 \uC0AC\uC804\uC744 \uC0AC\uC6A9\uD574 \uD55C \uC904\uC758 \uAC04\uB2E8\uD55C \uB73B\uC744 \uD45C\uC2DC\uD569\uB2C8\uB2E4.",
       hoverDefinitionOff: "\uC0AC\uC6A9 \uC548 \uD568",
@@ -21696,6 +21854,19 @@
       extractImageText: "\uC774\uBBF8\uC9C0 \uD14D\uC2A4\uD2B8 \uCD94\uCD9C",
       extractingImageText: "\uC774\uBBF8\uC9C0 \uD14D\uC2A4\uD2B8\uB97C \uCD94\uCD9C\uD558\uB294 \uC911\u2026",
       imageTextExtractionResult: "\uC774\uBBF8\uC9C0 \uD14D\uC2A4\uD2B8 \uCD94\uCD9C",
+      mediaPageEyebrow: "\uBBF8\uB514\uC5B4",
+      mediaPageTitle: "\uBBF8\uB514\uC5B4 \uB9AC\uC18C\uC2A4",
+      mediaDetect: "\uBBF8\uB514\uC5B4 \uD0D0\uC9C0",
+      mediaDetecting: "\uBBF8\uB514\uC5B4\uB97C \uD0D0\uC9C0\uD558\uB294 \uC911\u2026",
+      mediaImages: "\uC774\uBBF8\uC9C0",
+      mediaAudio: "\uC624\uB514\uC624",
+      mediaVideo: "\uB3D9\uC601\uC0C1",
+      mediaCount: "\uB9AC\uC18C\uC2A4 {count}\uAC1C",
+      mediaEmpty: "\uBBF8\uB514\uC5B4 \uB9AC\uC18C\uC2A4\uB97C \uCC3E\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4",
+      mediaEmptyHelp: "\uD0D0\uC9C0 \uBC84\uD2BC\uC744 \uB20C\uB7EC \uD604\uC7AC \uD398\uC774\uC9C0\uB97C \uB2E4\uC2DC \uC2A4\uCE94\uD558\uC138\uC694.",
+      mediaDownload: "\uB2E4\uC6B4\uB85C\uB4DC",
+      mediaDownloadSelected: "\uC120\uD0DD \uD56D\uBAA9 \uB2E4\uC6B4\uB85C\uB4DC",
+      mediaSelectAll: "\uBBF8\uB514\uC5B4 \uB9AC\uC18C\uC2A4 \uBAA8\uB450 \uC120\uD0DD",
       imageTextExtractionPrompt: "\uC774 \uC774\uBBF8\uC9C0\uC5D0 \uBCF4\uC774\uB294 \uBAA8\uB4E0 \uD14D\uC2A4\uD2B8\uB97C \uCD94\uCD9C\uD558\uC138\uC694. \uC6D0\uBB38 \uC5B8\uC5B4\uB97C \uC720\uC9C0\uD558\uACE0 \uBC88\uC5ED\uD558\uC9C0 \uB9C8\uC138\uC694. \uC904\uBC14\uAFC8, \uC77D\uAE30 \uC21C\uC11C, \uBAA9\uB85D, \uD45C \uAD6C\uC870\uB97C \uCD5C\uB300\uD55C \uBCF4\uC874\uD558\uACE0 \uCD94\uCD9C\uD55C \uD14D\uC2A4\uD2B8\uB9CC \uCD9C\uB825\uD558\uBA70 \uC124\uBA85\uC740 \uD558\uC9C0 \uB9C8\uC138\uC694.",
       noImageTextFound: "\uC0AC\uC6A9\uD560 \uC218 \uC788\uB294 \uD14D\uC2A4\uD2B8\uB97C \uC778\uC2DD\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4",
       retryAnswer: "\uB2E4\uC2DC \uB2F5\uBCC0",
@@ -23718,6 +23889,7 @@
     pictureInPictureVideoButtonEnabled: false,
     imageTextExtractionEnabled: false,
     imageTextExtractionMinSize: 160,
+    mediaPreDetectionEnabled: false,
     articleExtractionRules: [],
     enabledToolIds: {
       selection: [...DEFAULT_SELECTION_TOOL_IDS],
@@ -23958,6 +24130,7 @@
       pictureInPictureVideoButtonEnabled: stored.pictureInPictureVideoButtonEnabled ?? false,
       imageTextExtractionEnabled: stored.imageTextExtractionEnabled ?? false,
       imageTextExtractionMinSize: stored.imageTextExtractionMinSize ?? 160,
+      mediaPreDetectionEnabled: stored.mediaPreDetectionEnabled ?? DEFAULT_SETTINGS.mediaPreDetectionEnabled,
       articleExtractionRules: normalizeArticleExtractionRules(
         stored.articleExtractionRules
       ),
@@ -29218,9 +29391,9 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
     clearLinkTextSelectingMarker(pointerState.activationTarget);
     pointerState = null;
   }
-  function setLinkTextSelectionEnabled(enabled2) {
+  function setLinkTextSelectionEnabled(enabled3) {
     const existing = document.getElementById(LINK_TEXT_SELECTION_STYLE_ID);
-    if (!enabled2) {
+    if (!enabled3) {
       existing?.remove();
       clearLinkTextSelectingMarker();
       pointerState = null;
@@ -29254,11 +29427,179 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
     }
   }
 
+  // src/content/forceCopy.ts
+  var FORCE_COPY_ATTRIBUTE = "data-webmind-force-copy";
+  var FORCE_COPY_STYLE_ID = "webmind-force-copy-style";
+  var FORCE_COPY_CSS = `
+:root[${FORCE_COPY_ATTRIBUTE}][${FORCE_COPY_ATTRIBUTE}][${FORCE_COPY_ATTRIBUTE}],
+:root[${FORCE_COPY_ATTRIBUTE}][${FORCE_COPY_ATTRIBUTE}][${FORCE_COPY_ATTRIBUTE}] body,
+:root[${FORCE_COPY_ATTRIBUTE}][${FORCE_COPY_ATTRIBUTE}][${FORCE_COPY_ATTRIBUTE}] body * {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+`;
+  var enabled = false;
+  var listenerAttached = false;
+  function setForceCopyStyles(nextEnabled) {
+    const existing = document.getElementById(FORCE_COPY_STYLE_ID);
+    if (!nextEnabled) {
+      existing?.remove();
+      return;
+    }
+    if (existing) return;
+    const style = document.createElement("style");
+    style.id = FORCE_COPY_STYLE_ID;
+    style.textContent = FORCE_COPY_CSS;
+    (document.head ?? document.documentElement).append(style);
+  }
+  function copySelectedText(event) {
+    if (!enabled || !event.clipboardData) return;
+    const text2 = pageSelectionTextForCopy();
+    if (!text2) return;
+    event.clipboardData.setData("text/plain", text2);
+    event.preventDefault();
+  }
+  function setForceCopyEnabled(nextEnabled) {
+    enabled = nextEnabled;
+    document.documentElement.toggleAttribute(FORCE_COPY_ATTRIBUTE, enabled);
+    setForceCopyStyles(enabled);
+    if (!listenerAttached) {
+      window.addEventListener("copy", copySelectedText, true);
+      listenerAttached = true;
+    }
+    return enabled;
+  }
+  function isForceCopyEnabled() {
+    return enabled;
+  }
+
+  // src/content/media.ts
+  var cachedResources = [];
+  function absoluteUrl(value) {
+    if (!value) return "";
+    try {
+      return new URL(value, location.href).href;
+    } catch {
+      return "";
+    }
+  }
+  function fileName(url, fallback) {
+    try {
+      const pathname = new URL(url).pathname;
+      const value = decodeURIComponent(pathname.split("/").pop() ?? "").trim();
+      return value || fallback;
+    } catch {
+      return fallback;
+    }
+  }
+  function numberAttribute(element, name) {
+    const value = Number(element.getAttribute(name));
+    return Number.isFinite(value) && value > 0 ? value : void 0;
+  }
+  function resourceName(element, url, kind) {
+    const label = [
+      element.getAttribute("alt"),
+      element.getAttribute("aria-label"),
+      element.getAttribute("title"),
+      element.getAttribute("download")
+    ].find((value) => value?.trim());
+    return label?.trim() || fileName(url, kind);
+  }
+  function timingBytes(url) {
+    const entry = performance.getEntriesByName(url).find(
+      (item) => "transferSize" in item
+    );
+    return entry?.encodedBodySize || entry?.decodedBodySize || entry?.transferSize || void 0;
+  }
+  function kindFromResourceUrl(url, initiatorType) {
+    const pathname = url.split(/[?#]/, 1)[0].toLowerCase();
+    if (initiatorType === "img" || /\.(?:avif|bmp|gif|ico|jpe?g|png|svg|webp)$/.test(pathname)) {
+      return "image";
+    }
+    if (initiatorType === "audio" || /\.(?:aac|flac|m4a|mp3|oga|ogg|opus|wav)$/.test(pathname)) {
+      return "audio";
+    }
+    if (initiatorType === "video" || /\.(?:3gp|m4v|mkv|mov|mp4|mpeg|mpg|ogv|webm|m3u8|mpd)$/.test(pathname)) {
+      return "video";
+    }
+    return null;
+  }
+  function addResource(resources, element, kind, rawUrl) {
+    const url = absoluteUrl(rawUrl);
+    if (!url || url.startsWith("javascript:") || url.startsWith("about:")) return;
+    const key = `${kind}:${url}`;
+    if (resources.has(key)) return;
+    const media = element;
+    const resource = {
+      id: crypto.randomUUID(),
+      kind,
+      name: resourceName(element, url, kind),
+      url,
+      mimeType: element.getAttribute("type") || void 0,
+      width: element instanceof HTMLImageElement ? element.naturalWidth || numberAttribute(element, "width") : element instanceof HTMLVideoElement ? element.videoWidth || numberAttribute(element, "width") : void 0,
+      height: element instanceof HTMLImageElement ? element.naturalHeight || numberAttribute(element, "height") : element instanceof HTMLVideoElement ? element.videoHeight || numberAttribute(element, "height") : void 0,
+      duration: (element instanceof HTMLAudioElement || element instanceof HTMLVideoElement) && Number.isFinite(element.duration) && element.duration > 0 ? element.duration : void 0,
+      bytes: timingBytes(url),
+      detail: element instanceof HTMLMediaElement ? element.getAttribute("type") || void 0 : void 0
+    };
+    resources.set(key, resource);
+  }
+  function detectMediaResources() {
+    const resources = /* @__PURE__ */ new Map();
+    document.querySelectorAll("img").forEach((element) => {
+      addResource(resources, element, "image", element.currentSrc || element.src);
+    });
+    document.querySelectorAll("audio, video").forEach((element) => {
+      const media = element;
+      addResource(resources, element, element.tagName.toLowerCase(), media.currentSrc || media.src);
+    });
+    document.querySelectorAll("audio source, video source").forEach((element) => {
+      const parent = element.parentElement;
+      const kind = parent?.tagName.toLowerCase();
+      if (kind === "audio" || kind === "video") {
+        addResource(resources, element, kind, element.getAttribute("src") ?? "");
+      }
+    });
+    performance.getEntriesByType("resource").forEach((entry) => {
+      if (!(entry instanceof PerformanceResourceTiming)) return;
+      const kind = kindFromResourceUrl(entry.name, entry.initiatorType);
+      if (!kind) return;
+      const key = `${kind}:${entry.name}`;
+      if (resources.has(key)) return;
+      const manifest = /\.(?:m3u8|mpd)(?:[?#]|$)/i.test(entry.name);
+      resources.set(key, {
+        id: crypto.randomUUID(),
+        kind,
+        name: fileName(entry.name, kind),
+        url: entry.name,
+        bytes: entry.encodedBodySize || entry.decodedBodySize || entry.transferSize || void 0,
+        detail: manifest ? "HLS/DASH manifest" : void 0
+      });
+    });
+    cachedResources = Array.from(resources.values());
+    return cachedResources;
+  }
+  function cachedMediaResources() {
+    return cachedResources;
+  }
+  function downloadPageMedia(url, name) {
+    if (!/^blob:|^data:/i.test(url)) return false;
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = name;
+    anchor.rel = "noopener";
+    anchor.style.display = "none";
+    (document.body ?? document.documentElement).append(anchor);
+    anchor.click();
+    anchor.remove();
+    return true;
+  }
+
   // src/content/selectionHighlighter.ts
   var HIGHLIGHT_NAME = "webmind-selection-match";
   var STYLE_ID = "webmind-selection-match-style";
   var MARKER_HOST_ID = "webmind-selection-match-markers";
-  var enabled = false;
+  var enabled2 = false;
   var listenersAttached2 = false;
   var frameId = null;
   var activeRanges = [];
@@ -29431,7 +29772,7 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
   }
   function refreshHighlights() {
     frameId = null;
-    if (!enabled) return;
+    if (!enabled2) return;
     const selection = window.getSelection();
     const selectedText = selection?.toString() ?? "";
     if (!canHighlightSelectionText(selectedText)) {
@@ -29452,7 +29793,7 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
     renderMarkers(ranges);
   }
   function scheduleRefresh() {
-    if (!enabled || frameId !== null) return;
+    if (!enabled2 || frameId !== null) return;
     frameId = window.requestAnimationFrame(refreshHighlights);
   }
   function refreshMarkerPositions() {
@@ -29460,9 +29801,9 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
   }
   function setSelectionMatchHighlightMode(nextMode, nextMinTriggerChars = 1) {
     matchMode = nextMode;
-    enabled = matchMode !== "off";
+    enabled2 = matchMode !== "off";
     minTriggerChars = Math.max(1, Math.round(nextMinTriggerChars) || 1);
-    if (!enabled) {
+    if (!enabled2) {
       if (frameId !== null) window.cancelAnimationFrame(frameId);
       frameId = null;
       clearHighlights();
@@ -29530,8 +29871,8 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
     "[aria-label*='clone this repository']"
   ].join(", ");
   var PAGE_BRIDGE_ENABLED_ATTRIBUTE = "data-webmind-github-ssh-clone-rewrite";
-  function setGithubCloneUrlRewriteBridgeEnabled(enabled2) {
-    document.documentElement.toggleAttribute(PAGE_BRIDGE_ENABLED_ATTRIBUTE, enabled2);
+  function setGithubCloneUrlRewriteBridgeEnabled(enabled3) {
+    document.documentElement.toggleAttribute(PAGE_BRIDGE_ENABLED_ATTRIBUTE, enabled3);
   }
   function stringValue(element) {
     const candidate = element;
@@ -38036,6 +38377,17 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
   }
   async function initialize() {
     settings = await loadSettings();
+    const preDetectMedia = () => {
+      if (!settings?.mediaPreDetectionEnabled) return;
+      if (document.readyState === "complete") {
+        detectMediaResources();
+        return;
+      }
+      window.addEventListener("load", () => {
+        if (settings?.mediaPreDetectionEnabled) detectMediaResources();
+      }, { once: true });
+    };
+    preDetectMedia();
     const linkTextSelectionEnabled = () => Boolean(
       settings?.linkTextSelectionEnabled && !urlMatchesBlacklist(
         location.href,
@@ -38170,6 +38522,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
         settings.selectionOverlayMinChars
       );
       syncGithubCloneUrlRewrite();
+      preDetectMedia();
       if (!selectionOverlayEnabled() || !selectionOverlayShortcutActive()) {
         showSelection?.(null);
       } else {
@@ -38197,6 +38550,26 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       }
       if (message.type === "page.screenshot.select") {
         return selectScreenshotArea();
+      }
+      if (message.type === "page.forceCopy.set") {
+        return { enabled: setForceCopyEnabled(Boolean(message.enabled)) };
+      }
+      if (message.type === "page.forceCopy.status") {
+        return { enabled: isForceCopyEnabled() };
+      }
+      if (message.type === "page.media.detect") {
+        return detectMediaResources();
+      }
+      if (message.type === "page.media.cached") {
+        return cachedMediaResources();
+      }
+      if (message.type === "page.media.download") {
+        return {
+          downloaded: downloadPageMedia(
+            String(message.url ?? ""),
+            String(message.name ?? "media")
+          )
+        };
       }
       if (message.type === "page.pictureInPicture.pick") {
         return startPictureInPictureSelection(settings?.interfaceLanguage);

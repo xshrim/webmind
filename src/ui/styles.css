@@ -1685,6 +1685,12 @@ svg {
   stroke-width: 2.2;
 }
 
+.panel-header .force-copy-button svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.2;
+}
+
 .brand-compact strong {
   font-size: 13px;
 }
@@ -3977,9 +3983,138 @@ button.prompt-row:hover {
   display: grid;
   height: 54px;
   flex: 0 0 auto;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   border-top: 1px solid var(--border);
   background: var(--surface);
+}
+
+.media-toolbar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 8px 9px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.media-filter,
+.media-select,
+.media-select-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.media-select-all {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  padding: 0;
+}
+
+.media-select-all input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.media-filter {
+  min-width: 0;
+}
+
+.media-kind-filters {
+  justify-content: flex-start;
+}
+
+.media-count {
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.media-toolbar-actions {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.media-list {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  border-top: 1px solid var(--border);
+}
+
+.media-row {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: auto 96px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.media-preview {
+  display: grid;
+  width: 96px;
+  height: 64px;
+  place-items: center;
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.media-preview img,
+.media-preview video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.media-preview audio {
+  width: 92px;
+}
+
+.media-meta {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.media-meta strong,
+.media-meta a,
+.media-meta small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.media-meta strong {
+  font-size: 12px;
+}
+
+.media-meta a {
+  color: var(--teal);
+  font-size: 10px;
+  text-decoration: none;
+}
+
+.media-meta a:hover {
+  text-decoration: underline;
+}
+
+.media-meta small {
+  color: var(--muted);
+  font-size: 10px;
 }
 
 .todo-toolbar {

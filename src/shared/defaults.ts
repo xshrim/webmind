@@ -266,6 +266,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   pictureInPictureVideoButtonEnabled: false,
   imageTextExtractionEnabled: false,
   imageTextExtractionMinSize: 160,
+  mediaPreDetectionEnabled: false,
   articleExtractionRules: [],
   enabledToolIds: {
     selection: [...DEFAULT_SELECTION_TOOL_IDS],

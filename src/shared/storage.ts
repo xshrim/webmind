@@ -422,6 +422,8 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
       stored.pictureInPictureVideoButtonEnabled ?? false,
     imageTextExtractionEnabled: stored.imageTextExtractionEnabled ?? false,
     imageTextExtractionMinSize: stored.imageTextExtractionMinSize ?? 160,
+    mediaPreDetectionEnabled:
+      stored.mediaPreDetectionEnabled ?? DEFAULT_SETTINGS.mediaPreDetectionEnabled,
     articleExtractionRules: normalizeArticleExtractionRules(
       stored.articleExtractionRules
     ),

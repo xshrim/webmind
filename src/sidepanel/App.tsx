@@ -13,10 +13,12 @@ import {
   Clock3,
   Cookie,
   Copy,
+  Download,
   Eraser,
   FileText,
   Globe,
   ImagePlus,
+  Images,
   Link2,
   ListTree,
   ListTodo,
@@ -24,6 +26,7 @@ import {
   LoaderCircle,
   MessageCirclePlus,
   MessageSquareText,
+  Mouse,
   Paperclip,
   PanelTop,
   PictureInPicture2,
@@ -34,6 +37,7 @@ import {
   RedoDot,
   ScanText,
   Search,
+  SatelliteDish,
   Send,
   Settings,
   Sparkles,
@@ -123,6 +127,8 @@ import type {
   McpToolApprovalDecision,
   McpToolApprovalRequest,
   McpToolSelection,
+  MediaResource,
+  MediaResourceKind,
   ModelPurpose,
   PageContext,
   PageTextBlock,
@@ -223,7 +229,7 @@ import {
   ImmersiveTranslateIcon
 } from "./customIcons";
 
-type ViewId = "chat" | "tools" | "todos" | "mcp" | "history" | "logs";
+type ViewId = "chat" | "tools" | "todos" | "mcp" | "media" | "history" | "logs";
 
 function todoSourceLabel(todo: TodoItem, language?: AppLanguage): string {
   if (!todo.source?.url) return uiText(language, "todoCreatedManually");
@@ -417,6 +423,7 @@ export function App() {
   const [contextLoading, setContextLoading] = useState(true);
   const [articlePicking, setArticlePicking] = useState(false);
   const [pictureInPicturePicking, setPictureInPicturePicking] = useState(false);
+  const [forceCopyEnabled, setForceCopyEnabled] = useState(false);
   const [articlePruning, setArticlePruning] = useState(false);
   const [bodyPreviewExpanded, setBodyPreviewExpanded] = useState(false);
   const [streamingId, setStreamingId] = useState<string | null>(null);
@@ -425,6 +432,15 @@ export function App() {
   const [operationLogs, setOperationLogs] = useState<OperationLogEntry[]>([]);
   const [history, setHistory] = useState<Conversation[]>([]);
   const [todos, setTodos] = useState<TodoItem[]>([]);
+  const [mediaResources, setMediaResources] = useState<MediaResource[]>([]);
+  const [mediaKinds, setMediaKinds] = useState<Set<MediaResourceKind>>(
+    () => new Set(["audio", "video"])
+  );
+  const [mediaLoading, setMediaLoading] = useState(false);
+  const [mediaSelectedIds, setMediaSelectedIds] = useState<Set<string>>(
+    () => new Set()
+  );
+  const [mediaDownloading, setMediaDownloading] = useState(false);
   const [todoFilter, setTodoFilter] = useState<"all" | TodoStatus>("open");
   const [todoQuery, setTodoQuery] = useState("");
   const [expandedTodoIds, setExpandedTodoIds] = useState<Set<string>>(
@@ -1225,6 +1241,23 @@ export function App() {
         contextModeRef.current = nextContextMode;
         setActiveTab(page.tab);
         activeTabIdRef.current = page.tab?.id ?? null;
+        if (page.tab?.id) {
+          void sendToTab<{ enabled: boolean }>(page.tab.id, {
+            type: "page.forceCopy.status"
+          })
+            .then((result) => {
+              if (activeTabContextVersionRef.current === version) {
+                setForceCopyEnabled(Boolean(result.enabled));
+              }
+            })
+            .catch(() => {
+              if (activeTabContextVersionRef.current === version) {
+                setForceCopyEnabled(false);
+              }
+            });
+        } else {
+          setForceCopyEnabled(false);
+        }
         setIncludePage(nextContextMode !== "none");
 
         if (nextContextMode === "none") {
@@ -2234,6 +2267,105 @@ export function App() {
         setToolStatus("");
       }
     }
+  };
+
+  const toggleForceCopy = async () => {
+    const tabId = activeTab?.id;
+    if (!tabId) {
+      setNotice(t("noReadableTab"));
+      return;
+    }
+    try {
+      const result = await sendToTab<{ enabled: boolean }>(
+        tabId,
+        { type: "page.forceCopy.set", enabled: !forceCopyEnabled },
+        settingsRef.current?.interfaceLanguage
+      );
+      if (activeTabIdRef.current === tabId) {
+        setForceCopyEnabled(Boolean(result.enabled));
+      }
+    } catch (error) {
+      setNotice(errorMessage(error));
+      appendOperationLog(errorMessage(error), "error");
+    }
+  };
+
+  const loadMediaResources = async (force = false) => {
+    const tabId = activeTab?.id;
+    if (!tabId) return;
+    setMediaLoading(true);
+    try {
+      const resources = await sendToTab<MediaResource[]>(tabId, {
+        type: force ? "page.media.detect" : "page.media.cached"
+      }, settingsRef.current?.interfaceLanguage);
+      if (activeTabIdRef.current === tabId) {
+        setMediaResources(Array.isArray(resources) ? resources : []);
+        setMediaSelectedIds(new Set());
+      }
+    } catch (error) {
+      setNotice(errorMessage(error));
+      appendOperationLog(errorMessage(error), "error");
+    } finally {
+      setMediaLoading(false);
+    }
+  };
+
+  const downloadMediaResource = async (resource: MediaResource) => {
+    try {
+      if (/^(blob:|data:)/i.test(resource.url) && activeTab?.id) {
+        await sendToTab(activeTab.id, {
+          type: "page.media.download",
+          url: resource.url,
+          name: resource.name
+        }, settingsRef.current?.interfaceLanguage);
+      } else {
+        await runtimeRequest("media.download", {
+          url: resource.url,
+          name: resource.name
+        }, settingsRef.current?.interfaceLanguage);
+      }
+    } catch (error) {
+      setNotice(errorMessage(error));
+      appendOperationLog(errorMessage(error), "error");
+    }
+  };
+
+  const downloadSelectedMedia = async () => {
+    const selected = mediaResources.filter((resource) =>
+      mediaSelectedIds.has(resource.id)
+    );
+    if (!selected.length) return;
+    setMediaDownloading(true);
+    try {
+      for (const resource of selected) await downloadMediaResource(resource);
+      setMediaSelectedIds(new Set());
+    } finally {
+      setMediaDownloading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (view !== "media" || !activeTab?.id) return;
+    void loadMediaResources(!settings?.mediaPreDetectionEnabled);
+  }, [view, activeTab?.id, settings?.mediaPreDetectionEnabled]);
+
+  const visibleMediaResources = mediaResources.filter((resource) =>
+    mediaKinds.has(resource.kind)
+  );
+  const allVisibleMediaSelected =
+    visibleMediaResources.length > 0 &&
+    visibleMediaResources.every((resource) => mediaSelectedIds.has(resource.id));
+
+  const toggleAllVisibleMedia = () => {
+    setMediaSelectedIds((current) => {
+      const next = new Set(current);
+      if (allVisibleMediaSelected) {
+        visibleMediaResources.forEach((resource) => next.delete(resource.id));
+      } else {
+        visibleMediaResources.forEach((resource) => next.add(resource.id));
+      }
+      return next;
+    });
   };
 
   const restoreCurrentBody = async () => {
@@ -4903,12 +5035,14 @@ export function App() {
             <PictureInPicture2 />
           </button>
           <button
-            className="icon-button"
+            className={`${forceCopyEnabled ? "brand-tool-button" : "icon-button"} force-copy-button`}
             type="button"
-            title={t("restorePage")}
-            onClick={() => void restorePage()}
+            title={t("forceCopy")}
+            aria-label={t("forceCopy")}
+            aria-pressed={forceCopyEnabled}
+            onClick={() => void toggleForceCopy()}
           >
-            <RefreshCcw />
+            <Mouse />
           </button>
           <select
             className="provider-select"
@@ -4959,6 +5093,14 @@ export function App() {
             onClick={() => void openCookieViewer()}
           >
             <Cookie />
+          </button>
+          <button
+            className="icon-button"
+            type="button"
+            title={t("restorePage")}
+            onClick={() => void restorePage()}
+          >
+            <RefreshCcw />
           </button>
           <button
             className="icon-button"
@@ -5816,6 +5958,146 @@ export function App() {
                     </article>
                   );
                 })}
+              </div>
+            )}
+          </section>
+        )}
+
+        {view === "media" && (
+          <section className="workspace-view media-workspace">
+            <div className="view-heading">
+              <div>
+                <p className="eyebrow">{t("mediaPageEyebrow")}</p>
+                <h1>{t("mediaPageTitle")}</h1>
+              </div>
+            </div>
+            <div className="media-toolbar">
+              <label className="media-select-all">
+                <input
+                  type="checkbox"
+                  checked={allVisibleMediaSelected}
+                  disabled={!visibleMediaResources.length}
+                  title={t("mediaSelectAll")}
+                  aria-label={t("mediaSelectAll")}
+                  onChange={toggleAllVisibleMedia}
+                />
+              </label>
+              <div className="log-level-segmented media-kind-filters">
+                {([
+                  ["image", t("mediaImages")],
+                  ["audio", t("mediaAudio")],
+                  ["video", t("mediaVideo")]
+                ] as const).map(([kind, label]) => (
+                  <button
+                    className={`media-filter ${mediaKinds.has(kind) ? "active" : ""}`}
+                    key={kind}
+                    type="button"
+                    aria-pressed={mediaKinds.has(kind)}
+                    onClick={() =>
+                      setMediaKinds((current) => {
+                        const next = new Set(current);
+                        if (next.has(kind)) next.delete(kind);
+                        else next.add(kind);
+                        return next;
+                      })
+                    }
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <div className="media-toolbar-actions">
+                <span className="media-count">
+                  {t("mediaCount").replace(
+                    "{count}",
+                    String(visibleMediaResources.length)
+                  )}
+                </span>
+                <button
+                  className="icon-button mini"
+                  type="button"
+                  title={t("mediaDetect")}
+                  aria-label={t("mediaDetect")}
+                  disabled={mediaLoading}
+                  onClick={() => void loadMediaResources(true)}
+                >
+                  <SatelliteDish className={mediaLoading ? "spin" : ""} />
+                </button>
+                <button
+                  className="icon-button mini"
+                  type="button"
+                  title={t("mediaDownloadSelected")}
+                  aria-label={t("mediaDownloadSelected")}
+                  disabled={mediaDownloading || !mediaSelectedIds.size}
+                  onClick={() => void downloadSelectedMedia()}
+                >
+                  <Download />
+                </button>
+              </div>
+            </div>
+            {!mediaResources.length ? (
+              <div className="simple-empty">
+                <Images />
+                <strong>{mediaLoading ? t("mediaDetecting") : t("mediaEmpty")}</strong>
+                {!mediaLoading && <span>{t("mediaEmptyHelp")}</span>}
+              </div>
+            ) : (
+              <div className="media-list">
+                {visibleMediaResources.map((resource) => (
+                    <article className="media-row" key={resource.id}>
+                      <label className="media-select">
+                        <input
+                          type="checkbox"
+                          checked={mediaSelectedIds.has(resource.id)}
+                          onChange={() =>
+                            setMediaSelectedIds((current) => {
+                              const next = new Set(current);
+                              if (next.has(resource.id)) next.delete(resource.id);
+                              else next.add(resource.id);
+                              return next;
+                            })
+                          }
+                        />
+                      </label>
+                      <div className="media-preview">
+                        {resource.kind === "image" ? (
+                          <img src={resource.url} alt="" loading="lazy" />
+                        ) : resource.kind === "audio" ? (
+                          <audio controls preload="metadata" src={resource.url} />
+                        ) : (
+                          <video controls preload="metadata" src={resource.url} />
+                        )}
+                      </div>
+                      <div className="media-meta">
+                        <strong title={resource.name}>{resource.name}</strong>
+                        <a href={resource.url} target="_blank" rel="noreferrer" title={resource.url}>
+                          {resource.url}
+                        </a>
+                        <small>
+                          {resource.mimeType || resource.kind}
+                          {resource.width && resource.height
+                            ? ` · ${resource.width}×${resource.height}`
+                            : ""}
+                          {resource.duration
+                            ? ` · ${Math.round(resource.duration)}s`
+                            : ""}
+                          {resource.bytes
+                            ? ` · ${Math.round(resource.bytes / 1024)} KB`
+                            : ""}
+                          {resource.detail ? ` · ${resource.detail}` : ""}
+                        </small>
+                      </div>
+                      <button
+                        className="icon-button mini"
+                        type="button"
+                        title={t("mediaDownload")}
+                        aria-label={t("mediaDownload")}
+                        onClick={() => void downloadMediaResource(resource)}
+                      >
+                        <Download />
+                      </button>
+                    </article>
+                  ))}
               </div>
             )}
           </section>

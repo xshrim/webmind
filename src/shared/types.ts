@@ -200,6 +200,7 @@ export interface AppSettings {
   pictureInPictureVideoButtonEnabled: boolean;
   imageTextExtractionEnabled: boolean;
   imageTextExtractionMinSize: number;
+  mediaPreDetectionEnabled: boolean;
   articleExtractionRules: ArticleExtractionRule[];
   enabledToolIds: Record<ToolSurface, string[]>;
   chromeSyncEnabled: boolean;
@@ -359,6 +360,21 @@ export interface ArticlePreviewBlock {
   markdown?: string;
   sourceText?: string;
   targetId?: string;
+}
+
+export type MediaResourceKind = "image" | "audio" | "video";
+
+export interface MediaResource {
+  id: string;
+  kind: MediaResourceKind;
+  name: string;
+  url: string;
+  mimeType?: string;
+  width?: number;
+  height?: number;
+  duration?: number;
+  bytes?: number;
+  detail?: string;
 }
 
 export interface ArticleExtractionRule {

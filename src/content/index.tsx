@@ -119,6 +119,12 @@ import {
   shouldCloseFloatingResult
 } from "./floatingResult";
 import { setLinkTextSelectionEnabled } from "./linkTextSelection";
+import { isForceCopyEnabled, setForceCopyEnabled } from "./forceCopy";
+import {
+  cachedMediaResources,
+  detectMediaResources,
+  downloadPageMedia
+} from "./media";
 import { setSelectionMatchHighlightMode } from "./selectionHighlighter";
 import {
   setGithubCloneUrlRewriteBridgeEnabled,
@@ -4306,6 +4312,17 @@ function SelectionAssistant({ query }: { query: string | null }) {
 
 async function initialize(): Promise<void> {
   settings = await loadSettings();
+  const preDetectMedia = () => {
+    if (!settings?.mediaPreDetectionEnabled) return;
+    if (document.readyState === "complete") {
+      detectMediaResources();
+      return;
+    }
+    window.addEventListener("load", () => {
+      if (settings?.mediaPreDetectionEnabled) detectMediaResources();
+    }, { once: true });
+  };
+  preDetectMedia();
   const linkTextSelectionEnabled = () =>
     Boolean(
       settings?.linkTextSelectionEnabled &&
@@ -4476,6 +4493,7 @@ async function initialize(): Promise<void> {
       settings.selectionOverlayMinChars
     );
     syncGithubCloneUrlRewrite();
+    preDetectMedia();
     if (!selectionOverlayEnabled() || !selectionOverlayShortcutActive()) {
       showSelection?.(null);
     } else {
@@ -4510,6 +4528,26 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     }
     if (message.type === "page.screenshot.select") {
       return selectScreenshotArea();
+    }
+    if (message.type === "page.forceCopy.set") {
+      return { enabled: setForceCopyEnabled(Boolean(message.enabled)) };
+    }
+    if (message.type === "page.forceCopy.status") {
+      return { enabled: isForceCopyEnabled() };
+    }
+    if (message.type === "page.media.detect") {
+      return detectMediaResources();
+    }
+    if (message.type === "page.media.cached") {
+      return cachedMediaResources();
+    }
+    if (message.type === "page.media.download") {
+      return {
+        downloaded: downloadPageMedia(
+          String(message.url ?? ""),
+          String(message.name ?? "media")
+        )
+      };
     }
     if (message.type === "page.pictureInPicture.pick") {
       return startPictureInPictureSelection(settings?.interfaceLanguage);

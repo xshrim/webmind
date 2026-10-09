@@ -1947,6 +1947,31 @@ export function SettingsApp() {
                   </label>
                 )}
                 <div className="field">
+                  <span className="field-label">{t("mediaPreDetection")}</span>
+                  <div className="segmented segmented-wrap">
+                    {([
+                      [false, t("mediaPreDetectionOff")],
+                      [true, t("mediaPreDetectionOn")]
+                    ] as const).map(([enabled, label]) => (
+                      <button
+                        key={String(enabled)}
+                        className={
+                          settings.mediaPreDetectionEnabled === enabled
+                            ? "active"
+                            : ""
+                        }
+                        type="button"
+                        onClick={() =>
+                          void updatePreference("mediaPreDetectionEnabled", enabled)
+                        }
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  <small>{t("mediaPreDetectionHelp")}</small>
+                </div>
+                <div className="field">
                   <span className="field-label">{t("autoReply")}</span>
                   <div className="segmented segmented-wrap">
                     {([

@@ -5,6 +5,7 @@ import {
   FileText,
   History,
   ImagePlus,
+  Images,
   Languages,
   Lightbulb,
   ListTodo,
@@ -82,6 +83,7 @@ export const NAV_ITEMS = [
   { id: "tools" as const, labelKey: "navTools" as UiTextKey, icon: Wand2 },
   { id: "mcp" as const, labelKey: "navMcp" as UiTextKey, icon: Network },
   { id: "todos" as const, labelKey: "navTodos" as UiTextKey, icon: ListTodo },
+  { id: "media" as const, labelKey: "navMedia" as UiTextKey, icon: Images },
   { id: "history" as const, labelKey: "navHistory" as UiTextKey, icon: History },
   { id: "logs" as const, labelKey: "navLogs" as UiTextKey, icon: NotepadText }
 ];
