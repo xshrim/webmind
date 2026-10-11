@@ -15986,8 +15986,17 @@
     mediaEmpty: "Keine Medienressourcen gefunden",
     mediaEmptyHelp: "Mit Erkennen die aktuelle Seite erneut scannen.",
     mediaDownload: "Herunterladen",
+    mediaPauseDownload: "Download pausieren",
+    mediaResumeDownload: "Download fortsetzen",
     mediaDownloadSelected: "Auswahl herunterladen",
+    mediaDelete: "Medien entfernen",
+    mediaDeleteSelected: "Ausgew\xE4hlte Medien entfernen",
     mediaSelectAll: "Alle Medienressourcen ausw\xE4hlen",
+    mediaSubtitles: "Untertitel",
+    mediaNoSubtitles: "Keine Untertitel",
+    mediaRecordLive: "Livestream aufnehmen",
+    mediaStopRecording: "Aufnahme stoppen",
+    mediaLiveBatchNotice: "Live-Streams einzeln aufnehmen, damit die Aufnahme manuell beendet werden kann.",
     imageTextExtractionPrompt: "Extrahieren Sie den gesamten sichtbaren Text aus diesem Bild. Behalten Sie die Originalsprache bei und \xFCbersetzen Sie nicht; bewahren Sie Zeilenumbr\xFCche, Leserichtung, Listen und Tabellenstruktur so weit wie m\xF6glich. Geben Sie nur den extrahierten Text aus und f\xFCgen Sie keine Erkl\xE4rungen hinzu.",
     noImageTextFound: "Kein verwertbarer Text erkannt",
     retryAnswer: "Antwort erneut versuchen",
@@ -16718,8 +16727,17 @@
     mediaEmpty: "No se encontraron recursos multimedia",
     mediaEmptyHelp: "Pulsa detectar para volver a escanear la p\xE1gina actual.",
     mediaDownload: "Descargar",
+    mediaPauseDownload: "Pausar descarga",
+    mediaResumeDownload: "Reanudar descarga",
     mediaDownloadSelected: "Descargar seleccionados",
+    mediaDelete: "Quitar medio",
+    mediaDeleteSelected: "Quitar medios seleccionados",
     mediaSelectAll: "Seleccionar todos los recursos multimedia",
+    mediaSubtitles: "Subt\xEDtulos",
+    mediaNoSubtitles: "Sin subt\xEDtulos",
+    mediaRecordLive: "Grabar directo",
+    mediaStopRecording: "Detener grabaci\xF3n",
+    mediaLiveBatchNotice: "Graba las emisiones en directo por separado para poder detenerlas manualmente.",
     imageTextExtractionPrompt: "Extraer todo el texto visible de esta imagen. Mantener el idioma original y no traducir; conservar los saltos de l\xEDnea, el orden de lectura, las listas y la estructura de la tabla en la medida de lo posible. Mostrar \xFAnicamente el texto extra\xEDdo y no a\xF1adir explicaciones.",
     noImageTextFound: "No se reconoci\xF3 texto utilizable",
     retryAnswer: "Reintentar respuesta",
@@ -17450,8 +17468,17 @@
     mediaEmpty: "Aucune ressource m\xE9dia trouv\xE9e",
     mediaEmptyHelp: "Cliquez sur d\xE9tecter pour analyser \xE0 nouveau la page.",
     mediaDownload: "T\xE9l\xE9charger",
+    mediaPauseDownload: "Mettre le t\xE9l\xE9chargement en pause",
+    mediaResumeDownload: "Reprendre le t\xE9l\xE9chargement",
     mediaDownloadSelected: "T\xE9l\xE9charger la s\xE9lection",
+    mediaDelete: "Supprimer le m\xE9dia",
+    mediaDeleteSelected: "Supprimer les m\xE9dias s\xE9lectionn\xE9s",
     mediaSelectAll: "S\xE9lectionner toutes les ressources multim\xE9dias",
+    mediaSubtitles: "Sous-titres",
+    mediaNoSubtitles: "Sans sous-titres",
+    mediaRecordLive: "Enregistrer le direct",
+    mediaStopRecording: "Arr\xEAter l\u2019enregistrement",
+    mediaLiveBatchNotice: "Enregistrez les flux en direct s\xE9par\xE9ment pour pouvoir arr\xEAter l\u2019enregistrement manuellement.",
     imageTextExtractionPrompt: "Extraire tout le texte visible de cette image. Conserver la langue d'origine sans traduire ; pr\xE9server autant que possible les sauts de ligne, l'ordre de lecture, les listes et la structure des tableaux. Afficher uniquement le texte extrait, sans explications.",
     noImageTextFound: "Aucun texte exploitable n'a \xE9t\xE9 reconnu",
     retryAnswer: "R\xE9essayer",
@@ -18182,8 +18209,17 @@
     mediaEmpty: "Nessuna risorsa multimediale trovata",
     mediaEmptyHelp: "Premi rileva per analizzare di nuovo la pagina corrente.",
     mediaDownload: "Scarica",
+    mediaPauseDownload: "Metti in pausa il download",
+    mediaResumeDownload: "Riprendi il download",
     mediaDownloadSelected: "Scarica selezionati",
+    mediaDelete: "Rimuovi media",
+    mediaDeleteSelected: "Rimuovi media selezionati",
     mediaSelectAll: "Seleziona tutte le risorse multimediali",
+    mediaSubtitles: "Sottotitoli",
+    mediaNoSubtitles: "Senza sottotitoli",
+    mediaRecordLive: "Registra la diretta",
+    mediaStopRecording: "Ferma la registrazione",
+    mediaLiveBatchNotice: "Registra i flussi in diretta singolarmente per poter interrompere la registrazione manualmente.",
     imageTextExtractionPrompt: "Estrai tutto il testo visibile da questa immagine. Mantieni la lingua originale senza tradurre; preserva il pi\xF9 possibile le interruzioni di riga, l'ordine di lettura, gli elenchi e la struttura delle tabelle. Fornisci in output solo il testo estratto senza aggiungere spiegazioni.",
     noImageTextFound: "Nessun testo utilizzabile riconosciuto",
     retryAnswer: "Riprova a generare la risposta",
@@ -18945,8 +18981,17 @@
       mediaEmpty: "\u672A\u53D1\u73B0\u5A92\u4F53\u8D44\u6E90",
       mediaEmptyHelp: "\u70B9\u51FB\u63A2\u6D4B\u6309\u94AE\u91CD\u65B0\u626B\u63CF\u5F53\u524D\u9875\u9762\u3002",
       mediaDownload: "\u4E0B\u8F7D",
+      mediaPauseDownload: "\u6682\u505C\u4E0B\u8F7D",
+      mediaResumeDownload: "\u7EE7\u7EED\u4E0B\u8F7D",
       mediaDownloadSelected: "\u4E0B\u8F7D\u9009\u4E2D\u9879",
+      mediaDelete: "\u79FB\u9664\u5A92\u4F53",
+      mediaDeleteSelected: "\u79FB\u9664\u9009\u4E2D\u5A92\u4F53",
       mediaSelectAll: "\u5168\u9009\u5A92\u4F53\u8D44\u6E90",
+      mediaSubtitles: "\u5B57\u5E55",
+      mediaNoSubtitles: "\u4E0D\u6DFB\u52A0\u5B57\u5E55",
+      mediaRecordLive: "\u5F55\u5236\u76F4\u64AD",
+      mediaStopRecording: "\u505C\u6B62\u5F55\u5236",
+      mediaLiveBatchNotice: "\u76F4\u64AD\u6D41\u8BF7\u5355\u72EC\u5F55\u5236\uFF0C\u4EE5\u4FBF\u624B\u52A8\u505C\u6B62\u3002",
       imageTextExtractionPrompt: "\u8BF7\u63D0\u53D6\u8FD9\u5F20\u56FE\u7247\u4E2D\u6240\u6709\u53EF\u89C1\u6587\u5B57\u3002\u4FDD\u6301\u539F\u6587\u8BED\u8A00\uFF0C\u4E0D\u8981\u7FFB\u8BD1\uFF1B\u5C3D\u91CF\u4FDD\u7559\u6362\u884C\u3001\u9605\u8BFB\u987A\u5E8F\u3001\u5217\u8868\u548C\u8868\u683C\u7ED3\u6784\u3002\u53EA\u8F93\u51FA\u63D0\u53D6\u5230\u7684\u6587\u5B57\uFF0C\u4E0D\u8981\u89E3\u91CA\u3002",
       noImageTextFound: "\u672A\u8BC6\u522B\u5230\u53EF\u7528\u6587\u5B57",
       retryAnswer: "\u91CD\u65B0\u56DE\u7B54",
@@ -19675,8 +19720,17 @@
       mediaEmpty: "\u672A\u767C\u73FE\u5A92\u9AD4\u8CC7\u6E90",
       mediaEmptyHelp: "\u9EDE\u64CA\u63A2\u6E2C\u6309\u9215\u91CD\u65B0\u6383\u63CF\u76EE\u524D\u9801\u9762\u3002",
       mediaDownload: "\u4E0B\u8F09",
+      mediaPauseDownload: "\u66AB\u505C\u4E0B\u8F09",
+      mediaResumeDownload: "\u7E7C\u7E8C\u4E0B\u8F09",
       mediaDownloadSelected: "\u4E0B\u8F09\u9078\u53D6\u9805\u76EE",
+      mediaDelete: "\u79FB\u9664\u5A92\u9AD4",
+      mediaDeleteSelected: "\u79FB\u9664\u9078\u53D6\u5A92\u9AD4",
       mediaSelectAll: "\u5168\u9078\u5A92\u9AD4\u8CC7\u6E90",
+      mediaSubtitles: "\u5B57\u5E55",
+      mediaNoSubtitles: "\u4E0D\u52A0\u5165\u5B57\u5E55",
+      mediaRecordLive: "\u9304\u88FD\u76F4\u64AD",
+      mediaStopRecording: "\u505C\u6B62\u9304\u88FD",
+      mediaLiveBatchNotice: "\u76F4\u64AD\u4E32\u6D41\u8ACB\u55AE\u7368\u9304\u88FD\uFF0C\u624D\u80FD\u624B\u52D5\u505C\u6B62\u3002",
       imageTextExtractionPrompt: "\u8ACB\u63D0\u53D6\u9019\u5F35\u5716\u7247\u4E2D\u6240\u6709\u53EF\u898B\u6587\u5B57\u3002\u4FDD\u6301\u539F\u6587\u8A9E\u8A00\uFF0C\u4E0D\u8981\u7FFB\u8B6F\uFF1B\u76E1\u91CF\u4FDD\u7559\u63DB\u884C\u3001\u95B1\u8B80\u9806\u5E8F\u3001\u5217\u8868\u548C\u8868\u683C\u7D50\u69CB\u3002\u53EA\u8F38\u51FA\u63D0\u53D6\u5230\u7684\u6587\u5B57\uFF0C\u4E0D\u8981\u89E3\u91CB\u3002",
       noImageTextFound: "\u672A\u8B58\u5225\u5230\u53EF\u7528\u6587\u5B57",
       retryAnswer: "\u91CD\u65B0\u56DE\u7B54",
@@ -20405,8 +20459,17 @@
       mediaEmpty: "No media resources found",
       mediaEmptyHelp: "Select detect to scan the current page again.",
       mediaDownload: "Download",
+      mediaPauseDownload: "Pause download",
+      mediaResumeDownload: "Resume download",
       mediaDownloadSelected: "Download selected",
+      mediaDelete: "Remove media",
+      mediaDeleteSelected: "Remove selected media",
       mediaSelectAll: "Select all media resources",
+      mediaSubtitles: "Subtitles",
+      mediaNoSubtitles: "No subtitles",
+      mediaRecordLive: "Record live stream",
+      mediaStopRecording: "Stop recording",
+      mediaLiveBatchNotice: "Record live streams individually so you can stop them manually.",
       imageTextExtractionPrompt: "Extract all visible text from this image. Keep the original language and do not translate; preserve line breaks, reading order, lists, and table structure as much as possible. Output only the extracted text and do not explain.",
       noImageTextFound: "No usable text was recognized",
       retryAnswer: "Retry answer",
@@ -21135,8 +21198,17 @@
       mediaEmpty: "\u30E1\u30C7\u30A3\u30A2\u30EA\u30BD\u30FC\u30B9\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093",
       mediaEmptyHelp: "\u691C\u51FA\u30DC\u30BF\u30F3\u3067\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u3092\u518D\u30B9\u30AD\u30E3\u30F3\u3057\u307E\u3059\u3002",
       mediaDownload: "\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9",
+      mediaPauseDownload: "\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9\u3092\u4E00\u6642\u505C\u6B62",
+      mediaResumeDownload: "\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9\u3092\u518D\u958B",
       mediaDownloadSelected: "\u9078\u629E\u9805\u76EE\u3092\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9",
+      mediaDelete: "\u30E1\u30C7\u30A3\u30A2\u3092\u524A\u9664",
+      mediaDeleteSelected: "\u9078\u629E\u3057\u305F\u30E1\u30C7\u30A3\u30A2\u3092\u524A\u9664",
       mediaSelectAll: "\u30E1\u30C7\u30A3\u30A2\u30EA\u30BD\u30FC\u30B9\u3092\u3059\u3079\u3066\u9078\u629E",
+      mediaSubtitles: "\u5B57\u5E55",
+      mediaNoSubtitles: "\u5B57\u5E55\u306A\u3057",
+      mediaRecordLive: "\u30E9\u30A4\u30D6\u3092\u9332\u753B",
+      mediaStopRecording: "\u9332\u753B\u3092\u505C\u6B62",
+      mediaLiveBatchNotice: "\u30E9\u30A4\u30D6\u914D\u4FE1\u306F\u624B\u52D5\u3067\u505C\u6B62\u3067\u304D\u308B\u3088\u3046\u500B\u5225\u306B\u9332\u753B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
       imageTextExtractionPrompt: "\u3053\u306E\u753B\u50CF\u306B\u5199\u3063\u3066\u3044\u308B\u53EF\u8996\u30C6\u30AD\u30B9\u30C8\u3092\u3059\u3079\u3066\u62BD\u51FA\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u5143\u306E\u8A00\u8A9E\u3092\u7DAD\u6301\u3057\u3001\u7FFB\u8A33\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002\u6539\u884C\u3001\u8AAD\u307F\u9806\u3001\u7B87\u6761\u66F8\u304D\u3001\u8868\u69CB\u9020\u3092\u3067\u304D\u308B\u3060\u3051\u4FDD\u3061\u3001\u62BD\u51FA\u3057\u305F\u6587\u5B57\u3060\u3051\u3092\u51FA\u529B\u3057\u3066\u8AAC\u660E\u306F\u3057\u306A\u3044\u3067\u304F\u3060\u3055\u3044\u3002",
       noImageTextFound: "\u5229\u7528\u53EF\u80FD\u306A\u6587\u5B57\u304C\u8A8D\u8B58\u3055\u308C\u307E\u305B\u3093\u3067\u3057\u305F",
       retryAnswer: "\u518D\u56DE\u7B54",
@@ -21865,8 +21937,17 @@
       mediaEmpty: "\uBBF8\uB514\uC5B4 \uB9AC\uC18C\uC2A4\uB97C \uCC3E\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4",
       mediaEmptyHelp: "\uD0D0\uC9C0 \uBC84\uD2BC\uC744 \uB20C\uB7EC \uD604\uC7AC \uD398\uC774\uC9C0\uB97C \uB2E4\uC2DC \uC2A4\uCE94\uD558\uC138\uC694.",
       mediaDownload: "\uB2E4\uC6B4\uB85C\uB4DC",
+      mediaPauseDownload: "\uB2E4\uC6B4\uB85C\uB4DC \uC77C\uC2DC\uC911\uC9C0",
+      mediaResumeDownload: "\uB2E4\uC6B4\uB85C\uB4DC \uC7AC\uAC1C",
       mediaDownloadSelected: "\uC120\uD0DD \uD56D\uBAA9 \uB2E4\uC6B4\uB85C\uB4DC",
+      mediaDelete: "\uBBF8\uB514\uC5B4 \uC81C\uAC70",
+      mediaDeleteSelected: "\uC120\uD0DD\uD55C \uBBF8\uB514\uC5B4 \uC81C\uAC70",
       mediaSelectAll: "\uBBF8\uB514\uC5B4 \uB9AC\uC18C\uC2A4 \uBAA8\uB450 \uC120\uD0DD",
+      mediaSubtitles: "\uC790\uB9C9",
+      mediaNoSubtitles: "\uC790\uB9C9 \uC5C6\uC74C",
+      mediaRecordLive: "\uB77C\uC774\uBE0C \uB179\uD654",
+      mediaStopRecording: "\uB179\uD654 \uC911\uC9C0",
+      mediaLiveBatchNotice: "\uB77C\uC774\uBE0C \uC2A4\uD2B8\uB9BC\uC740 \uC218\uB3D9\uC73C\uB85C \uC911\uC9C0\uD560 \uC218 \uC788\uB3C4\uB85D \uAC1C\uBCC4 \uB179\uD654\uD558\uC138\uC694.",
       imageTextExtractionPrompt: "\uC774 \uC774\uBBF8\uC9C0\uC5D0 \uBCF4\uC774\uB294 \uBAA8\uB4E0 \uD14D\uC2A4\uD2B8\uB97C \uCD94\uCD9C\uD558\uC138\uC694. \uC6D0\uBB38 \uC5B8\uC5B4\uB97C \uC720\uC9C0\uD558\uACE0 \uBC88\uC5ED\uD558\uC9C0 \uB9C8\uC138\uC694. \uC904\uBC14\uAFC8, \uC77D\uAE30 \uC21C\uC11C, \uBAA9\uB85D, \uD45C \uAD6C\uC870\uB97C \uCD5C\uB300\uD55C \uBCF4\uC874\uD558\uACE0 \uCD94\uCD9C\uD55C \uD14D\uC2A4\uD2B8\uB9CC \uCD9C\uB825\uD558\uBA70 \uC124\uBA85\uC740 \uD558\uC9C0 \uB9C8\uC138\uC694.",
       noImageTextFound: "\uC0AC\uC6A9\uD560 \uC218 \uC788\uB294 \uD14D\uC2A4\uD2B8\uB97C \uC778\uC2DD\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4",
       retryAnswer: "\uB2E4\uC2DC \uB2F5\uBCC0",
@@ -28937,12 +29018,26 @@ ${index}. ${content.trim()}
     return response.result;
   }
 
+  // src/shared/id.ts
+  function uuidFromRandomValues(cryptoApi) {
+    if (typeof cryptoApi.getRandomValues !== "function") return null;
+    const bytes = cryptoApi.getRandomValues(new Uint8Array(16));
+    bytes[6] = bytes[6] & 15 | 64;
+    bytes[8] = bytes[8] & 63 | 128;
+    const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0"));
+    return `${hex.slice(0, 4).join("")}-${hex.slice(4, 6).join("")}-${hex.slice(6, 8).join("")}-${hex.slice(8, 10).join("")}-${hex.slice(10).join("")}`;
+  }
+  function createId(prefix = "", cryptoApi = globalThis.crypto) {
+    const id = typeof cryptoApi?.randomUUID === "function" && cryptoApi.randomUUID() || cryptoApi && uuidFromRandomValues(cryptoApi) || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+    return prefix ? `${prefix}-${id}` : id;
+  }
+
   // src/content/imageAttachments.ts
   function imageDataUrlToAttachment(dataUrl, fallbackName) {
     const match = dataUrl.match(/^data:([^;,]+);base64,(.+)$/i);
     if (!match) return null;
     return {
-      id: crypto.randomUUID(),
+      id: createId("image"),
       kind: "image",
       name: fallbackName,
       mimeType: match[1],
@@ -29487,10 +29582,21 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
     try {
       const pathname = new URL(url).pathname;
       const value = decodeURIComponent(pathname.split("/").pop() ?? "").trim();
-      return value || fallback;
+      return value && !/^blob$|^data$/i.test(value) ? value : fallback;
     } catch {
       return fallback;
     }
+  }
+  function isGenericMediaName(value) {
+    return /^original(?:\.[a-z0-9]{1,8})?$/i.test(value.trim());
+  }
+  function pageTitleFallback(kind) {
+    return document.title.trim() || kind;
+  }
+  function nameFromUrl(url, kind) {
+    const candidate = fileName(url, "");
+    if (isGenericMediaName(candidate) || /\.(?:m4s|m3u8|mpd)$/i.test(candidate)) return pageTitleFallback(kind);
+    return /\.[a-z0-9]{1,8}$/i.test(candidate) ? candidate : pageTitleFallback(kind);
   }
   function numberAttribute(element, name) {
     const value = Number(element.getAttribute(name));
@@ -29503,7 +29609,57 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
       element.getAttribute("title"),
       element.getAttribute("download")
     ].find((value) => value?.trim());
-    return label?.trim() || fileName(url, kind);
+    if (label?.trim() && !isGenericMediaName(label)) return label.trim();
+    return nameFromUrl(url, kind);
+  }
+  function mediaFormat(url, mimeType, kind) {
+    const pathname = url.split(/[?#]/, 1)[0];
+    const extension = pathname.match(/\.([a-z0-9]{1,8})$/i)?.[1];
+    if (extension) return extension.toLowerCase();
+    const subtype = mimeType?.split("/", 2)[1]?.split(";", 1)[0].trim();
+    if (subtype) {
+      const normalized = subtype.toLowerCase();
+      if (["octet-stream", "binary", "x-download"].includes(normalized)) return kind;
+      const aliases = {
+        jpeg: "jpg",
+        "svg+xml": "svg",
+        mpeg: kind === "audio" ? "mp3" : "mpeg",
+        mp4: kind === "audio" ? "m4a" : "mp4",
+        quicktime: "mov",
+        "x-matroska": "mkv",
+        "x-msvideo": "avi",
+        "x-mpegurl": "m3u8",
+        "vnd.apple.mpegurl": "m3u8",
+        "dash+xml": "mpd"
+      };
+      return aliases[normalized] || normalized;
+    }
+    return kind;
+  }
+  function filenameFormat(value) {
+    const match = value?.match(/\.([a-z0-9]{1,8})(?:[?#]|$)/i);
+    return match?.[1]?.toLowerCase() || "";
+  }
+  function contentDispositionFilename(value) {
+    if (!value) return "";
+    const encoded = value.match(/filename\*\s*=\s*UTF-8''([^;]+)/i)?.[1];
+    if (encoded) {
+      try {
+        return decodeURIComponent(encoded.replace(/^"|"$/g, ""));
+      } catch {
+        return encoded.replace(/^"|"$/g, "");
+      }
+    }
+    return value.match(/filename\s*=\s*"([^"]+)"/i)?.[1] || value.match(/filename\s*=\s*([^;]+)/i)?.[1]?.trim() || "";
+  }
+  function sourceTypeFor(element, url, rawUrl) {
+    const ownType = element.getAttribute("type") || void 0;
+    if (ownType || !(element instanceof HTMLMediaElement)) return ownType;
+    const source = Array.from(element.querySelectorAll("source")).find((item) => {
+      const sourceUrl = absoluteUrl(item.getAttribute("src"));
+      return sourceUrl === url || item.getAttribute("src") === rawUrl;
+    });
+    return source?.getAttribute("type") || element.querySelector("source[type]")?.getAttribute("type") || void 0;
   }
   function timingBytes(url) {
     const entry = performance.getEntriesByName(url).find(
@@ -29513,13 +29669,21 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
   }
   function kindFromResourceUrl(url, initiatorType) {
     const pathname = url.split(/[?#]/, 1)[0].toLowerCase();
+    if (initiatorType === "track" || /\.(?:srt|vtt|ttml)$/.test(pathname)) {
+      return "subtitle";
+    }
     if (initiatorType === "img" || /\.(?:avif|bmp|gif|ico|jpe?g|png|svg|webp)$/.test(pathname)) {
       return "image";
     }
     if (initiatorType === "audio" || /\.(?:aac|flac|m4a|mp3|oga|ogg|opus|wav)$/.test(pathname)) {
       return "audio";
     }
-    if (initiatorType === "video" || /\.(?:3gp|m4v|mkv|mov|mp4|mpeg|mpg|ogv|webm|m3u8|mpd)$/.test(pathname)) {
+    if (/\.(?:m4s)$/.test(pathname)) {
+      if (/[?&](?:mime|type)=audio(?:%2f|\/)/.test(url.toLowerCase())) return "audio";
+      if (/(?:audio|sound|30216|30232)(?:[-_.]|$)/.test(pathname)) return "audio";
+      return "video";
+    }
+    if (initiatorType === "video" || /\.(?:3gp|m4v|mkv|mov|mp4|mpeg|mpg|ogv|webm|m3u8|mpd|ts|f4v)$/.test(pathname)) {
       return "video";
     }
     return null;
@@ -29530,17 +29694,20 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
     const key = `${kind}:${url}`;
     if (resources.has(key)) return;
     const media = element;
+    const mimeType = sourceTypeFor(element, url, rawUrl);
     const resource = {
-      id: crypto.randomUUID(),
+      id: createId("media"),
       kind,
       name: resourceName(element, url, kind),
       url,
-      mimeType: element.getAttribute("type") || void 0,
+      format: mediaFormat(url, mimeType, kind),
+      mimeType,
       width: element instanceof HTMLImageElement ? element.naturalWidth || numberAttribute(element, "width") : element instanceof HTMLVideoElement ? element.videoWidth || numberAttribute(element, "width") : void 0,
       height: element instanceof HTMLImageElement ? element.naturalHeight || numberAttribute(element, "height") : element instanceof HTMLVideoElement ? element.videoHeight || numberAttribute(element, "height") : void 0,
       duration: (element instanceof HTMLAudioElement || element instanceof HTMLVideoElement) && Number.isFinite(element.duration) && element.duration > 0 ? element.duration : void 0,
       bytes: timingBytes(url),
-      detail: element instanceof HTMLMediaElement ? element.getAttribute("type") || void 0 : void 0
+      detail: mimeType,
+      frameId: 0
     };
     resources.set(key, resource);
   }
@@ -29568,12 +29735,14 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
       if (resources.has(key)) return;
       const manifest = /\.(?:m3u8|mpd)(?:[?#]|$)/i.test(entry.name);
       resources.set(key, {
-        id: crypto.randomUUID(),
+        id: createId("media"),
         kind,
-        name: fileName(entry.name, kind),
+        name: nameFromUrl(entry.name, kind),
         url: entry.name,
+        format: mediaFormat(entry.name, void 0, kind),
         bytes: entry.encodedBodySize || entry.decodedBodySize || entry.transferSize || void 0,
-        detail: manifest ? "HLS/DASH manifest" : void 0
+        detail: manifest ? "HLS/DASH manifest" : void 0,
+        frameId: 0
       });
     });
     cachedResources = Array.from(resources.values());
@@ -29582,8 +29751,8 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
   function cachedMediaResources() {
     return cachedResources;
   }
-  function downloadPageMedia(url, name) {
-    if (!/^blob:|^data:/i.test(url)) return false;
+  async function downloadPageMedia(url, name) {
+    if (!/^(?:https?|blob|data):/i.test(url)) return false;
     const anchor = document.createElement("a");
     anchor.href = url;
     anchor.download = name;
@@ -29593,6 +29762,72 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
     anchor.click();
     anchor.remove();
     return true;
+  }
+  async function previewPageMedia(url, kind) {
+    try {
+      if (/^data:/i.test(url)) {
+        const mimeType = url.slice(5, url.indexOf(",")).split(";", 1)[0] || void 0;
+        return { dataUrl: url, mimeType, format: mediaFormat("", mimeType, kind) };
+      }
+      if (!/^blob:/i.test(url)) {
+        const response2 = await fetch(url, {
+          method: "HEAD",
+          credentials: "include"
+        });
+        const mimeType = response2.headers.get("content-type")?.split(";", 1)[0] || void 0;
+        return mimeType ? { dataUrl: "", mimeType, format: mediaFormat(url, mimeType, kind) } : null;
+      }
+      const response = await fetch(url);
+      if (!response.ok) return null;
+      const responseMimeType = response.headers.get("content-type")?.split(";", 1)[0] || "";
+      const blob = await response.blob();
+      const blobMimeType = blob.type || responseMimeType || void 0;
+      const blobKind = blobMimeType?.startsWith("audio/") ? "audio" : blobMimeType?.startsWith("video/") ? "video" : kind;
+      if (!blob.size) return null;
+      if (blob.size > 64 * 1024 * 1024) {
+        return {
+          dataUrl: "",
+          mimeType: blobMimeType,
+          format: mediaFormat("", blobMimeType, blobKind)
+        };
+      }
+      const dataUrl = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(typeof reader.result === "string" ? reader.result : "");
+        reader.onerror = () => resolve("");
+        reader.readAsDataURL(blob);
+      });
+      if (!dataUrl) return null;
+      return {
+        dataUrl,
+        mimeType: blobMimeType,
+        format: mediaFormat("", blobMimeType, blobKind)
+      };
+    } catch {
+      return null;
+    }
+  }
+  async function probePageMedia(url, kind) {
+    if (!url || /^blob:|^data:/i.test(url)) return null;
+    try {
+      const response = await fetch(url, {
+        method: "HEAD",
+        credentials: "include",
+        redirect: "follow"
+      });
+      const mimeType = response.headers.get("content-type")?.split(";", 1)[0] || void 0;
+      const headerName = contentDispositionFilename(response.headers.get("content-disposition"));
+      const format = filenameFormat(headerName) || mediaFormat(url, mimeType, kind);
+      const bytes = Number(response.headers.get("content-length")) || void 0;
+      return {
+        mimeType,
+        format: format === kind ? void 0 : format,
+        name: headerName || void 0,
+        bytes
+      };
+    } catch {
+      return null;
+    }
   }
 
   // src/content/selectionHighlighter.ts
@@ -35651,7 +35886,7 @@ ${text2}`;
     const beginImmersiveRun = () => {
       immersiveRunRef.current?.controller.abort();
       const run = {
-        id: crypto.randomUUID(),
+        id: createId(),
         controller: new AbortController()
       };
       immersiveRunRef.current = run;
@@ -36351,7 +36586,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
         if (tool.id === "ask-selection") {
           const targetRect = snapshot.rect;
           const pending = {
-            id: crypto.randomUUID(),
+            id: createId(),
             action: "ask",
             createdAt: Date.now(),
             contextScope: "selection",
@@ -36491,7 +36726,7 @@ ${t("currentResultLabel")}\uFF1A` : "",
     const openSearch = async () => {
       if (!query) return;
       const pending = {
-        id: crypto.randomUUID(),
+        id: createId(),
         action: "ask",
         createdAt: Date.now(),
         text: `${t("researchSearchPrefix")}\uFF1A${query}`,
@@ -37513,7 +37748,7 @@ ${t("currentResultLabel")}\uFF1A` : "",
     const runImageTextExtraction = async (triggerButton) => {
       const target = imageTextTarget;
       if (!target || imageTextBusy || !target.element.isConnected) return;
-      const runId = crypto.randomUUID();
+      const runId = createId();
       imageTextRunRef.current = runId;
       if (triggerButton) triggerButton.style.visibility = "hidden";
       const capturePromise = runtimeRequest2(
@@ -38565,11 +38800,23 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       }
       if (message.type === "page.media.download") {
         return {
-          downloaded: downloadPageMedia(
+          downloaded: await downloadPageMedia(
             String(message.url ?? ""),
             String(message.name ?? "media")
           )
         };
+      }
+      if (message.type === "page.media.preview") {
+        return previewPageMedia(
+          String(message.url ?? ""),
+          message.kind === "audio" || message.kind === "video" ? message.kind : "image"
+        );
+      }
+      if (message.type === "page.media.probe") {
+        return probePageMedia(
+          String(message.url ?? ""),
+          message.kind === "audio" || message.kind === "video" ? message.kind : "image"
+        );
       }
       if (message.type === "page.pictureInPicture.pick") {
         return startPictureInPictureSelection(settings?.interfaceLanguage);

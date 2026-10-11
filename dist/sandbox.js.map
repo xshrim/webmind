@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/sandbox/main.ts"],
+  "sourcesContent": ["// Chrome only permits dynamically generated player transforms in a sandboxed\n// extension page. The offscreen page cannot evaluate arbitrary code itself.\nwindow.addEventListener(\"message\", async (event) => {\n  const message = event.data as { op?: string; id?: number; code?: string } | undefined;\n  if (message?.op !== \"eval\" || typeof message.id !== \"number\" || typeof message.code !== \"string\") return;\n  try {\n    const result = await new Function(message.code)();\n    event.source?.postMessage({ op: \"result\", id: message.id, result }, { targetOrigin: \"*\" });\n  } catch (error) {\n    event.source?.postMessage({\n      op: \"result\",\n      id: message.id,\n      error: error instanceof Error ? error.message : String(error)\n    }, { targetOrigin: \"*\" });\n  }\n});\n\nwindow.parent.postMessage({ op: \"ready\" }, { targetOrigin: \"*\" });\n"],
+  "mappings": ";;;AAEA,SAAO,iBAAiB,WAAW,OAAO,UAAU;AAClD,UAAM,UAAU,MAAM;AACtB,QAAI,SAAS,OAAO,UAAU,OAAO,QAAQ,OAAO,YAAY,OAAO,QAAQ,SAAS,SAAU;AAClG,QAAI;AACF,YAAM,SAAS,MAAM,IAAI,SAAS,QAAQ,IAAI,EAAE;AAChD,YAAM,QAAQ,YAAY,EAAE,IAAI,UAAU,IAAI,QAAQ,IAAI,OAAO,GAAG,EAAE,cAAc,IAAI,CAAC;AAAA,IAC3F,SAAS,OAAO;AACd,YAAM,QAAQ,YAAY;AAAA,QACxB,IAAI;AAAA,QACJ,IAAI,QAAQ;AAAA,QACZ,OAAO,iBAAiB,QAAQ,MAAM,UAAU,OAAO,KAAK;AAAA,MAC9D,GAAG,EAAE,cAAc,IAAI,CAAC;AAAA,IAC1B;AAAA,EACF,CAAC;AAED,SAAO,OAAO,YAAY,EAAE,IAAI,QAAQ,GAAG,EAAE,cAAc,IAAI,CAAC;",
+  "names": []
+}

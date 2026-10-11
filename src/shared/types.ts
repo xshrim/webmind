@@ -362,19 +362,71 @@ export interface ArticlePreviewBlock {
   targetId?: string;
 }
 
-export type MediaResourceKind = "image" | "audio" | "video";
+export type MediaResourceKind = "image" | "audio" | "video" | "subtitle";
+
+export interface MediaVariant {
+  id?: string;
+  url: string;
+  format: string;
+  width?: number;
+  height?: number;
+  bitrate?: number;
+  quality?: string;
+  mimeType?: string;
+  bytes?: number;
+  representationId?: string;
+  audioUrl?: string;
+  audioRepresentationId?: string;
+  subtitleGroupId?: string;
+  requestUrls?: string[];
+}
+
+export interface MediaSubtitleTrack {
+  id: string;
+  name: string;
+  url: string;
+  format: string;
+  language?: string;
+  groupId?: string;
+  streamType: "hls" | "dash";
+  representationId?: string;
+}
+
+export interface CapturedMediaTrack {
+  url: string;
+  kind: "audio" | "video";
+  mimeType?: string;
+  bytes?: number;
+  frameId?: number;
+}
 
 export interface MediaResource {
   id: string;
   kind: MediaResourceKind;
   name: string;
   url: string;
+  format: string;
   mimeType?: string;
   width?: number;
   height?: number;
   duration?: number;
   bytes?: number;
   detail?: string;
+  variants?: MediaVariant[];
+  audioUrl?: string;
+  isComposite?: boolean;
+  manifestUrl?: string;
+  streamType?: "hls" | "dash";
+  representationId?: string;
+  audioRepresentationId?: string;
+  isLive?: boolean;
+  subtitles?: MediaSubtitleTrack[];
+  selectedSubtitleId?: string;
+  capturedTracks?: CapturedMediaTrack[];
+  requestUrls?: string[];
+  processingError?: string;
+  /** Frame that owns the page media element; top-level documents use zero. */
+  frameId?: number;
 }
 
 export interface ArticleExtractionRule {

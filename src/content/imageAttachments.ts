@@ -1,5 +1,6 @@
 import { runtimeRequest } from "../shared/browser";
 import type { ImageAttachment } from "../shared/types";
+import { createId } from "../shared/id";
 
 export function imageDataUrlToAttachment(
   dataUrl: string,
@@ -8,7 +9,7 @@ export function imageDataUrlToAttachment(
   const match = dataUrl.match(/^data:([^;,]+);base64,(.+)$/i);
   if (!match) return null;
   return {
-    id: crypto.randomUUID(),
+    id: createId("image"),
     kind: "image",
     name: fallbackName,
     mimeType: match[1],

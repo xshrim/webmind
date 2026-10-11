@@ -9,10 +9,13 @@
     "activeTab",
     "cookies",
     "contextMenus",
+    "declarativeNetRequest",
     "downloads",
+    "offscreen",
     "scripting",
     "sidePanel",
-    "storage"
+    "storage",
+    "webRequest"
   ],
   "host_permissions": [
     "<all_urls>"
@@ -28,6 +31,12 @@
     "default_path": "sidepanel.html"
   },
   "options_page": "options.html",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
+  "sandbox": {
+    "pages": ["sandbox.html"]
+  },
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],

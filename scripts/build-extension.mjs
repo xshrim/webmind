@@ -28,5 +28,17 @@ await Promise.all([
     entryPoints: ["src/content/githubCloneBridge.ts"],
     outfile: "dist/githubCloneBridge.js",
     format: "iife"
+  }),
+  build({
+    ...shared,
+    entryPoints: ["src/offscreen/main.ts"],
+    outfile: "dist/offscreen.js",
+    format: "iife"
+  }),
+  build({
+    ...shared,
+    entryPoints: ["src/sandbox/main.ts"],
+    outfile: "dist/sandbox.js",
+    format: "iife"
   })
 ]);

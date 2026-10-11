@@ -123,7 +123,9 @@ import { isForceCopyEnabled, setForceCopyEnabled } from "./forceCopy";
 import {
   cachedMediaResources,
   detectMediaResources,
-  downloadPageMedia
+  downloadPageMedia,
+  previewPageMedia,
+  probePageMedia
 } from "./media";
 import { setSelectionMatchHighlightMode } from "./selectionHighlighter";
 import {
@@ -179,6 +181,7 @@ import {
   runImmersiveTranslationWorkflow
 } from "../shared/immersiveWorkflow";
 import { Markdown } from "../ui/Markdown";
+import { createId } from "../shared/id";
 import { PAGE_STYLES, SHADOW_STYLES } from "./styles";
 import {
   cancelPictureInPictureSelection,
@@ -1270,7 +1273,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
   const beginImmersiveRun = () => {
     immersiveRunRef.current?.controller.abort();
     const run = {
-      id: crypto.randomUUID(),
+      id: createId(),
       controller: new AbortController()
     };
     immersiveRunRef.current = run;
@@ -2103,7 +2106,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
       if (tool.id === "ask-selection") {
         const targetRect = snapshot.rect;
         const pending: PendingAction = {
-          id: crypto.randomUUID(),
+          id: createId(),
           action: "ask",
           createdAt: Date.now(),
           contextScope: "selection",
@@ -2258,7 +2261,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
   const openSearch = async () => {
     if (!query) return;
     const pending: PendingAction = {
-      id: crypto.randomUUID(),
+      id: createId(),
       action: "ask",
       createdAt: Date.now(),
       text: `${t("researchSearchPrefix")}：${query}`,
@@ -3405,7 +3408,7 @@ function SelectionAssistant({ query }: { query: string | null }) {
   const runImageTextExtraction = async (triggerButton?: HTMLButtonElement) => {
     const target = imageTextTarget;
     if (!target || imageTextBusy || !target.element.isConnected) return;
-    const runId = crypto.randomUUID();
+    const runId = createId();
     imageTextRunRef.current = runId;
     if (triggerButton) triggerButton.style.visibility = "hidden";
     const capturePromise = runtimeRequest<{ dataUrl: string }>(
@@ -4543,11 +4546,23 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     }
     if (message.type === "page.media.download") {
       return {
-        downloaded: downloadPageMedia(
+        downloaded: await downloadPageMedia(
           String(message.url ?? ""),
           String(message.name ?? "media")
         )
       };
+    }
+    if (message.type === "page.media.preview") {
+      return previewPageMedia(
+        String(message.url ?? ""),
+        message.kind === "audio" || message.kind === "video" ? message.kind : "image"
+      );
+    }
+    if (message.type === "page.media.probe") {
+      return probePageMedia(
+        String(message.url ?? ""),
+        message.kind === "audio" || message.kind === "video" ? message.kind : "image"
+      );
     }
     if (message.type === "page.pictureInPicture.pick") {
       return startPictureInPictureSelection(settings?.interfaceLanguage);

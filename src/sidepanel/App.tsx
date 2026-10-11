@@ -29,7 +29,9 @@ import {
   Mouse,
   Paperclip,
   PanelTop,
+  Pause,
   PictureInPicture2,
+  Play,
   PenLine,
   Presentation,
   QrCode,
@@ -78,6 +80,7 @@ import {
   type UiTextKey
 } from "../shared/i18n";
 import { TooltipLayer } from "./TooltipLayer";
+import { createBilibiliMediaResource, type BilibiliDashInfo } from "../shared/bilibiliMedia";
 import {
   clearConversations,
   consumePendingAction,
@@ -184,6 +187,7 @@ import {
   runImmersiveTranslationWorkflow
 } from "../shared/immersiveWorkflow";
 import { SyntaxHighlightedMarkdown } from "./SyntaxHighlightedMarkdown";
+import { StreamMediaPreview } from "./StreamMediaPreview";
 import { extractPdfContext } from "./pdf";
 import { searchWeb } from "../shared/webSearch";
 import {
@@ -230,6 +234,43 @@ import {
 } from "./customIcons";
 
 type ViewId = "chat" | "tools" | "todos" | "mcp" | "media" | "history" | "logs";
+
+function isOriginalMediaName(value: string | undefined): boolean {
+  return /^original(?:\.[a-z0-9]{1,8})?$/i.test(value?.trim() ?? "");
+}
+
+function mediaResourceName(
+  value: string,
+  pageTitle: string | undefined,
+  kind: MediaResourceKind
+): string {
+  return isOriginalMediaName(value) ? pageTitle?.trim() || kind : value;
+}
+
+function mediaFileName(value: string | undefined): string | undefined {
+  const name = value?.trim();
+  return name && !isOriginalMediaName(name) && /\.[a-z0-9]{1,8}$/i.test(name)
+    ? name
+    : undefined;
+}
+
+function mediaDisplayName(value: string, format: string): string {
+  const extension = format.replace(/[^a-z0-9]/gi, "").toLowerCase();
+  if (!extension || ["image", "audio", "video", "subtitle"].includes(extension)) return value;
+  const name = value.trim() || "media";
+  return name.toLowerCase().endsWith(`.${extension}`)
+    ? name
+    : `${name.replace(/\.[a-z0-9]{1,8}$/i, "")}.${extension}`;
+}
+
+function capturedMediaUrl(
+  resource: MediaResource,
+  kind: "audio" | "video"
+): string | undefined {
+  return resource.capturedTracks?.find((track) =>
+    track.kind === kind && /^https?:/i.test(track.url)
+  )?.url;
+}
 
 function todoSourceLabel(todo: TodoItem, language?: AppLanguage): string {
   if (!todo.source?.url) return uiText(language, "todoCreatedManually");
@@ -440,7 +481,26 @@ export function App() {
   const [mediaSelectedIds, setMediaSelectedIds] = useState<Set<string>>(
     () => new Set()
   );
+  const [mediaPreviewUrls, setMediaPreviewUrls] = useState<Record<string, string>>({});
+  const mediaPreviewRequestedRef = useRef(new Set<string>());
+  const mediaTabCacheRef = useRef(new Map<number, {
+    resources: MediaResource[];
+    previews: Record<string, string>;
+  }>());
+  const mediaResourcesTabIdRef = useRef<number | null>(null);
   const [mediaDownloading, setMediaDownloading] = useState(false);
+  const [completedMediaDownloadIds, setCompletedMediaDownloadIds] = useState<Set<string>>(() => new Set());
+  const [mediaDownloadProgress, setMediaDownloadProgress] = useState<Record<string, {
+    phase: "processing" | "downloading";
+    progress?: number;
+    speed?: number;
+    updatedAt?: number;
+    paused?: boolean;
+  }>>({});
+  const mediaResourceBytesRef = useRef(new Map<string, number>());
+  const [recordingMediaIds, setRecordingMediaIds] = useState<Set<string>>(() => new Set());
+  const recordingMediaControllersRef = useRef(new Map<string, AbortController>());
+  const mediaDownloadControllersRef = useRef(new Map<string, AbortController>());
   const [todoFilter, setTodoFilter] = useState<"all" | TodoStatus>("open");
   const [todoQuery, setTodoQuery] = useState("");
   const [expandedTodoIds, setExpandedTodoIds] = useState<Set<string>>(
@@ -2293,14 +2353,87 @@ export function App() {
   const loadMediaResources = async (force = false) => {
     const tabId = activeTab?.id;
     if (!tabId) return;
+    const cached = !force ? mediaTabCacheRef.current.get(tabId) : undefined;
+    if (cached) {
+      mediaResourcesTabIdRef.current = tabId;
+      setMediaResources(cached.resources);
+      setMediaPreviewUrls(cached.previews);
+      setMediaSelectedIds(new Set());
+      return;
+    }
+    mediaResourcesTabIdRef.current = tabId;
+    setMediaResources([]);
+    setMediaPreviewUrls({});
+    setMediaSelectedIds(new Set());
+    mediaPreviewRequestedRef.current.clear();
     setMediaLoading(true);
     try {
-      const resources = await sendToTab<MediaResource[]>(tabId, {
+      let resources = await sendToTab<MediaResource[]>(tabId, {
         type: force ? "page.media.detect" : "page.media.cached"
       }, settingsRef.current?.interfaceLanguage);
+      if (!force && !resources?.some((item) => item.kind === "audio" || item.kind === "video")) {
+        resources = await sendToTab<MediaResource[]>(tabId, {
+          type: "page.media.detect"
+        }, settingsRef.current?.interfaceLanguage);
+      }
+      const pageResources = Array.isArray(resources) ? resources : [];
+      resources = pageResources;
+      const captured = await runtimeRequest<Array<{
+        url: string;
+        frameId: number;
+        kind: "manifest" | "audio" | "video";
+        mimeType?: string;
+        bytes?: number;
+        time: number;
+      }>>("media.capture.list", { tabId }, settingsRef.current?.interfaceLanguage).catch(() => []);
+      await runtimeRequest("media.context", {
+        pageUrl: activeTab?.url || "",
+        tabId,
+        urls: [...pageResources.map((item) => item.url), ...captured.map((item) => item.url)]
+      }, settingsRef.current?.interfaceLanguage).catch(() => undefined);
+      if (Array.isArray(resources)) {
+        const { inspectStreamingResources } = await import("./streamingMedia");
+        resources = await inspectStreamingResources(resources, activeTab?.url || "", captured);
+      }
+      let isBilibili = false;
+      try {
+        isBilibili = /(?:^|\.)(?:bilibili\.com|b23\.tv)$/i.test(
+          new URL(activeTab?.url ?? "").hostname
+        );
+      } catch {
+        isBilibili = false;
+      }
+      if (isBilibili) {
+        try {
+          const dash = await runtimeRequest<BilibiliDashInfo | null>("media.bilibili", {
+            tabId
+          }, settingsRef.current?.interfaceLanguage);
+          if (dash) resources = createBilibiliMediaResource(resources, dash);
+        } catch {
+          // Keep ordinary page media available if the player has no DASH data.
+        }
+      }
+      await runtimeRequest("media.context", {
+        pageUrl: activeTab?.url || "",
+        tabId,
+        urls: resources.flatMap((item) => [item.url, item.manifestUrl, item.audioUrl,
+          ...(item.variants ?? []).flatMap((variant) => [variant.url, variant.audioUrl, ...(variant.requestUrls ?? [])]),
+          ...(item.capturedTracks ?? []).map((track) => track.url),
+          ...(item.requestUrls ?? []),
+          ...(item.subtitles ?? []).map((track) => track.url),
+          ...captured.map((request) => request.url)]).filter(Boolean)
+      }, settingsRef.current?.interfaceLanguage).catch(() => undefined);
       if (activeTabIdRef.current === tabId) {
-        setMediaResources(Array.isArray(resources) ? resources : []);
+        const nextResources = Array.isArray(resources) ? resources : [];
+        mediaResourcesTabIdRef.current = tabId;
+        mediaTabCacheRef.current.set(tabId, { resources: nextResources, previews: {} });
+        setMediaResources(nextResources);
+        void runtimeRequest("media.download.status", {
+          resourceIds: nextResources.map((resource) => resource.id)
+        }, settingsRef.current?.interfaceLanguage).catch(() => undefined);
         setMediaSelectedIds(new Set());
+        setMediaPreviewUrls({});
+        mediaPreviewRequestedRef.current.clear();
       }
     } catch (error) {
       setNotice(errorMessage(error));
@@ -2310,20 +2443,178 @@ export function App() {
     }
   };
 
-  const downloadMediaResource = async (resource: MediaResource) => {
-    try {
-      if (/^(blob:|data:)/i.test(resource.url) && activeTab?.id) {
-        await sendToTab(activeTab.id, {
-          type: "page.media.download",
-          url: resource.url,
-          name: resource.name
-        }, settingsRef.current?.interfaceLanguage);
-      } else {
-        await runtimeRequest("media.download", {
-          url: resource.url,
-          name: resource.name
-        }, settingsRef.current?.interfaceLanguage);
+  const downloadMediaResource = async (resource: MediaResource, fromBatch = false) => {
+    setCompletedMediaDownloadIds((current) => {
+      const next = new Set(current);
+      next.delete(resource.id);
+      return next;
+    });
+    const isYouTubeVideo = resource.kind === "video" && (() => {
+      try {
+        const host = new URL(activeTab?.url || "").hostname.toLowerCase();
+        return host === "youtube.com" || host.endsWith(".youtube.com") || host === "youtu.be";
+      } catch {
+        return false;
       }
+    })();
+    setMediaDownloadProgress((current) => ({
+      ...current,
+      [resource.id]: {
+        phase: resource.streamType || resource.isComposite || resource.capturedTracks?.length || isYouTubeVideo ? "processing" : "downloading",
+        progress: 0,
+        paused: false
+      }
+    }));
+    if (resource.streamType || resource.isComposite || resource.capturedTracks?.length || isYouTubeVideo) {
+      const recordingController = recordingMediaControllersRef.current.get(resource.id);
+      if (recordingController && !fromBatch) {
+        recordingController.abort();
+        return;
+      }
+      const isLiveRecording = Boolean(resource.isLive && !fromBatch);
+      if (resource.isLive && fromBatch) {
+        setNotice(t("mediaLiveBatchNotice"));
+        return;
+      }
+      const controller = new AbortController();
+      mediaDownloadControllersRef.current.set(resource.id, controller);
+      if (isLiveRecording) {
+        recordingMediaControllersRef.current.set(resource.id, controller);
+        setRecordingMediaIds((current) => new Set(current).add(resource.id));
+        setMediaDownloading(true);
+      } else if (!fromBatch) {
+        setMediaDownloading(true);
+      }
+      try {
+        const { downloadStreamingMedia } = await import("./streamingMedia");
+        await downloadStreamingMedia(
+          resource,
+          resource.name,
+          activeTab?.url || "",
+          controller.signal,
+          activeTab?.id
+        );
+      } catch (error) {
+        setMediaDownloadProgress((current) => {
+          const next = { ...current };
+          delete next[resource.id];
+          return next;
+        });
+        if (!controller.signal.aborted) {
+          setNotice(errorMessage(error));
+          appendOperationLog(errorMessage(error), "error");
+        }
+      } finally {
+        mediaDownloadControllersRef.current.delete(resource.id);
+        if (isLiveRecording) {
+          recordingMediaControllersRef.current.delete(resource.id);
+          setRecordingMediaIds((current) => {
+            const next = new Set(current);
+            next.delete(resource.id);
+            return next;
+          });
+        }
+        if (!fromBatch || isLiveRecording) setMediaDownloading(false);
+      }
+      return;
+    }
+    let format = resource.format;
+    let mimeType = resource.mimeType;
+    let resourceName = mediaResourceName(resource.name, activeTab?.title, resource.kind);
+    if (
+      (resource.kind === "audio" || resource.kind === "video") &&
+      format === resource.kind &&
+      /^https?:/i.test(resource.url)
+    ) {
+      try {
+        const probe = await runtimeRequest<{
+          mimeType?: string;
+          format?: string;
+          name?: string;
+        } | null>("media.probe", {
+          url: resource.url,
+          kind: resource.kind
+        }, settingsRef.current?.interfaceLanguage);
+        const probeName = mediaFileName(probe?.name);
+        format = probe?.format || format;
+        mimeType = probe?.mimeType || mimeType;
+        resourceName = probeName || resourceName;
+        if (probe?.format || probe?.mimeType || probe?.name) {
+          setMediaResources((current) =>
+            current.map((item) =>
+              item.id === resource.id
+                ? {
+                    ...item,
+                    name: probeName || mediaResourceName(item.name, activeTab?.title, item.kind),
+                    mimeType: probe.mimeType || item.mimeType,
+                    format: probe.format || item.format
+                  }
+                : item
+            )
+          );
+        }
+      } catch {
+        // The page-context probe below remains available for same-origin media.
+      }
+    }
+    const extension = format && format !== resource.kind
+      ? format.replace(/[^a-z0-9]+/gi, "").toLowerCase()
+      : "";
+    const name = /\.[a-z0-9]{1,8}$/i.test(resourceName)
+      ? resourceName
+      : `${resourceName || resource.kind}${extension ? `.${extension}` : ""}`;
+    try {
+      if (/^(blob|data):/i.test(resource.url)) {
+        const preview = mediaPreviewUrls[resource.id];
+        if (preview && activeTab?.id) {
+          const fallback = await sendToTab<{ downloaded?: boolean }>(activeTab.id, {
+            type: "page.media.download",
+            url: preview,
+            name
+          }, settingsRef.current?.interfaceLanguage);
+          if (fallback?.downloaded) {
+            setCompletedMediaDownloadIds((current) => new Set(current).add(resource.id));
+            setMediaDownloadProgress((current) => {
+              const next = { ...current };
+              delete next[resource.id];
+              return next;
+            });
+            return;
+          }
+        }
+        throw new Error("Media download failed");
+      }
+      await runtimeRequest("media.download", {
+        url: resource.url,
+        name,
+        resourceId: resource.id,
+        expectedBytes: resource.bytes,
+        format,
+        mimeType,
+        pageUrl: activeTab?.url
+      }, settingsRef.current?.interfaceLanguage);
+    } catch (error) {
+      setMediaDownloadProgress((current) => {
+        const next = { ...current };
+        delete next[resource.id];
+        return next;
+      });
+      setNotice(errorMessage(error));
+      appendOperationLog(errorMessage(error), "error");
+    }
+  };
+
+  const controlMediaDownload = async (resource: MediaResource) => {
+    const progress = mediaDownloadProgress[resource.id];
+    if (!progress) {
+      await downloadMediaResource(resource);
+      return;
+    }
+    try {
+      await runtimeRequest("media.download.control", {
+        resourceId: resource.id,
+        action: progress.paused ? "resume" : "pause"
+      }, settingsRef.current?.interfaceLanguage);
     } catch (error) {
       setNotice(errorMessage(error));
       appendOperationLog(errorMessage(error), "error");
@@ -2337,17 +2628,286 @@ export function App() {
     if (!selected.length) return;
     setMediaDownloading(true);
     try {
-      for (const resource of selected) await downloadMediaResource(resource);
+      for (const resource of selected) await downloadMediaResource(resource, true);
       setMediaSelectedIds(new Set());
     } finally {
       setMediaDownloading(false);
     }
   };
 
+  const removeMediaResource = (resourceId: string) => {
+    recordingMediaControllersRef.current.get(resourceId)?.abort();
+    mediaDownloadControllersRef.current.get(resourceId)?.abort();
+    void runtimeRequest("media.download.control", { resourceId, action: "cancel" }, settingsRef.current?.interfaceLanguage);
+    setCompletedMediaDownloadIds((current) => {
+      const next = new Set(current);
+      next.delete(resourceId);
+      return next;
+    });
+    setMediaResources((current) =>
+      current.filter((resource) => resource.id !== resourceId)
+    );
+    setMediaSelectedIds((current) => {
+      const next = new Set(current);
+      next.delete(resourceId);
+      return next;
+    });
+  };
+
+  const removeSelectedMedia = () => {
+    if (!mediaSelectedIds.size) return;
+    mediaSelectedIds.forEach((id) => {
+      recordingMediaControllersRef.current.get(id)?.abort();
+      mediaDownloadControllersRef.current.get(id)?.abort();
+      void runtimeRequest("media.download.control", { resourceId: id, action: "cancel" }, settingsRef.current?.interfaceLanguage);
+    });
+    setCompletedMediaDownloadIds((current) => {
+      const next = new Set(current);
+      mediaSelectedIds.forEach((id) => next.delete(id));
+      return next;
+    });
+    setMediaResources((current) =>
+      current.filter((resource) => !mediaSelectedIds.has(resource.id))
+    );
+    setMediaSelectedIds(new Set());
+  };
+
   useEffect(() => {
     if (view !== "media" || !activeTab?.id) return;
-    void loadMediaResources(!settings?.mediaPreDetectionEnabled);
+    void loadMediaResources(false);
   }, [view, activeTab?.id, settings?.mediaPreDetectionEnabled]);
+
+  useEffect(() => {
+    mediaResourceBytesRef.current = new Map(
+      mediaResources.flatMap((resource) =>
+        typeof resource.bytes === "number" && resource.bytes > 0
+          ? [[resource.id, resource.bytes] as const]
+          : []
+      )
+    );
+  }, [mediaResources]);
+
+  useEffect(() => {
+    const tabId = mediaResourcesTabIdRef.current;
+    if (tabId === null) return;
+    mediaTabCacheRef.current.set(tabId, {
+      resources: mediaResources,
+      previews: mediaPreviewUrls
+    });
+  }, [mediaResources, mediaPreviewUrls]);
+
+  useEffect(() => {
+    const onMessage = (message: {
+      type?: string;
+      payload?: {
+        resourceId?: string;
+        phase?: "processing" | "downloading";
+        progress?: number;
+        done?: boolean;
+        error?: string;
+        speed?: number;
+        paused?: boolean;
+      };
+    }) => {
+      if (message.type !== "media.download.progress" || !message.payload?.resourceId) return;
+      const { resourceId, phase, progress, done, error, speed, paused } = message.payload;
+      if (done) {
+        setCompletedMediaDownloadIds((current) => {
+          const next = new Set(current);
+          if (error) next.delete(resourceId);
+          else next.add(resourceId);
+          return next;
+        });
+      }
+      setMediaDownloadProgress((current) => {
+        const nextPhase = phase === "processing" ? "processing" : "downloading";
+        const previous = current[resourceId];
+        const updatedAt = performance.now();
+        const estimatedSpeed = nextPhase === "processing" &&
+          typeof progress === "number" &&
+          typeof previous?.progress === "number" &&
+          previous.updatedAt &&
+          updatedAt > previous.updatedAt
+          ? (progress - previous.progress) * (mediaResourceBytesRef.current.get(resourceId) ?? 0) *
+            1000 / (updatedAt - previous.updatedAt)
+          : undefined;
+        const nextSpeed = speed ?? (estimatedSpeed && estimatedSpeed > 0 ? estimatedSpeed : undefined);
+        const previousPercent = typeof previous?.progress === "number"
+          ? Math.round(previous.progress * 100)
+          : undefined;
+        const nextPercent = typeof progress === "number" ? Math.round(progress * 100) : undefined;
+        const nextPaused = paused ?? previous?.paused ?? false;
+        if (!done && previous?.phase === nextPhase && previousPercent === nextPercent &&
+          previous.speed === nextSpeed && previous.paused === nextPaused) return current;
+        const next = { ...current };
+        if (done) delete next[resourceId];
+        else next[resourceId] = {
+          phase: nextPhase,
+          progress: progress ?? previous?.progress,
+          speed: nextSpeed,
+          updatedAt,
+          paused: nextPaused
+        };
+        return next;
+      });
+      if (error) {
+        setNotice(error);
+        appendOperationLog(error, "error");
+      }
+    };
+    chrome.runtime.onMessage.addListener(onMessage);
+    return () => chrome.runtime.onMessage.removeListener(onMessage);
+  }, []);
+
+  useEffect(() => () => {
+    recordingMediaControllersRef.current.forEach((controller) => controller.abort());
+    recordingMediaControllersRef.current.clear();
+  }, [activeTab?.id]);
+
+  useEffect(() => {
+    if (view !== "media" || !activeTab?.id) return;
+      const pending = mediaResources.filter(
+      (resource) =>
+        resource.kind !== "subtitle" &&
+        (/^(blob:|data:)/i.test(resource.url) || resource.format === resource.kind) &&
+        !mediaPreviewRequestedRef.current.has(resource.id)
+    );
+    if (!pending.length) return;
+    pending.forEach((resource) => mediaPreviewRequestedRef.current.add(resource.id));
+    let cancelled = false;
+    void Promise.all(
+      pending.map(async (resource) => {
+        try {
+          const preview = await sendToTab<{
+            dataUrl: string;
+            mimeType?: string;
+            format?: string;
+          } | null>(activeTab.id!, {
+            type: "page.media.preview",
+            url: resource.url,
+            kind: resource.kind
+          }, settingsRef.current?.interfaceLanguage);
+          return [resource.id, preview] as const;
+        } catch {
+          return [resource.id, null] as const;
+        }
+      })
+    ).then((entries) => {
+      if (cancelled) return;
+      setMediaPreviewUrls((current) => {
+        const next = { ...current };
+        entries.forEach(([id, preview]) => {
+          if (preview?.dataUrl) next[id] = preview.dataUrl;
+          if (preview?.mimeType || preview?.format) {
+            setMediaResources((resources) =>
+              resources.map((resource) =>
+                resource.id === id
+                  ? {
+                      ...resource,
+                      mimeType: preview.mimeType || resource.mimeType,
+                      format: preview.format || resource.format
+                    }
+                  : resource
+              )
+            );
+          }
+        });
+        return next;
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeTab?.id, mediaResources, mediaPreviewUrls, view]);
+
+  useEffect(() => {
+    if (view !== "media" || !activeTab?.id) return;
+    const pending = mediaResources.filter(
+      (resource) =>
+        (resource.kind === "image"
+          ? !resource.bytes
+          : (resource.kind === "audio" || resource.kind === "video") &&
+            !resource.streamType &&
+            /^https?:/i.test(resource.url)) &&
+        !mediaPreviewRequestedRef.current.has(`probe:${resource.id}`)
+    );
+    if (!pending.length) return;
+    pending.forEach((resource) => mediaPreviewRequestedRef.current.add(`probe:${resource.id}`));
+    let cancelled = false;
+    void Promise.all(
+      pending.map(async (resource) => {
+        try {
+          let probe: {
+            mimeType?: string;
+            format?: string;
+            name?: string;
+            bytes?: number;
+          } | null = null;
+          try {
+            probe = await sendToTab<{
+              mimeType?: string;
+              format?: string;
+              name?: string;
+              bytes?: number;
+            } | null>(activeTab.id!, {
+              type: "page.media.probe",
+              url: resource.url,
+              kind: resource.kind
+            }, settingsRef.current?.interfaceLanguage);
+            if (!probe?.bytes) {
+              const fallback = await runtimeRequest<{
+                mimeType?: string;
+                format?: string;
+                name?: string;
+                bytes?: number;
+              } | null>("media.probe", {
+                url: resource.url,
+                kind: resource.kind
+              }, settingsRef.current?.interfaceLanguage);
+              probe = fallback
+                ? { ...probe, ...Object.fromEntries(Object.entries(fallback).filter(([, value]) => value !== undefined)) }
+                : probe;
+            }
+          } catch {
+            probe = await runtimeRequest<{
+              mimeType?: string;
+              format?: string;
+              name?: string;
+              bytes?: number;
+            } | null>("media.probe", {
+              url: resource.url,
+              kind: resource.kind
+            }, settingsRef.current?.interfaceLanguage).catch(() => null);
+          }
+          return [resource.id, probe] as const;
+        } catch {
+          return [resource.id, null] as const;
+        }
+      })
+    ).then((entries) => {
+      if (cancelled) return;
+      setMediaResources((current) =>
+        current.map((resource) => {
+          const probe = entries.find(([id]) => id === resource.id)?.[1];
+          if (!probe) return resource;
+          return {
+            ...resource,
+            name: mediaFileName(probe.name) || mediaResourceName(
+              resource.name,
+              activeTab?.title,
+              resource.kind
+            ),
+            mimeType: probe.mimeType || resource.mimeType,
+            format: probe.format || resource.format,
+            bytes: probe.bytes || resource.bytes
+          };
+        })
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeTab?.id, mediaResources, view]);
 
   const visibleMediaResources = mediaResources.filter((resource) =>
     mediaKinds.has(resource.kind)
@@ -2366,6 +2926,59 @@ export function App() {
       }
       return next;
     });
+  };
+
+  const formatMediaDuration = (duration?: number): string => {
+    if (!Number.isFinite(duration) || duration === undefined || duration < 0) return "";
+    const totalSeconds = Math.floor(duration);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return [hours, minutes, seconds]
+      .map((value) => String(value).padStart(2, "0"))
+      .join(":");
+  };
+
+  const formatMediaBytes = (bytes?: number): string => {
+    if (!Number.isFinite(bytes) || bytes === undefined || bytes <= 0) return "";
+    const units = ["B", "KiB", "MiB", "GiB", "TiB"];
+    const unit = Math.max(
+      0,
+      Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1)
+    );
+    const value = bytes / 1024 ** unit;
+    return `${unit ? Number(value.toFixed(1)) : Math.round(value)} ${units[unit]}`;
+  };
+
+  const formatMediaSpeed = (bytesPerSecond?: number): string => {
+    if (!bytesPerSecond || bytesPerSecond <= 0) return "0.0 B/s";
+    const units = ["B/s", "KB/s", "MB/s", "GB/s", "TB/s"];
+    const unit = Math.max(
+      0,
+      Math.min(Math.floor(Math.log(bytesPerSecond) / Math.log(1000)), units.length - 1)
+    );
+    const value = bytesPerSecond / 1000 ** unit;
+    return `${unit ? Number(value.toFixed(1)) : Math.round(value)} ${units[unit]}`;
+  };
+
+  const updateMediaDuration = (resourceId: string, duration: number) => {
+    if (!Number.isFinite(duration) || duration <= 0) return;
+    setMediaResources((current) =>
+      current.map((resource) =>
+        resource.id === resourceId ? { ...resource, duration } : resource
+      )
+    );
+  };
+
+  const updateMediaDimensions = (resourceId: string, width: number, height: number) => {
+    if (!Number.isFinite(width) || width <= 0 || !Number.isFinite(height) || height <= 0) return;
+    setMediaResources((current) =>
+      current.map((resource) =>
+        resource.id === resourceId && (resource.width !== width || resource.height !== height)
+          ? { ...resource, width, height }
+          : resource
+      )
+    );
   };
 
   const restoreCurrentBody = async () => {
@@ -5004,80 +5617,83 @@ export function App() {
     <div className="panel-shell">
       <TooltipLayer />
       <header className="panel-header">
-        <div className="brand-compact">
-          <button
-            className="brand-tool-button"
-            type="button"
-            title={`${t("immersiveTranslation")}: ${selectedContextOption.title}`}
-            onClick={() => void runHeaderImmersiveTranslate()}
-          >
-            <ImmersiveTranslateIcon />
-          </button>
-          <button
-            className="brand-tool-button"
-            type="button"
-            title={`${t("immersiveReading")}: ${selectedContextOption.title}`}
-            onClick={() => void runHeaderImmersiveReading()}
-          >
-            <ImmersiveReadingIcon />
-          </button>
-          <strong>WebMind</strong>
+        <div className="header-leading">
+          <div className="brand-compact">
+            <button
+              className="brand-tool-button"
+              type="button"
+              title={`${t("immersiveTranslation")}: ${selectedContextOption.title}`}
+              onClick={() => void runHeaderImmersiveTranslate()}
+            >
+              <ImmersiveTranslateIcon />
+            </button>
+            <button
+              className="brand-tool-button"
+              type="button"
+              title={`${t("immersiveReading")}: ${selectedContextOption.title}`}
+              onClick={() => void runHeaderImmersiveReading()}
+            >
+              <ImmersiveReadingIcon />
+            </button>
+          </div>
+          <div className="header-leading-actions">
+            <button
+              className="brand-tool-button"
+              type="button"
+              title={t("pictureInPicture")}
+              aria-label={t("pictureInPicture")}
+              disabled={pictureInPicturePicking}
+              onClick={() => void pickPictureInPictureElement()}
+            >
+              <PictureInPicture2 />
+            </button>
+            <button
+              className={`${forceCopyEnabled ? "brand-tool-button" : "icon-button"} force-copy-button`}
+              type="button"
+              title={t("forceCopy")}
+              aria-label={t("forceCopy")}
+              aria-pressed={forceCopyEnabled}
+              onClick={() => void toggleForceCopy()}
+            >
+              <Mouse />
+            </button>
+          </div>
         </div>
+        <select
+          className="provider-select"
+          value={settings.activeProfileId ?? ""}
+          title={
+            activeProfile
+              ? `${activeProfile.name} · ${activeProfile.model}`
+              : t("chooseModel")
+          }
+          onChange={(event) => {
+            const next = {
+              ...settings,
+              activeProfileId: event.target.value || null,
+              defaultProfileId: event.target.value || null
+            };
+            settingsRef.current = next;
+            setSettings(next);
+            appendOperationLog(
+              `${t("currentModelEngine")}: ${
+                event.target.selectedOptions[0]?.textContent ?? t("chooseModel")
+              }`,
+              "info"
+            );
+            void import("../shared/storage").then(({ saveSettings }) =>
+              saveSettings(next)
+            );
+          }}
+        >
+          <option value="">{t("chooseModel")}</option>
+          {settings.profiles.map((profile) => (
+            <option key={profile.id} value={profile.id}>
+              {profile.name} · {profile.model}
+            </option>
+          ))}
+        </select>
         <div className="header-actions">
-          <button
-            className="brand-tool-button"
-            type="button"
-            title={t("pictureInPicture")}
-            aria-label={t("pictureInPicture")}
-            disabled={pictureInPicturePicking}
-            onClick={() => void pickPictureInPictureElement()}
-          >
-            <PictureInPicture2 />
-          </button>
-          <button
-            className={`${forceCopyEnabled ? "brand-tool-button" : "icon-button"} force-copy-button`}
-            type="button"
-            title={t("forceCopy")}
-            aria-label={t("forceCopy")}
-            aria-pressed={forceCopyEnabled}
-            onClick={() => void toggleForceCopy()}
-          >
-            <Mouse />
-          </button>
-          <select
-            className="provider-select"
-            value={settings.activeProfileId ?? ""}
-            title={
-              activeProfile
-                ? `${activeProfile.name} · ${activeProfile.model}`
-                : t("chooseModel")
-            }
-            onChange={(event) => {
-              const next = {
-                ...settings,
-                activeProfileId: event.target.value || null,
-                defaultProfileId: event.target.value || null
-              };
-              settingsRef.current = next;
-              setSettings(next);
-              appendOperationLog(
-                `${t("currentModelEngine")}: ${
-                  event.target.selectedOptions[0]?.textContent ?? t("chooseModel")
-                }`,
-                "info"
-              );
-              void import("../shared/storage").then(({ saveSettings }) =>
-                saveSettings(next)
-              );
-            }}
-          >
-            <option value="">{t("chooseModel")}</option>
-            {settings.profiles.map((profile) => (
-              <option key={profile.id} value={profile.id}>
-                {profile.name} · {profile.model}
-              </option>
-            ))}
-          </select>
           <button
             className="icon-button"
             type="button"
@@ -5989,7 +6605,7 @@ export function App() {
                   ["video", t("mediaVideo")]
                 ] as const).map(([kind, label]) => (
                   <button
-                    className={`media-filter ${mediaKinds.has(kind) ? "active" : ""}`}
+                    className={`media-filter media-kind-${kind} ${mediaKinds.has(kind) ? "active" : ""}`}
                     key={kind}
                     type="button"
                     aria-pressed={mediaKinds.has(kind)}
@@ -6033,9 +6649,19 @@ export function App() {
                 >
                   <Download />
                 </button>
+                <button
+                  className="icon-button mini danger"
+                  type="button"
+                  title={t("mediaDeleteSelected")}
+                  aria-label={t("mediaDeleteSelected")}
+                  disabled={!mediaSelectedIds.size}
+                  onClick={removeSelectedMedia}
+                >
+                  <X />
+                </button>
               </div>
             </div>
-            {!mediaResources.length ? (
+            {!visibleMediaResources.length ? (
               <div className="simple-empty">
                 <Images />
                 <strong>{mediaLoading ? t("mediaDetecting") : t("mediaEmpty")}</strong>
@@ -6043,7 +6669,45 @@ export function App() {
               </div>
             ) : (
               <div className="media-list">
-                {visibleMediaResources.map((resource) => (
+                {visibleMediaResources.map((resource) => {
+                  const mediaName = mediaDisplayName(
+                    mediaResourceName(resource.name, activeTab?.title, resource.kind),
+                    resource.format
+                  );
+                  const selectedVariant = resource.variants?.find((variant) =>
+                    variant.id === resource.representationId || variant.url === resource.url
+                  ) || resource.variants?.[0];
+                  const availableSubtitleTracks = resource.subtitles?.filter((track) =>
+                    !selectedVariant?.subtitleGroupId || track.groupId === selectedVariant.subtitleGroupId
+                  ) || [];
+                  const isTimedMedia = resource.kind === "audio" || resource.kind === "video";
+                  const mediaKindLabel = resource.kind === "image"
+                    ? t("mediaImages")
+                    : resource.kind === "audio"
+                      ? t("mediaAudio")
+                      : resource.kind === "video"
+                        ? t("mediaVideo")
+                        : t("mediaSubtitles");
+                  const downloadProgress = mediaDownloadProgress[resource.id];
+                  const isDownloading = Boolean(downloadProgress);
+                  const downloadComplete = completedMediaDownloadIds.has(resource.id);
+                  const progressPercent = typeof downloadProgress?.progress === "number"
+                    ? Math.min(100, Math.max(0, Math.round(downloadProgress.progress * 100)))
+                    : undefined;
+                  const mediaTransport = resource.streamType?.toUpperCase() ||
+                    (resource.isComposite || resource.capturedTracks?.length || /^blob:/i.test(resource.url)
+                      ? "MSE"
+                      : "HTTP");
+                  const capturedUrl = resource.kind === "audio" || resource.kind === "video"
+                    ? capturedMediaUrl(resource, resource.kind)
+                    : undefined;
+                  const mediaUrl = resource.manifestUrl || (
+                    /^blob:/i.test(resource.url)
+                      ? capturedUrl || resource.capturedTracks?.[0]?.url || resource.url
+                      : resource.url
+                  );
+                  const mediaPreviewUrl = mediaPreviewUrls[resource.id] || capturedUrl || resource.url;
+                  return (
                     <article className="media-row" key={resource.id}>
                       <label className="media-select">
                         <input
@@ -6059,45 +6723,215 @@ export function App() {
                           }
                         />
                       </label>
-                      <div className="media-preview">
+                      <div className={`media-preview ${isTimedMedia ? "media-preview-timed" : ""}`}>
                         {resource.kind === "image" ? (
-                          <img src={resource.url} alt="" loading="lazy" />
-                        ) : resource.kind === "audio" ? (
-                          <audio controls preload="metadata" src={resource.url} />
+                          <img
+                            src={mediaPreviewUrls[resource.id] || resource.url}
+                            alt=""
+                            loading="lazy"
+                            onLoad={(event) => updateMediaDimensions(
+                              resource.id,
+                              event.currentTarget.naturalWidth,
+                              event.currentTarget.naturalHeight
+                            )}
+                          />
+                        ) : resource.kind === "audio" && !resource.streamType ? (
+                          <audio
+                            controls
+                            controlsList="nodownload noplaybackrate noremoteplayback"
+                            preload="metadata"
+                            src={mediaPreviewUrl}
+                            onLoadedMetadata={(event) =>
+                              updateMediaDuration(resource.id, event.currentTarget.duration)
+                            }
+                          />
+                        ) : resource.kind === "video" && resource.streamType ? (
+                          <StreamMediaPreview
+                            resource={resource}
+                            onDuration={(duration) => updateMediaDuration(resource.id, duration)}
+                          />
+                        ) : resource.kind === "video" ? (
+                          <video
+                            autoPlay
+                            controls
+                            controlsList="nodownload nofullscreen noremoteplayback"
+                            disablePictureInPicture
+                            muted
+                            playsInline
+                            preload="metadata"
+                            src={mediaPreviewUrl}
+                            onLoadedMetadata={(event) =>
+                              updateMediaDuration(resource.id, event.currentTarget.duration)
+                            }
+                          />
                         ) : (
-                          <video controls preload="metadata" src={resource.url} />
+                          <div className={`media-subtitle-preview ${resource.streamType ? "media-stream-preview" : ""}`} title={resource.format.toUpperCase()}>
+                            <FileText aria-hidden="true" />
+                            <span>{resource.streamType?.toUpperCase() || resource.format.toUpperCase()}</span>
+                          </div>
                         )}
+                        {isTimedMedia && formatMediaDuration(resource.duration) ? (
+                          <span className="media-duration-overlay">
+                            {formatMediaDuration(resource.duration)}
+                          </span>
+                        ) : null}
                       </div>
                       <div className="media-meta">
-                        <strong title={resource.name}>{resource.name}</strong>
-                        <a href={resource.url} target="_blank" rel="noreferrer" title={resource.url}>
-                          {resource.url}
-                        </a>
-                        <small>
-                          {resource.mimeType || resource.kind}
-                          {resource.width && resource.height
-                            ? ` · ${resource.width}×${resource.height}`
-                            : ""}
-                          {resource.duration
-                            ? ` · ${Math.round(resource.duration)}s`
-                            : ""}
-                          {resource.bytes
-                            ? ` · ${Math.round(resource.bytes / 1024)} KB`
-                            : ""}
-                          {resource.detail ? ` · ${resource.detail}` : ""}
+                        <div className="media-title-row">
+                          <span className={`media-kind media-kind-${resource.kind}`}>
+                            {mediaKindLabel}
+                          </span>
+                          <strong
+                            className={`media-name media-name-${resource.kind}`}
+                            title={mediaName}
+                          >
+                            {mediaName}
+                          </strong>
+                        </div>
+                        {downloadProgress ? (
+                          <div
+                            className="media-download-progress"
+                            role="progressbar"
+                            aria-label={downloadProgress.phase === "processing" ? "Processing media" : "Downloading media"}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                            {...(progressPercent === undefined ? {} : { "aria-valuenow": progressPercent })}
+                          >
+                            <span className="media-transport">{mediaTransport}</span>
+                            <span className="media-download-progress-track">
+                              <span
+                                className={`media-download-progress-fill${progressPercent === undefined ? " indeterminate" : ""}`}
+                                style={progressPercent === undefined ? undefined : { width: `${progressPercent}%` }}
+                              />
+                              <span className="media-download-speed">
+                                {formatMediaSpeed(downloadProgress.speed)}
+                              </span>
+                            </span>
+                            <span className="media-download-progress-label">
+                              {progressPercent === undefined ? "" : `${progressPercent}%`}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="media-source-row">
+                            <span className="media-transport">{mediaTransport}</span>
+                            <a className="media-url" href={mediaUrl} target="_blank" rel="noreferrer" title={mediaUrl}>
+                              {mediaUrl}
+                            </a>
+                          </div>
+                        )}
+                        <small className="media-details">
+                          <span className={`media-format media-format-${resource.kind}`}>
+                            {resource.format}
+                          </span>
+                          {resource.variants?.length ? (
+                          <select
+                            className="media-resolution-select"
+                            aria-label={`${resource.name} resolution`}
+                            value={selectedVariant?.id || selectedVariant?.url || resource.url}
+                            onChange={(event) => {
+                              const variant = resource.variants?.find(
+                                (item) => (item.id || item.url) === event.currentTarget.value
+                              );
+                              if (!variant) return;
+                              setMediaResources((current) => current.map((item) =>
+                                item.id === resource.id
+                                  ? {
+                                      ...item,
+                                      url: item.streamType === "dash" ? item.url : variant.url,
+                                      representationId: variant.representationId || variant.id,
+                                      audioUrl: variant.audioUrl || item.audioUrl,
+                                      audioRepresentationId:
+                                        variant.audioRepresentationId || item.audioRepresentationId,
+                                      selectedSubtitleId: undefined,
+                                      width: variant.width,
+                                      height: variant.height,
+                                      bytes: variant.bytes,
+                                      mimeType: variant.mimeType || item.mimeType
+                                    }
+                                  : item
+                              ));
+                            }}
+                          >
+                            {resource.variants.map((variant) => (
+                              <option key={variant.id || variant.url} value={variant.id || variant.url}>
+                                {variant.height
+                                  ? `${variant.height}p`
+                                  : variant.quality || (resource.kind === "audio" ? t("mediaAudio") : "Video")}
+                                {variant.bitrate ? ` · ${Math.round(variant.bitrate / 1000)}kbps` : ""}
+                              </option>
+                            ))}
+                          </select>
+                          ) : resource.width && resource.height ? (
+                            <span className="media-resolution-label">
+                              {isTimedMedia ? `${resource.height}p` : `${resource.width}×${resource.height}`}
+                            </span>
+                          ) : null}
+                          {resource.kind === "video" && availableSubtitleTracks.some((track) => track.format === "vtt") ? (
+                            <select
+                              className="media-subtitle-select"
+                              aria-label={`${resource.name} subtitles`}
+                              value={resource.selectedSubtitleId || ""}
+                              onChange={(event) => setMediaResources((current) => current.map((item) =>
+                                item.id === resource.id
+                                  ? { ...item, selectedSubtitleId: event.currentTarget.value || undefined }
+                                  : item
+                              ))}
+                            >
+                              <option value="">{t("mediaNoSubtitles")}</option>
+                              {availableSubtitleTracks.filter((track) => track.format === "vtt").map((track) => (
+                                <option key={track.id} value={track.id}>{track.language || track.name}</option>
+                              ))}
+                            </select>
+                          ) : null}
+                          <span className="media-size">
+                            {formatMediaBytes(resource.bytes) || "—"}
+                          </span>
+                          {resource.processingError ? (
+                            <span className="media-processing-error" title={resource.processingError}>
+                              {resource.processingError}
+                            </span>
+                          ) : null}
                         </small>
                       </div>
+                      <div className="media-row-actions">
+                        <button
+                          className={`icon-button mini${downloadComplete && !isDownloading ? " media-download-complete" : ""}`}
+                          type="button"
+                          title={recordingMediaIds.has(resource.id)
+                            ? t("mediaStopRecording")
+                            : isDownloading
+                              ? downloadProgress?.paused ? t("mediaResumeDownload") : t("mediaPauseDownload")
+                              : resource.isLive ? t("mediaRecordLive") : t("mediaDownload")}
+                          aria-label={recordingMediaIds.has(resource.id)
+                            ? t("mediaStopRecording")
+                            : isDownloading
+                              ? downloadProgress?.paused ? t("mediaResumeDownload") : t("mediaPauseDownload")
+                              : resource.isLive ? t("mediaRecordLive") : t("mediaDownload")}
+                          onClick={() => void (recordingMediaIds.has(resource.id)
+                            ? downloadMediaResource(resource)
+                            : controlMediaDownload(resource))}
+                        >
+                          {recordingMediaIds.has(resource.id)
+                            ? <Square />
+                            : isDownloading
+                              ? downloadProgress?.paused
+                                ? <Play />
+                                : <span className="media-download-control"><LoaderCircle className="spin" /><Pause /></span>
+                              : <Download />}
+                        </button>
+                      </div>
                       <button
-                        className="icon-button mini"
+                        className="icon-button mini danger media-remove"
                         type="button"
-                        title={t("mediaDownload")}
-                        aria-label={t("mediaDownload")}
-                        onClick={() => void downloadMediaResource(resource)}
+                        title={t("mediaDelete")}
+                        aria-label={t("mediaDelete")}
+                        onClick={() => removeMediaResource(resource.id)}
                       >
-                        <Download />
+                        <X />
                       </button>
                     </article>
-                  ))}
+                  );
+                })}
               </div>
             )}
           </section>
