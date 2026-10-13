@@ -49,6 +49,10 @@ export function selectScreenshotArea(): Promise<ScreenshotSelection | null> {
       if (completed) return;
       completed = true;
       overlay.remove();
+      overlay.removeEventListener("pointerdown", onPointerDown);
+      overlay.removeEventListener("pointermove", onPointerMove);
+      overlay.removeEventListener("pointerup", onPointerUp);
+      overlay.removeEventListener("contextmenu", onContextMenu);
       document.removeEventListener("keydown", onKeyDown, true);
       cancelActiveSelection = null;
       resolve(result);
@@ -91,11 +95,7 @@ export function selectScreenshotArea(): Promise<ScreenshotSelection | null> {
         viewportWidth: window.innerWidth,
         viewportHeight: window.innerHeight
       };
-      overlay.remove();
-      document.removeEventListener("keydown", onKeyDown, true);
-      cancelActiveSelection = null;
-      completed = true;
-      window.requestAnimationFrame(() => resolve(result));
+      finish(result);
     };
 
     const onPointerDown = (event: PointerEvent) => {
@@ -130,4 +130,8 @@ export function selectScreenshotArea(): Promise<ScreenshotSelection | null> {
     document.addEventListener("keydown", onKeyDown, true);
     cancelActiveSelection = () => finish(null);
   });
+}
+
+export function cancelScreenshotArea(): void {
+  cancelActiveSelection?.();
 }

@@ -14943,8 +14943,15 @@
   ];
   var ArrowRightLeft = createLucideIcon("arrow-right-left", __iconNode);
 
-  // node_modules/lucide-react/dist/esm/icons/book-open.mjs
+  // node_modules/lucide-react/dist/esm/icons/arrow-up-right.mjs
   var __iconNode2 = [
+    ["path", { d: "M7 7h10v10", key: "1tivn9" }],
+    ["path", { d: "M7 17 17 7", key: "1vkiza" }]
+  ];
+  var ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode2);
+
+  // node_modules/lucide-react/dist/esm/icons/book-open.mjs
+  var __iconNode3 = [
     ["path", { d: "M12 5v16", key: "1f6ucr" }],
     [
       "path",
@@ -14954,18 +14961,18 @@
       }
     ]
   ];
-  var BookOpen = createLucideIcon("book-open", __iconNode2);
+  var BookOpen = createLucideIcon("book-open", __iconNode3);
 
   // node_modules/lucide-react/dist/esm/icons/check.mjs
-  var __iconNode3 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-  var Check = createLucideIcon("check", __iconNode3);
+  var __iconNode4 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+  var Check = createLucideIcon("check", __iconNode4);
 
   // node_modules/lucide-react/dist/esm/icons/chevron-down.mjs
-  var __iconNode4 = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-  var ChevronDown = createLucideIcon("chevron-down", __iconNode4);
+  var __iconNode5 = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+  var ChevronDown = createLucideIcon("chevron-down", __iconNode5);
 
   // node_modules/lucide-react/dist/esm/icons/clipboard.mjs
-  var __iconNode5 = [
+  var __iconNode6 = [
     ["rect", { width: "8", height: "4", x: "8", y: "2", rx: "1", ry: "1", key: "tgr4d6" }],
     [
       "path",
@@ -14975,25 +14982,25 @@
       }
     ]
   ];
-  var Clipboard = createLucideIcon("clipboard", __iconNode5);
+  var Clipboard = createLucideIcon("clipboard", __iconNode6);
 
   // node_modules/lucide-react/dist/esm/icons/code-xml.mjs
-  var __iconNode6 = [
+  var __iconNode7 = [
     ["path", { d: "m18 16 4-4-4-4", key: "1inbqp" }],
     ["path", { d: "m6 8-4 4 4 4", key: "15zrgr" }],
     ["path", { d: "m14.5 4-5 16", key: "e7oirm" }]
   ];
-  var CodeXml = createLucideIcon("code-xml", __iconNode6);
+  var CodeXml = createLucideIcon("code-xml", __iconNode7);
 
   // node_modules/lucide-react/dist/esm/icons/copy.mjs
-  var __iconNode7 = [
+  var __iconNode8 = [
     ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
     ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
   ];
-  var Copy = createLucideIcon("copy", __iconNode7);
+  var Copy = createLucideIcon("copy", __iconNode8);
 
   // node_modules/lucide-react/dist/esm/icons/earth.mjs
-  var __iconNode8 = [
+  var __iconNode9 = [
     ["path", { d: "M21.54 15H17a2 2 0 0 0-2 2v4.54", key: "1djwo0" }],
     [
       "path",
@@ -15005,10 +15012,10 @@
     ["path", { d: "M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05", key: "14pb5j" }],
     ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
   ];
-  var Earth = createLucideIcon("earth", __iconNode8);
+  var Earth = createLucideIcon("earth", __iconNode9);
 
   // node_modules/lucide-react/dist/esm/icons/file-text.mjs
-  var __iconNode9 = [
+  var __iconNode10 = [
     [
       "path",
       {
@@ -15021,27 +15028,27 @@
     ["path", { d: "M16 13H8", key: "t4e002" }],
     ["path", { d: "M16 17H8", key: "z1uh3a" }]
   ];
-  var FileText = createLucideIcon("file-text", __iconNode9);
+  var FileText = createLucideIcon("file-text", __iconNode10);
 
   // node_modules/lucide-react/dist/esm/icons/highlighter.mjs
-  var __iconNode10 = [
+  var __iconNode11 = [
     ["path", { d: "m9 11-6 6v3h9l3-3", key: "1a3l36" }],
     ["path", { d: "m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4", key: "14a9rk" }]
   ];
-  var Highlighter = createLucideIcon("highlighter", __iconNode10);
+  var Highlighter = createLucideIcon("highlighter", __iconNode11);
 
   // node_modules/lucide-react/dist/esm/icons/image-plus.mjs
-  var __iconNode11 = [
+  var __iconNode12 = [
     ["path", { d: "M16 5h6", key: "1vod17" }],
     ["path", { d: "M19 2v6", key: "4bpg5p" }],
     ["path", { d: "M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5", key: "1ue2ih" }],
     ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }],
     ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }]
   ];
-  var ImagePlus = createLucideIcon("image-plus", __iconNode11);
+  var ImagePlus = createLucideIcon("image-plus", __iconNode12);
 
   // node_modules/lucide-react/dist/esm/icons/languages.mjs
-  var __iconNode12 = [
+  var __iconNode13 = [
     ["path", { d: "m5 8 6 6", key: "1wu5hv" }],
     ["path", { d: "m4 14 6-6 2-3", key: "1k1g8d" }],
     ["path", { d: "M2 5h12", key: "or177f" }],
@@ -15049,10 +15056,10 @@
     ["path", { d: "m22 22-5-10-5 10", key: "don7ne" }],
     ["path", { d: "M14 18h6", key: "1m8k6r" }]
   ];
-  var Languages = createLucideIcon("languages", __iconNode12);
+  var Languages = createLucideIcon("languages", __iconNode13);
 
   // node_modules/lucide-react/dist/esm/icons/lightbulb.mjs
-  var __iconNode13 = [
+  var __iconNode14 = [
     [
       "path",
       {
@@ -15063,39 +15070,39 @@
     ["path", { d: "M9 18h6", key: "x1upvd" }],
     ["path", { d: "M10 22h4", key: "ceow96" }]
   ];
-  var Lightbulb = createLucideIcon("lightbulb", __iconNode13);
+  var Lightbulb = createLucideIcon("lightbulb", __iconNode14);
 
   // node_modules/lucide-react/dist/esm/icons/list-checks.mjs
-  var __iconNode14 = [
+  var __iconNode15 = [
     ["path", { d: "M13 5h8", key: "a7qcls" }],
     ["path", { d: "M13 12h8", key: "h98zly" }],
     ["path", { d: "M13 19h8", key: "c3s6r1" }],
     ["path", { d: "m3 17 2 2 4-4", key: "1jhpwq" }],
     ["path", { d: "m3 7 2 2 4-4", key: "1obspn" }]
   ];
-  var ListChecks = createLucideIcon("list-checks", __iconNode14);
+  var ListChecks = createLucideIcon("list-checks", __iconNode15);
 
   // node_modules/lucide-react/dist/esm/icons/list-todo.mjs
-  var __iconNode15 = [
+  var __iconNode16 = [
     ["path", { d: "M13 5h8", key: "a7qcls" }],
     ["path", { d: "M13 12h8", key: "h98zly" }],
     ["path", { d: "M13 19h8", key: "c3s6r1" }],
     ["path", { d: "m3 17 2 2 4-4", key: "1jhpwq" }],
     ["rect", { x: "3", y: "4", width: "6", height: "6", rx: "1", key: "cif1o7" }]
   ];
-  var ListTodo = createLucideIcon("list-todo", __iconNode15);
+  var ListTodo = createLucideIcon("list-todo", __iconNode16);
 
   // node_modules/lucide-react/dist/esm/icons/maximize-2.mjs
-  var __iconNode16 = [
+  var __iconNode17 = [
     ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
     ["path", { d: "m21 3-7 7", key: "1l2asr" }],
     ["path", { d: "m3 21 7-7", key: "tjx5ai" }],
     ["path", { d: "M9 21H3v-6", key: "wtvkvv" }]
   ];
-  var Maximize2 = createLucideIcon("maximize-2", __iconNode16);
+  var Maximize2 = createLucideIcon("maximize-2", __iconNode17);
 
   // node_modules/lucide-react/dist/esm/icons/message-square-reply.mjs
-  var __iconNode17 = [
+  var __iconNode18 = [
     [
       "path",
       {
@@ -15106,10 +15113,10 @@
     ["path", { d: "m10 8-3 3 3 3", key: "fp6dz7" }],
     ["path", { d: "M17 14v-1a2 2 0 0 0-2-2H7", key: "1tkjnz" }]
   ];
-  var MessageSquareReply = createLucideIcon("message-square-reply", __iconNode17);
+  var MessageSquareReply = createLucideIcon("message-square-reply", __iconNode18);
 
   // node_modules/lucide-react/dist/esm/icons/message-square-text.mjs
-  var __iconNode18 = [
+  var __iconNode19 = [
     [
       "path",
       {
@@ -15121,27 +15128,31 @@
     ["path", { d: "M7 15h6", key: "d9of3u" }],
     ["path", { d: "M7 7h8", key: "af5zfr" }]
   ];
-  var MessageSquareText = createLucideIcon("message-square-text", __iconNode18);
+  var MessageSquareText = createLucideIcon("message-square-text", __iconNode19);
 
   // node_modules/lucide-react/dist/esm/icons/minimize-2.mjs
-  var __iconNode19 = [
+  var __iconNode20 = [
     ["path", { d: "m14 10 7-7", key: "oa77jy" }],
     ["path", { d: "M20 10h-6V4", key: "mjg0md" }],
     ["path", { d: "m3 21 7-7", key: "tjx5ai" }],
     ["path", { d: "M4 14h6v6", key: "rmj7iw" }]
   ];
-  var Minimize2 = createLucideIcon("minimize-2", __iconNode19);
+  var Minimize2 = createLucideIcon("minimize-2", __iconNode20);
+
+  // node_modules/lucide-react/dist/esm/icons/minus.mjs
+  var __iconNode21 = [["path", { d: "M5 12h14", key: "1ays0h" }]];
+  var Minus = createLucideIcon("minus", __iconNode21);
 
   // node_modules/lucide-react/dist/esm/icons/panel-right-open.mjs
-  var __iconNode20 = [
+  var __iconNode22 = [
     ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }],
     ["path", { d: "M15 3v18", key: "14nvp0" }],
     ["path", { d: "m10 15-3-3 3-3", key: "1pgupc" }]
   ];
-  var PanelRightOpen = createLucideIcon("panel-right-open", __iconNode20);
+  var PanelRightOpen = createLucideIcon("panel-right-open", __iconNode22);
 
   // node_modules/lucide-react/dist/esm/icons/pen-line.mjs
-  var __iconNode21 = [
+  var __iconNode23 = [
     ["path", { d: "M13 21h8", key: "1jsn5i" }],
     [
       "path",
@@ -15151,25 +15162,38 @@
       }
     ]
   ];
-  var PenLine = createLucideIcon("pen-line", __iconNode21);
+  var PenLine = createLucideIcon("pen-line", __iconNode23);
+
+  // node_modules/lucide-react/dist/esm/icons/pencil.mjs
+  var __iconNode24 = [
+    [
+      "path",
+      {
+        d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
+        key: "1a8usu"
+      }
+    ],
+    ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
+  ];
+  var Pencil = createLucideIcon("pencil", __iconNode24);
 
   // node_modules/lucide-react/dist/esm/icons/picture-in-picture-2.mjs
-  var __iconNode22 = [
+  var __iconNode25 = [
     ["path", { d: "M21 9V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h4", key: "daa4of" }],
     ["rect", { width: "10", height: "7", x: "12", y: "13", rx: "2", key: "1nb8gs" }]
   ];
-  var PictureInPicture2 = createLucideIcon("picture-in-picture-2", __iconNode22);
+  var PictureInPicture2 = createLucideIcon("picture-in-picture-2", __iconNode25);
 
   // node_modules/lucide-react/dist/esm/icons/presentation.mjs
-  var __iconNode23 = [
+  var __iconNode26 = [
     ["path", { d: "M2 3h20", key: "91anmk" }],
     ["path", { d: "M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3", key: "2k9sn8" }],
     ["path", { d: "m7 21 5-5 5 5", key: "bip4we" }]
   ];
-  var Presentation = createLucideIcon("presentation", __iconNode23);
+  var Presentation = createLucideIcon("presentation", __iconNode26);
 
   // node_modules/lucide-react/dist/esm/icons/qr-code.mjs
-  var __iconNode24 = [
+  var __iconNode27 = [
     ["rect", { width: "5", height: "5", x: "3", y: "3", rx: "1", key: "1tu5fj" }],
     ["rect", { width: "5", height: "5", x: "16", y: "3", rx: "1", key: "1v8r4q" }],
     ["rect", { width: "5", height: "5", x: "3", y: "16", rx: "1", key: "1x03jg" }],
@@ -15183,24 +15207,38 @@
     ["path", { d: "M21 12v.01", key: "1lwtk9" }],
     ["path", { d: "M12 21v-1", key: "1880an" }]
   ];
-  var QrCode = createLucideIcon("qr-code", __iconNode24);
+  var QrCode = createLucideIcon("qr-code", __iconNode27);
 
   // node_modules/lucide-react/dist/esm/icons/reply.mjs
-  var __iconNode25 = [
+  var __iconNode28 = [
     ["path", { d: "M20 18v-2a4 4 0 0 0-4-4H4", key: "5vmcpk" }],
     ["path", { d: "m9 17-5-5 5-5", key: "nvlc11" }]
   ];
-  var Reply = createLucideIcon("reply", __iconNode25);
+  var Reply = createLucideIcon("reply", __iconNode28);
 
   // node_modules/lucide-react/dist/esm/icons/rotate-ccw.mjs
-  var __iconNode26 = [
+  var __iconNode29 = [
     ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
     ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
   ];
-  var RotateCcw = createLucideIcon("rotate-ccw", __iconNode26);
+  var RotateCcw = createLucideIcon("rotate-ccw", __iconNode29);
+
+  // node_modules/lucide-react/dist/esm/icons/save.mjs
+  var __iconNode30 = [
+    [
+      "path",
+      {
+        d: "M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z",
+        key: "1c8476"
+      }
+    ],
+    ["path", { d: "M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7", key: "1ydtos" }],
+    ["path", { d: "M7 3v4a1 1 0 0 0 1 1h7", key: "t51u73" }]
+  ];
+  var Save = createLucideIcon("save", __iconNode30);
 
   // node_modules/lucide-react/dist/esm/icons/scan-text.mjs
-  var __iconNode27 = [
+  var __iconNode31 = [
     ["path", { d: "M3 7V5a2 2 0 0 1 2-2h2", key: "aa7l1z" }],
     ["path", { d: "M17 3h2a2 2 0 0 1 2 2v2", key: "4qcy5o" }],
     ["path", { d: "M21 17v2a2 2 0 0 1-2 2h-2", key: "6vwrx8" }],
@@ -15209,17 +15247,17 @@
     ["path", { d: "M7 12h10", key: "b7w52i" }],
     ["path", { d: "M7 16h6", key: "1vyc9m" }]
   ];
-  var ScanText = createLucideIcon("scan-text", __iconNode27);
+  var ScanText = createLucideIcon("scan-text", __iconNode31);
 
   // node_modules/lucide-react/dist/esm/icons/search.mjs
-  var __iconNode28 = [
+  var __iconNode32 = [
     ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
     ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
   ];
-  var Search = createLucideIcon("search", __iconNode28);
+  var Search = createLucideIcon("search", __iconNode32);
 
   // node_modules/lucide-react/dist/esm/icons/send.mjs
-  var __iconNode29 = [
+  var __iconNode33 = [
     [
       "path",
       {
@@ -15229,10 +15267,10 @@
     ],
     ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
   ];
-  var Send = createLucideIcon("send", __iconNode29);
+  var Send = createLucideIcon("send", __iconNode33);
 
   // node_modules/lucide-react/dist/esm/icons/sparkles.mjs
-  var __iconNode30 = [
+  var __iconNode34 = [
     [
       "path",
       {
@@ -15244,10 +15282,10 @@
     ["path", { d: "M22 4h-4", key: "gwowj6" }],
     ["circle", { cx: "4", cy: "20", r: "2", key: "6kqj1y" }]
   ];
-  var Sparkles = createLucideIcon("sparkles", __iconNode30);
+  var Sparkles = createLucideIcon("sparkles", __iconNode34);
 
   // node_modules/lucide-react/dist/esm/icons/square-dashed-text.mjs
-  var __iconNode31 = [
+  var __iconNode35 = [
     ["path", { d: "M14 21h1", key: "v9vybs" }],
     ["path", { d: "M14 3h1", key: "1ec4yj" }],
     ["path", { d: "M19 3a2 2 0 0 1 2 2", key: "18rm91" }],
@@ -15264,10 +15302,41 @@
     ["path", { d: "M9 21h1", key: "15o7lz" }],
     ["path", { d: "M9 3h1", key: "1yesri" }]
   ];
-  var SquareDashedText = createLucideIcon("square-dashed-text", __iconNode31);
+  var SquareDashedText = createLucideIcon("square-dashed-text", __iconNode35);
+
+  // node_modules/lucide-react/dist/esm/icons/square.mjs
+  var __iconNode36 = [
+    ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }]
+  ];
+  var Square = createLucideIcon("square", __iconNode36);
+
+  // node_modules/lucide-react/dist/esm/icons/trash-2.mjs
+  var __iconNode37 = [
+    ["path", { d: "M10 11v6", key: "nco0om" }],
+    ["path", { d: "M14 11v6", key: "outv1u" }],
+    ["path", { d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6", key: "miytrc" }],
+    ["path", { d: "M3 6h18", key: "d0wm0j" }],
+    ["path", { d: "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2", key: "e791ji" }]
+  ];
+  var Trash2 = createLucideIcon("trash-2", __iconNode37);
+
+  // node_modules/lucide-react/dist/esm/icons/type.mjs
+  var __iconNode38 = [
+    ["path", { d: "M12 4v16", key: "1654pz" }],
+    ["path", { d: "M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2", key: "e0r10z" }],
+    ["path", { d: "M9 20h6", key: "s66wpe" }]
+  ];
+  var Type = createLucideIcon("type", __iconNode38);
+
+  // node_modules/lucide-react/dist/esm/icons/undo-2.mjs
+  var __iconNode39 = [
+    ["path", { d: "M9 14 4 9l5-5", key: "102s5s" }],
+    ["path", { d: "M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11", key: "f3b9sd" }]
+  ];
+  var Undo2 = createLucideIcon("undo-2", __iconNode39);
 
   // node_modules/lucide-react/dist/esm/icons/wand-sparkles.mjs
-  var __iconNode32 = [
+  var __iconNode40 = [
     [
       "path",
       {
@@ -15283,18 +15352,35 @@
     ["path", { d: "M21 16h-4", key: "1cnmox" }],
     ["path", { d: "M11 3H9", key: "1obp7u" }]
   ];
-  var WandSparkles = createLucideIcon("wand-sparkles", __iconNode32);
+  var WandSparkles = createLucideIcon("wand-sparkles", __iconNode40);
 
   // node_modules/lucide-react/dist/esm/icons/x.mjs
-  var __iconNode33 = [
+  var __iconNode41 = [
     ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
     ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
   ];
-  var X = createLucideIcon("x", __iconNode33);
+  var X = createLucideIcon("x", __iconNode41);
+
+  // node_modules/lucide-react/dist/esm/icons/zoom-in.mjs
+  var __iconNode42 = [
+    ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }],
+    ["line", { x1: "21", x2: "16.65", y1: "21", y2: "16.65", key: "13gj7c" }],
+    ["line", { x1: "11", x2: "11", y1: "8", y2: "14", key: "1vmskp" }],
+    ["line", { x1: "8", x2: "14", y1: "11", y2: "11", key: "durymu" }]
+  ];
+  var ZoomIn = createLucideIcon("zoom-in", __iconNode42);
+
+  // node_modules/lucide-react/dist/esm/icons/zoom-out.mjs
+  var __iconNode43 = [
+    ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }],
+    ["line", { x1: "21", x2: "16.65", y1: "21", y2: "16.65", key: "13gj7c" }],
+    ["line", { x1: "8", x2: "14", y1: "11", y2: "11", key: "durymu" }]
+  ];
+  var ZoomOut = createLucideIcon("zoom-out", __iconNode43);
 
   // src/content/index.tsx
-  var import_react5 = __toESM(require_react(), 1);
-  var import_client = __toESM(require_client(), 1);
+  var import_react6 = __toESM(require_react(), 1);
+  var import_client2 = __toESM(require_client(), 1);
 
   // src/shared/locales/de.ts
   var deUiText = {
@@ -15584,6 +15670,20 @@
     captureScreenshot: "Screenshot aufnehmen",
     composerAddScreenshot: "Screenshot hinzuf\xFCgen",
     screenshotSelectArea: "Ziehen Sie auf der Seite, um einen Bereich auszuw\xE4hlen. Mit Esc brechen Sie ab.",
+    screenshotEditorTitle: "Screenshot bearbeiten",
+    screenshotToolPen: "Stift",
+    screenshotToolLine: "Linie",
+    screenshotToolArrow: "Pfeil",
+    screenshotToolRectangle: "Rechteck",
+    screenshotToolText: "Text",
+    screenshotUndo: "Annotation zur\xFCcknehmen",
+    screenshotClear: "Annotationen l\xF6schen",
+    screenshotStrokeColor: "Annotationsfarbe",
+    screenshotStrokeWidth: "Annotationsbreite",
+    screenshotTextPlaceholder: "Text eingeben und auf das Bild klicken",
+    screenshotEditorLoading: "Screenshot wird geladen\u2026",
+    screenshotCancel: "Screenshot abbrechen",
+    screenshotConfirm: "Screenshot best\xE4tigen",
     addUrl: "URL hinzuf\xFCgen",
     you: "Sie",
     ordinaryConversation: "Normaler Chat",
@@ -16325,6 +16425,20 @@
     captureScreenshot: "Capturar pantalla",
     composerAddScreenshot: "A\xF1adir captura de pantalla",
     screenshotSelectArea: "Arrastre en la p\xE1gina para seleccionar un \xE1rea. Pulse Esc para cancelar.",
+    screenshotEditorTitle: "Editar captura de pantalla",
+    screenshotToolPen: "L\xE1piz",
+    screenshotToolLine: "L\xEDnea",
+    screenshotToolArrow: "Flecha",
+    screenshotToolRectangle: "Rect\xE1ngulo",
+    screenshotToolText: "Texto",
+    screenshotUndo: "Deshacer anotaci\xF3n",
+    screenshotClear: "Borrar anotaciones",
+    screenshotStrokeColor: "Color de anotaci\xF3n",
+    screenshotStrokeWidth: "Grosor de anotaci\xF3n",
+    screenshotTextPlaceholder: "Escriba texto y haga clic en la imagen",
+    screenshotEditorLoading: "Cargando captura\u2026",
+    screenshotCancel: "Cancelar captura",
+    screenshotConfirm: "Confirmar captura",
     addUrl: "A\xF1adir URL",
     you: "Usted",
     ordinaryConversation: "Chat normal",
@@ -17066,6 +17180,20 @@
     captureScreenshot: "Capturer l'\xE9cran",
     composerAddScreenshot: "Ajouter une capture d'\xE9cran",
     screenshotSelectArea: "Faites glisser sur la page pour s\xE9lectionner une zone. Appuyez sur \xC9chap pour annuler.",
+    screenshotEditorTitle: "Modifier la capture d'\xE9cran",
+    screenshotToolPen: "Crayon",
+    screenshotToolLine: "Ligne",
+    screenshotToolArrow: "Fl\xE8che",
+    screenshotToolRectangle: "Rectangle",
+    screenshotToolText: "Texte",
+    screenshotUndo: "Annuler l'annotation",
+    screenshotClear: "Effacer les annotations",
+    screenshotStrokeColor: "Couleur de l'annotation",
+    screenshotStrokeWidth: "\xC9paisseur de l'annotation",
+    screenshotTextPlaceholder: "Saisissez le texte puis cliquez sur l'image",
+    screenshotEditorLoading: "Chargement de la capture\u2026",
+    screenshotCancel: "Annuler la capture",
+    screenshotConfirm: "Confirmer la capture",
     addUrl: "Ajouter URL",
     you: "Vous",
     ordinaryConversation: "Discussion classique",
@@ -17807,6 +17935,20 @@
     captureScreenshot: "Cattura schermata",
     composerAddScreenshot: "Aggiungi schermata",
     screenshotSelectArea: "Trascina sulla pagina per selezionare un'area. Premi Esc per annullare.",
+    screenshotEditorTitle: "Modifica schermata",
+    screenshotToolPen: "Penna",
+    screenshotToolLine: "Linea",
+    screenshotToolArrow: "Freccia",
+    screenshotToolRectangle: "Rettangolo",
+    screenshotToolText: "Testo",
+    screenshotUndo: "Annulla annotazione",
+    screenshotClear: "Cancella annotazioni",
+    screenshotStrokeColor: "Colore annotazione",
+    screenshotStrokeWidth: "Spessore annotazione",
+    screenshotTextPlaceholder: "Inserisci il testo e fai clic sull'immagine",
+    screenshotEditorLoading: "Caricamento schermata\u2026",
+    screenshotCancel: "Annulla schermata",
+    screenshotConfirm: "Conferma schermata",
     addUrl: "Aggiungi URL",
     you: "Tu",
     ordinaryConversation: "Chat standard",
@@ -18580,6 +18722,20 @@
       captureScreenshot: "\u622A\u56FE",
       composerAddScreenshot: "\u6DFB\u52A0\u622A\u56FE",
       screenshotSelectArea: "\u8BF7\u5728\u9875\u9762\u4E0A\u62D6\u62FD\u6846\u9009\u622A\u56FE\u533A\u57DF\uFF0C\u6309 Esc \u53D6\u6D88\u3002",
+      screenshotEditorTitle: "\u7F16\u8F91\u622A\u56FE",
+      screenshotToolPen: "\u753B\u7B14",
+      screenshotToolLine: "\u76F4\u7EBF",
+      screenshotToolArrow: "\u7BAD\u5934",
+      screenshotToolRectangle: "\u77E9\u5F62",
+      screenshotToolText: "\u6587\u5B57",
+      screenshotUndo: "\u64A4\u9500\u6807\u6CE8",
+      screenshotClear: "\u6E05\u9664\u6807\u6CE8",
+      screenshotStrokeColor: "\u6807\u6CE8\u989C\u8272",
+      screenshotStrokeWidth: "\u6807\u6CE8\u7EBF\u5BBD",
+      screenshotTextPlaceholder: "\u8F93\u5165\u6587\u5B57\u540E\u70B9\u51FB\u56FE\u7247",
+      screenshotEditorLoading: "\u6B63\u5728\u52A0\u8F7D\u622A\u56FE\u2026",
+      screenshotCancel: "\u53D6\u6D88\u622A\u56FE",
+      screenshotConfirm: "\u786E\u8BA4\u622A\u56FE",
       addUrl: "\u6DFB\u52A0 URL",
       you: "\u4F60",
       ordinaryConversation: "\u666E\u901A\u5BF9\u8BDD",
@@ -19319,6 +19475,20 @@
       captureScreenshot: "\u622A\u5716",
       composerAddScreenshot: "\u65B0\u589E\u622A\u5716",
       screenshotSelectArea: "\u8ACB\u5728\u9801\u9762\u4E0A\u62D6\u66F3\u6846\u9078\u622A\u5716\u5340\u57DF\uFF0C\u6309 Esc \u53D6\u6D88\u3002",
+      screenshotEditorTitle: "\u7DE8\u8F2F\u622A\u5716",
+      screenshotToolPen: "\u756B\u7B46",
+      screenshotToolLine: "\u76F4\u7DDA",
+      screenshotToolArrow: "\u7BAD\u982D",
+      screenshotToolRectangle: "\u77E9\u5F62",
+      screenshotToolText: "\u6587\u5B57",
+      screenshotUndo: "\u5FA9\u539F\u6A19\u8A3B",
+      screenshotClear: "\u6E05\u9664\u6A19\u8A3B",
+      screenshotStrokeColor: "\u6A19\u8A3B\u984F\u8272",
+      screenshotStrokeWidth: "\u6A19\u8A3B\u7DDA\u5BEC",
+      screenshotTextPlaceholder: "\u8F38\u5165\u6587\u5B57\u5F8C\u9EDE\u64CA\u5716\u7247",
+      screenshotEditorLoading: "\u6B63\u5728\u8F09\u5165\u622A\u5716\u2026",
+      screenshotCancel: "\u53D6\u6D88\u622A\u5716",
+      screenshotConfirm: "\u78BA\u8A8D\u622A\u5716",
       addUrl: "\u65B0\u589E URL",
       you: "\u4F60",
       ordinaryConversation: "\u4E00\u822C\u5C0D\u8A71",
@@ -20058,6 +20228,20 @@
       captureScreenshot: "Capture Screenshot",
       composerAddScreenshot: "Add Screenshot",
       screenshotSelectArea: "Drag on the page to select an area. Press Esc to cancel.",
+      screenshotEditorTitle: "Edit Screenshot",
+      screenshotToolPen: "Pen",
+      screenshotToolLine: "Line",
+      screenshotToolArrow: "Arrow",
+      screenshotToolRectangle: "Rectangle",
+      screenshotToolText: "Text",
+      screenshotUndo: "Undo annotation",
+      screenshotClear: "Clear annotations",
+      screenshotStrokeColor: "Annotation color",
+      screenshotStrokeWidth: "Annotation width",
+      screenshotTextPlaceholder: "Enter text, then click the image",
+      screenshotEditorLoading: "Loading screenshot\u2026",
+      screenshotCancel: "Cancel screenshot",
+      screenshotConfirm: "Confirm screenshot",
       addUrl: "Add URL",
       you: "You",
       ordinaryConversation: "Regular Chat",
@@ -20797,6 +20981,20 @@
       captureScreenshot: "\u30B9\u30AF\u30EA\u30FC\u30F3\u30B7\u30E7\u30C3\u30C8",
       composerAddScreenshot: "\u30B9\u30AF\u30EA\u30FC\u30F3\u30B7\u30E7\u30C3\u30C8\u3092\u8FFD\u52A0",
       screenshotSelectArea: "\u30DA\u30FC\u30B8\u4E0A\u3067\u30C9\u30E9\u30C3\u30B0\u3057\u3066\u7BC4\u56F2\u3092\u9078\u629E\u3057\u307E\u3059\u3002Esc \u3067\u30AD\u30E3\u30F3\u30BB\u30EB\u3067\u304D\u307E\u3059\u3002",
+      screenshotEditorTitle: "\u30B9\u30AF\u30EA\u30FC\u30F3\u30B7\u30E7\u30C3\u30C8\u3092\u7DE8\u96C6",
+      screenshotToolPen: "\u30DA\u30F3",
+      screenshotToolLine: "\u76F4\u7DDA",
+      screenshotToolArrow: "\u77E2\u5370",
+      screenshotToolRectangle: "\u56DB\u89D2\u5F62",
+      screenshotToolText: "\u6587\u5B57",
+      screenshotUndo: "\u6CE8\u91C8\u3092\u5143\u306B\u623B\u3059",
+      screenshotClear: "\u6CE8\u91C8\u3092\u6D88\u53BB",
+      screenshotStrokeColor: "\u6CE8\u91C8\u306E\u8272",
+      screenshotStrokeWidth: "\u6CE8\u91C8\u306E\u592A\u3055",
+      screenshotTextPlaceholder: "\u6587\u5B57\u3092\u5165\u529B\u3057\u3066\u753B\u50CF\u3092\u30AF\u30EA\u30C3\u30AF",
+      screenshotEditorLoading: "\u30B9\u30AF\u30EA\u30FC\u30F3\u30B7\u30E7\u30C3\u30C8\u3092\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026",
+      screenshotCancel: "\u30B9\u30AF\u30EA\u30FC\u30F3\u30B7\u30E7\u30C3\u30C8\u3092\u30AD\u30E3\u30F3\u30BB\u30EB",
+      screenshotConfirm: "\u30B9\u30AF\u30EA\u30FC\u30F3\u30B7\u30E7\u30C3\u30C8\u3092\u78BA\u5B9A",
       addUrl: "URL \u3092\u8FFD\u52A0",
       you: "\u3042\u306A\u305F",
       ordinaryConversation: "\u901A\u5E38\u306E\u30C1\u30E3\u30C3\u30C8",
@@ -21536,6 +21734,20 @@
       captureScreenshot: "\uC2A4\uD06C\uB9B0\uC0F7",
       composerAddScreenshot: "\uC2A4\uD06C\uB9B0\uC0F7 \uCD94\uAC00",
       screenshotSelectArea: "\uD398\uC774\uC9C0\uC5D0\uC11C \uB4DC\uB798\uADF8\uD574 \uC601\uC5ED\uC744 \uC120\uD0DD\uD558\uC138\uC694. Esc \uD0A4\uB85C \uCDE8\uC18C\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
+      screenshotEditorTitle: "\uC2A4\uD06C\uB9B0\uC0F7 \uD3B8\uC9D1",
+      screenshotToolPen: "\uD39C",
+      screenshotToolLine: "\uC9C1\uC120",
+      screenshotToolArrow: "\uD654\uC0B4\uD45C",
+      screenshotToolRectangle: "\uC0AC\uAC01\uD615",
+      screenshotToolText: "\uD14D\uC2A4\uD2B8",
+      screenshotUndo: "\uC8FC\uC11D \uC2E4\uD589 \uCDE8\uC18C",
+      screenshotClear: "\uC8FC\uC11D \uC9C0\uC6B0\uAE30",
+      screenshotStrokeColor: "\uC8FC\uC11D \uC0C9\uC0C1",
+      screenshotStrokeWidth: "\uC8FC\uC11D \uC120 \uB450\uAED8",
+      screenshotTextPlaceholder: "\uD14D\uC2A4\uD2B8\uB97C \uC785\uB825\uD55C \uB4A4 \uC774\uBBF8\uC9C0\uB97C \uD074\uB9AD\uD558\uC138\uC694",
+      screenshotEditorLoading: "\uC2A4\uD06C\uB9B0\uC0F7\uC744 \uBD88\uB7EC\uC624\uB294 \uC911\u2026",
+      screenshotCancel: "\uC2A4\uD06C\uB9B0\uC0F7 \uCDE8\uC18C",
+      screenshotConfirm: "\uC2A4\uD06C\uB9B0\uC0F7 \uD655\uC815",
       addUrl: "URL \uCD94\uAC00",
       you: "\uB098",
       ordinaryConversation: "\uC77C\uBC18 \uB300\uD654",
@@ -29203,6 +29415,10 @@ ${index}. ${content.trim()}
         if (completed) return;
         completed = true;
         overlay.remove();
+        overlay.removeEventListener("pointerdown", onPointerDown);
+        overlay.removeEventListener("pointermove", onPointerMove);
+        overlay.removeEventListener("pointerup", onPointerUp);
+        overlay.removeEventListener("contextmenu", onContextMenu);
         document.removeEventListener("keydown", onKeyDown, true);
         cancelActiveSelection = null;
         resolve(result);
@@ -29242,11 +29458,7 @@ ${index}. ${content.trim()}
           viewportWidth: window.innerWidth,
           viewportHeight: window.innerHeight
         };
-        overlay.remove();
-        document.removeEventListener("keydown", onKeyDown, true);
-        cancelActiveSelection = null;
-        completed = true;
-        window.requestAnimationFrame(() => resolve(result));
+        finish(result);
       };
       const onPointerDown = (event) => {
         event.preventDefault();
@@ -29277,6 +29489,9 @@ ${index}. ${content.trim()}
       document.addEventListener("keydown", onKeyDown, true);
       cancelActiveSelection = () => finish(null);
     });
+  }
+  function cancelScreenshotArea() {
+    cancelActiveSelection?.();
   }
 
   // src/content/hoverDefinition.ts
@@ -30295,6 +30510,1801 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
     if (name === "WebMind") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProductLogoIcon, {});
     const Icon2 = TOOL_ICONS[name] ?? Sparkles;
     return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Icon2, {});
+  }
+
+  // src/content/screenshotEditor.tsx
+  var import_client = __toESM(require_client(), 1);
+
+  // src/sidepanel/ScreenshotEditor.tsx
+  var import_react4 = __toESM(require_react(), 1);
+
+  // src/sidepanel/screenshotCrop.ts
+  function screenshotCrop(imageWidth, imageHeight, selection) {
+    const viewportWidth = Math.max(1, selection.viewportWidth);
+    const viewportHeight = Math.max(1, selection.viewportHeight);
+    const left = Math.max(0, Math.min(viewportWidth, selection.left));
+    const top = Math.max(0, Math.min(viewportHeight, selection.top));
+    const right = Math.max(
+      left,
+      Math.min(viewportWidth, selection.left + selection.width)
+    );
+    const bottom = Math.max(
+      top,
+      Math.min(viewportHeight, selection.top + selection.height)
+    );
+    const scaleX = imageWidth / viewportWidth;
+    const scaleY = imageHeight / viewportHeight;
+    const sourceX = Math.round(left * scaleX);
+    const sourceY = Math.round(top * scaleY);
+    const sourceWidth = Math.max(
+      1,
+      Math.min(imageWidth - sourceX, Math.round((right - left) * scaleX))
+    );
+    const sourceHeight = Math.max(
+      1,
+      Math.min(imageHeight - sourceY, Math.round((bottom - top) * scaleY))
+    );
+    const maxSide = 2048;
+    const outputScale = Math.min(1, maxSide / Math.max(sourceWidth, sourceHeight));
+    return {
+      sourceX,
+      sourceY,
+      sourceWidth,
+      sourceHeight,
+      outputWidth: Math.max(1, Math.round(sourceWidth * outputScale)),
+      outputHeight: Math.max(1, Math.round(sourceHeight * outputScale))
+    };
+  }
+
+  // src/sidepanel/ScreenshotEditor.tsx
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var RESIZE_HANDLES = [
+    { id: "n", className: "screenshot-resize-n" },
+    { id: "ne", className: "screenshot-resize-ne" },
+    { id: "e", className: "screenshot-resize-e" },
+    { id: "se", className: "screenshot-resize-se" },
+    { id: "s", className: "screenshot-resize-s" },
+    { id: "sw", className: "screenshot-resize-sw" },
+    { id: "w", className: "screenshot-resize-w" },
+    { id: "nw", className: "screenshot-resize-nw" }
+  ];
+  var TOOLS = [
+    { id: "pen", icon: Pencil, label: "screenshotToolPen" },
+    { id: "line", icon: Minus, label: "screenshotToolLine" },
+    { id: "arrow", icon: ArrowUpRight, label: "screenshotToolArrow" },
+    { id: "rectangle", icon: Square, label: "screenshotToolRectangle" },
+    { id: "text", icon: Type, label: "screenshotToolText" }
+  ];
+  function drawArrow(context, start, end, width) {
+    const angle = Math.atan2(end.y - start.y, end.x - start.x);
+    const head = Math.max(10, width * 4);
+    context.beginPath();
+    context.moveTo(end.x, end.y);
+    context.lineTo(
+      end.x - head * Math.cos(angle - Math.PI / 6),
+      end.y - head * Math.sin(angle - Math.PI / 6)
+    );
+    context.moveTo(end.x, end.y);
+    context.lineTo(
+      end.x - head * Math.cos(angle + Math.PI / 6),
+      end.y - head * Math.sin(angle + Math.PI / 6)
+    );
+    context.stroke();
+  }
+  function drawAnnotation(context, annotation) {
+    context.save();
+    context.strokeStyle = annotation.color;
+    context.fillStyle = annotation.color;
+    context.lineWidth = annotation.width;
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    if (annotation.tool === "text") {
+      context.font = `700 ${Math.max(16, annotation.width * 6)}px sans-serif`;
+      context.fillText(annotation.text ?? "", annotation.start?.x ?? 0, annotation.start?.y ?? 0);
+      context.restore();
+      return;
+    }
+    if (annotation.tool === "pen" && annotation.points?.length) {
+      context.beginPath();
+      context.moveTo(annotation.points[0].x, annotation.points[0].y);
+      annotation.points.slice(1).forEach((point) => context.lineTo(point.x, point.y));
+      context.stroke();
+      context.restore();
+      return;
+    }
+    if (!annotation.start || !annotation.end) {
+      context.restore();
+      return;
+    }
+    if (annotation.tool === "rectangle") {
+      context.strokeRect(
+        annotation.start.x,
+        annotation.start.y,
+        annotation.end.x - annotation.start.x,
+        annotation.end.y - annotation.start.y
+      );
+    } else {
+      context.beginPath();
+      context.moveTo(annotation.start.x, annotation.start.y);
+      context.lineTo(annotation.end.x, annotation.end.y);
+      context.stroke();
+      if (annotation.tool === "arrow") {
+        drawArrow(context, annotation.start, annotation.end, annotation.width);
+      }
+    }
+    context.restore();
+  }
+  function drawScene(canvas, image, annotations, draft) {
+    const context = canvas.getContext("2d");
+    if (!context) return;
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    annotations.forEach((annotation) => drawAnnotation(context, annotation));
+    if (draft) drawAnnotation(context, draft);
+  }
+  function cropSourceImage(image, placement) {
+    const crop = screenshotCrop(image.naturalWidth, image.naturalHeight, placement);
+    const canvas = document.createElement("canvas");
+    canvas.width = crop.outputWidth;
+    canvas.height = crop.outputHeight;
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("Unable to create screenshot canvas");
+    context.drawImage(
+      image,
+      crop.sourceX,
+      crop.sourceY,
+      crop.sourceWidth,
+      crop.sourceHeight,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+    return canvas.toDataURL("image/png");
+  }
+  function resizedPlacement(start, handle, deltaX, deltaY) {
+    const minSize = 32;
+    let left = start.left;
+    let top = start.top;
+    let right = start.left + start.width;
+    let bottom = start.top + start.height;
+    if (handle.includes("w")) {
+      left = Math.max(0, Math.min(right - minSize, start.left + deltaX));
+    }
+    if (handle.includes("e")) {
+      right = Math.min(
+        start.viewportWidth,
+        Math.max(left + minSize, start.left + start.width + deltaX)
+      );
+    }
+    if (handle.includes("n")) {
+      top = Math.max(0, Math.min(bottom - minSize, start.top + deltaY));
+    }
+    if (handle.includes("s")) {
+      bottom = Math.min(
+        start.viewportHeight,
+        Math.max(top + minSize, start.top + start.height + deltaY)
+      );
+    }
+    return {
+      ...start,
+      left,
+      top,
+      width: right - left,
+      height: bottom - top
+    };
+  }
+  function ScreenshotEditor({
+    attachment,
+    language,
+    placement,
+    sourceDataUrl,
+    onCancel,
+    onConfirm
+  }) {
+    const canvasRef = (0, import_react4.useRef)(null);
+    const editorRef = (0, import_react4.useRef)(null);
+    const imageRef = (0, import_react4.useRef)(null);
+    const sourceImageRef = (0, import_react4.useRef)(null);
+    const draftRef = (0, import_react4.useRef)(null);
+    const resizeRef = (0, import_react4.useRef)(null);
+    const cropFrameRef = (0, import_react4.useRef)(null);
+    const pendingPlacementRef = (0, import_react4.useRef)(null);
+    const [imageReady, setImageReady] = (0, import_react4.useState)(false);
+    const [imageVersion, setImageVersion] = (0, import_react4.useState)(0);
+    const [workingAttachment, setWorkingAttachment] = (0, import_react4.useState)(attachment);
+    const [editorPlacement, setEditorPlacement] = (0, import_react4.useState)(placement);
+    const [pagePosition, setPagePosition] = (0, import_react4.useState)({
+      left: placement?.left ?? 0,
+      top: placement?.top ?? 0
+    });
+    const [tool, setTool] = (0, import_react4.useState)("pen");
+    const [color, setColor] = (0, import_react4.useState)("#e53935");
+    const [width, setWidth] = (0, import_react4.useState)(4);
+    const [text2, setText] = (0, import_react4.useState)("");
+    const [annotations, setAnnotations] = (0, import_react4.useState)([]);
+    const [draft, setDraft] = (0, import_react4.useState)(null);
+    const [zoom, setZoom] = (0, import_react4.useState)(1);
+    const pageMode = Boolean(placement);
+    const activePlacement = editorPlacement ?? placement;
+    (0, import_react4.useEffect)(() => {
+      if (!sourceDataUrl || !placement) {
+        sourceImageRef.current = null;
+        setEditorPlacement(placement);
+        setWorkingAttachment(attachment);
+        return;
+      }
+      const source = new Image();
+      source.onload = () => {
+        sourceImageRef.current = source;
+        setEditorPlacement(placement);
+        setWorkingAttachment({
+          ...attachment,
+          dataUrl: cropSourceImage(source, placement)
+        });
+      };
+      source.src = sourceDataUrl;
+      return () => {
+        source.onload = null;
+      };
+    }, [attachment, placement, sourceDataUrl]);
+    (0, import_react4.useEffect)(() => {
+      if (!imageRef.current) setImageReady(false);
+      const image = new Image();
+      image.onload = () => {
+        imageRef.current = image;
+        setImageReady(true);
+        setImageVersion((value) => value + 1);
+      };
+      image.src = workingAttachment.dataUrl ?? "";
+      return () => {
+        image.onload = null;
+      };
+    }, [workingAttachment.dataUrl]);
+    (0, import_react4.useEffect)(() => {
+      if (!placement) return;
+      const onKeyDown = (event) => {
+        if (event.key !== "Escape") return;
+        event.preventDefault();
+        onCancel();
+      };
+      document.addEventListener("keydown", onKeyDown, true);
+      return () => document.removeEventListener("keydown", onKeyDown, true);
+    }, [onCancel, placement]);
+    (0, import_react4.useLayoutEffect)(() => {
+      if (!pageMode || !activePlacement || !imageReady || !editorRef.current) return;
+      const frame = window.requestAnimationFrame(() => {
+        const editor = editorRef.current;
+        if (!editor) return;
+        const margin = 8;
+        const rect = editor.getBoundingClientRect();
+        setPagePosition({
+          left: Math.max(
+            margin,
+            Math.min(activePlacement.left, window.innerWidth - rect.width - margin)
+          ),
+          top: activePlacement.top + rect.height <= window.innerHeight - margin ? Math.max(margin, activePlacement.top) : Math.max(margin, activePlacement.top - rect.height - margin)
+        });
+      });
+      return () => window.cancelAnimationFrame(frame);
+    }, [activePlacement, imageReady, pageMode, tool]);
+    (0, import_react4.useEffect)(() => {
+      const canvas = canvasRef.current;
+      const image = imageRef.current;
+      if (!canvas || !image || !imageReady) return;
+      canvas.width = image.naturalWidth || image.width;
+      canvas.height = image.naturalHeight || image.height;
+      drawScene(canvas, image, annotations, draft);
+    }, [annotations, draft, imageReady, imageVersion]);
+    const pointFromEvent = (event) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return { x: 0, y: 0 };
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: Math.max(0, Math.min(canvas.width, (event.clientX - rect.left) * (canvas.width / rect.width))),
+        y: Math.max(0, Math.min(canvas.height, (event.clientY - rect.top) * (canvas.height / rect.height)))
+      };
+    };
+    const onPointerDown = (event) => {
+      if (!imageReady) return;
+      event.preventDefault();
+      const point = pointFromEvent(event);
+      if (tool === "text") {
+        if (!text2.trim()) return;
+        setAnnotations((current) => [
+          ...current,
+          { tool, color, width, start: point, text: text2.trim() }
+        ]);
+        setText("");
+        return;
+      }
+      const next = tool === "pen" ? { tool, color, width, points: [point] } : { tool, color, width, start: point, end: point };
+      draftRef.current = next;
+      setDraft(next);
+      event.currentTarget.setPointerCapture(event.pointerId);
+    };
+    const onPointerMove = (event) => {
+      const current = draftRef.current;
+      if (!current) return;
+      event.preventDefault();
+      const point = pointFromEvent(event);
+      const next = current.tool === "pen" ? { ...current, points: [...current.points ?? [], point] } : { ...current, end: point };
+      draftRef.current = next;
+      setDraft(next);
+    };
+    const finishPointer = (event) => {
+      const current = draftRef.current;
+      if (!current) return;
+      const point = pointFromEvent(event);
+      const finished = current.tool === "pen" ? { ...current, points: [...current.points ?? [], point] } : { ...current, end: point };
+      draftRef.current = null;
+      setDraft(null);
+      setAnnotations((items) => [...items, finished]);
+      try {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      } catch {
+      }
+    };
+    const queueCrop = (nextPlacement) => {
+      setEditorPlacement(nextPlacement);
+      const source = sourceImageRef.current;
+      if (!source) return;
+      pendingPlacementRef.current = nextPlacement;
+      if (cropFrameRef.current !== null) return;
+      cropFrameRef.current = window.requestAnimationFrame(() => {
+        cropFrameRef.current = null;
+        const pending = pendingPlacementRef.current;
+        pendingPlacementRef.current = null;
+        if (!pending) return;
+        setWorkingAttachment((current) => ({
+          ...current,
+          dataUrl: cropSourceImage(source, pending)
+        }));
+      });
+    };
+    const onResizePointerDown = (handle, event) => {
+      if (!activePlacement || !sourceImageRef.current) return;
+      event.preventDefault();
+      event.stopPropagation();
+      resizeRef.current = {
+        handle,
+        pointerX: event.clientX,
+        pointerY: event.clientY,
+        placement: activePlacement
+      };
+      setAnnotations([]);
+      draftRef.current = null;
+      setDraft(null);
+      event.currentTarget.setPointerCapture(event.pointerId);
+    };
+    const onResizePointerMove = (event) => {
+      const current = resizeRef.current;
+      if (!current) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const canvasRect = canvasRef.current?.getBoundingClientRect();
+      const scaleX = canvasRect ? current.placement.width / Math.max(1, canvasRect.width) : 1;
+      const scaleY = canvasRect ? current.placement.height / Math.max(1, canvasRect.height) : 1;
+      queueCrop(
+        resizedPlacement(
+          current.placement,
+          current.handle,
+          (event.clientX - current.pointerX) * scaleX,
+          (event.clientY - current.pointerY) * scaleY
+        )
+      );
+    };
+    const finishResize = (event) => {
+      if (!resizeRef.current) return;
+      onResizePointerMove(event);
+      resizeRef.current = null;
+      try {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      } catch {
+      }
+    };
+    const confirm = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      onConfirm({ ...workingAttachment, dataUrl: canvas.toDataURL("image/png") });
+    };
+    const save = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = workingAttachment.name || "screenshot.png";
+      link.click();
+    };
+    const pageStyle = pageMode ? { left: pagePosition.left, top: pagePosition.top } : void 0;
+    const canvasStyle = !pageMode ? {
+      width: `${zoom * 100}%`,
+      maxWidth: "none",
+      maxHeight: "none",
+      height: "auto"
+    } : void 0;
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+      "div",
+      {
+        className: `modal-backdrop screenshot-editor-backdrop ${placement ? "screenshot-editor-page-mode" : ""}`,
+        children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+          "section",
+          {
+            ref: editorRef,
+            className: "screenshot-editor",
+            style: pageStyle,
+            role: "dialog",
+            "aria-modal": "true",
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "screenshot-preview-float", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("header", { className: "screenshot-editor-heading", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h2", { children: uiText(language, "screenshotEditorTitle") }) }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "screenshot-editor-canvas-wrap", children: imageReady ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "screenshot-editor-canvas-frame", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                    "canvas",
+                    {
+                      ref: canvasRef,
+                      className: "screenshot-editor-canvas",
+                      style: canvasStyle,
+                      onPointerDown,
+                      onPointerMove,
+                      onPointerUp: finishPointer,
+                      onPointerCancel: finishPointer
+                    }
+                  ),
+                  pageMode && sourceImageRef.current && RESIZE_HANDLES.map(({ id, className }) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                    "button",
+                    {
+                      className: `screenshot-resize-handle ${className}`,
+                      type: "button",
+                      "aria-label": uiText(language, "screenshotEditorTitle"),
+                      title: uiText(language, "screenshotEditorTitle"),
+                      onPointerDown: (event) => onResizePointerDown(id, event),
+                      onPointerMove: onResizePointerMove,
+                      onPointerUp: finishResize,
+                      onPointerCancel: finishResize
+                    },
+                    id
+                  ))
+                ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: uiText(language, "screenshotEditorLoading") }) })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "screenshot-tools-float", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "screenshot-editor-tools", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "screenshot-editor-tool-group", children: TOOLS.map(({ id, icon: Icon2, label }) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                  "button",
+                  {
+                    className: `icon-button mini ${tool === id ? "active" : ""}`,
+                    type: "button",
+                    title: uiText(language, label),
+                    "aria-label": uiText(language, label),
+                    "aria-pressed": tool === id,
+                    onClick: () => setTool(id),
+                    children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon2, {})
+                  },
+                  id
+                )) }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("label", { className: "screenshot-editor-color", title: uiText(language, "screenshotStrokeColor"), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { "aria-label": uiText(language, "screenshotStrokeColor"), type: "color", value: color, onChange: (event) => setColor(event.target.value) }) }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("label", { className: "screenshot-editor-width", title: uiText(language, "screenshotStrokeWidth"), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { "aria-label": uiText(language, "screenshotStrokeWidth"), type: "range", min: "1", max: "14", value: width, onChange: (event) => setWidth(Number(event.target.value)) }) }),
+                tool === "text" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                  "input",
+                  {
+                    className: "screenshot-editor-text",
+                    value: text2,
+                    placeholder: uiText(language, "screenshotTextPlaceholder"),
+                    "aria-label": uiText(language, "screenshotTextPlaceholder"),
+                    onChange: (event) => setText(event.target.value)
+                  }
+                ),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "screenshot-tools-spacer" }),
+                !pageMode && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "icon-button mini", type: "button", title: "Zoom out", "aria-label": "Zoom out", disabled: zoom <= 0.75, onClick: () => setZoom((value) => Math.max(0.75, value - 0.25)), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ZoomOut, {}) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "icon-button mini", type: "button", title: "Reset zoom", "aria-label": "Reset zoom", disabled: zoom === 1, onClick: () => setZoom(1), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(RotateCcw, {}) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "icon-button mini", type: "button", title: "Zoom in", "aria-label": "Zoom in", disabled: zoom >= 3, onClick: () => setZoom((value) => Math.min(3, value + 0.25)), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ZoomIn, {}) })
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "icon-button mini", type: "button", title: uiText(language, "screenshotUndo"), "aria-label": uiText(language, "screenshotUndo"), disabled: !annotations.length, onClick: () => setAnnotations((items) => items.slice(0, -1)), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Undo2, {}) }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "icon-button mini", type: "button", title: uiText(language, "screenshotClear"), "aria-label": uiText(language, "screenshotClear"), disabled: !annotations.length, onClick: () => setAnnotations([]), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Trash2, {}) }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "icon-button mini screenshot-editor-cancel", type: "button", title: uiText(language, "screenshotCancel"), "aria-label": uiText(language, "screenshotCancel"), onClick: onCancel, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(X, {}) }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "icon-button mini screenshot-editor-confirm", type: "button", title: uiText(language, "screenshotConfirm"), "aria-label": uiText(language, "screenshotConfirm"), disabled: !imageReady, onClick: confirm, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Check, {}) }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "icon-button mini screenshot-editor-save", type: "button", title: uiText(language, "save"), "aria-label": uiText(language, "save"), disabled: !imageReady, onClick: save, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Save, {}) })
+              ] }) })
+            ]
+          }
+        )
+      }
+    );
+  }
+
+  // src/content/styles.ts
+  var SHADOW_STYLES = `
+  :host {
+    all: initial;
+    color-scheme: light dark;
+    --md-bg: #ffffff;
+    --md-surface: #f4f6f5;
+    --md-border: #d8ddda;
+    --md-text: #17201e;
+    --md-muted: #62706c;
+    --md-accent: #e8533f;
+    --md-teal: #178f7c;
+    --md-page-action-muted: #d4d8d6;
+    --md-shadow: 0 14px 38px rgba(15, 26, 23, .18);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    letter-spacing: 0;
+  }
+  * { box-sizing: border-box; letter-spacing: 0; }
+  button { font: inherit; }
+  .modal-backdrop {
+    position: fixed;
+    z-index: 2147483647;
+    inset: 0;
+    display: grid;
+    overflow: auto;
+    place-items: center;
+    padding: 10px;
+    background: rgba(10, 17, 15, .58);
+  }
+  .screenshot-editor-backdrop {
+    align-content: center;
+    justify-items: center;
+    gap: 8px;
+  }
+  .screenshot-editor {
+    display: flex;
+    width: min(760px, 100%);
+    max-height: calc(100vh - 20px);
+    flex-direction: column;
+    gap: 8px;
+  }
+  .screenshot-preview-float,
+  .screenshot-tools-float {
+    width: 100%;
+    border: 1px solid var(--md-border);
+    border-radius: 7px;
+    background: var(--md-bg);
+    box-shadow: var(--md-shadow);
+  }
+  .screenshot-editor-canvas-frame {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+  }
+  .screenshot-preview-float {
+    display: flex;
+    max-height: calc(100vh - 112px);
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .screenshot-editor-heading {
+    display: flex;
+    min-height: 38px;
+    align-items: center;
+    padding: 4px 12px;
+    border-bottom: 1px solid var(--md-border);
+    color: var(--md-text);
+  }
+  .screenshot-editor-heading h2 {
+    margin: 0;
+    font-size: 13px;
+  }
+  .screenshot-editor-canvas-wrap {
+    display: grid;
+    min-height: 120px;
+    max-height: calc(100vh - 164px);
+    place-items: center;
+    overflow: auto;
+    padding: 10px;
+    background: #1b2422;
+  }
+  .screenshot-editor-canvas {
+    display: block;
+    max-width: 100%;
+    max-height: calc(100vh - 210px);
+    cursor: crosshair;
+    touch-action: none;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, .28);
+  }
+  .screenshot-editor-tools {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 7px 9px;
+    scrollbar-width: thin;
+  }
+  .screenshot-editor-tool-group {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 3px;
+  }
+  .screenshot-editor-tools .icon-button {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    color: var(--md-muted);
+    background: transparent;
+    cursor: pointer;
+  }
+  .screenshot-editor-tools .icon-button:hover,
+  .screenshot-editor-tools .icon-button.active {
+    border-color: var(--md-border);
+    color: var(--md-text);
+    background: var(--md-surface);
+  }
+  .screenshot-editor-tools .icon-button:disabled { cursor: not-allowed; opacity: .48; }
+  .screenshot-editor-tools .icon-button svg { width: 15px; height: 15px; stroke-width: 1.9; }
+  .screenshot-editor-tools .screenshot-editor-cancel { color: var(--md-accent); }
+  .screenshot-editor-tools .screenshot-editor-confirm { color: var(--md-teal); }
+  .screenshot-editor-color {
+    display: grid;
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid var(--md-border);
+    border-radius: 5px;
+    background: var(--md-bg);
+    cursor: pointer;
+  }
+  .screenshot-editor-color input { width: 22px; height: 22px; padding: 0; border: 0; background: transparent; cursor: pointer; }
+  .screenshot-editor-width { display: flex; flex: 0 0 auto; width: 72px; align-items: center; }
+  .screenshot-editor-width input { width: 100%; accent-color: var(--md-teal); }
+  .screenshot-editor-text {
+    min-width: 120px;
+    flex: 1 1 150px;
+    min-height: 28px;
+    padding: 0 8px;
+    border: 1px solid var(--md-border);
+    border-radius: 5px;
+    color: var(--md-text);
+    background: var(--md-bg);
+    font-size: 11px;
+  }
+  .screenshot-tools-spacer { flex: 1 1 auto; }
+  .screenshot-editor-page-mode {
+    display: block;
+    overflow: hidden;
+    padding: 0;
+    background: rgba(10, 17, 15, .58);
+  }
+  .screenshot-editor-page-mode .screenshot-editor {
+    position: fixed;
+    max-width: calc(100vw - 16px);
+    max-height: calc(100vh - 16px);
+  }
+  .screenshot-editor-page-mode .screenshot-preview-float { max-height: calc(100vh - 112px); }
+  .screenshot-editor-page-mode .screenshot-editor-canvas-wrap { max-height: calc(100vh - 164px); }
+  .screenshot-editor-page-mode .screenshot-editor-canvas {
+    width: 100%;
+    height: auto;
+  }
+  .screenshot-editor-page-mode .screenshot-preview-float {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .screenshot-editor-page-mode .screenshot-editor-heading { display: none; }
+  .screenshot-editor-page-mode .screenshot-editor-canvas-wrap {
+    padding: 0;
+    background: transparent;
+  }
+  .screenshot-resize-handle {
+    position: absolute;
+    z-index: 2;
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: var(--md-accent);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, .42);
+    cursor: move;
+    touch-action: none;
+  }
+  .screenshot-resize-n { top: -6px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+  .screenshot-resize-ne { top: -6px; right: -6px; cursor: nesw-resize; }
+  .screenshot-resize-e { top: 50%; right: -6px; transform: translateY(-50%); cursor: ew-resize; }
+  .screenshot-resize-se { right: -6px; bottom: -6px; cursor: nwse-resize; }
+  .screenshot-resize-s { bottom: -6px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+  .screenshot-resize-sw { bottom: -6px; left: -6px; cursor: nesw-resize; }
+  .screenshot-resize-w { top: 50%; left: -6px; transform: translateY(-50%); cursor: ew-resize; }
+  .screenshot-resize-nw { top: -6px; left: -6px; cursor: nwse-resize; }
+  .md-toolbar {
+    position: fixed;
+    z-index: 2147483646;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    width: max-content;
+    max-width: min(430px, calc(100vw - 20px));
+    min-height: 40px;
+    padding: 4px;
+    border: 1px solid var(--md-border);
+    border-radius: 7px;
+    background: var(--md-bg);
+    box-shadow: var(--md-shadow);
+  }
+  .md-hover-dot {
+    position: fixed;
+    z-index: 2147483646;
+    width: 9px;
+    height: 9px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--md-accent);
+    box-shadow: 0 1px 5px rgba(15, 26, 23, .22);
+    cursor: pointer;
+  }
+  .md-hover-dot:hover {
+    background: var(--md-teal);
+  }
+  .md-definition-tooltip {
+    position: fixed;
+    z-index: 2147483647;
+    max-width: min(360px, calc(100vw - 20px));
+    overflow: hidden;
+    padding: 5px 9px;
+    border: 1px solid var(--md-border);
+    border-radius: 5px;
+    color: var(--md-text);
+    background: var(--md-bg);
+    box-shadow: 0 7px 20px rgba(15, 26, 23, .18);
+    font-size: 12px;
+    line-height: 1.35;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+  .md-icon-button {
+    display: grid;
+    width: 31px;
+    height: 31px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 5px;
+    color: var(--md-text);
+    background: transparent;
+    cursor: pointer;
+  }
+  .md-toolbar .md-icon-button { color: var(--md-teal); }
+  .md-icon-button:hover { color: var(--md-accent); background: var(--md-surface); }
+  .md-icon-button:disabled { cursor: wait; opacity: .45; }
+  .md-icon-button svg { width: 17px; height: 17px; stroke-width: 1.9; }
+  .md-divider { width: 1px; height: 20px; background: var(--md-border); margin: 0 2px; }
+  .md-result {
+    position: fixed;
+    z-index: 2147483647;
+    display: flex;
+    flex-direction: column;
+    width: min(420px, calc(100vw - 20px));
+    max-height: min(460px, calc(100vh - 20px));
+    overflow: visible;
+    overscroll-behavior: contain;
+    border: 1px solid var(--md-border);
+    border-radius: 7px;
+    color: var(--md-text);
+    background: var(--md-bg);
+    box-shadow: var(--md-shadow);
+  }
+  .md-result-head {
+    display: flex;
+    min-height: 42px;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 8px 7px 12px;
+    border-bottom: 1px solid var(--md-border);
+  }
+  .md-result-title { flex: 1; min-width: 0; font-size: 13px; font-weight: 700; }
+  .md-result-head > svg {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+    color: var(--md-accent);
+  }
+  .md-result-body {
+    flex: 1 1 auto;
+    min-height: 86px;
+    max-height: clamp(86px, calc(100vh - 180px), 280px);
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    padding: 13px 14px;
+    font-size: 14px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .md-qr-result { width: min(300px, calc(100vw - 20px)); }
+  .md-qr-result-body {
+    display: grid;
+    min-height: 252px;
+    place-items: center;
+    padding: 20px;
+  }
+  .md-qr-code {
+    width: min(240px, calc(100vw - 80px));
+    aspect-ratio: 1;
+  }
+  .md-qr-code svg { display: block; width: 100%; height: 100%; }
+  .md-result-body .markdown {
+    min-width: 0;
+    white-space: normal;
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+    overflow-wrap: anywhere;
+  }
+  .md-result-body .markdown > :first-child { margin-top: 0; }
+  .md-result-body .markdown > :last-child { margin-bottom: 0; }
+  .md-result-body .markdown p,
+  .md-result-body .markdown ul,
+  .md-result-body .markdown ol,
+  .md-result-body .markdown blockquote,
+  .md-result-body .markdown pre,
+  .md-result-body .markdown table {
+    margin: 0 0 8px;
+  }
+  .md-result-body .markdown ul,
+  .md-result-body .markdown ol { padding-left: 20px; }
+  .md-result-body .markdown li + li { margin-top: 3px; }
+  .md-result-body .markdown strong,
+  .md-result-body .markdown b {
+    font-synthesis: weight;
+    font-weight: 700;
+  }
+  .md-result-body .markdown a { color: var(--md-teal); }
+  .md-result-body .markdown blockquote {
+    padding-left: 9px;
+    border-left: 3px solid var(--md-border);
+    color: var(--md-muted);
+  }
+  .md-result-body .markdown code {
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: var(--md-surface);
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: .92em;
+  }
+  .md-result-body .markdown pre {
+    max-width: 100%;
+    overflow: auto;
+    padding: 8px;
+    border: 1px solid var(--md-border);
+    border-radius: 5px;
+    background: var(--md-surface);
+  }
+  .md-result-body .markdown pre code {
+    padding: 0;
+    background: transparent;
+  }
+  .md-result-body .markdown table {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    border-collapse: collapse;
+  }
+  .md-result-body .markdown th,
+  .md-result-body .markdown td {
+    padding: 5px 7px;
+    border: 1px solid var(--md-border);
+    text-align: left;
+  }
+  .md-result-error { color: #b33427; }
+  .md-result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 8px;
+    border-top: 1px solid var(--md-border);
+    background: var(--md-surface);
+  }
+  .md-result-head.md-draggable-head {
+    cursor: move;
+    touch-action: none;
+    user-select: none;
+  }
+  .md-result-head.md-draggable-head:active { cursor: grabbing; }
+  .md-result-tools {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+  .md-tool-menu {
+    position: relative;
+    display: inline-flex;
+    min-width: 0;
+    flex: 0 0 auto;
+  }
+  .md-tool-select {
+    display: inline-flex;
+    min-width: 120px;
+    max-width: 170px;
+    height: 31px;
+    align-items: center;
+    gap: 6px;
+    padding: 0 8px;
+    border: 1px solid var(--md-border);
+    border-radius: 5px;
+    color: var(--md-text);
+    background: var(--md-bg);
+    cursor: pointer;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 650;
+  }
+  .md-tool-select svg {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 auto;
+    color: var(--md-accent);
+  }
+  .md-tool-select .md-menu-chevron {
+    width: 12px;
+    height: 12px;
+    margin-left: auto;
+    color: currentColor;
+    opacity: .68;
+  }
+  .md-tool-select span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .md-tool-menu-list {
+    position: absolute;
+    z-index: 4;
+    left: 0;
+    bottom: calc(100% + 6px);
+    display: grid;
+    width: 190px;
+    max-height: 220px;
+    overflow: auto;
+    overscroll-behavior: contain;
+    gap: 3px;
+    padding: 5px;
+    border: 1px solid var(--md-border);
+    border-radius: 7px;
+    background: var(--md-bg);
+    box-shadow: var(--md-shadow);
+  }
+  .md-tool-menu-list button {
+    display: flex;
+    width: 100%;
+    min-height: 30px;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 5px;
+    color: var(--md-text);
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 650;
+    text-align: left;
+  }
+  .md-tool-menu-list button:hover,
+  .md-tool-menu-list button.active {
+    color: var(--md-teal);
+    background: color-mix(in srgb, var(--md-teal) 9%, var(--md-bg));
+  }
+  .md-tool-menu-list svg {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 auto;
+    color: var(--md-accent);
+  }
+  .md-tool-menu-list span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .md-text-button {
+    display: inline-flex;
+    min-height: 31px;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+    border: 1px solid var(--md-border);
+    border-radius: 5px;
+    color: var(--md-text);
+    background: var(--md-bg);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 650;
+  }
+  .md-text-button:hover { border-color: var(--md-teal); color: var(--md-teal); }
+  .md-text-button:disabled {
+    cursor: not-allowed;
+    opacity: .48;
+  }
+  .md-text-button svg { width: 14px; height: 14px; }
+  .md-followup {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: stretch;
+    gap: 7px;
+    padding: 8px;
+    border-top: 1px solid var(--md-border);
+    background: var(--md-bg);
+  }
+  .md-followup textarea {
+    width: 100%;
+    height: 34px;
+    min-width: 0;
+    resize: none;
+    padding: 7px 9px;
+    border: 1px solid var(--md-border);
+    border-radius: 5px;
+    color: var(--md-text);
+    background: var(--md-bg);
+    font: inherit;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .md-followup textarea::placeholder { color: var(--md-muted); }
+  .md-followup button {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--md-accent);
+    border-radius: 5px;
+    color: #fff;
+    background: var(--md-accent);
+    cursor: pointer;
+  }
+  .md-followup button:disabled {
+    cursor: not-allowed;
+    opacity: .48;
+  }
+  .md-followup button svg { width: 15px; height: 15px; }
+  .md-spinner {
+    width: 17px;
+    height: 17px;
+    margin: 28px auto;
+    border: 2px solid var(--md-border);
+    border-top-color: var(--md-accent);
+    border-radius: 50%;
+    animation: md-spin .8s linear infinite;
+  }
+  .md-mini-spinner {
+    width: 13px;
+    height: 13px;
+    border: 2px solid color-mix(in srgb, var(--md-accent) 25%, transparent);
+    border-top-color: var(--md-accent);
+    border-radius: 50%;
+    animation: md-spin .8s linear infinite;
+  }
+  .md-page-action-button {
+    position: fixed;
+    z-index: 2147483645;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    color: var(--md-page-action-muted);
+    background: transparent;
+    box-shadow: none;
+    outline: none;
+    opacity: .45;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      color .15s ease,
+      opacity .15s ease,
+      transform .15s ease,
+      box-shadow .15s ease;
+  }
+  .md-auto-reply-button { width: 16px; height: 16px; }
+  .md-video-pip-button {
+    width: 22px;
+    height: 22px;
+  }
+  .md-page-action-button:hover,
+  .md-page-action-button:focus-visible {
+    color: var(--md-accent);
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  .md-page-action-button:focus,
+  .md-page-action-button:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+  .md-page-action-button:active {
+    color: var(--md-accent);
+    opacity: 1;
+    transform: scale(.9);
+  }
+  .md-page-action-button:disabled {
+    cursor: wait;
+    opacity: .68;
+    transform: none;
+  }
+  .md-video-pip-button svg {
+    width: 13px;
+    height: 13px;
+    stroke-width: 2.1;
+  }
+  .md-auto-reply-button.error {
+    color: #b33427;
+  }
+  .md-page-action-button.error:hover,
+  .md-page-action-button.error:focus-visible,
+  .md-page-action-button.error:active {
+    color: var(--md-accent);
+  }
+  .md-auto-reply-button svg {
+    width: 10px;
+    height: 10px;
+    stroke-width: 2.4;
+  }
+  .md-auto-reply-button .webmind-logo-icon {
+    display: block;
+    width: 10px;
+    height: 10px;
+    object-fit: contain;
+    filter: grayscale(1) brightness(1.45);
+  }
+  .md-page-action-button:hover .webmind-logo-icon,
+  .md-page-action-button:focus-visible .webmind-logo-icon,
+  .md-page-action-button:active .webmind-logo-icon {
+    filter: none;
+  }
+  .md-auto-reply-button .md-mini-spinner {
+    width: 10px;
+    height: 10px;
+    border-width: 1px;
+  }
+  .md-search-button {
+    position: fixed;
+    z-index: 2147483645;
+    right: 18px;
+    top: 124px;
+    display: flex;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid var(--md-border);
+    border-radius: 7px;
+    color: #fff;
+    background: #18211f;
+    box-shadow: 0 8px 24px rgba(15, 26, 23, .2);
+    cursor: pointer;
+  }
+  .md-search-button:hover { background: var(--md-teal); }
+  .md-search-button svg { width: 19px; height: 19px; }
+  .md-search-answer {
+    position: fixed;
+    z-index: 2147483643;
+    top: 84px;
+    right: 18px;
+    display: flex;
+    width: min(360px, calc(100vw - 36px));
+    max-height: min(620px, calc(100vh - 116px));
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--md-border);
+    border-radius: 7px;
+    color: var(--md-text);
+    background: var(--md-bg);
+    box-shadow: var(--md-shadow);
+  }
+  .md-search-answer-head {
+    display: flex;
+    min-height: 40px;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 7px 6px 12px;
+    border-bottom: 1px solid var(--md-border);
+    background: var(--md-bg);
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+  }
+  .md-search-answer-head:active {
+    cursor: grabbing;
+  }
+  .md-search-answer-head > svg {
+    width: 16px;
+    height: 16px;
+    color: var(--md-accent);
+  }
+  .md-search-answer-head strong {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+  }
+  .md-search-answer-body {
+    min-height: 96px;
+    overflow: auto;
+    padding: 13px 14px;
+    font-size: 13px;
+    line-height: 1.62;
+    overflow-wrap: anywhere;
+  }
+  .md-search-answer-body.error { color: #b33427; }
+  .md-search-answer-markdown {
+    overflow-wrap: anywhere;
+  }
+  .md-search-answer-markdown .markdown {
+    color: var(--md-text);
+    font-size: 13px;
+    line-height: 1.62;
+  }
+  .md-search-answer-markdown .markdown > :first-child {
+    margin-top: 0;
+  }
+  .md-search-answer-markdown .markdown > :last-child {
+    margin-bottom: 0;
+  }
+  .md-search-answer-markdown .markdown p,
+  .md-search-answer-markdown .markdown ul,
+  .md-search-answer-markdown .markdown ol,
+  .md-search-answer-markdown .markdown blockquote,
+  .md-search-answer-markdown .markdown pre {
+    margin: 0 0 6px;
+  }
+  .md-search-answer-markdown .markdown ul,
+  .md-search-answer-markdown .markdown ol {
+    padding-left: 18px;
+  }
+  .md-search-answer-markdown .markdown h1,
+  .md-search-answer-markdown .markdown h2,
+  .md-search-answer-markdown .markdown h3 {
+    margin: 8px 0 5px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .md-search-answer-markdown .markdown a {
+    color: var(--md-teal);
+  }
+  .md-search-answer-markdown .markdown a[href^="http"] {
+    display: inline-flex;
+    align-items: center;
+    min-height: 18px;
+    padding: 0 5px;
+    border: 1px solid var(--md-border);
+    border-radius: 999px;
+    color: var(--md-teal);
+    background: color-mix(in srgb, var(--md-teal) 7%, var(--md-bg));
+    text-decoration: none;
+    font-size: 10.5px;
+    font-weight: 750;
+    line-height: 1.4;
+  }
+  .md-search-answer-markdown .markdown a[href^="http"]:hover {
+    border-color: var(--md-teal);
+    color: var(--md-accent);
+  }
+  .md-search-answer-markdown .markdown code {
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: var(--md-surface);
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: .92em;
+  }
+  .md-search-answer-markdown .markdown pre {
+    overflow: auto;
+    padding: 8px;
+    border: 1px solid var(--md-border);
+    border-radius: 5px;
+    background: var(--md-surface);
+  }
+  .md-search-answer-markdown .markdown pre code {
+    padding: 0;
+    background: transparent;
+  }
+  .md-search-answer-markdown .markdown blockquote {
+    padding-left: 9px;
+    border-left: 3px solid var(--md-border);
+    color: var(--md-muted);
+  }
+  .md-search-answer-actions {
+    display: flex;
+    gap: 7px;
+    padding: 8px;
+    border-top: 1px solid var(--md-border);
+    background: var(--md-surface);
+  }
+  .md-edge-tools {
+    position: fixed;
+    z-index: 2147483644;
+    right: -23px;
+    bottom: var(--md-edge-bottom, 36px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    transition: right .16s ease;
+  }
+  .md-edge-tools:hover,
+  .md-edge-tools:focus-within {
+    right: 10px;
+  }
+  .md-edge-trigger {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--md-border);
+    border-radius: 50%;
+    color: var(--md-accent);
+    background: var(--md-bg);
+    box-shadow: var(--md-shadow);
+    cursor: pointer;
+    touch-action: none;
+    cursor: grab;
+  }
+  .md-edge-trigger:active {
+    cursor: grabbing;
+  }
+  .md-edge-trigger svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2.2;
+  }
+  .md-edge-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(9px);
+    transition: opacity .14s ease, transform .14s ease;
+  }
+  .md-edge-close {
+    display: grid;
+    width: 20px;
+    height: 20px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--md-border);
+    border-radius: 50%;
+    color: var(--md-muted);
+    background: var(--md-bg);
+    box-shadow: 0 6px 14px rgba(15, 26, 23, .14);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(9px);
+    transition: opacity .14s ease, transform .14s ease, color .14s ease;
+  }
+  .md-edge-close:hover {
+    color: var(--md-accent);
+  }
+  .md-edge-tools:hover .md-edge-menu,
+  .md-edge-tools:focus-within .md-edge-menu,
+  .md-edge-tools:hover .md-edge-close,
+  .md-edge-tools:focus-within .md-edge-close {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+  .md-edge-menu button {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--md-border);
+    border-radius: 50%;
+    color: var(--md-text);
+    background: var(--md-bg);
+    box-shadow: 0 8px 22px rgba(15, 26, 23, .16);
+    cursor: pointer;
+  }
+  .md-edge-menu button:hover {
+    border-color: var(--md-teal);
+    color: var(--md-teal);
+  }
+  .md-edge-menu button:disabled {
+    cursor: wait;
+    opacity: .5;
+  }
+  .md-edge-menu svg {
+    width: 15px;
+    height: 15px;
+  }
+  .md-edge-close svg {
+    width: 12px;
+    height: 12px;
+  }
+  .md-edge-result {
+    position: fixed;
+    z-index: 2147483645;
+    right: 16px;
+    bottom: 154px;
+    display: flex;
+    width: min(360px, calc(100vw - 32px));
+    max-height: min(360px, calc(100vh - 190px));
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--md-border);
+    border-radius: 7px;
+    color: var(--md-text);
+    background: var(--md-bg);
+    box-shadow: var(--md-shadow);
+  }
+  .md-edge-result-head {
+    display: flex;
+    min-height: 38px;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 7px 6px 11px;
+    border-bottom: 1px solid var(--md-border);
+  }
+  .md-edge-result-head > svg {
+    width: 15px;
+    height: 15px;
+    color: var(--md-accent);
+  }
+  .md-edge-result-head strong {
+    flex: 1;
+    min-width: 0;
+    font-size: 12px;
+  }
+  .md-edge-result-body {
+    overflow: auto;
+    padding: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .md-edge-result-body.error { color: #b33427; }
+  .md-progress-orb {
+    position: fixed;
+    z-index: 2147483646;
+    right: 16px;
+    bottom: 90px;
+    display: grid;
+    width: 54px;
+    height: 54px;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid var(--md-border);
+    border-radius: 50%;
+    color: var(--md-text);
+    background: var(--md-bg);
+    box-shadow: var(--md-shadow);
+  }
+  .md-progress-orb.error {
+    color: #b33427;
+  }
+  .md-progress-fill {
+    position: absolute;
+    inset: auto -10% 0;
+    height: var(--md-progress);
+    min-height: 8%;
+    background: color-mix(in srgb, var(--md-teal) 72%, #ffffff);
+    opacity: .82;
+    transition: height .24s ease;
+  }
+  .md-progress-fill::before,
+  .md-progress-fill::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% - 5px);
+    width: 78px;
+    height: 78px;
+    border-radius: 43%;
+    background: var(--md-bg);
+    transform: translateX(-50%);
+    animation: md-wave 5s linear infinite;
+  }
+  .md-progress-fill::after {
+    border-radius: 47%;
+    opacity: .72;
+    animation-duration: 6.8s;
+    animation-direction: reverse;
+  }
+  .md-progress-orb.error .md-progress-fill {
+    background: color-mix(in srgb, #b33427 68%, #ffffff);
+  }
+  .md-progress-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: 44px;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    text-align: center;
+  }
+  .md-progress-content strong {
+    font-size: 13px;
+    line-height: 1;
+  }
+  .md-progress-content span {
+    display: block;
+    overflow: hidden;
+    color: var(--md-muted);
+    font-size: 7.5px;
+    font-weight: 650;
+    line-height: 1.12;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  @keyframes md-spin { to { transform: rotate(360deg); } }
+  @keyframes md-wave {
+    to { transform: translateX(-50%) rotate(360deg); }
+  }
+  @media (prefers-color-scheme: dark) {
+    :host {
+      --md-bg: #1c2422;
+      --md-surface: #252f2c;
+      --md-border: #3a4743;
+      --md-text: #f2f5f4;
+      --md-muted: #a7b1ae;
+      --md-page-action-muted: #e2e8e5;
+      --md-shadow: 0 16px 42px rgba(0, 0, 0, .42);
+    }
+  }
+`;
+  var PAGE_STYLES = `
+  ::highlight(webmind-hover-definition) {
+    background-color: rgba(19, 139, 120, .42);
+    color: inherit;
+  }
+  ::highlight(webmind-hover-definition-underline) {
+    text-decoration: underline;
+    text-decoration-color: rgba(54, 116, 152, .9);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 2px;
+  }
+  .webmind-page-tooltip {
+    position: fixed !important;
+    z-index: 2147483647 !important;
+    max-width: min(320px, calc(100vw - 16px)) !important;
+    padding: 8px 10px !important;
+    border: 1px solid rgba(179, 52, 39, .45) !important;
+    border-radius: 5px !important;
+    color: #fff !important;
+    background: rgba(126, 37, 29, .96) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .24) !important;
+    font: 600 12px/1.45 system-ui, sans-serif !important;
+    letter-spacing: 0 !important;
+    pointer-events: none !important;
+  }
+  .webmind-translation {
+    display: block !important;
+    margin: .35em 0 .7em !important;
+    color: inherit !important;
+    font: inherit !important;
+    line-height: 1.55 !important;
+  }
+  .webmind-translation-text {
+    color: inherit !important;
+  }
+  .webmind-translation-text a,
+  .webmind-translation-link {
+    color: inherit !important;
+    text-decoration: underline !important;
+  }
+  .webmind-translation-citation {
+    display: inline !important;
+    margin: 0 .08em !important;
+    padding: 0 !important;
+    font-size: .72em !important;
+    line-height: 1 !important;
+    vertical-align: super !important;
+    white-space: nowrap !important;
+  }
+  .webmind-translation-citation a {
+    color: inherit !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+  }
+  .webmind-translation-citation a:hover {
+    text-decoration: underline !important;
+  }
+  .webmind-translation-default {
+    opacity: .94 !important;
+  }
+  .webmind-translation-highlight {
+    padding: .18em .42em !important;
+    border-radius: .35em !important;
+    background: rgba(255, 212, 102, .24) !important;
+  }
+  .webmind-translation-divider {
+    padding-top: .45em !important;
+    border-top: 1px dashed rgba(23, 143, 124, .55) !important;
+  }
+  .webmind-translation-quote {
+    padding-left: .75em !important;
+    border-left: 3px solid #178f7c !important;
+    opacity: .94 !important;
+  }
+  .webmind-translation-blur {
+    filter: blur(2.4px) !important;
+    opacity: .82 !important;
+    transition: filter .16s ease, opacity .16s ease !important;
+  }
+  .webmind-translation-blur:hover {
+    filter: blur(0) !important;
+    opacity: .96 !important;
+  }
+  .webmind-translation-transparent {
+    opacity: .54 !important;
+  }
+  .webmind-translation-effect-underline {
+    text-decoration: underline !important;
+    text-decoration-thickness: .08em !important;
+    text-underline-offset: .18em !important;
+  }
+  .webmind-translation-effect-bold {
+    font-weight: 700 !important;
+  }
+  .webmind-translation-effect-italic {
+    font-style: italic !important;
+  }
+  .webmind-translation-effect-light {
+    color: rgba(88, 101, 96, .78) !important;
+  }
+  .webmind-translation-effect-emphasis {
+    color: #3a7283 !important;
+  }
+  .webmind-translation-effect-large {
+    font-size: 1.1em !important;
+    line-height: 1.45 !important;
+  }
+  .webmind-translation-effect-dashed-underline {
+    text-decoration-line: underline !important;
+    text-decoration-style: dashed !important;
+    text-decoration-thickness: .08em !important;
+    text-underline-offset: .18em !important;
+  }
+  .webmind-translation-effect-small {
+    font-size: .9em !important;
+    line-height: 1.45 !important;
+  }
+  @media (prefers-color-scheme: dark) {
+    .webmind-translation-effect-emphasis {
+      color: #7cb9c7 !important;
+    }
+  }
+  .webmind-translated-only {
+    outline: 1px dashed rgba(23, 143, 124, .28) !important;
+    outline-offset: 2px !important;
+  }
+  .webmind-immersive-reading-token {
+    display: inline !important;
+    white-space: normal !important;
+  }
+  .webmind-immersive-reading-highlight-uniform,
+  .webmind-immersive-reading-highlight-leveled {
+    border-radius: .28em !important;
+    box-decoration-break: clone !important;
+    -webkit-box-decoration-break: clone !important;
+    padding: .05em .16em !important;
+  }
+  .webmind-immersive-reading-highlight-uniform {
+    background: rgba(82, 177, 151, .18) !important;
+  }
+  .webmind-immersive-reading-level-1 {
+    background: rgba(128, 203, 169, .18) !important;
+  }
+  .webmind-immersive-reading-level-2 {
+    background: rgba(119, 184, 213, .18) !important;
+  }
+  .webmind-immersive-reading-level-3 {
+    background: rgba(222, 190, 94, .2) !important;
+  }
+  .webmind-immersive-reading-level-4 {
+    background: rgba(226, 150, 87, .2) !important;
+  }
+  .webmind-immersive-reading-level-5 {
+    background: rgba(214, 116, 135, .2) !important;
+  }
+  .webmind-immersive-reading-outer,
+  .webmind-immersive-reading-inner {
+    display: inline !important;
+    color: inherit;
+  }
+  .webmind-immersive-reading-inner {
+    margin-left: .08em !important;
+  }
+  @media (prefers-color-scheme: dark) {
+    .webmind-immersive-reading-highlight-uniform {
+      background: rgba(111, 219, 187, .22) !important;
+    }
+    .webmind-immersive-reading-level-1 {
+      background: rgba(128, 224, 176, .2) !important;
+    }
+    .webmind-immersive-reading-level-2 {
+      background: rgba(119, 203, 232, .2) !important;
+    }
+    .webmind-immersive-reading-level-3 {
+      background: rgba(238, 205, 104, .22) !important;
+    }
+    .webmind-immersive-reading-level-4 {
+      background: rgba(239, 161, 92, .22) !important;
+    }
+    .webmind-immersive-reading-level-5 {
+      background: rgba(229, 124, 148, .22) !important;
+    }
+  }
+	`;
+
+  // src/content/screenshotEditor.tsx
+  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var cancelActiveEditor = null;
+  function validAttachment(attachment) {
+    return Boolean(
+      attachment && attachment.kind === "image" && typeof attachment.dataUrl === "string" && attachment.dataUrl.startsWith("data:image/")
+    );
+  }
+  function editScreenshotInPage(attachment, placement, language, sourceDataUrl) {
+    if (!validAttachment(attachment)) {
+      return Promise.reject(new Error("Invalid screenshot attachment"));
+    }
+    cancelActiveEditor?.();
+    return new Promise((resolve) => {
+      const host = document.createElement("div");
+      host.id = "webmind-screenshot-editor";
+      const shadow = host.attachShadow({ mode: "closed" });
+      const style = document.createElement("style");
+      style.textContent = SHADOW_STYLES;
+      const mount = document.createElement("div");
+      shadow.append(style, mount);
+      document.documentElement.append(host);
+      let settled = false;
+      let root = null;
+      const finish = (result) => {
+        if (settled) return;
+        settled = true;
+        cancelActiveEditor = null;
+        root?.unmount();
+        host.remove();
+        resolve(result);
+      };
+      const cancel = () => finish(null);
+      cancelActiveEditor = cancel;
+      root = (0, import_client.createRoot)(mount);
+      root.render(
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+          ScreenshotEditor,
+          {
+            attachment,
+            language,
+            placement,
+            sourceDataUrl,
+            onCancel: cancel,
+            onConfirm: finish
+          }
+        )
+      );
+    });
   }
 
   // src/shared/immersiveWorkflow.ts
@@ -33363,8 +35373,8 @@ Please report this to https://github.com/markedjs/marked.`, e) {
   var Kt = x.lex;
 
   // src/ui/Markdown.tsx
-  var import_react4 = __toESM(require_react(), 1);
-  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+  var import_react5 = __toESM(require_react(), 1);
+  var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
   k.setOptions({
     breaks: true,
     gfm: true
@@ -33384,8 +35394,8 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     );
   }
   function Markdown({ content }) {
-    const html2 = (0, import_react4.useMemo)(() => renderMarkdownHtml(content), [content]);
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+    const html2 = (0, import_react5.useMemo)(() => renderMarkdownHtml(content), [content]);
+    return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
       "div",
       {
         className: "markdown",
@@ -33393,1066 +35403,6 @@ Please report this to https://github.com/markedjs/marked.`, e) {
       }
     );
   }
-
-  // src/content/styles.ts
-  var SHADOW_STYLES = `
-  :host {
-    all: initial;
-    color-scheme: light dark;
-    --md-bg: #ffffff;
-    --md-surface: #f4f6f5;
-    --md-border: #d8ddda;
-    --md-text: #17201e;
-    --md-muted: #62706c;
-    --md-accent: #e8533f;
-    --md-teal: #178f7c;
-    --md-page-action-muted: #d4d8d6;
-    --md-shadow: 0 14px 38px rgba(15, 26, 23, .18);
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    font-size: 14px;
-    letter-spacing: 0;
-  }
-  * { box-sizing: border-box; letter-spacing: 0; }
-  button { font: inherit; }
-  .md-toolbar {
-    position: fixed;
-    z-index: 2147483646;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0;
-    width: max-content;
-    max-width: min(430px, calc(100vw - 20px));
-    min-height: 40px;
-    padding: 4px;
-    border: 1px solid var(--md-border);
-    border-radius: 7px;
-    background: var(--md-bg);
-    box-shadow: var(--md-shadow);
-  }
-  .md-hover-dot {
-    position: fixed;
-    z-index: 2147483646;
-    width: 9px;
-    height: 9px;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: var(--md-accent);
-    box-shadow: 0 1px 5px rgba(15, 26, 23, .22);
-    cursor: pointer;
-  }
-  .md-hover-dot:hover {
-    background: var(--md-teal);
-  }
-  .md-definition-tooltip {
-    position: fixed;
-    z-index: 2147483647;
-    max-width: min(360px, calc(100vw - 20px));
-    overflow: hidden;
-    padding: 5px 9px;
-    border: 1px solid var(--md-border);
-    border-radius: 5px;
-    color: var(--md-text);
-    background: var(--md-bg);
-    box-shadow: 0 7px 20px rgba(15, 26, 23, .18);
-    font-size: 12px;
-    line-height: 1.35;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    transform: translateX(-50%);
-    pointer-events: none;
-  }
-  .md-icon-button {
-    display: grid;
-    width: 31px;
-    height: 31px;
-    place-items: center;
-    padding: 0;
-    border: 0;
-    border-radius: 5px;
-    color: var(--md-text);
-    background: transparent;
-    cursor: pointer;
-  }
-  .md-toolbar .md-icon-button { color: var(--md-teal); }
-  .md-icon-button:hover { color: var(--md-accent); background: var(--md-surface); }
-  .md-icon-button:disabled { cursor: wait; opacity: .45; }
-  .md-icon-button svg { width: 17px; height: 17px; stroke-width: 1.9; }
-  .md-divider { width: 1px; height: 20px; background: var(--md-border); margin: 0 2px; }
-  .md-result {
-    position: fixed;
-    z-index: 2147483647;
-    display: flex;
-    flex-direction: column;
-    width: min(420px, calc(100vw - 20px));
-    max-height: min(460px, calc(100vh - 20px));
-    overflow: visible;
-    overscroll-behavior: contain;
-    border: 1px solid var(--md-border);
-    border-radius: 7px;
-    color: var(--md-text);
-    background: var(--md-bg);
-    box-shadow: var(--md-shadow);
-  }
-  .md-result-head {
-    display: flex;
-    min-height: 42px;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 8px 7px 12px;
-    border-bottom: 1px solid var(--md-border);
-  }
-  .md-result-title { flex: 1; min-width: 0; font-size: 13px; font-weight: 700; }
-  .md-result-head > svg {
-    width: 16px;
-    height: 16px;
-    flex: 0 0 auto;
-    color: var(--md-accent);
-  }
-  .md-result-body {
-    flex: 1 1 auto;
-    min-height: 86px;
-    max-height: clamp(86px, calc(100vh - 180px), 280px);
-    overflow: auto;
-    overscroll-behavior: contain;
-    scrollbar-gutter: stable;
-    padding: 13px 14px;
-    font-size: 14px;
-    line-height: 1.65;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-  }
-  .md-qr-result { width: min(300px, calc(100vw - 20px)); }
-  .md-qr-result-body {
-    display: grid;
-    min-height: 252px;
-    place-items: center;
-    padding: 20px;
-  }
-  .md-qr-code {
-    width: min(240px, calc(100vw - 80px));
-    aspect-ratio: 1;
-  }
-  .md-qr-code svg { display: block; width: 100%; height: 100%; }
-  .md-result-body .markdown {
-    min-width: 0;
-    white-space: normal;
-    color: inherit;
-    font: inherit;
-    line-height: inherit;
-    overflow-wrap: anywhere;
-  }
-  .md-result-body .markdown > :first-child { margin-top: 0; }
-  .md-result-body .markdown > :last-child { margin-bottom: 0; }
-  .md-result-body .markdown p,
-  .md-result-body .markdown ul,
-  .md-result-body .markdown ol,
-  .md-result-body .markdown blockquote,
-  .md-result-body .markdown pre,
-  .md-result-body .markdown table {
-    margin: 0 0 8px;
-  }
-  .md-result-body .markdown ul,
-  .md-result-body .markdown ol { padding-left: 20px; }
-  .md-result-body .markdown li + li { margin-top: 3px; }
-  .md-result-body .markdown strong,
-  .md-result-body .markdown b {
-    font-synthesis: weight;
-    font-weight: 700;
-  }
-  .md-result-body .markdown a { color: var(--md-teal); }
-  .md-result-body .markdown blockquote {
-    padding-left: 9px;
-    border-left: 3px solid var(--md-border);
-    color: var(--md-muted);
-  }
-  .md-result-body .markdown code {
-    padding: 1px 4px;
-    border-radius: 4px;
-    background: var(--md-surface);
-    font-family: "SFMono-Regular", Consolas, monospace;
-    font-size: .92em;
-  }
-  .md-result-body .markdown pre {
-    max-width: 100%;
-    overflow: auto;
-    padding: 8px;
-    border: 1px solid var(--md-border);
-    border-radius: 5px;
-    background: var(--md-surface);
-  }
-  .md-result-body .markdown pre code {
-    padding: 0;
-    background: transparent;
-  }
-  .md-result-body .markdown table {
-    display: block;
-    width: 100%;
-    overflow: auto;
-    border-collapse: collapse;
-  }
-  .md-result-body .markdown th,
-  .md-result-body .markdown td {
-    padding: 5px 7px;
-    border: 1px solid var(--md-border);
-    text-align: left;
-  }
-  .md-result-error { color: #b33427; }
-  .md-result-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 6px;
-    padding: 8px;
-    border-top: 1px solid var(--md-border);
-    background: var(--md-surface);
-  }
-  .md-result-head.md-draggable-head {
-    cursor: move;
-    touch-action: none;
-    user-select: none;
-  }
-  .md-result-head.md-draggable-head:active { cursor: grabbing; }
-  .md-result-tools {
-    display: flex;
-    min-width: 0;
-    flex: 1;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px;
-  }
-  .md-tool-menu {
-    position: relative;
-    display: inline-flex;
-    min-width: 0;
-    flex: 0 0 auto;
-  }
-  .md-tool-select {
-    display: inline-flex;
-    min-width: 120px;
-    max-width: 170px;
-    height: 31px;
-    align-items: center;
-    gap: 6px;
-    padding: 0 8px;
-    border: 1px solid var(--md-border);
-    border-radius: 5px;
-    color: var(--md-text);
-    background: var(--md-bg);
-    cursor: pointer;
-    font: inherit;
-    font-size: 12px;
-    font-weight: 650;
-  }
-  .md-tool-select svg {
-    width: 14px;
-    height: 14px;
-    flex: 0 0 auto;
-    color: var(--md-accent);
-  }
-  .md-tool-select .md-menu-chevron {
-    width: 12px;
-    height: 12px;
-    margin-left: auto;
-    color: currentColor;
-    opacity: .68;
-  }
-  .md-tool-select span {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .md-tool-menu-list {
-    position: absolute;
-    z-index: 4;
-    left: 0;
-    bottom: calc(100% + 6px);
-    display: grid;
-    width: 190px;
-    max-height: 220px;
-    overflow: auto;
-    overscroll-behavior: contain;
-    gap: 3px;
-    padding: 5px;
-    border: 1px solid var(--md-border);
-    border-radius: 7px;
-    background: var(--md-bg);
-    box-shadow: var(--md-shadow);
-  }
-  .md-tool-menu-list button {
-    display: flex;
-    width: 100%;
-    min-height: 30px;
-    align-items: center;
-    gap: 8px;
-    padding: 0 8px;
-    border: 0;
-    border-radius: 5px;
-    color: var(--md-text);
-    background: transparent;
-    cursor: pointer;
-    font: inherit;
-    font-size: 12px;
-    font-weight: 650;
-    text-align: left;
-  }
-  .md-tool-menu-list button:hover,
-  .md-tool-menu-list button.active {
-    color: var(--md-teal);
-    background: color-mix(in srgb, var(--md-teal) 9%, var(--md-bg));
-  }
-  .md-tool-menu-list svg {
-    width: 15px;
-    height: 15px;
-    flex: 0 0 auto;
-    color: var(--md-accent);
-  }
-  .md-tool-menu-list span {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .md-text-button {
-    display: inline-flex;
-    min-height: 31px;
-    align-items: center;
-    gap: 6px;
-    padding: 0 10px;
-    border: 1px solid var(--md-border);
-    border-radius: 5px;
-    color: var(--md-text);
-    background: var(--md-bg);
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 650;
-  }
-  .md-text-button:hover { border-color: var(--md-teal); color: var(--md-teal); }
-  .md-text-button:disabled {
-    cursor: not-allowed;
-    opacity: .48;
-  }
-  .md-text-button svg { width: 14px; height: 14px; }
-  .md-followup {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: stretch;
-    gap: 7px;
-    padding: 8px;
-    border-top: 1px solid var(--md-border);
-    background: var(--md-bg);
-  }
-  .md-followup textarea {
-    width: 100%;
-    height: 34px;
-    min-width: 0;
-    resize: none;
-    padding: 7px 9px;
-    border: 1px solid var(--md-border);
-    border-radius: 5px;
-    color: var(--md-text);
-    background: var(--md-bg);
-    font: inherit;
-    font-size: 13px;
-    line-height: 1.45;
-  }
-  .md-followup textarea::placeholder { color: var(--md-muted); }
-  .md-followup button {
-    display: grid;
-    width: 34px;
-    height: 34px;
-    place-items: center;
-    padding: 0;
-    border: 1px solid var(--md-accent);
-    border-radius: 5px;
-    color: #fff;
-    background: var(--md-accent);
-    cursor: pointer;
-  }
-  .md-followup button:disabled {
-    cursor: not-allowed;
-    opacity: .48;
-  }
-  .md-followup button svg { width: 15px; height: 15px; }
-  .md-spinner {
-    width: 17px;
-    height: 17px;
-    margin: 28px auto;
-    border: 2px solid var(--md-border);
-    border-top-color: var(--md-accent);
-    border-radius: 50%;
-    animation: md-spin .8s linear infinite;
-  }
-  .md-mini-spinner {
-    width: 13px;
-    height: 13px;
-    border: 2px solid color-mix(in srgb, var(--md-accent) 25%, transparent);
-    border-top-color: var(--md-accent);
-    border-radius: 50%;
-    animation: md-spin .8s linear infinite;
-  }
-  .md-page-action-button {
-    position: fixed;
-    z-index: 2147483645;
-    display: grid;
-    place-items: center;
-    padding: 0;
-    border: 0;
-    border-radius: 4px;
-    appearance: none;
-    -webkit-appearance: none;
-    color: var(--md-page-action-muted);
-    background: transparent;
-    box-shadow: none;
-    outline: none;
-    opacity: .45;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition:
-      color .15s ease,
-      opacity .15s ease,
-      transform .15s ease,
-      box-shadow .15s ease;
-  }
-  .md-auto-reply-button { width: 16px; height: 16px; }
-  .md-video-pip-button {
-    width: 22px;
-    height: 22px;
-  }
-  .md-page-action-button:hover,
-  .md-page-action-button:focus-visible {
-    color: var(--md-accent);
-    opacity: 1;
-    transform: scale(1.08);
-  }
-  .md-page-action-button:focus,
-  .md-page-action-button:focus-visible {
-    outline: none;
-    box-shadow: none;
-  }
-  .md-page-action-button:active {
-    color: var(--md-accent);
-    opacity: 1;
-    transform: scale(.9);
-  }
-  .md-page-action-button:disabled {
-    cursor: wait;
-    opacity: .68;
-    transform: none;
-  }
-  .md-video-pip-button svg {
-    width: 13px;
-    height: 13px;
-    stroke-width: 2.1;
-  }
-  .md-auto-reply-button.error {
-    color: #b33427;
-  }
-  .md-page-action-button.error:hover,
-  .md-page-action-button.error:focus-visible,
-  .md-page-action-button.error:active {
-    color: var(--md-accent);
-  }
-  .md-auto-reply-button svg {
-    width: 10px;
-    height: 10px;
-    stroke-width: 2.4;
-  }
-  .md-auto-reply-button .webmind-logo-icon {
-    display: block;
-    width: 10px;
-    height: 10px;
-    object-fit: contain;
-    filter: grayscale(1) brightness(1.45);
-  }
-  .md-page-action-button:hover .webmind-logo-icon,
-  .md-page-action-button:focus-visible .webmind-logo-icon,
-  .md-page-action-button:active .webmind-logo-icon {
-    filter: none;
-  }
-  .md-auto-reply-button .md-mini-spinner {
-    width: 10px;
-    height: 10px;
-    border-width: 1px;
-  }
-  .md-search-button {
-    position: fixed;
-    z-index: 2147483645;
-    right: 18px;
-    top: 124px;
-    display: flex;
-    width: 42px;
-    height: 42px;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    border: 1px solid var(--md-border);
-    border-radius: 7px;
-    color: #fff;
-    background: #18211f;
-    box-shadow: 0 8px 24px rgba(15, 26, 23, .2);
-    cursor: pointer;
-  }
-  .md-search-button:hover { background: var(--md-teal); }
-  .md-search-button svg { width: 19px; height: 19px; }
-  .md-search-answer {
-    position: fixed;
-    z-index: 2147483643;
-    top: 84px;
-    right: 18px;
-    display: flex;
-    width: min(360px, calc(100vw - 36px));
-    max-height: min(620px, calc(100vh - 116px));
-    flex-direction: column;
-    overflow: hidden;
-    border: 1px solid var(--md-border);
-    border-radius: 7px;
-    color: var(--md-text);
-    background: var(--md-bg);
-    box-shadow: var(--md-shadow);
-  }
-  .md-search-answer-head {
-    display: flex;
-    min-height: 40px;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 7px 6px 12px;
-    border-bottom: 1px solid var(--md-border);
-    background: var(--md-bg);
-    cursor: grab;
-    touch-action: none;
-    user-select: none;
-  }
-  .md-search-answer-head:active {
-    cursor: grabbing;
-  }
-  .md-search-answer-head > svg {
-    width: 16px;
-    height: 16px;
-    color: var(--md-accent);
-  }
-  .md-search-answer-head strong {
-    flex: 1;
-    min-width: 0;
-    font-size: 13px;
-  }
-  .md-search-answer-body {
-    min-height: 96px;
-    overflow: auto;
-    padding: 13px 14px;
-    font-size: 13px;
-    line-height: 1.62;
-    overflow-wrap: anywhere;
-  }
-  .md-search-answer-body.error { color: #b33427; }
-  .md-search-answer-markdown {
-    overflow-wrap: anywhere;
-  }
-  .md-search-answer-markdown .markdown {
-    color: var(--md-text);
-    font-size: 13px;
-    line-height: 1.62;
-  }
-  .md-search-answer-markdown .markdown > :first-child {
-    margin-top: 0;
-  }
-  .md-search-answer-markdown .markdown > :last-child {
-    margin-bottom: 0;
-  }
-  .md-search-answer-markdown .markdown p,
-  .md-search-answer-markdown .markdown ul,
-  .md-search-answer-markdown .markdown ol,
-  .md-search-answer-markdown .markdown blockquote,
-  .md-search-answer-markdown .markdown pre {
-    margin: 0 0 6px;
-  }
-  .md-search-answer-markdown .markdown ul,
-  .md-search-answer-markdown .markdown ol {
-    padding-left: 18px;
-  }
-  .md-search-answer-markdown .markdown h1,
-  .md-search-answer-markdown .markdown h2,
-  .md-search-answer-markdown .markdown h3 {
-    margin: 8px 0 5px;
-    font-size: 13px;
-    line-height: 1.4;
-  }
-  .md-search-answer-markdown .markdown a {
-    color: var(--md-teal);
-  }
-  .md-search-answer-markdown .markdown a[href^="http"] {
-    display: inline-flex;
-    align-items: center;
-    min-height: 18px;
-    padding: 0 5px;
-    border: 1px solid var(--md-border);
-    border-radius: 999px;
-    color: var(--md-teal);
-    background: color-mix(in srgb, var(--md-teal) 7%, var(--md-bg));
-    text-decoration: none;
-    font-size: 10.5px;
-    font-weight: 750;
-    line-height: 1.4;
-  }
-  .md-search-answer-markdown .markdown a[href^="http"]:hover {
-    border-color: var(--md-teal);
-    color: var(--md-accent);
-  }
-  .md-search-answer-markdown .markdown code {
-    padding: 1px 4px;
-    border-radius: 4px;
-    background: var(--md-surface);
-    font-family: "SFMono-Regular", Consolas, monospace;
-    font-size: .92em;
-  }
-  .md-search-answer-markdown .markdown pre {
-    overflow: auto;
-    padding: 8px;
-    border: 1px solid var(--md-border);
-    border-radius: 5px;
-    background: var(--md-surface);
-  }
-  .md-search-answer-markdown .markdown pre code {
-    padding: 0;
-    background: transparent;
-  }
-  .md-search-answer-markdown .markdown blockquote {
-    padding-left: 9px;
-    border-left: 3px solid var(--md-border);
-    color: var(--md-muted);
-  }
-  .md-search-answer-actions {
-    display: flex;
-    gap: 7px;
-    padding: 8px;
-    border-top: 1px solid var(--md-border);
-    background: var(--md-surface);
-  }
-  .md-edge-tools {
-    position: fixed;
-    z-index: 2147483644;
-    right: -23px;
-    bottom: var(--md-edge-bottom, 36px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    transition: right .16s ease;
-  }
-  .md-edge-tools:hover,
-  .md-edge-tools:focus-within {
-    right: 10px;
-  }
-  .md-edge-trigger {
-    display: grid;
-    width: 42px;
-    height: 42px;
-    place-items: center;
-    padding: 0;
-    border: 1px solid var(--md-border);
-    border-radius: 50%;
-    color: var(--md-accent);
-    background: var(--md-bg);
-    box-shadow: var(--md-shadow);
-    cursor: pointer;
-    touch-action: none;
-    cursor: grab;
-  }
-  .md-edge-trigger:active {
-    cursor: grabbing;
-  }
-  .md-edge-trigger svg {
-    width: 18px;
-    height: 18px;
-    stroke-width: 2.2;
-  }
-  .md-edge-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(9px);
-    transition: opacity .14s ease, transform .14s ease;
-  }
-  .md-edge-close {
-    display: grid;
-    width: 20px;
-    height: 20px;
-    place-items: center;
-    padding: 0;
-    border: 1px solid var(--md-border);
-    border-radius: 50%;
-    color: var(--md-muted);
-    background: var(--md-bg);
-    box-shadow: 0 6px 14px rgba(15, 26, 23, .14);
-    cursor: pointer;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(9px);
-    transition: opacity .14s ease, transform .14s ease, color .14s ease;
-  }
-  .md-edge-close:hover {
-    color: var(--md-accent);
-  }
-  .md-edge-tools:hover .md-edge-menu,
-  .md-edge-tools:focus-within .md-edge-menu,
-  .md-edge-tools:hover .md-edge-close,
-  .md-edge-tools:focus-within .md-edge-close {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateX(0);
-  }
-  .md-edge-menu button {
-    display: grid;
-    width: 34px;
-    height: 34px;
-    place-items: center;
-    padding: 0;
-    border: 1px solid var(--md-border);
-    border-radius: 50%;
-    color: var(--md-text);
-    background: var(--md-bg);
-    box-shadow: 0 8px 22px rgba(15, 26, 23, .16);
-    cursor: pointer;
-  }
-  .md-edge-menu button:hover {
-    border-color: var(--md-teal);
-    color: var(--md-teal);
-  }
-  .md-edge-menu button:disabled {
-    cursor: wait;
-    opacity: .5;
-  }
-  .md-edge-menu svg {
-    width: 15px;
-    height: 15px;
-  }
-  .md-edge-close svg {
-    width: 12px;
-    height: 12px;
-  }
-  .md-edge-result {
-    position: fixed;
-    z-index: 2147483645;
-    right: 16px;
-    bottom: 154px;
-    display: flex;
-    width: min(360px, calc(100vw - 32px));
-    max-height: min(360px, calc(100vh - 190px));
-    flex-direction: column;
-    overflow: hidden;
-    border: 1px solid var(--md-border);
-    border-radius: 7px;
-    color: var(--md-text);
-    background: var(--md-bg);
-    box-shadow: var(--md-shadow);
-  }
-  .md-edge-result-head {
-    display: flex;
-    min-height: 38px;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 7px 6px 11px;
-    border-bottom: 1px solid var(--md-border);
-  }
-  .md-edge-result-head > svg {
-    width: 15px;
-    height: 15px;
-    color: var(--md-accent);
-  }
-  .md-edge-result-head strong {
-    flex: 1;
-    min-width: 0;
-    font-size: 12px;
-  }
-  .md-edge-result-body {
-    overflow: auto;
-    padding: 12px;
-    font-size: 13px;
-    line-height: 1.6;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-  }
-  .md-edge-result-body.error { color: #b33427; }
-  .md-progress-orb {
-    position: fixed;
-    z-index: 2147483646;
-    right: 16px;
-    bottom: 90px;
-    display: grid;
-    width: 54px;
-    height: 54px;
-    place-items: center;
-    overflow: hidden;
-    border: 1px solid var(--md-border);
-    border-radius: 50%;
-    color: var(--md-text);
-    background: var(--md-bg);
-    box-shadow: var(--md-shadow);
-  }
-  .md-progress-orb.error {
-    color: #b33427;
-  }
-  .md-progress-fill {
-    position: absolute;
-    inset: auto -10% 0;
-    height: var(--md-progress);
-    min-height: 8%;
-    background: color-mix(in srgb, var(--md-teal) 72%, #ffffff);
-    opacity: .82;
-    transition: height .24s ease;
-  }
-  .md-progress-fill::before,
-  .md-progress-fill::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    bottom: calc(100% - 5px);
-    width: 78px;
-    height: 78px;
-    border-radius: 43%;
-    background: var(--md-bg);
-    transform: translateX(-50%);
-    animation: md-wave 5s linear infinite;
-  }
-  .md-progress-fill::after {
-    border-radius: 47%;
-    opacity: .72;
-    animation-duration: 6.8s;
-    animation-direction: reverse;
-  }
-  .md-progress-orb.error .md-progress-fill {
-    background: color-mix(in srgb, #b33427 68%, #ffffff);
-  }
-  .md-progress-content {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    width: 44px;
-    min-width: 0;
-    flex-direction: column;
-    align-items: center;
-    gap: 1px;
-    text-align: center;
-  }
-  .md-progress-content strong {
-    font-size: 13px;
-    line-height: 1;
-  }
-  .md-progress-content span {
-    display: block;
-    overflow: hidden;
-    color: var(--md-muted);
-    font-size: 7.5px;
-    font-weight: 650;
-    line-height: 1.12;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  @keyframes md-spin { to { transform: rotate(360deg); } }
-  @keyframes md-wave {
-    to { transform: translateX(-50%) rotate(360deg); }
-  }
-  @media (prefers-color-scheme: dark) {
-    :host {
-      --md-bg: #1c2422;
-      --md-surface: #252f2c;
-      --md-border: #3a4743;
-      --md-text: #f2f5f4;
-      --md-muted: #a7b1ae;
-      --md-page-action-muted: #e2e8e5;
-      --md-shadow: 0 16px 42px rgba(0, 0, 0, .42);
-    }
-  }
-`;
-  var PAGE_STYLES = `
-  ::highlight(webmind-hover-definition) {
-    background-color: rgba(19, 139, 120, .42);
-    color: inherit;
-  }
-  ::highlight(webmind-hover-definition-underline) {
-    text-decoration: underline;
-    text-decoration-color: rgba(54, 116, 152, .9);
-    text-decoration-thickness: 1.5px;
-    text-underline-offset: 2px;
-  }
-  .webmind-page-tooltip {
-    position: fixed !important;
-    z-index: 2147483647 !important;
-    max-width: min(320px, calc(100vw - 16px)) !important;
-    padding: 8px 10px !important;
-    border: 1px solid rgba(179, 52, 39, .45) !important;
-    border-radius: 5px !important;
-    color: #fff !important;
-    background: rgba(126, 37, 29, .96) !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, .24) !important;
-    font: 600 12px/1.45 system-ui, sans-serif !important;
-    letter-spacing: 0 !important;
-    pointer-events: none !important;
-  }
-  .webmind-translation {
-    display: block !important;
-    margin: .35em 0 .7em !important;
-    color: inherit !important;
-    font: inherit !important;
-    line-height: 1.55 !important;
-  }
-  .webmind-translation-text {
-    color: inherit !important;
-  }
-  .webmind-translation-text a,
-  .webmind-translation-link {
-    color: inherit !important;
-    text-decoration: underline !important;
-  }
-  .webmind-translation-citation {
-    display: inline !important;
-    margin: 0 .08em !important;
-    padding: 0 !important;
-    font-size: .72em !important;
-    line-height: 1 !important;
-    vertical-align: super !important;
-    white-space: nowrap !important;
-  }
-  .webmind-translation-citation a {
-    color: inherit !important;
-    text-decoration: none !important;
-    cursor: pointer !important;
-  }
-  .webmind-translation-citation a:hover {
-    text-decoration: underline !important;
-  }
-  .webmind-translation-default {
-    opacity: .94 !important;
-  }
-  .webmind-translation-highlight {
-    padding: .18em .42em !important;
-    border-radius: .35em !important;
-    background: rgba(255, 212, 102, .24) !important;
-  }
-  .webmind-translation-divider {
-    padding-top: .45em !important;
-    border-top: 1px dashed rgba(23, 143, 124, .55) !important;
-  }
-  .webmind-translation-quote {
-    padding-left: .75em !important;
-    border-left: 3px solid #178f7c !important;
-    opacity: .94 !important;
-  }
-  .webmind-translation-blur {
-    filter: blur(2.4px) !important;
-    opacity: .82 !important;
-    transition: filter .16s ease, opacity .16s ease !important;
-  }
-  .webmind-translation-blur:hover {
-    filter: blur(0) !important;
-    opacity: .96 !important;
-  }
-  .webmind-translation-transparent {
-    opacity: .54 !important;
-  }
-  .webmind-translation-effect-underline {
-    text-decoration: underline !important;
-    text-decoration-thickness: .08em !important;
-    text-underline-offset: .18em !important;
-  }
-  .webmind-translation-effect-bold {
-    font-weight: 700 !important;
-  }
-  .webmind-translation-effect-italic {
-    font-style: italic !important;
-  }
-  .webmind-translation-effect-light {
-    color: rgba(88, 101, 96, .78) !important;
-  }
-  .webmind-translation-effect-emphasis {
-    color: #3a7283 !important;
-  }
-  .webmind-translation-effect-large {
-    font-size: 1.1em !important;
-    line-height: 1.45 !important;
-  }
-  .webmind-translation-effect-dashed-underline {
-    text-decoration-line: underline !important;
-    text-decoration-style: dashed !important;
-    text-decoration-thickness: .08em !important;
-    text-underline-offset: .18em !important;
-  }
-  .webmind-translation-effect-small {
-    font-size: .9em !important;
-    line-height: 1.45 !important;
-  }
-  @media (prefers-color-scheme: dark) {
-    .webmind-translation-effect-emphasis {
-      color: #7cb9c7 !important;
-    }
-  }
-  .webmind-translated-only {
-    outline: 1px dashed rgba(23, 143, 124, .28) !important;
-    outline-offset: 2px !important;
-  }
-  .webmind-immersive-reading-token {
-    display: inline !important;
-    white-space: normal !important;
-  }
-  .webmind-immersive-reading-highlight-uniform,
-  .webmind-immersive-reading-highlight-leveled {
-    border-radius: .28em !important;
-    box-decoration-break: clone !important;
-    -webkit-box-decoration-break: clone !important;
-    padding: .05em .16em !important;
-  }
-  .webmind-immersive-reading-highlight-uniform {
-    background: rgba(82, 177, 151, .18) !important;
-  }
-  .webmind-immersive-reading-level-1 {
-    background: rgba(128, 203, 169, .18) !important;
-  }
-  .webmind-immersive-reading-level-2 {
-    background: rgba(119, 184, 213, .18) !important;
-  }
-  .webmind-immersive-reading-level-3 {
-    background: rgba(222, 190, 94, .2) !important;
-  }
-  .webmind-immersive-reading-level-4 {
-    background: rgba(226, 150, 87, .2) !important;
-  }
-  .webmind-immersive-reading-level-5 {
-    background: rgba(214, 116, 135, .2) !important;
-  }
-  .webmind-immersive-reading-outer,
-  .webmind-immersive-reading-inner {
-    display: inline !important;
-    color: inherit;
-  }
-  .webmind-immersive-reading-inner {
-    margin-left: .08em !important;
-  }
-  @media (prefers-color-scheme: dark) {
-    .webmind-immersive-reading-highlight-uniform {
-      background: rgba(111, 219, 187, .22) !important;
-    }
-    .webmind-immersive-reading-level-1 {
-      background: rgba(128, 224, 176, .2) !important;
-    }
-    .webmind-immersive-reading-level-2 {
-      background: rgba(119, 203, 232, .2) !important;
-    }
-    .webmind-immersive-reading-level-3 {
-      background: rgba(238, 205, 104, .22) !important;
-    }
-    .webmind-immersive-reading-level-4 {
-      background: rgba(239, 161, 92, .22) !important;
-    }
-    .webmind-immersive-reading-level-5 {
-      background: rgba(229, 124, 148, .22) !important;
-    }
-  }
-	`;
 
   // src/content/pictureInPicture.ts
   function rectRight(rect) {
@@ -35104,7 +36054,7 @@ Please report this to https://github.com/markedjs/marked.`, e) {
   }
 
   // src/content/index.tsx
-  var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
   var IMMERSIVE_TRANSLATION_BATCH_SIZE = 10;
   var IMMERSIVE_TRANSLATION_CONCURRENCY = 3;
   var settings = null;
@@ -35173,7 +36123,11 @@ Please report this to https://github.com/markedjs/marked.`, e) {
     return !(nextTarget instanceof Node) || !container.contains(nextTarget);
   }
   function isAssistantEvent(event) {
-    return Boolean(assistantHost && event.composedPath().includes(assistantHost));
+    return Boolean(
+      assistantHost && event.composedPath().includes(assistantHost) || event.composedPath().some(
+        (item) => item instanceof HTMLElement && item.id === "webmind-screenshot-editor"
+      )
+    );
   }
   function loadHoverDefinitionDictionary() {
     if (!hoverDefinitionDictionaryPromise) {
@@ -35596,7 +36550,7 @@ ${text2}`;
     content,
     results
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "md-search-answer-markdown", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Markdown, { content: linkCitationMarkers(content, results) }) });
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "md-search-answer-markdown", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Markdown, { content: linkCitationMarkers(content, results) }) });
   }
   function isVisible(element) {
     const style = getComputedStyle(element);
@@ -35793,66 +36747,66 @@ ${text2}`;
     });
   }
   function SelectionAssistant({ query }) {
-    const [snapshot, setSnapshot] = (0, import_react5.useState)(null);
-    const [activeTool, setActiveTool] = (0, import_react5.useState)(null);
-    const [localSettings, setLocalSettings] = (0, import_react5.useState)(settings);
-    const [currentHref, setCurrentHref] = (0, import_react5.useState)(location.href);
-    const [customTools, setCustomTools] = (0, import_react5.useState)([]);
-    const [result, setResult] = (0, import_react5.useState)("");
-    const [error, setError] = (0, import_react5.useState)("");
-    const [resultBusy, setResultBusy] = (0, import_react5.useState)(false);
-    const [copied, setCopied] = (0, import_react5.useState)(false);
-    const [selectionCopied, setSelectionCopied] = (0, import_react5.useState)(false);
-    const [todoCreated, setTodoCreated] = (0, import_react5.useState)(false);
-    const [selectionQrCode, setSelectionQrCode] = (0, import_react5.useState)(null);
-    const [hoverOpen, setHoverOpen] = (0, import_react5.useState)(false);
-    const [hoverDefinition, setHoverDefinition] = (0, import_react5.useState)(null);
-    const [selectedResultToolId, setSelectedResultToolId] = (0, import_react5.useState)("");
-    const [resultToolMenuOpen, setResultToolMenuOpen] = (0, import_react5.useState)(false);
-    const [followUpQuestion, setFollowUpQuestion] = (0, import_react5.useState)("");
-    const [edgeResultTitle, setEdgeResultTitle] = (0, import_react5.useState)("");
-    const [edgeResult, setEdgeResult] = (0, import_react5.useState)("");
-    const [edgeError, setEdgeError] = (0, import_react5.useState)("");
-    const [edgeBusy, setEdgeBusy] = (0, import_react5.useState)(false);
-    const [edgeDismissed, setEdgeDismissed] = (0, import_react5.useState)(false);
-    const [edgeBottomOverride, setEdgeBottomOverride] = (0, import_react5.useState)(
+    const [snapshot, setSnapshot] = (0, import_react6.useState)(null);
+    const [activeTool, setActiveTool] = (0, import_react6.useState)(null);
+    const [localSettings, setLocalSettings] = (0, import_react6.useState)(settings);
+    const [currentHref, setCurrentHref] = (0, import_react6.useState)(location.href);
+    const [customTools, setCustomTools] = (0, import_react6.useState)([]);
+    const [result, setResult] = (0, import_react6.useState)("");
+    const [error, setError] = (0, import_react6.useState)("");
+    const [resultBusy, setResultBusy] = (0, import_react6.useState)(false);
+    const [copied, setCopied] = (0, import_react6.useState)(false);
+    const [selectionCopied, setSelectionCopied] = (0, import_react6.useState)(false);
+    const [todoCreated, setTodoCreated] = (0, import_react6.useState)(false);
+    const [selectionQrCode, setSelectionQrCode] = (0, import_react6.useState)(null);
+    const [hoverOpen, setHoverOpen] = (0, import_react6.useState)(false);
+    const [hoverDefinition, setHoverDefinition] = (0, import_react6.useState)(null);
+    const [selectedResultToolId, setSelectedResultToolId] = (0, import_react6.useState)("");
+    const [resultToolMenuOpen, setResultToolMenuOpen] = (0, import_react6.useState)(false);
+    const [followUpQuestion, setFollowUpQuestion] = (0, import_react6.useState)("");
+    const [edgeResultTitle, setEdgeResultTitle] = (0, import_react6.useState)("");
+    const [edgeResult, setEdgeResult] = (0, import_react6.useState)("");
+    const [edgeError, setEdgeError] = (0, import_react6.useState)("");
+    const [edgeBusy, setEdgeBusy] = (0, import_react6.useState)(false);
+    const [edgeDismissed, setEdgeDismissed] = (0, import_react6.useState)(false);
+    const [edgeBottomOverride, setEdgeBottomOverride] = (0, import_react6.useState)(
       null
     );
-    const [autoReplyTarget, setAutoReplyTarget] = (0, import_react5.useState)(null);
-    const [autoReplyBusy, setAutoReplyBusy] = (0, import_react5.useState)(false);
-    const [autoReplyError, setAutoReplyError] = (0, import_react5.useState)("");
-    const [imageTextTarget, setImageTextTarget] = (0, import_react5.useState)(null);
-    const [imageTextVisible, setImageTextVisible] = (0, import_react5.useState)(false);
-    const [imageTextBusy, setImageTextBusy] = (0, import_react5.useState)(false);
-    const [pictureInPictureVideos, setPictureInPictureVideos] = (0, import_react5.useState)([]);
-    const [resultPositionOverride, setResultPositionOverride] = (0, import_react5.useState)(null);
-    const [searchAnswer, setSearchAnswer] = (0, import_react5.useState)({
+    const [autoReplyTarget, setAutoReplyTarget] = (0, import_react6.useState)(null);
+    const [autoReplyBusy, setAutoReplyBusy] = (0, import_react6.useState)(false);
+    const [autoReplyError, setAutoReplyError] = (0, import_react6.useState)("");
+    const [imageTextTarget, setImageTextTarget] = (0, import_react6.useState)(null);
+    const [imageTextVisible, setImageTextVisible] = (0, import_react6.useState)(false);
+    const [imageTextBusy, setImageTextBusy] = (0, import_react6.useState)(false);
+    const [pictureInPictureVideos, setPictureInPictureVideos] = (0, import_react6.useState)([]);
+    const [resultPositionOverride, setResultPositionOverride] = (0, import_react6.useState)(null);
+    const [searchAnswer, setSearchAnswer] = (0, import_react6.useState)({
       text: "",
       error: "",
       busy: false,
       results: []
     });
-    const [searchAnswerPosition, setSearchAnswerPosition] = (0, import_react5.useState)(null);
-    const [searchAnswerDismissed, setSearchAnswerDismissed] = (0, import_react5.useState)(false);
-    const [searchAnswerRefreshToken, setSearchAnswerRefreshToken] = (0, import_react5.useState)(0);
-    const [translationProgress, setTranslationProgress] = (0, import_react5.useState)(null);
-    const resultRef = (0, import_react5.useRef)(null);
-    const activeToolRef = (0, import_react5.useRef)(null);
-    const hoverTimeoutRef = (0, import_react5.useRef)(null);
-    const hoverDefinitionTimerRef = (0, import_react5.useRef)(null);
-    const hoverDefinitionCandidateRef = (0, import_react5.useRef)(
+    const [searchAnswerPosition, setSearchAnswerPosition] = (0, import_react6.useState)(null);
+    const [searchAnswerDismissed, setSearchAnswerDismissed] = (0, import_react6.useState)(false);
+    const [searchAnswerRefreshToken, setSearchAnswerRefreshToken] = (0, import_react6.useState)(0);
+    const [translationProgress, setTranslationProgress] = (0, import_react6.useState)(null);
+    const resultRef = (0, import_react6.useRef)(null);
+    const activeToolRef = (0, import_react6.useRef)(null);
+    const hoverTimeoutRef = (0, import_react6.useRef)(null);
+    const hoverDefinitionTimerRef = (0, import_react6.useRef)(null);
+    const hoverDefinitionCandidateRef = (0, import_react6.useRef)(
       null
     );
-    const hoverDefinitionPointerRef = (0, import_react5.useRef)(null);
-    const hoverDefinitionFrameRef = (0, import_react5.useRef)({ frameId: null, value: null });
-    const hoverDefinitionShortcutPressedRef = (0, import_react5.useRef)(false);
-    const imageHoverTimeoutRef = (0, import_react5.useRef)(null);
-    const imageHoverHideTimeoutRef = (0, import_react5.useRef)(null);
-    const imageHoverCandidateRef = (0, import_react5.useRef)(null);
-    const imageTextRunRef = (0, import_react5.useRef)("");
-    const searchAnswerKeyRef = (0, import_react5.useRef)("");
-    const autoImmersiveRunKeyRef = (0, import_react5.useRef)("");
-    const searchAnswerDragRef = (0, import_react5.useRef)({
+    const hoverDefinitionPointerRef = (0, import_react6.useRef)(null);
+    const hoverDefinitionFrameRef = (0, import_react6.useRef)({ frameId: null, value: null });
+    const hoverDefinitionShortcutPressedRef = (0, import_react6.useRef)(false);
+    const imageHoverTimeoutRef = (0, import_react6.useRef)(null);
+    const imageHoverHideTimeoutRef = (0, import_react6.useRef)(null);
+    const imageHoverCandidateRef = (0, import_react6.useRef)(null);
+    const imageTextRunRef = (0, import_react6.useRef)("");
+    const searchAnswerKeyRef = (0, import_react6.useRef)("");
+    const autoImmersiveRunKeyRef = (0, import_react6.useRef)("");
+    const searchAnswerDragRef = (0, import_react6.useRef)({
       active: false,
       pointerId: 0,
       startX: 0,
@@ -35862,7 +36816,7 @@ ${text2}`;
       width: 360,
       height: 420
     });
-    const resultPanelDragRef = (0, import_react5.useRef)({
+    const resultPanelDragRef = (0, import_react6.useRef)({
       active: false,
       pointerId: 0,
       startX: 0,
@@ -35872,16 +36826,16 @@ ${text2}`;
       width: 420,
       height: 360
     });
-    const edgeDragRef = (0, import_react5.useRef)({
+    const edgeDragRef = (0, import_react6.useRef)({
       active: false,
       pointerId: 0,
       startY: 0,
       startBottom: 36,
       moved: false
     });
-    const immersiveShortcutCooldownRef = (0, import_react5.useRef)(0);
-    const immersiveRunRef = (0, import_react5.useRef)(null);
-    const runEdgeImmersiveTranslateRef = (0, import_react5.useRef)(async () => {
+    const immersiveShortcutCooldownRef = (0, import_react6.useRef)(0);
+    const immersiveRunRef = (0, import_react6.useRef)(null);
+    const runEdgeImmersiveTranslateRef = (0, import_react6.useRef)(async () => {
     });
     const beginImmersiveRun = () => {
       immersiveRunRef.current?.controller.abort();
@@ -35898,13 +36852,13 @@ ${text2}`;
         immersiveRunRef.current = null;
       }
     };
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       showTranslationProgress = setTranslationProgress;
       return () => {
         showTranslationProgress = null;
       };
     }, []);
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       const panel = resultRef.current;
       if (!panel || !activeTool || !snapshot) return;
       const handleWheel = (event) => {
@@ -35920,12 +36874,12 @@ ${text2}`;
       panel.addEventListener("wheel", handleWheel, { passive: false });
       return () => panel.removeEventListener("wheel", handleWheel);
     }, [activeTool, snapshot]);
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       if (!translationProgress || translationProgress.active) return;
       const timer = window.setTimeout(() => setTranslationProgress(null), 1800);
       return () => window.clearTimeout(timer);
     }, [translationProgress]);
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       let lastHref = location.href;
       const refreshHref = () => {
         if (location.href === lastHref) return;
@@ -35941,16 +36895,16 @@ ${text2}`;
         window.removeEventListener("hashchange", refreshHref);
       };
     }, []);
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       setSearchAnswerDismissed(false);
       setSearchAnswerPosition(null);
       searchAnswerKeyRef.current = "";
     }, [query]);
-    (0, import_react5.useEffect)(
+    (0, import_react6.useEffect)(
       () => observePictureInPictureVideos(setPictureInPictureVideos),
       []
     );
-    (0, import_react5.useLayoutEffect)(() => {
+    (0, import_react6.useLayoutEffect)(() => {
       showSelection = (next) => {
         if (activeToolRef.current) return;
         imageTextRunRef.current = "";
@@ -35973,10 +36927,10 @@ ${text2}`;
         showSelection = null;
       };
     }, []);
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       activeToolRef.current = activeTool;
     }, [activeTool]);
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       void Promise.all([loadSettings(), loadCustomTools()]).then(
         ([nextSettings, nextTools]) => {
           setLocalSettings(nextSettings);
@@ -36004,17 +36958,17 @@ ${text2}`;
       return immersiveShortcutContextScope ?? defaultImmersiveContentScope();
     };
     const immersiveCollectingLabel = (scope) => scope === "paragraph" || scope === "selection" ? t("collectingSelection") : scope === "article" ? t("collectingCurrentBody") : t("collectingPageBody");
-    const activeProfile = (0, import_react5.useMemo)(
+    const activeProfile = (0, import_react6.useMemo)(
       () => activeSettings?.profiles.find(
         (profile) => profile.id === activeSettings.activeProfileId
       ) ?? null,
       [activeSettings]
     );
-    const translationProfile = (0, import_react5.useMemo)(
+    const translationProfile = (0, import_react6.useMemo)(
       () => activeSettings ? profileForPurpose(activeSettings, "translation") : null,
       [activeSettings]
     );
-    const visionProfile = (0, import_react5.useMemo)(
+    const visionProfile = (0, import_react6.useMemo)(
       () => activeSettings ? profileForPurpose(activeSettings, "vision") : null,
       [activeSettings]
     );
@@ -36046,7 +37000,7 @@ ${text2}`;
       currentHref,
       activeSettings?.hoverDefinitionUrlBlacklist ?? []
     );
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       const cancelScheduledPointer = () => {
         cancelLatestAnimationFrame(
           hoverDefinitionFrameRef.current,
@@ -36195,7 +37149,7 @@ ${text2}`;
       hoverDefinitionMode,
       hoverDefinitionShortcut
     ]);
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       if (!inputAutoReplyEnabled || autoReplyBlocked) {
         setAutoReplyTarget(null);
         return;
@@ -36243,7 +37197,7 @@ ${text2}`;
       inputAutoReplyDisableSingleLine,
       inputAutoReplyEnabled
     ]);
-    const clearImageHoverTimers = (0, import_react5.useCallback)(() => {
+    const clearImageHoverTimers = (0, import_react6.useCallback)(() => {
       if (imageHoverTimeoutRef.current !== null) {
         window.clearTimeout(imageHoverTimeoutRef.current);
         imageHoverTimeoutRef.current = null;
@@ -36253,7 +37207,7 @@ ${text2}`;
         imageHoverHideTimeoutRef.current = null;
       }
     }, []);
-    const imageTextTargetFromImage = (0, import_react5.useCallback)(
+    const imageTextTargetFromImage = (0, import_react6.useCallback)(
       (image) => {
         if (!imageTextExtractionEnabled || imageTextExtractionBlocked) {
           return null;
@@ -36281,7 +37235,7 @@ ${text2}`;
         imageTextExtractionEnabled
       ]
     );
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       if (!imageTextExtractionEnabled || imageTextExtractionBlocked) {
         clearImageHoverTimers();
         imageHoverCandidateRef.current = null;
@@ -36356,11 +37310,11 @@ ${text2}`;
       imageTextExtractionEnabled,
       imageTextTargetFromImage
     ]);
-    const availableTools = (0, import_react5.useMemo)(
+    const availableTools = (0, import_react6.useMemo)(
       () => allTools(customTools, activeSettings ?? void 0),
       [customTools, activeSettings]
     );
-    const askSelectionTool = (0, import_react5.useMemo)(
+    const askSelectionTool = (0, import_react6.useMemo)(
       () => availableTools.find((tool) => tool.id === "ask-selection") ?? {
         id: "ask-selection",
         title: uiText(activeSettings?.interfaceLanguage, "askSelectionTitle"),
@@ -36374,7 +37328,7 @@ ${text2}`;
       },
       [activeSettings?.interfaceLanguage, availableTools]
     );
-    const imageTextExtractionTool = (0, import_react5.useMemo)(
+    const imageTextExtractionTool = (0, import_react6.useMemo)(
       () => ({
         id: IMAGE_TEXT_EXTRACTION_TOOL_ID,
         title: uiText(
@@ -36391,20 +37345,20 @@ ${text2}`;
       }),
       [activeSettings?.interfaceLanguage]
     );
-    const selectionTools = (0, import_react5.useMemo)(() => {
+    const selectionTools = (0, import_react6.useMemo)(() => {
       const ids = activeSettings?.enabledToolIds?.selection ?? availableTools.map((tool) => tool.id);
       return ids.map((id) => availableTools.find((tool) => tool.id === id)).filter(
         (tool) => Boolean(tool) && tool?.id !== "ask-selection"
       );
     }, [activeSettings, availableTools]);
     const edgeToolIds = activeSettings?.enabledToolIds?.edge ?? ["summary"];
-    const edgeTools = (0, import_react5.useMemo)(
+    const edgeTools = (0, import_react6.useMemo)(
       () => edgeToolIds.map((id) => availableTools.find((tool) => tool.id === id)).filter(
         (tool) => Boolean(tool) && tool?.id !== "ask-selection"
       ),
       [availableTools, edgeToolIds]
     );
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       if (!query || !searchAnswerEnabled || searchAnswerDismissed) {
         setSearchAnswer({ text: "", error: "", busy: false, results: [] });
         return;
@@ -36499,7 +37453,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
         setHoverOpen(false);
       }, 220);
     };
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       const hide = () => {
         if (!activeTool) setSnapshot(null);
       };
@@ -36510,7 +37464,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
         window.removeEventListener("resize", hide);
       };
     }, [activeTool]);
-    const position = (0, import_react5.useMemo)(() => {
+    const position = (0, import_react6.useMemo)(() => {
       if (!snapshot) return { left: 10, top: 10 };
       const width = Math.min(
         430,
@@ -36524,7 +37478,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
       const top = below + 46 < window.innerHeight ? below : Math.max(10, snapshot.rect.top - 48);
       return { left, top };
     }, [selectionTools.length, snapshot]);
-    const dotPosition = (0, import_react5.useMemo)(() => {
+    const dotPosition = (0, import_react6.useMemo)(() => {
       if (!snapshot) return { left: 10, top: 10 };
       const left = Math.max(
         6,
@@ -36534,7 +37488,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
       const top = below + 12 < window.innerHeight ? below : Math.max(6, snapshot.rect.top - 15);
       return { left, top };
     }, [snapshot]);
-    const resultPosition = (0, import_react5.useMemo)(
+    const resultPosition = (0, import_react6.useMemo)(
       () => snapshot ? candidateFloatingResultPosition(
         snapshot.rect,
         420,
@@ -36544,7 +37498,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
       ) : { left: 10, top: 10 },
       [snapshot]
     );
-    const selectionQrCodePosition = (0, import_react5.useMemo)(
+    const selectionQrCodePosition = (0, import_react6.useMemo)(
       () => snapshot ? candidateFloatingResultPosition(
         snapshot.rect,
         300,
@@ -36580,7 +37534,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
       }
       return false;
     };
-    const runTool = (0, import_react5.useCallback)(
+    const runTool = (0, import_react6.useCallback)(
       async (tool) => {
         if (!snapshot) return;
         if (tool.id === "ask-selection") {
@@ -36637,7 +37591,7 @@ ${context}` : uiText(activeSettings?.interfaceLanguage, "duckNoResults"),
       },
       [activeSettings, snapshot]
     );
-    const resultTools = (0, import_react5.useMemo)(() => {
+    const resultTools = (0, import_react6.useMemo)(() => {
       const tools = selectionTools.filter((tool) => tool.id !== "ask-selection");
       if (activeTool && activeTool.id !== IMAGE_TEXT_EXTRACTION_TOOL_ID && !tools.some((tool) => tool.id === activeTool.id)) {
         return [activeTool, ...tools];
@@ -37401,7 +38355,7 @@ ${t("currentResultLabel")}\uFF1A` : "",
       );
       showEdgeResult(t("restorePage"), t("pageRestored"));
     };
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       if (!activeSettings || !translationProfile) return;
       const translationRules = activeSettings.immersiveTranslationAutoWhitelist ?? [];
       const readingRules = activeSettings.immersiveReadingAutoWhitelist ?? [];
@@ -37436,7 +38390,7 @@ ${t("currentResultLabel")}\uFF1A` : "",
       runEdgeImmersiveTranslate,
       runEdgeImmersiveReading
     ]);
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       if (!activeSettings) return;
       const preventShortcut = (event) => {
         event.preventDefault();
@@ -37733,7 +38687,7 @@ ${t("currentResultLabel")}\uFF1A` : "",
         Math.min(window.innerHeight - 20, imageTextTarget.rect.top + 2)
       )
     } : null;
-    const imageResultPosition = (0, import_react5.useMemo)(() => {
+    const imageResultPosition = (0, import_react6.useMemo)(() => {
       if (activeTool?.id !== IMAGE_TEXT_EXTRACTION_TOOL_ID || !imageTextTarget) {
         return null;
       }
@@ -37891,7 +38845,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       setSelectionQrCode(null);
       setSnapshot(null);
     };
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       if (!activeTool || !snapshot) return;
       const handlePointerDown = (event) => {
         if (!shouldCloseFloatingResult(event, isAssistantEvent(event))) return;
@@ -37900,7 +38854,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       document.addEventListener("pointerdown", handlePointerDown, true);
       return () => document.removeEventListener("pointerdown", handlePointerDown, true);
     }, [activeTool, snapshot]);
-    (0, import_react5.useEffect)(() => {
+    (0, import_react6.useEffect)(() => {
       if (!selectionQrCode || !snapshot) return;
       const handlePointerDown = (event) => {
         if (!shouldCloseFloatingResult(event, isAssistantEvent(event))) return;
@@ -37910,14 +38864,14 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       return () => document.removeEventListener("pointerdown", handlePointerDown, true);
     }, [selectionQrCode, snapshot]);
     const visibleToolbar = snapshot && !selectionOverlayBlocked && activeSettings?.selectionOverlayMode !== "off" && !activeTool && !selectionQrCode && (activeSettings?.selectionOverlayMode === "always" || hoverOpen);
-    const selectionToolButton = (tool) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+    const selectionToolButton = (tool) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
       "button",
       {
         className: "md-icon-button",
         type: "button",
         title: tool.title,
         onClick: () => void runTool(tool),
-        children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ToolIcon, { name: tool.icon })
+        children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ToolIcon, { name: tool.icon })
       },
       tool.id
     );
@@ -37961,7 +38915,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       const fixedTools = {
         copy: {
           title: uiText(activeSettings?.interfaceLanguage, "copySelection"),
-          icon: selectionCopied ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Check, {}) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Copy, {}),
+          icon: selectionCopied ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Check, {}) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Copy, {}),
           onClick: async () => {
             await copyText(snapshot?.copyText ?? "");
             setSelectionCopied(true);
@@ -37970,21 +38924,21 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
         },
         search: {
           title: t("searchSelection"),
-          icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Search, {}),
+          icon: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Search, {}),
           onClick: searchSelection
         },
         todo: {
           title: t("selectionTodo"),
-          icon: todoCreated ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Check, {}) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ListTodo, {}),
+          icon: todoCreated ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Check, {}) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ListTodo, {}),
           onClick: createTodoFromSelection
         },
         qrcode: {
           title: t("selectionQrCode"),
-          icon: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(QrCode, {}),
+          icon: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(QrCode, {}),
           onClick: showSelectionQrCode
         }
       }[tool];
-      return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
         "button",
         {
           className: "md-icon-button",
@@ -37997,8 +38951,8 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
         tool
       );
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
-      activeSettings?.pictureInPictureVideoButtonEnabled !== false && pictureInPictureVideos.map((target) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
+      activeSettings?.pictureInPictureVideoButtonEnabled !== false && pictureInPictureVideos.map((target) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
         "button",
         {
           className: `md-page-action-button md-video-pip-button ${target.active ? "active" : ""}`,
@@ -38022,11 +38976,11 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
             event.stopPropagation();
             runVideoPictureInPicture(target);
           },
-          children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PictureInPicture2, {})
+          children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PictureInPicture2, {})
         },
         target.id
       )),
-      autoReplyPosition && inputAutoReplyEnabled && !autoReplyBlocked && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      autoReplyPosition && inputAutoReplyEnabled && !autoReplyBlocked && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
         "button",
         {
           className: `md-page-action-button md-auto-reply-button ${autoReplyBusy ? "busy" : ""} ${autoReplyError ? "error" : ""}`,
@@ -38052,10 +39006,10 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
             event.stopPropagation();
             void runAutoReply();
           },
-          children: autoReplyBusy ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "md-mini-spinner" }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ToolIcon, { name: "WebMind" })
+          children: autoReplyBusy ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "md-mini-spinner" }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ToolIcon, { name: "WebMind" })
         }
       ),
-      hoverDefinition && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      hoverDefinition && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
         "div",
         {
           className: "md-definition-tooltip",
@@ -38064,7 +39018,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           children: hoverDefinition.meaning
         }
       ),
-      imageTextButtonPosition && imageTextVisible && imageTextExtractionEnabled && !imageTextExtractionBlocked && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      imageTextButtonPosition && imageTextVisible && imageTextExtractionEnabled && !imageTextExtractionBlocked && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
         "button",
         {
           className: `md-page-action-button md-auto-reply-button md-image-text-button ${imageTextBusy ? "busy" : ""}`,
@@ -38105,10 +39059,10 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
             event.stopPropagation();
             void runImageTextExtraction(event.currentTarget);
           },
-          children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ToolIcon, { name: "WebMind" })
+          children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ToolIcon, { name: "WebMind" })
         }
       ),
-      edgeQuickToolsEnabled && !edgeToolsBlocked && !edgeDismissed && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+      edgeQuickToolsEnabled && !edgeToolsBlocked && !edgeDismissed && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
         "div",
         {
           className: "md-edge-tools",
@@ -38119,7 +39073,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           onMouseDown: (event) => event.stopPropagation(),
           onMouseUp: (event) => event.stopPropagation(),
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
               "button",
               {
                 className: "md-edge-close",
@@ -38127,11 +39081,11 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                 title: t("closeQuickTools"),
                 "aria-label": t("closeQuickTools"),
                 onClick: () => setEdgeDismissed(true),
-                children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(X, {})
+                children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(X, {})
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "md-edge-menu", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "md-edge-menu", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                 "button",
                 {
                   type: "button",
@@ -38139,10 +39093,10 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                   "aria-label": t("immersiveTranslation"),
                   disabled: edgeBusy,
                   onClick: () => void runEdgeImmersiveTranslate(),
-                  children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ArrowRightLeft, {})
+                  children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ArrowRightLeft, {})
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                 "button",
                 {
                   type: "button",
@@ -38150,10 +39104,10 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                   "aria-label": t("immersiveReading"),
                   disabled: edgeBusy,
                   onClick: () => void runEdgeImmersiveReading(),
-                  children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Highlighter, {})
+                  children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Highlighter, {})
                 }
               ),
-              edgeTools.map((tool) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+              edgeTools.map((tool) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                 "button",
                 {
                   type: "button",
@@ -38161,11 +39115,11 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                   "aria-label": tool.title,
                   disabled: edgeBusy,
                   onClick: () => void runEdgeTool(tool),
-                  children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ToolIcon, { name: tool.icon })
+                  children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ToolIcon, { name: tool.icon })
                 },
                 tool.id
               )),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                 "button",
                 {
                   type: "button",
@@ -38173,11 +39127,11 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                   "aria-label": t("restorePage"),
                   disabled: edgeBusy,
                   onClick: runEdgeRestore,
-                  children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(RotateCcw, {})
+                  children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(RotateCcw, {})
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
               "button",
               {
                 className: "md-edge-trigger",
@@ -38189,13 +39143,13 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                 onPointerUp: endEdgeDrag,
                 onPointerCancel: endEdgeDrag,
                 onClick: handleEdgeTriggerClick,
-                children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Sparkles, {})
+                children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Sparkles, {})
               }
             )
           ]
         }
       ),
-      edgeResultTitle && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+      edgeResultTitle && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
         "div",
         {
           className: "md-edge-result",
@@ -38203,25 +39157,25 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           onMouseDown: (event) => event.stopPropagation(),
           onMouseUp: (event) => event.stopPropagation(),
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "md-edge-result-head", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Sparkles, {}),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { children: edgeResultTitle || "WebMind" }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "md-edge-result-head", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Sparkles, {}),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: edgeResultTitle || "WebMind" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                 "button",
                 {
                   className: "md-icon-button",
                   type: "button",
                   title: t("close"),
                   onClick: () => showEdgeResult(""),
-                  children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(X, {})
+                  children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(X, {})
                 }
               )
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: `md-edge-result-body ${edgeError ? "error" : ""}`, children: edgeBusy && !edgeResult && !edgeError ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "md-spinner" }) : edgeError || /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Markdown, { content: edgeResult }) })
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: `md-edge-result-body ${edgeError ? "error" : ""}`, children: edgeBusy && !edgeResult && !edgeError ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "md-spinner" }) : edgeError || /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Markdown, { content: edgeResult }) })
           ]
         }
       ),
-      query && searchAnswerEnabled && !searchAnswerDismissed && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+      query && searchAnswerEnabled && !searchAnswerDismissed && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
         "aside",
         {
           className: "md-search-answer",
@@ -38235,7 +39189,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           onMouseDown: (event) => event.stopPropagation(),
           onMouseUp: (event) => event.stopPropagation(),
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
               "header",
               {
                 className: "md-search-answer-head",
@@ -38244,9 +39198,9 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                 onPointerUp: endSearchAnswerDrag,
                 onPointerCancel: endSearchAnswerDrag,
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Sparkles, {}),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("strong", { children: uiText(activeSettings?.interfaceLanguage, "webmindAnswer") }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Sparkles, {}),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("strong", { children: uiText(activeSettings?.interfaceLanguage, "webmindAnswer") }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                     "button",
                     {
                       className: "md-icon-button",
@@ -38263,27 +39217,27 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                         });
                         setSearchAnswerRefreshToken((value) => value + 1);
                       },
-                      children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(RotateCcw, {})
+                      children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(RotateCcw, {})
                     }
                   ),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                     "button",
                     {
                       className: "md-icon-button",
                       type: "button",
                       title: t("close"),
                       onClick: () => setSearchAnswerDismissed(true),
-                      children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(X, {})
+                      children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(X, {})
                     }
                   )
                 ]
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
               "div",
               {
                 className: `md-search-answer-body ${searchAnswer.error ? "error" : ""}`,
-                children: searchAnswer.busy ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "md-spinner" }) : searchAnswer.error ? searchAnswer.error : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                children: searchAnswer.busy ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "md-spinner" }) : searchAnswer.error ? searchAnswer.error : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                   SearchAnswerMarkdown,
                   {
                     content: searchAnswer.text,
@@ -38292,27 +39246,27 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                 )
               }
             ),
-            searchAnswer.text && !searchAnswer.busy && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("footer", { className: "md-search-answer-actions", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+            searchAnswer.text && !searchAnswer.busy && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("footer", { className: "md-search-answer-actions", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
                 "button",
                 {
                   className: "md-text-button",
                   type: "button",
                   onClick: () => void copyText(searchAnswer.text),
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Copy, {}),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Copy, {}),
                     uiText(activeSettings?.interfaceLanguage, "copy")
                   ]
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
                 "button",
                 {
                   className: "md-text-button",
                   type: "button",
                   onClick: () => void openSearch(),
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PanelRightOpen, {}),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(PanelRightOpen, {}),
                     uiText(activeSettings?.interfaceLanguage, "more")
                   ]
                 }
@@ -38321,7 +39275,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           ]
         }
       ),
-      snapshot && activeSettings?.selectionOverlayMode === "hover" && !activeTool && !selectionQrCode && !selectionOverlayBlocked && !hoverOpen && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+      snapshot && activeSettings?.selectionOverlayMode === "hover" && !activeTool && !selectionQrCode && !selectionOverlayBlocked && !hoverOpen && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
         "button",
         {
           className: "md-hover-dot",
@@ -38336,7 +39290,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           onMouseLeave: scheduleHoverClose
         }
       ),
-      visibleToolbar && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+      visibleToolbar && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
         "div",
         {
           className: "md-toolbar",
@@ -38361,7 +39315,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           ]
         }
       ),
-      activeTool && snapshot && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+      activeTool && snapshot && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
         "div",
         {
           ref: resultRef,
@@ -38374,7 +39328,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           onMouseDown: (event) => event.stopPropagation(),
           onMouseUp: (event) => event.stopPropagation(),
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
               "div",
               {
                 className: "md-result-head md-draggable-head",
@@ -38383,25 +39337,25 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                 onPointerUp: endFloatingPanelDrag,
                 onPointerCancel: endFloatingPanelDrag,
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ToolIcon, { name: activeTool.icon }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "md-result-title", children: activeTool.title }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ToolIcon, { name: activeTool.icon }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "md-result-title", children: activeTool.title }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                     "button",
                     {
                       className: "md-icon-button",
                       type: "button",
                       title: t("close"),
                       onClick: closeResult,
-                      children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(X, {})
+                      children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(X, {})
                     }
                   )
                 ]
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: `md-result-body ${error ? "md-result-error" : ""}`, children: resultBusy ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "md-spinner" }) : error ? error : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Markdown, { content: result }) }),
-            (result || error) && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "md-result-actions", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "md-result-tools", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: `md-result-body ${error ? "md-result-error" : ""}`, children: resultBusy ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "md-spinner" }) : error ? error : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Markdown, { content: result }) }),
+            (result || error) && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "md-result-actions", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "md-result-tools", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
                   "div",
                   {
                     className: "md-tool-menu",
@@ -38411,7 +39365,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                       }
                     },
                     children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+                      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
                         "button",
                         {
                           className: "md-tool-select",
@@ -38420,19 +39374,19 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                           onClick: () => setResultToolMenuOpen((open) => !open),
                           title: t("chooseTool"),
                           children: [
-                            selectedResultTool && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ToolIcon, { name: selectedResultTool.icon }),
-                            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: selectedResultTool?.title ?? t("chooseTool") }),
-                            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ChevronDown, { className: "md-menu-chevron" })
+                            selectedResultTool && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ToolIcon, { name: selectedResultTool.icon }),
+                            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: selectedResultTool?.title ?? t("chooseTool") }),
+                            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ChevronDown, { className: "md-menu-chevron" })
                           ]
                         }
                       ),
-                      resultToolMenuOpen && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                      resultToolMenuOpen && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                         "div",
                         {
                           className: "md-tool-menu-list",
                           role: "menu",
                           onWheel: (event) => event.stopPropagation(),
-                          children: resultTools.map((tool) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+                          children: resultTools.map((tool) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
                             "button",
                             {
                               type: "button",
@@ -38443,8 +39397,8 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                                 setResultToolMenuOpen(false);
                               },
                               children: [
-                                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ToolIcon, { name: tool.icon }),
-                                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: tool.title })
+                                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(ToolIcon, { name: tool.icon }),
+                                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: tool.title })
                               ]
                             },
                             tool.id
@@ -38454,7 +39408,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                     ]
                   }
                 ),
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                   "button",
                   {
                     className: "md-text-button",
@@ -38464,7 +39418,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                     children: isImageTextResult ? t("reextractImageText") : t("rerunExecution")
                   }
                 ),
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                   "button",
                   {
                     className: "md-text-button",
@@ -38475,7 +39429,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                   }
                 )
               ] }),
-              result && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+              result && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
                 "button",
                 {
                   className: "md-text-button",
@@ -38485,12 +39439,12 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                     setCopied(true);
                   },
                   children: [
-                    copied ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Check, {}) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Copy, {}),
+                    copied ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Check, {}) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Copy, {}),
                     copied ? t("copied") : t("copy")
                   ]
                 }
               ),
-              result && snapshot.editable && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+              result && snapshot.editable && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
                 "button",
                 {
                   className: "md-text-button",
@@ -38500,14 +39454,14 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                     closeResult();
                   },
                   children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Clipboard, {}),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Clipboard, {}),
                     t("replace")
                   ]
                 }
               )
             ] }),
-            snapshot && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "md-followup", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            snapshot && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "md-followup", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                 "textarea",
                 {
                   rows: 2,
@@ -38523,21 +39477,21 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                   }
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                 "button",
                 {
                   type: "button",
                   title: t("send"),
                   disabled: !followUpQuestion.trim() || resultBusy,
                   onClick: () => void askFollowUp(),
-                  children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Send, {})
+                  children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Send, {})
                 }
               )
             ] })
           ]
         }
       ),
-      selectionQrCode && snapshot && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+      selectionQrCode && snapshot && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
         "div",
         {
           className: "md-result md-qr-result",
@@ -38549,7 +39503,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           onMouseDown: (event) => event.stopPropagation(),
           onMouseUp: (event) => event.stopPropagation(),
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
               "div",
               {
                 className: "md-result-head md-draggable-head",
@@ -38558,9 +39512,9 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                 onPointerUp: endFloatingPanelDrag,
                 onPointerCancel: endFloatingPanelDrag,
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(QrCode, {}),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "md-result-title", children: t("selectionQrCodeTitle") }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(QrCode, {}),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "md-result-title", children: t("selectionQrCodeTitle") }),
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                     "button",
                     {
                       className: "md-icon-button",
@@ -38570,13 +39524,13 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
                         setSelectionQrCode(null);
                         setResultPositionOverride(null);
                       },
-                      children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(X, {})
+                      children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(X, {})
                     }
                   )
                 ]
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "md-qr-result-body", children: selectionQrCode.error ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "md-result-error", children: selectionQrCode.error }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "md-qr-result-body", children: selectionQrCode.error ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "md-result-error", children: selectionQrCode.error }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
               "div",
               {
                 className: "md-qr-code",
@@ -38587,7 +39541,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           ]
         }
       ),
-      translationProgress && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+      translationProgress && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
         "div",
         {
           className: `md-progress-orb ${translationProgress.error ? "error" : ""}`,
@@ -38597,13 +39551,13 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
           role: "status",
           "aria-live": "polite",
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "md-progress-fill" }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "md-progress-content", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("strong", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "md-progress-fill" }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "md-progress-content", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("strong", { children: [
                 translationProgress.percent,
                 "%"
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: translationProgress.error ? translationProgress.label : translationProgress.active ? t("translatingShort") : t("translationComplete") })
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { children: translationProgress.error ? translationProgress.label : translationProgress.active ? t("translatingShort") : t("translationComplete") })
             ] })
           ]
         }
@@ -38651,7 +39605,7 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
     style.textContent = SHADOW_STYLES;
     const mount = document.createElement("div");
     shadow.append(style, mount);
-    (0, import_client.createRoot)(mount).render(/* @__PURE__ */ (0, import_jsx_runtime3.jsx)(SelectionAssistant, { query: searchQuery() }));
+    (0, import_client2.createRoot)(mount).render(/* @__PURE__ */ (0, import_jsx_runtime5.jsx)(SelectionAssistant, { query: searchQuery() }));
     document.addEventListener(
       "pointerover",
       (event) => {
@@ -38785,6 +39739,18 @@ ${truncateText(draft, 4e3, activeSettings?.interfaceLanguage)}` : t("autoReplyEm
       }
       if (message.type === "page.screenshot.select") {
         return selectScreenshotArea();
+      }
+      if (message.type === "page.screenshot.select.cancel") {
+        cancelScreenshotArea();
+        return { cancelled: true };
+      }
+      if (message.type === "page.screenshot.edit") {
+        return editScreenshotInPage(
+          message.attachment,
+          message.placement,
+          settings?.interfaceLanguage,
+          typeof message.captureDataUrl === "string" ? message.captureDataUrl : void 0
+        );
       }
       if (message.type === "page.forceCopy.set") {
         return { enabled: setForceCopyEnabled(Boolean(message.enabled)) };

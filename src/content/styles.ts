@@ -17,6 +17,190 @@ export const SHADOW_STYLES = `
   }
   * { box-sizing: border-box; letter-spacing: 0; }
   button { font: inherit; }
+  .modal-backdrop {
+    position: fixed;
+    z-index: 2147483647;
+    inset: 0;
+    display: grid;
+    overflow: auto;
+    place-items: center;
+    padding: 10px;
+    background: rgba(10, 17, 15, .58);
+  }
+  .screenshot-editor-backdrop {
+    align-content: center;
+    justify-items: center;
+    gap: 8px;
+  }
+  .screenshot-editor {
+    display: flex;
+    width: min(760px, 100%);
+    max-height: calc(100vh - 20px);
+    flex-direction: column;
+    gap: 8px;
+  }
+  .screenshot-preview-float,
+  .screenshot-tools-float {
+    width: 100%;
+    border: 1px solid var(--md-border);
+    border-radius: 7px;
+    background: var(--md-bg);
+    box-shadow: var(--md-shadow);
+  }
+  .screenshot-editor-canvas-frame {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+  }
+  .screenshot-preview-float {
+    display: flex;
+    max-height: calc(100vh - 112px);
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .screenshot-editor-heading {
+    display: flex;
+    min-height: 38px;
+    align-items: center;
+    padding: 4px 12px;
+    border-bottom: 1px solid var(--md-border);
+    color: var(--md-text);
+  }
+  .screenshot-editor-heading h2 {
+    margin: 0;
+    font-size: 13px;
+  }
+  .screenshot-editor-canvas-wrap {
+    display: grid;
+    min-height: 120px;
+    max-height: calc(100vh - 164px);
+    place-items: center;
+    overflow: auto;
+    padding: 10px;
+    background: #1b2422;
+  }
+  .screenshot-editor-canvas {
+    display: block;
+    max-width: 100%;
+    max-height: calc(100vh - 210px);
+    cursor: crosshair;
+    touch-action: none;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, .28);
+  }
+  .screenshot-editor-tools {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 7px 9px;
+    scrollbar-width: thin;
+  }
+  .screenshot-editor-tool-group {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 3px;
+  }
+  .screenshot-editor-tools .icon-button {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    color: var(--md-muted);
+    background: transparent;
+    cursor: pointer;
+  }
+  .screenshot-editor-tools .icon-button:hover,
+  .screenshot-editor-tools .icon-button.active {
+    border-color: var(--md-border);
+    color: var(--md-text);
+    background: var(--md-surface);
+  }
+  .screenshot-editor-tools .icon-button:disabled { cursor: not-allowed; opacity: .48; }
+  .screenshot-editor-tools .icon-button svg { width: 15px; height: 15px; stroke-width: 1.9; }
+  .screenshot-editor-tools .screenshot-editor-cancel { color: var(--md-accent); }
+  .screenshot-editor-tools .screenshot-editor-confirm { color: var(--md-teal); }
+  .screenshot-editor-color {
+    display: grid;
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid var(--md-border);
+    border-radius: 5px;
+    background: var(--md-bg);
+    cursor: pointer;
+  }
+  .screenshot-editor-color input { width: 22px; height: 22px; padding: 0; border: 0; background: transparent; cursor: pointer; }
+  .screenshot-editor-width { display: flex; flex: 0 0 auto; width: 72px; align-items: center; }
+  .screenshot-editor-width input { width: 100%; accent-color: var(--md-teal); }
+  .screenshot-editor-text {
+    min-width: 120px;
+    flex: 1 1 150px;
+    min-height: 28px;
+    padding: 0 8px;
+    border: 1px solid var(--md-border);
+    border-radius: 5px;
+    color: var(--md-text);
+    background: var(--md-bg);
+    font-size: 11px;
+  }
+  .screenshot-tools-spacer { flex: 1 1 auto; }
+  .screenshot-editor-page-mode {
+    display: block;
+    overflow: hidden;
+    padding: 0;
+    background: rgba(10, 17, 15, .58);
+  }
+  .screenshot-editor-page-mode .screenshot-editor {
+    position: fixed;
+    max-width: calc(100vw - 16px);
+    max-height: calc(100vh - 16px);
+  }
+  .screenshot-editor-page-mode .screenshot-preview-float { max-height: calc(100vh - 112px); }
+  .screenshot-editor-page-mode .screenshot-editor-canvas-wrap { max-height: calc(100vh - 164px); }
+  .screenshot-editor-page-mode .screenshot-editor-canvas {
+    width: 100%;
+    height: auto;
+  }
+  .screenshot-editor-page-mode .screenshot-preview-float {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .screenshot-editor-page-mode .screenshot-editor-heading { display: none; }
+  .screenshot-editor-page-mode .screenshot-editor-canvas-wrap {
+    padding: 0;
+    background: transparent;
+  }
+  .screenshot-resize-handle {
+    position: absolute;
+    z-index: 2;
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: var(--md-accent);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, .42);
+    cursor: move;
+    touch-action: none;
+  }
+  .screenshot-resize-n { top: -6px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+  .screenshot-resize-ne { top: -6px; right: -6px; cursor: nesw-resize; }
+  .screenshot-resize-e { top: 50%; right: -6px; transform: translateY(-50%); cursor: ew-resize; }
+  .screenshot-resize-se { right: -6px; bottom: -6px; cursor: nwse-resize; }
+  .screenshot-resize-s { bottom: -6px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+  .screenshot-resize-sw { bottom: -6px; left: -6px; cursor: nesw-resize; }
+  .screenshot-resize-w { top: 50%; left: -6px; transform: translateY(-50%); cursor: ew-resize; }
+  .screenshot-resize-nw { top: -6px; left: -6px; cursor: nwse-resize; }
   .md-toolbar {
     position: fixed;
     z-index: 2147483646;

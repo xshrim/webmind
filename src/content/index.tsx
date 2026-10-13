@@ -77,7 +77,10 @@ import {
   imageElementToAttachment,
   imageHoverRect
 } from "./imageAttachments";
-import { selectScreenshotArea } from "./screenshotSelection";
+import {
+  cancelScreenshotArea,
+  selectScreenshotArea
+} from "./screenshotSelection";
 import {
   autoReplyTargetFromEvent,
   currentSelection,
@@ -135,6 +138,8 @@ import {
 } from "./githubCloneRewrite";
 import { isGithubRepositoryPath } from "./githubSshCloneUrl";
 import { ToolIcon } from "./toolIcons";
+import { editScreenshotInPage } from "./screenshotEditor";
+import type { ScreenshotEditorPlacement } from "../sidepanel/ScreenshotEditor";
 import type {
   AppSettings,
   CustomTool,
@@ -334,7 +339,12 @@ function isFocusOutside(
 }
 
 function isAssistantEvent(event: Event): boolean {
-  return Boolean(assistantHost && event.composedPath().includes(assistantHost));
+  return Boolean(
+    (assistantHost && event.composedPath().includes(assistantHost)) ||
+      event.composedPath().some(
+        (item) => item instanceof HTMLElement && item.id === "webmind-screenshot-editor"
+      )
+  );
 }
 
 function loadHoverDefinitionDictionary(): Promise<HoverDefinitionDictionary> {
@@ -4531,6 +4541,20 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     }
     if (message.type === "page.screenshot.select") {
       return selectScreenshotArea();
+    }
+    if (message.type === "page.screenshot.select.cancel") {
+      cancelScreenshotArea();
+      return { cancelled: true };
+    }
+    if (message.type === "page.screenshot.edit") {
+      return editScreenshotInPage(
+        message.attachment as ImageAttachment,
+        message.placement as ScreenshotEditorPlacement,
+        settings?.interfaceLanguage,
+        typeof message.captureDataUrl === "string"
+          ? message.captureDataUrl
+          : undefined
+      );
     }
     if (message.type === "page.forceCopy.set") {
       return { enabled: setForceCopyEnabled(Boolean(message.enabled)) };

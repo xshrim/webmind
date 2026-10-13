@@ -613,6 +613,227 @@ svg {
   background: var(--surface-2);
 }
 
+.screenshot-editor-backdrop {
+  z-index: 1100;
+  align-content: end;
+  align-items: end;
+  justify-items: stretch;
+  gap: 8px;
+  padding: 8px 10px 62px;
+}
+
+.screenshot-editor {
+  display: flex;
+  width: min(760px, 100%);
+  max-width: 100%;
+  max-height: calc(100vh - 20px);
+  flex-direction: column;
+  gap: 8px;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.screenshot-preview-float,
+.screenshot-tools-float,
+.screenshot-actions-float {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.screenshot-editor-backdrop:not(.screenshot-editor-page-mode) .screenshot-editor {
+  gap: 0;
+}
+
+.screenshot-editor-backdrop:not(.screenshot-editor-page-mode) .screenshot-preview-float {
+  border-radius: 7px 7px 0 0;
+}
+
+.screenshot-editor-backdrop:not(.screenshot-editor-page-mode) .screenshot-tools-float {
+  border-top: 0;
+  border-radius: 0 0 7px 7px;
+}
+
+.screenshot-preview-float {
+  display: flex;
+  max-height: calc(100vh - 150px);
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.screenshot-editor-heading {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 4px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.screenshot-editor-heading h2 {
+  min-width: 0;
+  flex: 1;
+  margin: 0;
+  font-size: 13px;
+}
+
+.screenshot-editor-tools {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 7px 9px;
+  border-radius: 7px;
+  background: var(--surface);
+  scrollbar-width: thin;
+}
+
+.screenshot-editor-tool-group {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 3px;
+}
+
+.screenshot-editor-color {
+  display: grid;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.screenshot-editor-color input {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.screenshot-editor-width {
+  display: flex;
+  flex: 0 0 auto;
+  width: 72px;
+  align-items: center;
+}
+
+.screenshot-editor-width input {
+  width: 100%;
+  accent-color: var(--teal);
+}
+
+.screenshot-editor-text {
+  min-width: 120px;
+  flex: 1 1 150px;
+  min-height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text);
+  background: var(--surface);
+  font-size: 11px;
+}
+
+.screenshot-editor-canvas-wrap {
+  display: grid;
+  min-height: 180px;
+  max-height: calc(100vh - 220px);
+  place-items: center;
+  overflow: auto;
+  padding: 12px;
+  background: #1b2422;
+}
+
+.screenshot-editor-canvas {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 260px);
+  cursor: crosshair;
+  touch-action: none;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.28);
+}
+
+.screenshot-editor-canvas-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+.screenshot-editor-page-mode .screenshot-preview-float {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.screenshot-editor-page-mode .screenshot-editor-heading {
+  display: none;
+}
+
+.screenshot-editor-page-mode .screenshot-editor-canvas-wrap {
+  padding: 0;
+  background: transparent;
+}
+
+.screenshot-editor-page-mode .screenshot-editor-canvas-frame {
+  width: 100%;
+}
+
+.screenshot-resize-handle {
+  position: absolute;
+  z-index: 2;
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.42);
+  cursor: move;
+  touch-action: none;
+}
+
+.screenshot-resize-n { top: -6px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+.screenshot-resize-ne { top: -6px; right: -6px; cursor: nesw-resize; }
+.screenshot-resize-e { top: 50%; right: -6px; transform: translateY(-50%); cursor: ew-resize; }
+.screenshot-resize-se { right: -6px; bottom: -6px; cursor: nwse-resize; }
+.screenshot-resize-s { bottom: -6px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+.screenshot-resize-sw { bottom: -6px; left: -6px; cursor: nesw-resize; }
+.screenshot-resize-w { top: 50%; left: -6px; transform: translateY(-50%); cursor: ew-resize; }
+.screenshot-resize-nw { top: -6px; left: -6px; cursor: nwse-resize; }
+
+.screenshot-tools-spacer {
+  flex: 1 1 auto;
+}
+
+.screenshot-editor-cancel {
+  color: var(--danger);
+}
+
+.screenshot-editor-confirm {
+  color: var(--teal);
+}
+
+.screenshot-actions-float {
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+  padding: 7px 9px;
+}
+
 .mcp-approval-actions {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -5326,6 +5547,12 @@ button.prompt-row:hover {
   .modal-backdrop {
     align-items: end;
     padding: 0;
+  }
+
+  .screenshot-editor-backdrop {
+    align-content: end;
+    align-items: end;
+    padding: 8px 8px 62px;
   }
 
   .modal {

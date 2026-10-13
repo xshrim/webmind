@@ -187,6 +187,7 @@ import {
   runImmersiveTranslationWorkflow
 } from "../shared/immersiveWorkflow";
 import { SyntaxHighlightedMarkdown } from "./SyntaxHighlightedMarkdown";
+import { ScreenshotEditor } from "./ScreenshotEditor";
 import { StreamMediaPreview } from "./StreamMediaPreview";
 import { extractPdfContext } from "./pdf";
 import { searchWeb } from "../shared/webSearch";
@@ -449,6 +450,9 @@ export function App() {
   const [composer, setComposer] = useState("");
   const [attachments, setAttachments] = useState<ImageAttachment[]>([]);
   const [screenshotSelecting, setScreenshotSelecting] = useState(false);
+  const [screenshotDraft, setScreenshotDraft] = useState<ImageAttachment | null>(
+    null
+  );
   const [includePage, setIncludePage] = useState(true);
   const [webSearchEnabled, setWebSearchEnabled] = useState(false);
   const [reasoningEnabled, setReasoningEnabled] = useState(false);
@@ -5412,6 +5416,7 @@ export function App() {
         { type: "page.screenshot.select" },
         settingsRef.current?.interfaceLanguage
       );
+      setScreenshotSelecting(false);
       if (!selection) {
         setNotice("");
         return;
@@ -5422,18 +5427,50 @@ export function App() {
         settingsRef.current?.interfaceLanguage
       );
       const attachment = await screenshotToAttachment(capture.dataUrl, selection);
-      setAttachments((current) => [...current, attachment].slice(0, 6));
-      appendOperationLog(
-        `${t("logAttachmentAdded")}: ${t("captureScreenshot")}`,
-        "success"
-      );
       setNotice("");
       setView("chat");
+      try {
+        const edited = await sendToTab<ImageAttachment | null>(
+          activeTab.id,
+          {
+            type: "page.screenshot.edit",
+            attachment,
+            placement: selection,
+            captureDataUrl: capture.dataUrl
+          },
+          settingsRef.current?.interfaceLanguage
+        );
+        if (edited?.dataUrl) confirmScreenshotDraft(edited);
+      } catch {
+        // Pages that cannot receive content scripts keep the sidebar editor fallback.
+        setScreenshotDraft(attachment);
+      }
     } catch (error) {
       setNotice(errorMessage(error));
     } finally {
+      if (activeTab?.id) {
+        void sendToTab(activeTab.id, {
+          type: "page.screenshot.select.cancel"
+        }).catch(() => undefined);
+      }
       setScreenshotSelecting(false);
     }
+  };
+
+  const cancelScreenshotDraft = () => {
+    setScreenshotDraft(null);
+    setNotice("");
+  };
+
+  const confirmScreenshotDraft = (attachment: ImageAttachment) => {
+    setAttachments((current) => [...current, attachment].slice(0, 6));
+    setScreenshotDraft(null);
+    appendOperationLog(
+      `${t("logAttachmentAdded")}: ${t("captureScreenshot")}`,
+      "success"
+    );
+    setNotice("");
+    setView("chat");
   };
 
   const contextMode = effectiveContextMode();
@@ -7683,6 +7720,15 @@ export function App() {
           );
         })}
       </nav>
+
+      {screenshotDraft && (
+        <ScreenshotEditor
+          attachment={screenshotDraft}
+          language={settings.interfaceLanguage}
+          onCancel={cancelScreenshotDraft}
+          onConfirm={confirmScreenshotDraft}
+        />
+      )}
 
       {cookieViewerOpen && (
         <div className="modal-backdrop">
