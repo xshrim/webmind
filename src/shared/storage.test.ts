@@ -44,6 +44,16 @@ describe("settings normalization", () => {
     expect(normalizeSettings().imageTextExtractionEnabled).toBe(false);
   });
 
+  it("defaults the sidebar layout to standard and accepts compact", () => {
+    expect(normalizeSettings().panelLayoutMode).toBe("standard");
+    expect(normalizeSettings({ panelLayoutMode: "compact" }).panelLayoutMode).toBe(
+      "compact"
+    );
+    expect(
+      normalizeSettings({ panelLayoutMode: "dense" as "standard" }).panelLayoutMode
+    ).toBe("standard");
+  });
+
   it("preserves an explicit video picture-in-picture choice", () => {
     expect(
       normalizeSettings({ pictureInPictureVideoButtonEnabled: true })

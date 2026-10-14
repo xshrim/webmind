@@ -16,6 +16,7 @@ export type ProviderKind =
   | "ollama";
 
 export type ThemeMode = "system" | "light" | "dark";
+export type PanelLayoutMode = "standard" | "compact";
 export type AppLanguage =
   | "auto"
   | "zh-CN"
@@ -153,6 +154,7 @@ export interface AppSettings {
   visionProfileId: string | null;
   compareProfileIds: string[];
   theme: ThemeMode;
+  panelLayoutMode: PanelLayoutMode;
   logLevel: AppLogLevel;
   autoScrollDuringStreaming: boolean;
   modelThinkingTimeoutSeconds: number;

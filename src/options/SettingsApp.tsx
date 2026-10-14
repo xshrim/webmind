@@ -69,6 +69,7 @@ import type {
   SelectionSearchOpenMode,
   SelectionOverlayMode,
   SelectionOverlayFixedTool,
+  PanelLayoutMode,
   ToolDefinition,
   ToolSurface
 } from "../shared/types";
@@ -2423,6 +2424,27 @@ export function SettingsApp() {
                     <small>{t("appearanceThemeHelp")}</small>
                   </div>
                   <div className="field">
+                    <span className="field-label">{t("panelLayoutMode")}</span>
+                    <div className="segmented">
+                      {([
+                        ["standard", "panelLayoutModeStandard"],
+                        ["compact", "panelLayoutModeCompact"]
+                      ] as const).map(([mode, labelKey]) => (
+                        <button
+                          key={mode}
+                          className={settings.panelLayoutMode === mode ? "active" : ""}
+                          type="button"
+                          onClick={() =>
+                            void updatePreference("panelLayoutMode", mode as PanelLayoutMode)
+                          }
+                        >
+                          {t(labelKey)}
+                        </button>
+                      ))}
+                    </div>
+                    <small>{t("panelLayoutModeHelp")}</small>
+                  </div>
+                  <div className="field">
                     <span className="field-label">
                       {uiText(
                         settings.interfaceLanguage,
@@ -2461,30 +2483,30 @@ export function SettingsApp() {
                       )}
                     </small>
                   </div>
-                </div>
-                <div className="field">
-                  <span className="field-label">{t("mcpToolApprovalMode")}</span>
-                  <div className="segmented segmented-wrap">
-                    {([
-                      ["deny", "mcpToolApprovalDeny"],
-                      ["ask", "mcpToolApprovalAsk"],
-                      ["allow", "mcpToolApprovalAllow"]
-                    ] as const).map(([mode, label]) => (
-                      <button
-                        key={mode}
-                        className={
-                          settings.mcpToolApprovalMode === mode ? "active" : ""
-                        }
-                        type="button"
-                        onClick={() =>
-                          void updatePreference("mcpToolApprovalMode", mode)
-                        }
-                      >
-                        {t(label)}
-                      </button>
-                    ))}
+                  <div className="field">
+                    <span className="field-label">{t("mcpToolApprovalMode")}</span>
+                    <div className="segmented segmented-wrap">
+                      {([
+                        ["deny", "mcpToolApprovalDeny"],
+                        ["ask", "mcpToolApprovalAsk"],
+                        ["allow", "mcpToolApprovalAllow"]
+                      ] as const).map(([mode, label]) => (
+                        <button
+                          key={mode}
+                          className={
+                            settings.mcpToolApprovalMode === mode ? "active" : ""
+                          }
+                          type="button"
+                          onClick={() =>
+                            void updatePreference("mcpToolApprovalMode", mode)
+                          }
+                        >
+                          {t(label)}
+                        </button>
+                      ))}
+                    </div>
+                    <small>{t("mcpToolApprovalModeHelp")}</small>
                   </div>
-                  <small>{t("mcpToolApprovalModeHelp")}</small>
                 </div>
                 <div className="form-grid">
                   <label className="field">

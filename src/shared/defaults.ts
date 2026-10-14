@@ -216,6 +216,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   visionProfileId: null,
   compareProfileIds: [],
   theme: "system",
+  panelLayoutMode: "standard",
   logLevel: "info",
   autoScrollDuringStreaming: true,
   modelThinkingTimeoutSeconds: 0,

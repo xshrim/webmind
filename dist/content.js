@@ -15462,7 +15462,7 @@
     allowRound: "Diesen Zug erlauben",
     allowSession: "Diese Sitzung erlauben",
     mcpToolApprovalMode: "MCP-Tool-Berechtigungsmodus",
-    mcpToolApprovalModeHelp: "Steuert die globale Berechtigung f\xFCr aktivierte MCP-Tools. Bei Nachfragen kann die Freigabe f\xFCr diesen Aufruf, diesen Zug oder diese Sitzung gelten.",
+    mcpToolApprovalModeHelp: "Steuert die globale MCP-Tool-Freigabe.",
     mcpToolApprovalDeny: "Immer ablehnen",
     mcpToolApprovalAsk: "Immer nachfragen",
     mcpToolApprovalAllow: "Immer erlauben",
@@ -15800,6 +15800,10 @@
     themeSystem: "Systemeinstellung folgen",
     themeLight: "Hell",
     themeDark: "Dunkel",
+    panelLayoutMode: "Seitenleistenlayout",
+    panelLayoutModeStandard: "Standard",
+    panelLayoutModeCompact: "Kompakt",
+    panelLayoutModeHelp: "Der Kompaktmodus verringert interne Abst\xE4nde.",
     autoScrollDuringStreaming: "Automatisches Scrollen w\xE4hrend der Generierung",
     autoScrollDuringStreamingHelp: "Die Seitenleiste scrollt w\xE4hrend der Generierung automatisch zur neuesten Modellausgabe.",
     autoReply: "Automatische Antwort",
@@ -15859,7 +15863,7 @@
     selectionSearchCustomUrlHelp: "Verwenden Sie eine HTTP(S)-URL mit dem Platzhalter {query}.",
     selectionSearchOpenMode: "Ziel der Auswahlsuche",
     searchOpenMode: "Such\xF6ffnung",
-    selectionSearchOpenModeHelp: "\xD6ffnen Sie Ergebnisse in einem neuen Tab oder ersetzen Sie die aktuelle Seite.",
+    selectionSearchOpenModeHelp: "Ergebnisse im neuen Tab oder auf der aktuellen Seite \xF6ffnen.",
     selectionSearchOpenNewTab: "Neuer Tab",
     selectionSearchOpenCurrent: "Aktuelle Seite",
     includePageByDefault: "Aktuelle Seite standardm\xE4\xDFig einbeziehen",
@@ -16217,7 +16221,7 @@
     allowRound: "Permitir este turno",
     allowSession: "Permitir esta sesi\xF3n",
     mcpToolApprovalMode: "Modo de autorizaci\xF3n de herramientas MCP",
-    mcpToolApprovalModeHelp: "Controla la autorizaci\xF3n global de las herramientas MCP activadas. Al preguntar, la autorizaci\xF3n puede aplicarse a esta llamada, este turno o esta sesi\xF3n.",
+    mcpToolApprovalModeHelp: "Controla la autorizaci\xF3n global de herramientas MCP.",
     mcpToolApprovalDeny: "Denegar siempre",
     mcpToolApprovalAsk: "Preguntar siempre",
     mcpToolApprovalAllow: "Permitir siempre",
@@ -16555,6 +16559,10 @@
     themeSystem: "Seguir configuraci\xF3n del sistema",
     themeLight: "Claro",
     themeDark: "Oscuro",
+    panelLayoutMode: "Dise\xF1o de la barra lateral",
+    panelLayoutModeStandard: "Est\xE1ndar",
+    panelLayoutModeCompact: "Compacto",
+    panelLayoutModeHelp: "El modo compacto reduce el espaciado interno.",
     autoScrollDuringStreaming: "Desplazamiento autom\xE1tico durante la generaci\xF3n",
     autoScrollDuringStreamingHelp: "Mantiene la barra lateral desplazada hacia la \xFAltima respuesta del modelo mientras este genera contenido.",
     autoReply: "Respuesta autom\xE1tica",
@@ -16614,7 +16622,7 @@
     selectionSearchCustomUrlHelp: "Usa una URL HTTP(S) que contenga el marcador {query}.",
     selectionSearchOpenMode: "Destino de la b\xFAsqueda de selecci\xF3n",
     searchOpenMode: "Modo de apertura de b\xFAsqueda",
-    selectionSearchOpenModeHelp: "Abra los resultados en una pesta\xF1a nueva o reemplace la p\xE1gina actual.",
+    selectionSearchOpenModeHelp: "Abrir resultados en pesta\xF1a nueva o p\xE1gina actual.",
     selectionSearchOpenNewTab: "Pesta\xF1a nueva",
     selectionSearchOpenCurrent: "P\xE1gina actual",
     includePageByDefault: "Incluir la p\xE1gina actual por defecto",
@@ -16972,7 +16980,7 @@
     allowRound: "Autoriser ce tour",
     allowSession: "Autoriser cette session",
     mcpToolApprovalMode: "Mode d'autorisation des outils MCP",
-    mcpToolApprovalModeHelp: "Contr\xF4le l'autorisation globale des outils MCP activ\xE9s. En mode demande, l'autorisation peut s'appliquer \xE0 cet appel, ce tour ou cette session.",
+    mcpToolApprovalModeHelp: "Contr\xF4le l'autorisation globale des outils MCP.",
     mcpToolApprovalDeny: "Toujours refuser",
     mcpToolApprovalAsk: "Toujours demander",
     mcpToolApprovalAllow: "Toujours autoriser",
@@ -17310,6 +17318,10 @@
     themeSystem: "Suivre le syst\xE8me",
     themeLight: "Clair",
     themeDark: "Sombre",
+    panelLayoutMode: "Mise en page de la barre lat\xE9rale",
+    panelLayoutModeStandard: "Standard",
+    panelLayoutModeCompact: "Compact",
+    panelLayoutModeHelp: "Le mode compact r\xE9duit les espacements internes.",
     autoScrollDuringStreaming: "D\xE9filement automatique pendant la g\xE9n\xE9ration",
     autoScrollDuringStreamingHelp: "Maintient la barre lat\xE9rale d\xE9fil\xE9e jusqu'\xE0 la derni\xE8re r\xE9ponse du mod\xE8le pendant sa g\xE9n\xE9ration.",
     autoReply: "R\xE9ponse automatique",
@@ -17369,7 +17381,7 @@
     selectionSearchCustomUrlHelp: "Utilisez une URL HTTP(S) contenant le param\xE8tre {query}.",
     selectionSearchOpenMode: "Destination de la recherche de s\xE9lection",
     searchOpenMode: "Mode d'ouverture de la recherche",
-    selectionSearchOpenModeHelp: "Ouvrez les r\xE9sultats dans un nouvel onglet ou remplacez la page actuelle.",
+    selectionSearchOpenModeHelp: "Ouvrir les r\xE9sultats dans un nouvel onglet ou la page actuelle.",
     selectionSearchOpenNewTab: "Nouvel onglet",
     selectionSearchOpenCurrent: "Page actuelle",
     includePageByDefault: "Inclure la page actuelle par d\xE9faut",
@@ -17727,7 +17739,7 @@
     allowRound: "Consenti questo turno",
     allowSession: "Consenti questa sessione",
     mcpToolApprovalMode: "Modalit\xE0 di autorizzazione strumenti MCP",
-    mcpToolApprovalModeHelp: "Controlla l'autorizzazione globale degli strumenti MCP abilitati. Quando viene chiesto, l'autorizzazione pu\xF2 valere per questa chiamata, questo turno o questa sessione.",
+    mcpToolApprovalModeHelp: "Controlla l'autorizzazione globale degli strumenti MCP.",
     mcpToolApprovalDeny: "Rifiuta sempre",
     mcpToolApprovalAsk: "Chiedi sempre",
     mcpToolApprovalAllow: "Consenti sempre",
@@ -18065,6 +18077,10 @@
     themeSystem: "Segui impostazioni di sistema",
     themeLight: "Chiaro",
     themeDark: "Scuro",
+    panelLayoutMode: "Layout della barra laterale",
+    panelLayoutModeStandard: "Standard",
+    panelLayoutModeCompact: "Compatto",
+    panelLayoutModeHelp: "La modalit\xE0 compatta riduce gli spazi interni.",
     autoScrollDuringStreaming: "Scorrimento automatico durante la generazione",
     autoScrollDuringStreamingHelp: "Mantiene la barra laterale scorrevole sull'output pi\xF9 recente del modello durante la generazione.",
     autoReply: "Risposta automatica",
@@ -18124,7 +18140,7 @@
     selectionSearchCustomUrlHelp: "Usa un URL HTTP(S) contenente il segnaposto {query}.",
     selectionSearchOpenMode: "Destinazione della ricerca della selezione",
     searchOpenMode: "Modalit\xE0 di apertura della ricerca",
-    selectionSearchOpenModeHelp: "Apri i risultati in una nuova scheda o sostituisci la pagina corrente.",
+    selectionSearchOpenModeHelp: "Aprire i risultati in una nuova scheda o nella pagina corrente.",
     selectionSearchOpenNewTab: "Nuova scheda",
     selectionSearchOpenCurrent: "Pagina corrente",
     includePageByDefault: "Includi la pagina corrente per impostazione predefinita",
@@ -18514,7 +18530,7 @@
       allowRound: "\u672C\u8F6E\u5141\u8BB8",
       allowSession: "\u4F1A\u8BDD\u5141\u8BB8",
       mcpToolApprovalMode: "MCP\u5DE5\u5177\u6388\u6743\u6A21\u5F0F",
-      mcpToolApprovalModeHelp: "\u63A7\u5236\u5DF2\u542F\u7528 MCP \u5DE5\u5177\u7684\u5168\u5C40\u6267\u884C\u6388\u6743\uFF1B\u59CB\u7EC8\u8BE2\u95EE\u65F6\u53EF\u5728\u5BF9\u8BDD\u4E2D\u6309\u672C\u6B21\u3001\u672C\u8F6E\u6216\u4F1A\u8BDD\u6388\u6743\u3002",
+      mcpToolApprovalModeHelp: "\u63A7\u5236 MCP \u5DE5\u5177\u7684\u5168\u5C40\u6388\u6743\u3002",
       mcpToolApprovalDeny: "\u59CB\u7EC8\u62D2\u7EDD",
       mcpToolApprovalAsk: "\u59CB\u7EC8\u8BE2\u95EE",
       mcpToolApprovalAllow: "\u59CB\u7EC8\u5141\u8BB8",
@@ -18852,6 +18868,10 @@
       themeSystem: "\u8DDF\u968F\u7CFB\u7EDF",
       themeLight: "\u6D45\u8272",
       themeDark: "\u6DF1\u8272",
+      panelLayoutMode: "\u4FA7\u8FB9\u680F\u5E03\u5C40",
+      panelLayoutModeStandard: "\u6807\u51C6",
+      panelLayoutModeCompact: "\u7D27\u51D1",
+      panelLayoutModeHelp: "\u7D27\u51D1\u6A21\u5F0F\u4EC5\u7F29\u5C0F\u5185\u90E8\u95F4\u8DDD\u3002",
       autoScrollDuringStreaming: "\u8F93\u51FA\u65F6\u81EA\u52A8\u6EDA\u52A8",
       autoScrollDuringStreamingHelp: "\u5927\u6A21\u578B\u8F93\u51FA\u8FC7\u7A0B\u4E2D\uFF0C\u4FA7\u8FB9\u680F\u81EA\u52A8\u8DDF\u968F\u6700\u65B0\u5185\u5BB9\u6EDA\u52A8\u3002",
       autoReply: "\u81EA\u52A8\u56DE\u590D",
@@ -18910,7 +18930,7 @@
       selectionSearchCustomUrlHelp: "\u5730\u5740\u5FC5\u987B\u4F7F\u7528 HTTP(S)\uFF0C\u5E76\u5305\u542B {query} \u5360\u4F4D\u7B26\u3002",
       selectionSearchOpenMode: "\u5212\u8BCD\u641C\u7D22\u6253\u5F00\u65B9\u5F0F",
       searchOpenMode: "\u641C\u7D22\u6253\u5F00\u65B9\u5F0F",
-      selectionSearchOpenModeHelp: "\u9009\u62E9\u5728\u65B0\u6807\u7B7E\u9875\u6253\u5F00\u641C\u7D22\u7ED3\u679C\uFF0C\u6216\u5728\u5F53\u524D\u9875\u9762\u8DF3\u8F6C\u3002",
+      selectionSearchOpenModeHelp: "\u9009\u62E9\u5728\u65B0\u6807\u7B7E\u9875\u6216\u5F53\u524D\u9875\u6253\u5F00\u7ED3\u679C\u3002",
       selectionSearchOpenNewTab: "\u65B0\u6807\u7B7E\u9875",
       selectionSearchOpenCurrent: "\u5F53\u524D\u9875\u9762",
       includePageByDefault: "\u9ED8\u8BA4\u9644\u5E26\u5F53\u524D\u4E0A\u4E0B\u6587",
@@ -19267,7 +19287,7 @@
       allowRound: "\u672C\u8F2A\u5141\u8A31",
       allowSession: "\u6703\u8A71\u5141\u8A31",
       mcpToolApprovalMode: "MCP\u5DE5\u5177\u6388\u6B0A\u6A21\u5F0F",
-      mcpToolApprovalModeHelp: "\u63A7\u5236\u5DF2\u555F\u7528 MCP \u5DE5\u5177\u7684\u5168\u57DF\u57F7\u884C\u6388\u6B0A\uFF1B\u59CB\u7D42\u8A62\u554F\u6642\u53EF\u5728\u5C0D\u8A71\u4E2D\u6309\u672C\u6B21\u3001\u672C\u8F2A\u6216\u6703\u8A71\u6388\u6B0A\u3002",
+      mcpToolApprovalModeHelp: "\u63A7\u5236 MCP \u5DE5\u5177\u7684\u5168\u57DF\u6388\u6B0A\u3002",
       mcpToolApprovalDeny: "\u59CB\u7D42\u62D2\u7D55",
       mcpToolApprovalAsk: "\u59CB\u7D42\u8A62\u554F",
       mcpToolApprovalAllow: "\u59CB\u7D42\u5141\u8A31",
@@ -19605,6 +19625,10 @@
       themeSystem: "\u8DDF\u96A8\u7CFB\u7D71",
       themeLight: "\u6DFA\u8272",
       themeDark: "\u6DF1\u8272",
+      panelLayoutMode: "\u5074\u908A\u6B04\u4F48\u5C40",
+      panelLayoutModeStandard: "\u6A19\u6E96",
+      panelLayoutModeCompact: "\u7DCA\u6E4A",
+      panelLayoutModeHelp: "\u7DCA\u6E4A\u6A21\u5F0F\u50C5\u7E2E\u5C0F\u5167\u90E8\u9593\u8DDD\u3002",
       autoScrollDuringStreaming: "\u8F38\u51FA\u6642\u81EA\u52D5\u6372\u52D5",
       autoScrollDuringStreamingHelp: "\u6A21\u578B\u8F38\u51FA\u904E\u7A0B\u4E2D\uFF0C\u5074\u908A\u6B04\u81EA\u52D5\u8DDF\u96A8\u6700\u65B0\u5167\u5BB9\u6372\u52D5\u3002",
       autoReply: "\u81EA\u52D5\u56DE\u8986",
@@ -19663,7 +19687,7 @@
       selectionSearchCustomUrlHelp: "\u5730\u5740\u5FC5\u9808\u4F7F\u7528 HTTP(S)\uFF0C\u4E26\u5305\u542B {query} \u4F54\u4F4D\u7B26\u3002",
       selectionSearchOpenMode: "\u5283\u8A5E\u641C\u5C0B\u958B\u555F\u65B9\u5F0F",
       searchOpenMode: "\u641C\u5C0B\u958B\u555F\u65B9\u5F0F",
-      selectionSearchOpenModeHelp: "\u9078\u64C7\u5728\u65B0\u5206\u9801\u958B\u555F\u641C\u5C0B\u7D50\u679C\uFF0C\u6216\u5728\u76EE\u524D\u9801\u9762\u8DF3\u8F49\u3002",
+      selectionSearchOpenModeHelp: "\u9078\u64C7\u5728\u65B0\u5206\u9801\u6216\u76EE\u524D\u9801\u9762\u958B\u555F\u7D50\u679C\u3002",
       selectionSearchOpenNewTab: "\u65B0\u5206\u9801",
       selectionSearchOpenCurrent: "\u76EE\u524D\u9801\u9762",
       includePageByDefault: "\u9810\u8A2D\u9644\u5E36\u76EE\u524D\u4E0A\u4E0B\u6587",
@@ -20020,7 +20044,7 @@
       allowRound: "Allow This Turn",
       allowSession: "Allow This Session",
       mcpToolApprovalMode: "MCP Tool Authorization Mode",
-      mcpToolApprovalModeHelp: "Controls global authorization for enabled MCP tools. When set to ask, chat approvals may apply to one call, one turn, or this session.",
+      mcpToolApprovalModeHelp: "Controls global MCP tool authorization.",
       mcpToolApprovalDeny: "Always Deny",
       mcpToolApprovalAsk: "Always Ask",
       mcpToolApprovalAllow: "Always Allow",
@@ -20358,6 +20382,10 @@
       themeSystem: "Follow System",
       themeLight: "Light",
       themeDark: "Dark",
+      panelLayoutMode: "Sidebar Layout",
+      panelLayoutModeStandard: "Standard",
+      panelLayoutModeCompact: "Compact",
+      panelLayoutModeHelp: "Compact mode reduces internal spacing.",
       autoScrollDuringStreaming: "Auto-scroll While Generating",
       autoScrollDuringStreamingHelp: "Keep the sidebar scrolled to the latest model output while it is generating.",
       autoReply: "Auto Reply",
@@ -20416,7 +20444,7 @@
       selectionSearchCustomUrlHelp: "Use an HTTP(S) URL containing the {query} placeholder.",
       selectionSearchOpenMode: "Selection Search Destination",
       searchOpenMode: "Search Open Mode",
-      selectionSearchOpenModeHelp: "Choose whether search results open in a new tab or replace the current page.",
+      selectionSearchOpenModeHelp: "Open results in a new tab or the current page.",
       selectionSearchOpenNewTab: "New Tab",
       selectionSearchOpenCurrent: "Current Page",
       includePageByDefault: "Include Current Page by Default",
@@ -20773,7 +20801,7 @@
       allowRound: "\u3053\u306E\u30BF\u30FC\u30F3\u3067\u8A31\u53EF",
       allowSession: "\u30BB\u30C3\u30B7\u30E7\u30F3\u3067\u8A31\u53EF",
       mcpToolApprovalMode: "MCP \u30C4\u30FC\u30EB\u8A31\u53EF\u30E2\u30FC\u30C9",
-      mcpToolApprovalModeHelp: "\u6709\u52B9\u306A MCP \u30C4\u30FC\u30EB\u306B\u5BFE\u3059\u308B\u30B0\u30ED\u30FC\u30D0\u30EB\u306A\u5B9F\u884C\u8A31\u53EF\u3092\u5236\u5FA1\u3057\u307E\u3059\u3002\u78BA\u8A8D\u3059\u308B\u5834\u5408\u306F\u3001\u4ECA\u56DE\u3001\u3053\u306E\u30BF\u30FC\u30F3\u3001\u307E\u305F\u306F\u30BB\u30C3\u30B7\u30E7\u30F3\u306B\u8A31\u53EF\u3067\u304D\u307E\u3059\u3002",
+      mcpToolApprovalModeHelp: "MCP \u30C4\u30FC\u30EB\u306E\u5168\u4F53\u7684\u306A\u8A31\u53EF\u3092\u5236\u5FA1\u3057\u307E\u3059\u3002",
       mcpToolApprovalDeny: "\u5E38\u306B\u62D2\u5426",
       mcpToolApprovalAsk: "\u5E38\u306B\u78BA\u8A8D",
       mcpToolApprovalAllow: "\u5E38\u306B\u8A31\u53EF",
@@ -21111,6 +21139,10 @@
       themeSystem: "\u30B7\u30B9\u30C6\u30E0\u306B\u5F93\u3046",
       themeLight: "\u30E9\u30A4\u30C8",
       themeDark: "\u30C0\u30FC\u30AF",
+      panelLayoutMode: "\u30B5\u30A4\u30C9\u30D0\u30FC\u306E\u30EC\u30A4\u30A2\u30A6\u30C8",
+      panelLayoutModeStandard: "\u6A19\u6E96",
+      panelLayoutModeCompact: "\u30B3\u30F3\u30D1\u30AF\u30C8",
+      panelLayoutModeHelp: "\u30B3\u30F3\u30D1\u30AF\u30C8\u30E2\u30FC\u30C9\u306F\u5185\u90E8\u306E\u9593\u9694\u3092\u7E2E\u5C0F\u3057\u307E\u3059\u3002",
       autoScrollDuringStreaming: "\u751F\u6210\u4E2D\u306B\u81EA\u52D5\u30B9\u30AF\u30ED\u30FC\u30EB",
       autoScrollDuringStreamingHelp: "\u30E2\u30C7\u30EB\u306E\u751F\u6210\u4E2D\u3001\u30B5\u30A4\u30C9\u30D0\u30FC\u3092\u6700\u65B0\u306E\u51FA\u529B\u306B\u81EA\u52D5\u8FFD\u5F93\u3055\u305B\u307E\u3059\u3002",
       autoReply: "\u81EA\u52D5\u8FD4\u4FE1",
@@ -21169,7 +21201,7 @@
       selectionSearchCustomUrlHelp: "{query} \u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3092\u542B\u3080HTTP(S) URL\u3092\u6307\u5B9A\u3057\u307E\u3059\u3002",
       selectionSearchOpenMode: "\u9078\u629E\u30C6\u30AD\u30B9\u30C8\u691C\u7D22\u306E\u958B\u304D\u65B9",
       searchOpenMode: "\u691C\u7D22\u306E\u958B\u304D\u65B9",
-      selectionSearchOpenModeHelp: "\u691C\u7D22\u7D50\u679C\u3092\u65B0\u3057\u3044\u30BF\u30D6\u3067\u958B\u304F\u304B\u3001\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u3092\u7F6E\u304D\u63DB\u3048\u308B\u304B\u3092\u9078\u629E\u3057\u307E\u3059\u3002",
+      selectionSearchOpenModeHelp: "\u65B0\u3057\u3044\u30BF\u30D6\u307E\u305F\u306F\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u3067\u7D50\u679C\u3092\u958B\u304D\u307E\u3059\u3002",
       selectionSearchOpenNewTab: "\u65B0\u3057\u3044\u30BF\u30D6",
       selectionSearchOpenCurrent: "\u73FE\u5728\u306E\u30DA\u30FC\u30B8",
       includePageByDefault: "\u73FE\u5728\u306E\u30DA\u30FC\u30B8\u3092\u65E2\u5B9A\u3067\u6DFB\u4ED8",
@@ -21526,7 +21558,7 @@
       allowRound: "\uC774\uBC88 \uD134 \uD5C8\uC6A9",
       allowSession: "\uC138\uC158 \uD5C8\uC6A9",
       mcpToolApprovalMode: "MCP \uB3C4\uAD6C \uAD8C\uD55C \uBAA8\uB4DC",
-      mcpToolApprovalModeHelp: "\uD65C\uC131\uD654\uB41C MCP \uB3C4\uAD6C\uC758 \uC804\uC5ED \uC2E4\uD589 \uAD8C\uD55C\uC744 \uC81C\uC5B4\uD569\uB2C8\uB2E4. \uD56D\uC0C1 \uBB3B\uAE30\uC5D0\uC11C\uB294 \uC774\uBC88 \uD638\uCD9C, \uC774\uBC88 \uD134 \uB610\uB294 \uC138\uC158 \uB2E8\uC704\uB85C \uD5C8\uC6A9\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
+      mcpToolApprovalModeHelp: "MCP \uB3C4\uAD6C\uC758 \uC804\uCCB4 \uAD8C\uD55C\uC744 \uC81C\uC5B4\uD569\uB2C8\uB2E4.",
       mcpToolApprovalDeny: "\uD56D\uC0C1 \uAC70\uBD80",
       mcpToolApprovalAsk: "\uD56D\uC0C1 \uBB3B\uAE30",
       mcpToolApprovalAllow: "\uD56D\uC0C1 \uD5C8\uC6A9",
@@ -21864,6 +21896,10 @@
       themeSystem: "\uC2DC\uC2A4\uD15C \uB530\uB984",
       themeLight: "\uBC1D\uAC8C",
       themeDark: "\uC5B4\uB461\uAC8C",
+      panelLayoutMode: "\uC0AC\uC774\uB4DC\uBC14 \uB808\uC774\uC544\uC6C3",
+      panelLayoutModeStandard: "\uD45C\uC900",
+      panelLayoutModeCompact: "\uAC04\uACB0",
+      panelLayoutModeHelp: "\uAC04\uACB0 \uBAA8\uB4DC\uB294 \uB0B4\uBD80 \uAC04\uACA9\uC744 \uC904\uC785\uB2C8\uB2E4.",
       autoScrollDuringStreaming: "\uC0DD\uC131 \uC911 \uC790\uB3D9 \uC2A4\uD06C\uB864",
       autoScrollDuringStreamingHelp: "\uBAA8\uB378\uC774 \uC0DD\uC131\uD558\uB294 \uB3D9\uC548 \uC0AC\uC774\uB4DC\uBC14\uAC00 \uCD5C\uC2E0 \uCD9C\uB825\uC73C\uB85C \uC790\uB3D9 \uC2A4\uD06C\uB864\uB429\uB2C8\uB2E4.",
       autoReply: "\uC790\uB3D9 \uB2F5\uC7A5",
@@ -21922,7 +21958,7 @@
       selectionSearchCustomUrlHelp: "{query} \uC790\uB9AC \uD45C\uC2DC\uC790\uB97C \uD3EC\uD568\uD55C HTTP(S) URL\uC744 \uC785\uB825\uD558\uC138\uC694.",
       selectionSearchOpenMode: "\uC120\uD0DD \uD14D\uC2A4\uD2B8 \uAC80\uC0C9 \uC5F4\uAE30 \uBC29\uC2DD",
       searchOpenMode: "\uAC80\uC0C9 \uC5F4\uAE30 \uBC29\uC2DD",
-      selectionSearchOpenModeHelp: "\uAC80\uC0C9 \uACB0\uACFC\uB97C \uC0C8 \uD0ED\uC5D0\uC11C \uC5F4\uC9C0, \uD604\uC7AC \uD398\uC774\uC9C0\uC5D0\uC11C \uC774\uB3D9\uD560\uC9C0 \uC120\uD0DD\uD569\uB2C8\uB2E4.",
+      selectionSearchOpenModeHelp: "\uC0C8 \uD0ED \uB610\uB294 \uD604\uC7AC \uD398\uC774\uC9C0\uC5D0\uC11C \uACB0\uACFC\uB97C \uC5FD\uB2C8\uB2E4.",
       selectionSearchOpenNewTab: "\uC0C8 \uD0ED",
       selectionSearchOpenCurrent: "\uD604\uC7AC \uD398\uC774\uC9C0",
       includePageByDefault: "\uD604\uC7AC \uD398\uC774\uC9C0 \uAE30\uBCF8 \uCCA8\uBD80",
@@ -24132,6 +24168,7 @@
     visionProfileId: null,
     compareProfileIds: [],
     theme: "system",
+    panelLayoutMode: "standard",
     logLevel: "info",
     autoScrollDuringStreaming: true,
     modelThinkingTimeoutSeconds: 0,
@@ -24347,6 +24384,7 @@
       visionProfileId,
       compareProfileIds: stored.compareProfileIds ?? [],
       theme: stored.theme ?? DEFAULT_SETTINGS.theme,
+      panelLayoutMode: stored.panelLayoutMode === "compact" ? "compact" : DEFAULT_SETTINGS.panelLayoutMode,
       logLevel: APP_LOG_LEVELS.has(stored.logLevel) ? stored.logLevel : DEFAULT_SETTINGS.logLevel,
       autoScrollDuringStreaming: stored.autoScrollDuringStreaming ?? true,
       modelThinkingTimeoutSeconds: storedTimeoutSeconds,
@@ -30642,6 +30680,13 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
     annotations.forEach((annotation) => drawAnnotation(context, annotation));
     if (draft) drawAnnotation(context, draft);
   }
+  function drawAnnotationLayer(canvas, annotations, draft) {
+    const context = canvas.getContext("2d");
+    if (!context) return;
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    annotations.forEach((annotation) => drawAnnotation(context, annotation));
+    if (draft) drawAnnotation(context, draft);
+  }
   function cropSourceImage(image, placement) {
     const crop = screenshotCrop(image.naturalWidth, image.naturalHeight, placement);
     const canvas = document.createElement("canvas");
@@ -30772,30 +30817,18 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
       return () => document.removeEventListener("keydown", onKeyDown, true);
     }, [onCancel, placement]);
     (0, import_react4.useLayoutEffect)(() => {
-      if (!pageMode || !activePlacement || !imageReady || !editorRef.current) return;
-      const frame = window.requestAnimationFrame(() => {
-        const editor = editorRef.current;
-        if (!editor) return;
-        const margin = 8;
-        const rect = editor.getBoundingClientRect();
-        setPagePosition({
-          left: Math.max(
-            margin,
-            Math.min(activePlacement.left, window.innerWidth - rect.width - margin)
-          ),
-          top: activePlacement.top + rect.height <= window.innerHeight - margin ? Math.max(margin, activePlacement.top) : Math.max(margin, activePlacement.top - rect.height - margin)
-        });
-      });
-      return () => window.cancelAnimationFrame(frame);
-    }, [activePlacement, imageReady, pageMode, tool]);
+      if (!pageMode || !activePlacement) return;
+      setPagePosition({ left: activePlacement.left, top: activePlacement.top });
+    }, [activePlacement, pageMode]);
     (0, import_react4.useEffect)(() => {
       const canvas = canvasRef.current;
       const image = imageRef.current;
       if (!canvas || !image || !imageReady) return;
       canvas.width = image.naturalWidth || image.width;
       canvas.height = image.naturalHeight || image.height;
-      drawScene(canvas, image, annotations, draft);
-    }, [annotations, draft, imageReady, imageVersion]);
+      if (pageMode) drawAnnotationLayer(canvas, annotations, draft);
+      else drawScene(canvas, image, annotations, draft);
+    }, [annotations, draft, imageReady, imageVersion, pageMode]);
     const pointFromEvent = (event) => {
       const canvas = canvasRef.current;
       if (!canvas) return { x: 0, y: 0 };
@@ -30903,21 +30936,41 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
       } catch {
       }
     };
+    const renderExportCanvas = () => {
+      const image = imageRef.current;
+      const visibleCanvas = canvasRef.current;
+      if (!image || !visibleCanvas) return null;
+      const canvas = document.createElement("canvas");
+      canvas.width = image.naturalWidth || image.width;
+      canvas.height = image.naturalHeight || image.height;
+      drawScene(canvas, image, annotations, draft);
+      return canvas;
+    };
     const confirm = () => {
-      const canvas = canvasRef.current;
+      const canvas = renderExportCanvas();
       if (!canvas) return;
       onConfirm({ ...workingAttachment, dataUrl: canvas.toDataURL("image/png") });
     };
     const save = () => {
-      const canvas = canvasRef.current;
+      const canvas = renderExportCanvas();
       if (!canvas) return;
       const link = document.createElement("a");
       link.href = canvas.toDataURL("image/png");
       link.download = workingAttachment.name || "screenshot.png";
       link.click();
     };
-    const pageStyle = pageMode ? { left: pagePosition.left, top: pagePosition.top } : void 0;
-    const canvasStyle = !pageMode ? {
+    const pageStyle = pageMode && activePlacement ? {
+      left: pagePosition.left,
+      top: pagePosition.top,
+      width: activePlacement.width
+    } : void 0;
+    const frameStyle = pageMode && activePlacement ? { width: activePlacement.width, height: activePlacement.height } : void 0;
+    const canvasStyle = pageMode && activePlacement ? {
+      width: activePlacement.width,
+      height: activePlacement.height,
+      maxWidth: "none",
+      maxHeight: "none"
+    } : !pageMode ? {
       width: `${zoom * 100}%`,
       maxWidth: "none",
       maxHeight: "none",
@@ -30938,7 +30991,7 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
             children: [
               /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "screenshot-preview-float", children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("header", { className: "screenshot-editor-heading", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h2", { children: uiText(language, "screenshotEditorTitle") }) }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "screenshot-editor-canvas-wrap", children: imageReady ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "screenshot-editor-canvas-frame", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "screenshot-editor-canvas-wrap", children: imageReady ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "screenshot-editor-canvas-frame", style: frameStyle, children: [
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
                     "canvas",
                     {
@@ -31172,28 +31225,48 @@ a[href][${LINK_TEXT_SELECTING_ATTRIBUTE}] * {
     display: block;
     overflow: hidden;
     padding: 0;
-    background: rgba(10, 17, 15, .58);
+    background: transparent;
   }
   .screenshot-editor-page-mode .screenshot-editor {
     position: fixed;
-    max-width: calc(100vw - 16px);
-    max-height: calc(100vh - 16px);
-  }
-  .screenshot-editor-page-mode .screenshot-preview-float { max-height: calc(100vh - 112px); }
-  .screenshot-editor-page-mode .screenshot-editor-canvas-wrap { max-height: calc(100vh - 164px); }
-  .screenshot-editor-page-mode .screenshot-editor-canvas {
-    width: 100%;
-    height: auto;
+    max-width: none;
+    max-height: none;
+    gap: 8px;
   }
   .screenshot-editor-page-mode .screenshot-preview-float {
+    max-height: none;
+    overflow: visible;
     border: 0;
     background: transparent;
     box-shadow: none;
   }
-  .screenshot-editor-page-mode .screenshot-editor-heading { display: none; }
   .screenshot-editor-page-mode .screenshot-editor-canvas-wrap {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
     padding: 0;
+    overflow: visible;
     background: transparent;
+  }
+  .screenshot-editor-page-mode .screenshot-editor-canvas-frame {
+    width: 100%;
+    height: 100%;
+    outline: 2px solid var(--md-teal);
+    box-shadow: 0 0 0 100vmax rgba(10, 17, 15, .58);
+  }
+  .screenshot-editor-page-mode .screenshot-editor-canvas {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    box-shadow: none;
+  }
+  .screenshot-editor-page-mode .screenshot-editor-heading { display: none; }
+  .screenshot-editor-page-mode .screenshot-tools-float {
+    position: relative;
+    width: 100%;
+    margin-top: 0;
+    pointer-events: auto;
   }
   .screenshot-resize-handle {
     position: absolute;

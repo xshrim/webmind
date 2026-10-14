@@ -157,28 +157,48 @@ export const SHADOW_STYLES = `
     display: block;
     overflow: hidden;
     padding: 0;
-    background: rgba(10, 17, 15, .58);
+    background: transparent;
   }
   .screenshot-editor-page-mode .screenshot-editor {
     position: fixed;
-    max-width: calc(100vw - 16px);
-    max-height: calc(100vh - 16px);
-  }
-  .screenshot-editor-page-mode .screenshot-preview-float { max-height: calc(100vh - 112px); }
-  .screenshot-editor-page-mode .screenshot-editor-canvas-wrap { max-height: calc(100vh - 164px); }
-  .screenshot-editor-page-mode .screenshot-editor-canvas {
-    width: 100%;
-    height: auto;
+    max-width: none;
+    max-height: none;
+    gap: 8px;
   }
   .screenshot-editor-page-mode .screenshot-preview-float {
+    max-height: none;
+    overflow: visible;
     border: 0;
     background: transparent;
     box-shadow: none;
   }
-  .screenshot-editor-page-mode .screenshot-editor-heading { display: none; }
   .screenshot-editor-page-mode .screenshot-editor-canvas-wrap {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
     padding: 0;
+    overflow: visible;
     background: transparent;
+  }
+  .screenshot-editor-page-mode .screenshot-editor-canvas-frame {
+    width: 100%;
+    height: 100%;
+    outline: 2px solid var(--md-teal);
+    box-shadow: 0 0 0 100vmax rgba(10, 17, 15, .58);
+  }
+  .screenshot-editor-page-mode .screenshot-editor-canvas {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    box-shadow: none;
+  }
+  .screenshot-editor-page-mode .screenshot-editor-heading { display: none; }
+  .screenshot-editor-page-mode .screenshot-tools-float {
+    position: relative;
+    width: 100%;
+    margin-top: 0;
+    pointer-events: auto;
   }
   .screenshot-resize-handle {
     position: absolute;

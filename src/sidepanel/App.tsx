@@ -5651,7 +5651,11 @@ export function App() {
   }
 
   return (
-    <div className="panel-shell">
+    <div
+      className={`panel-shell ${
+        settings.panelLayoutMode === "compact" ? "panel-shell-compact" : ""
+      }`}
+    >
       <TooltipLayer />
       <header className="panel-header">
         <div className="header-leading">

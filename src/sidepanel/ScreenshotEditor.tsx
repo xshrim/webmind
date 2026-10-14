@@ -157,6 +157,18 @@ function drawScene(
   if (draft) drawAnnotation(context, draft);
 }
 
+function drawAnnotationLayer(
+  canvas: HTMLCanvasElement,
+  annotations: Annotation[],
+  draft: Annotation | null
+): void {
+  const context = canvas.getContext("2d");
+  if (!context) return;
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  annotations.forEach((annotation) => drawAnnotation(context, annotation));
+  if (draft) drawAnnotation(context, draft);
+}
+
 function cropSourceImage(
   image: HTMLImageElement,
   placement: ScreenshotEditorPlacement
@@ -307,25 +319,9 @@ export function ScreenshotEditor({
   }, [onCancel, placement]);
 
   useLayoutEffect(() => {
-    if (!pageMode || !activePlacement || !imageReady || !editorRef.current) return;
-    const frame = window.requestAnimationFrame(() => {
-      const editor = editorRef.current;
-      if (!editor) return;
-      const margin = 8;
-      const rect = editor.getBoundingClientRect();
-      setPagePosition({
-        left: Math.max(
-          margin,
-          Math.min(activePlacement.left, window.innerWidth - rect.width - margin)
-        ),
-        top:
-          activePlacement.top + rect.height <= window.innerHeight - margin
-            ? Math.max(margin, activePlacement.top)
-            : Math.max(margin, activePlacement.top - rect.height - margin)
-      });
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [activePlacement, imageReady, pageMode, tool]);
+    if (!pageMode || !activePlacement) return;
+    setPagePosition({ left: activePlacement.left, top: activePlacement.top });
+  }, [activePlacement, pageMode]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -333,8 +329,9 @@ export function ScreenshotEditor({
     if (!canvas || !image || !imageReady) return;
     canvas.width = image.naturalWidth || image.width;
     canvas.height = image.naturalHeight || image.height;
-    drawScene(canvas, image, annotations, draft);
-  }, [annotations, draft, imageReady, imageVersion]);
+    if (pageMode) drawAnnotationLayer(canvas, annotations, draft);
+    else drawScene(canvas, image, annotations, draft);
+  }, [annotations, draft, imageReady, imageVersion, pageMode]);
 
   const pointFromEvent = (event: React.PointerEvent<HTMLCanvasElement>): Point => {
     const canvas = canvasRef.current;
@@ -471,14 +468,25 @@ export function ScreenshotEditor({
     }
   };
 
+  const renderExportCanvas = (): HTMLCanvasElement | null => {
+    const image = imageRef.current;
+    const visibleCanvas = canvasRef.current;
+    if (!image || !visibleCanvas) return null;
+    const canvas = document.createElement("canvas");
+    canvas.width = image.naturalWidth || image.width;
+    canvas.height = image.naturalHeight || image.height;
+    drawScene(canvas, image, annotations, draft);
+    return canvas;
+  };
+
   const confirm = () => {
-    const canvas = canvasRef.current;
+    const canvas = renderExportCanvas();
     if (!canvas) return;
     onConfirm({ ...workingAttachment, dataUrl: canvas.toDataURL("image/png") });
   };
 
   const save = () => {
-    const canvas = canvasRef.current;
+    const canvas = renderExportCanvas();
     if (!canvas) return;
     const link = document.createElement("a");
     link.href = canvas.toDataURL("image/png");
@@ -486,10 +494,24 @@ export function ScreenshotEditor({
     link.click();
   };
 
-  const pageStyle = pageMode
-    ? ({ left: pagePosition.left, top: pagePosition.top } as CSSProperties)
+  const pageStyle = pageMode && activePlacement
+    ? ({
+        left: pagePosition.left,
+        top: pagePosition.top,
+        width: activePlacement.width
+      } as CSSProperties)
     : undefined;
-  const canvasStyle = !pageMode
+  const frameStyle = pageMode && activePlacement
+    ? ({ width: activePlacement.width, height: activePlacement.height } as CSSProperties)
+    : undefined;
+  const canvasStyle = pageMode && activePlacement
+    ? ({
+        width: activePlacement.width,
+        height: activePlacement.height,
+        maxWidth: "none",
+        maxHeight: "none"
+      } as CSSProperties)
+    : !pageMode
     ? ({
         width: `${zoom * 100}%`,
         maxWidth: "none",
@@ -516,7 +538,7 @@ export function ScreenshotEditor({
           </header>
           <div className="screenshot-editor-canvas-wrap">
             {imageReady ? (
-              <div className="screenshot-editor-canvas-frame">
+              <div className="screenshot-editor-canvas-frame" style={frameStyle}>
                 <canvas
                   ref={canvasRef}
                   className="screenshot-editor-canvas"

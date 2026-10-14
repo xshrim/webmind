@@ -4171,8 +4171,30 @@ button.prompt-row:hover {
 .context-popover {
   left: 0;
   bottom: calc(100% + 6px);
-  width: 152px;
+  width: 100%;
+  min-width: 0;
+  max-height: none;
+  overflow: visible;
+  gap: 1px;
+  padding: 2px;
   z-index: 60;
+}
+
+.context-popover button {
+  min-height: 0;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 3px 2px;
+  line-height: 1.25;
+}
+
+.context-popover button span {
+  min-width: 0;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .context-toggle svg {
@@ -4275,7 +4297,8 @@ button.prompt-row:hover {
 .media-kind-filters {
   flex-wrap: nowrap;
   justify-content: flex-start;
-  gap: 2px;
+  gap: 5px;
+  margin-left: 4px;
 }
 
 .media-filter.active {
@@ -5592,4 +5615,507 @@ button.prompt-row:hover {
     padding-right: 4px;
     padding-left: 4px;
   }
+}
+
+/* Compact sidebar density. Chrome still owns the actual side-panel width. */
+.panel-shell-compact {
+  min-width: 0;
+  min-inline-size: 0;
+}
+
+/* Prevent a flex/grid min-content child from defining the panel width. */
+.panel-shell-compact * {
+  min-width: 0;
+  min-inline-size: 0;
+}
+
+.panel-shell-compact .panel-header,
+.panel-shell-compact .header-leading,
+.panel-shell-compact .brand-compact,
+.panel-shell-compact .header-leading-actions,
+.panel-shell-compact .header-actions,
+.panel-shell-compact .panel-main,
+.panel-shell-compact .chat-view,
+.panel-shell-compact .workspace-view,
+.panel-shell-compact .composer-area,
+.panel-shell-compact .composer,
+.panel-shell-compact .composer-toolbar,
+.panel-shell-compact .composer-tools,
+.panel-shell-compact .panel-nav {
+  min-width: 0;
+}
+
+.panel-shell-compact .panel-header {
+  height: 42px;
+  gap: 2px;
+  padding: 0 6px;
+}
+
+.panel-shell-compact .header-leading,
+.panel-shell-compact .header-leading-actions,
+.panel-shell-compact .header-actions {
+  gap: 1px;
+  flex-shrink: 1;
+  overflow: hidden;
+}
+
+.panel-shell-compact .brand-tool-button,
+.panel-shell-compact .panel-header .header-actions .icon-button,
+.panel-shell-compact .panel-header .header-leading-actions .icon-button {
+  width: 20px;
+  height: 20px;
+}
+
+.panel-shell-compact .brand-tool-button svg,
+.panel-shell-compact .panel-header .header-actions .icon-button svg,
+.panel-shell-compact .panel-header .header-leading-actions .icon-button svg,
+.panel-shell-compact .panel-header .force-copy-button svg {
+  width: 17px;
+  height: 17px;
+}
+
+.panel-shell-compact .provider-select {
+  height: 27px;
+  padding: 0 20px 0 6px;
+  font-size: 10px;
+  text-overflow: clip;
+}
+
+.panel-shell-compact .panel-main,
+.panel-shell-compact .message-list,
+.panel-shell-compact .workspace-view {
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.panel-shell-compact .message-list {
+  gap: 12px;
+  padding: 12px 9px 17px;
+}
+
+.panel-shell-compact .chat-tools-toggle-main,
+.panel-shell-compact .tool-invocation-copy strong,
+.panel-shell-compact .tool-invocation-context-value,
+.panel-shell-compact .tool-invocation-page-snapshot > .tool-invocation-tooltip-anchor > span,
+.panel-shell-compact .message-file span,
+.panel-shell-compact .attachment-file span,
+.panel-shell-compact .body-preview summary strong,
+.panel-shell-compact .body-preview-action,
+.panel-shell-compact .body-preview-meta span,
+.panel-shell-compact .body-preview-meta-action,
+.panel-shell-compact .mcp-picker-server-toggle strong,
+.panel-shell-compact .mcp-picker-tools span {
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.panel-shell-compact .tool-invocation-context-value {
+  display: block;
+  -webkit-line-clamp: unset;
+}
+
+.panel-shell-compact .body-preview-meta {
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+.panel-shell-compact .body-preview summary {
+  min-width: 0;
+}
+
+.panel-shell-compact .body-preview summary > span:not(.body-preview-summary-actions) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.panel-shell-compact .body-preview-summary-actions {
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.panel-shell-compact .body-preview-action,
+.panel-shell-compact .body-preview-meta-action,
+.panel-shell-compact .body-preview-score {
+  flex-shrink: 1;
+  max-width: 100%;
+}
+
+.panel-shell-compact .message-actions,
+.panel-shell-compact .assistant-actions {
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.panel-shell-compact .assistant-actions > .message-tool-menu {
+  margin-left: 0;
+}
+
+.panel-shell-compact .assistant-actions .message-action-button {
+  width: 24px;
+  min-height: 24px;
+}
+
+.panel-shell-compact .message-tool-select {
+  min-width: 0;
+  min-height: 24px;
+  max-width: 100%;
+  padding: 0 5px;
+}
+
+.panel-shell-compact .message-tool-select span {
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.panel-shell-compact .workspace-view {
+  padding: 12px 9px 18px;
+}
+
+.panel-shell-compact .view-heading {
+  gap: 8px;
+  margin-bottom: 11px;
+}
+
+.panel-shell-compact .view-heading h1 {
+  font-size: 16px;
+}
+
+.panel-shell-compact .view-heading > svg,
+.panel-shell-compact .view-heading-actions > svg {
+  width: 21px;
+  height: 21px;
+}
+
+.panel-shell-compact .tool-row,
+.panel-shell-compact button.prompt-row {
+  gap: 7px;
+  padding: 8px 2px;
+}
+
+.panel-shell-compact .tool-main,
+.panel-shell-compact .prompt-main {
+  gap: 7px;
+  padding: 5px 2px;
+}
+
+.panel-shell-compact .tool-icon,
+.panel-shell-compact .prompt-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.panel-shell-compact .tool-row strong,
+.panel-shell-compact .prompt-row strong,
+.panel-shell-compact .history-row strong,
+.panel-shell-compact .tool-row small,
+.panel-shell-compact .prompt-row small,
+.panel-shell-compact .history-row span,
+.panel-shell-compact .tool-row > span:nth-child(2),
+.panel-shell-compact .prompt-row > span:nth-child(2) {
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.panel-shell-compact .tool-row > span:nth-child(2),
+.panel-shell-compact .prompt-row > span:nth-child(2) {
+  min-width: 0;
+}
+
+.panel-shell-compact .tool-list,
+.panel-shell-compact .tool-row,
+.panel-shell-compact .tool-main,
+.panel-shell-compact .todo-toolbar,
+.panel-shell-compact .todo-filters,
+.panel-shell-compact .todo-list,
+.panel-shell-compact .todo-row,
+.panel-shell-compact .mcp-server-list,
+.panel-shell-compact .mcp-server-row,
+.panel-shell-compact .media-toolbar,
+.panel-shell-compact .media-list,
+.panel-shell-compact .media-row,
+.panel-shell-compact .history-list,
+.panel-shell-compact .history-row,
+.panel-shell-compact .operation-log-list,
+.panel-shell-compact .operation-log-filter,
+.panel-shell-compact .operation-log-row {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.panel-shell-compact .history-main {
+  gap: 2px;
+  padding: 6px 3px;
+}
+
+.panel-shell-compact .history-row .icon-button.mini,
+.panel-shell-compact .mcp-server-row .icon-button.mini {
+  width: 23px;
+  height: 23px;
+}
+
+.panel-shell-compact .operation-log-list {
+  gap: 5px;
+}
+
+.panel-shell-compact .operation-log-filter {
+  gap: 6px;
+  margin: -2px 0 10px;
+  padding: 6px 7px;
+}
+
+.panel-shell-compact .operation-log-filter > span,
+.panel-shell-compact .operation-log-row time,
+.panel-shell-compact .operation-log-level {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.panel-shell-compact .log-level-segmented {
+  gap: 3px;
+}
+
+.panel-shell-compact .log-level-segmented button {
+  min-width: 0;
+  padding: 4px 5px;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.panel-shell-compact .operation-log-row {
+  gap: 5px;
+  padding: 7px 7px;
+}
+
+.panel-shell-compact .composer-area {
+  padding: 5px 6px;
+}
+
+.panel-shell-compact .composer-notice {
+  gap: 5px;
+  margin-bottom: 4px;
+  padding: 5px 6px;
+}
+
+.panel-shell-compact .attachment-strip {
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.panel-shell-compact .composer textarea {
+  height: 48px;
+  min-height: 48px;
+  padding: 8px 31px 3px 8px;
+}
+
+.panel-shell-compact .composer-toolbar {
+  min-height: 31px;
+  gap: 4px;
+  padding: 2px 3px 3px 4px;
+}
+
+.panel-shell-compact .composer-tools {
+  gap: 1px;
+}
+
+.panel-shell-compact .context-toggle,
+.panel-shell-compact .context-select {
+  height: 25px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.panel-shell-compact .context-toggle span {
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.panel-shell-compact .composer-tools .icon-button.mini,
+.panel-shell-compact .send-button {
+  width: 23px;
+  height: 23px;
+}
+
+.panel-shell-compact .panel-nav {
+  height: 44px;
+}
+
+.panel-shell-compact .panel-nav button {
+  gap: 1px;
+  padding: 2px 1px;
+  font-size: 8px;
+  line-height: 1.1;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.panel-shell-compact .panel-nav svg {
+  width: 15px;
+  height: 15px;
+}
+
+.panel-shell-compact .media-toolbar {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 2px;
+  margin-bottom: 8px;
+  padding: 5px 3px;
+}
+
+.panel-shell-compact .media-kind-filters {
+  min-width: 0;
+  gap: 4px;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+.panel-shell-compact .media-filter {
+  padding: 2px 4px;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  flex: 0 1 auto;
+}
+
+.panel-shell-compact .media-toolbar-actions {
+  min-width: 0;
+  gap: 0;
+}
+
+.panel-shell-compact .media-count {
+  min-width: 0;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+  text-align: right;
+  white-space: normal;
+}
+
+.panel-shell-compact .media-toolbar-actions .icon-button.mini {
+  width: 21px;
+  height: 21px;
+}
+
+.panel-shell-compact .media-row {
+  grid-template-columns: auto 60px minmax(0, 1fr) auto;
+  column-gap: 4px;
+  row-gap: 6px;
+  padding: 6px 0;
+}
+
+.panel-shell-compact .media-preview {
+  width: 56px;
+  height: 38px;
+  min-width: 56px;
+  min-height: 38px;
+  max-width: 56px;
+  max-height: 38px;
+}
+
+.panel-shell-compact .media-row-actions .icon-button,
+.panel-shell-compact .media-remove {
+  width: 23px;
+  height: 23px;
+}
+
+.panel-shell-compact .media-resolution-select,
+.panel-shell-compact .media-subtitle-select {
+  width: auto;
+  max-width: 100%;
+}
+
+.panel-shell-compact .media-meta strong,
+.panel-shell-compact .media-meta a,
+.panel-shell-compact .media-meta small,
+.panel-shell-compact .media-source-row .media-url,
+.panel-shell-compact .media-processing-error,
+.panel-shell-compact .media-size,
+.panel-shell-compact .media-resolution-label {
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.panel-shell-compact .media-title-row,
+.panel-shell-compact .media-source-row,
+.panel-shell-compact .media-details {
+  height: auto;
+  min-height: 14px;
+  align-items: flex-start;
+}
+
+.panel-shell-compact .media-source-row,
+.panel-shell-compact .media-details {
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+.panel-shell-compact .todo-toolbar {
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.panel-shell-compact .todo-filters {
+  gap: 2px;
+  padding: 2px;
+}
+
+.panel-shell-compact .todo-filters button {
+  min-height: 26px;
+  padding: 2px;
+  font-size: 11px;
+}
+
+.panel-shell-compact .todo-list {
+  gap: 3px;
+}
+
+.panel-shell-compact .todo-row {
+  padding: 7px 4px;
+}
+
+.panel-shell-compact .todo-title-content {
+  padding-inline-end: 62px;
+}
+
+.panel-shell-compact .todo-title-toggle strong,
+.panel-shell-compact .todo-source {
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.panel-shell-compact .todo-source-row {
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+.panel-shell-compact .todo-updated-at {
+  min-width: 0;
+  flex: 0 1 auto;
+  white-space: normal;
+}
+
+.panel-shell-compact .markdown pre,
+.panel-shell-compact .markdown table {
+  overflow-x: hidden;
+}
+
+.panel-shell-compact .markdown pre code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }

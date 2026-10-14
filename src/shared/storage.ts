@@ -270,6 +270,10 @@ export function normalizeSettings(stored: Partial<AppSettings> = {}): AppSetting
     visionProfileId,
     compareProfileIds: stored.compareProfileIds ?? [],
     theme: stored.theme ?? DEFAULT_SETTINGS.theme,
+    panelLayoutMode:
+      stored.panelLayoutMode === "compact"
+        ? "compact"
+        : DEFAULT_SETTINGS.panelLayoutMode,
     logLevel: APP_LOG_LEVELS.has(stored.logLevel as AppLogLevel)
       ? (stored.logLevel as AppLogLevel)
       : DEFAULT_SETTINGS.logLevel,
